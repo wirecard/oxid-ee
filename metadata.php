@@ -49,7 +49,9 @@ $aModule = array(
     'extend'            => array (
         \OxidEsales\Eshop\Core\ViewConfig::class                  => \Wirecard\Oxid\Extend\View_Config::class,
         \OxidEsales\Eshop\Application\Model\Order::class          => \Wirecard\Oxid\Extend\Order::class,
-        \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \Wirecard\Oxid\Extend\Payment_Gateway::class
+        \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \Wirecard\Oxid\Extend\Payment_Gateway::class,
+        \OxidEsales\Eshop\Application\Controller\Admin\PaymentMainAjax::class =>
+                    \Wirecard\Oxid\Extend\Payment_Main_Ajax::class
     ),
     'blocks' => array(
         array(

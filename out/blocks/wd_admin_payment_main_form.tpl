@@ -1,8 +1,36 @@
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
 <style>
     .pb-35 {
         padding-bottom: 35px;
     }
 </style>
+
+<script type="text/javascript">
+  function testPaymentMethodCredentials() {
+    // the DOM element the test result will be rendered to
+    var resultSpan = document.getElementById('test_credentials_result');
+
+    // clear any previous test results
+    resultSpan.innerHTML = '';
+
+    // get the payment method credentials from the page
+    var bodyParams = {
+      apiUrl: document.getElementById('configApiUrl').value,
+      httpUser: document.getElementById('configHttpUser').value,
+      httpPass: document.getElementById('configHttpPass').value
+    };
+
+    var successText = '[{oxmultilang ident="success_credentials"}]';
+    var failureText = '[{oxmultilang ident="error_credentials"}]';
+
+    $.post('[{ $oViewConf->getAjaxLink() }]cmpid=container&container=payment_main&fnc=checkPaymentMethodCredentials', bodyParams, function(data) {
+      data = JSON.parse(data);
+
+      resultSpan.innerHTML = data.success === true ? successText : failureText;
+    });
+  }
+</script>
 
 [{if $edit->oxpayments__wdoxidee_iswirecard->value == 1}]
   <tr>
@@ -26,7 +54,7 @@
       [{oxmultilang ident="config_base_url"}]
     </td>
     <td class="edittext">
-        <input type="text" class="editinput" size="25" name="editval[oxpayments__wdoxidee_apiurl]" value="[{$edit->oxpayments__wdoxidee_apiurl}]">
+        <input type="text" class="editinput" size="25" id="configApiUrl" name="editval[oxpayments__wdoxidee_apiurl]" value="[{$edit->oxpayments__wdoxidee_apiurl}]">
         [{oxinputhelp ident="config_base_url_desc"}]
     </td>
   </tr>
@@ -35,7 +63,7 @@
       [{oxmultilang ident="config_http_user"}]
     </td>
     <td class="edittext">
-        <input type="text" class="editinput" size="25" name="editval[oxpayments__wdoxidee_httpuser]" value="[{$edit->oxpayments__wdoxidee_httpuser}]">
+        <input type="text" class="editinput" size="25" id="configHttpUser" name="editval[oxpayments__wdoxidee_httpuser]" value="[{$edit->oxpayments__wdoxidee_httpuser}]">
     </td>
   </tr>
   <tr>
@@ -43,7 +71,24 @@
       [{oxmultilang ident="config_http_password"}]
     </td>
     <td class="edittext">
-        <input type="text" class="editinput" size="25" name="editval[oxpayments__wdoxidee_httppass]" value="[{$edit->oxpayments__wdoxidee_httppass}]">
+        <input type="text" class="editinput" size="25" id="configHttpPass" name="editval[oxpayments__wdoxidee_httppass]" value="[{$edit->oxpayments__wdoxidee_httppass}]">
+    </td>
+  </tr>
+  <tr>
+    <td class="edittext" width="100">
+      <input type="button" value="[{oxmultilang ident="test_credentials"}]" onclick="testPaymentMethodCredentials()" />
+    </td>
+    <td>
+      <span id="test_credentials_result"></span>
+    </td>
+  </tr>
+  <tr>
+    <td class="edittext" width="100">
+      <input type="button" value="[{oxmultilang ident="test_credentials"}]" onclick="testPaymentMethodCredentials()" />
+    </td>
+    <td>
+      <span id="test_credentials_result_success" class="hidden">[{oxmultilang ident="success_credentials"}]</span>
+      <span id="test_credentials_result_error" class="hidden">[{oxmultilang ident="error_credentials"}]</span>
     </td>
   </tr>
   <tr>
