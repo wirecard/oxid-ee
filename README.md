@@ -1,2 +1,3 @@
-# WIP: Work in progress
-Wirecard Payment Processing Gateway Extension for Oxid
+# Overview
+
+This is the Wirecard plugin for the Oxid 6 e-commerce platform. Currently under development.
