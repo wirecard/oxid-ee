@@ -1,0 +1,26 @@
+{
+    "name": "wirecard/paymentgateway-module",
+    "description": "Wirecard paymentSDK module for the OXID eShop",
+    "type": "oxideshop-module",
+    "keywords": ["oxid", "modules", "eShop", "payment"],
+    "require": {
+        "php": ">=7.0"
+    },
+    "extra": {
+        "oxideshop": {
+            "blacklist-filter": [
+                "documentation/**/*.*",
+                "CHANGELOG.md",
+                "composer.json",
+                "CONTRIBUTING.md",
+                "README.md"
+            ],
+            "target-directory": "wirecard/paymentgateway"
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Wirecard\\PaymentSDKModule\\": "../../../source/modules/wirecard/paymentgateway"
+        }
+    }
+}
