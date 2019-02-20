@@ -15,15 +15,15 @@ class OxidEE_Events
      * 
      * @return boolean true or false if query was executed
      */
-    private static function addColumnIfNotExists($sTableName, $sColumnName, $sQuery)
+    private static function _addColumnIfNotExists($sTableName, $sColumnName, $sQuery)
     {
-        $db = oxDb::getDb();
+        $oDb = oxDb::getDb();
 
-        $aColumns = $db->getAll("SHOW COLUMNS FROM {$sTableName} LIKE '{$sColumnName}'");
+        $aColumns = $oDb->getAll("SHOW COLUMNS FROM {$sTableName} LIKE '{$sColumnName}'");
 
         if (!$aColumns || count($aColumns) === 0) {
             try {
-                $db->Execute($sQuery);
+                $oDb->Execute($sQuery);
                 return true;
             } catch (Exception $e) {
 
@@ -43,9 +43,9 @@ class OxidEE_Events
      * 
      * @return boolean true or false if query was executed
      */
-    private static function insertRowIfNotExists($sTableName, $aKeyValue, $sQuery)
+    private static function _insertRowIfNotExists($sTableName, $aKeyValue, $sQuery)
     {
-        $db = oxDb::getDb();
+        $oDb = oxDb::getDb();
 
         $sWhere = '';
 
@@ -54,10 +54,10 @@ class OxidEE_Events
         }
 
         $sCheckQuery = "SELECT * FROM {$sTableName} WHERE 1" . $sWhere;
-        $sExisting = $db->getOne($sCheckQuery);
+        $sExisting = $oDb->getOne($sCheckQuery);
 
         if (!$sExisting) {
-            $db->Execute($sQuery);
+            $oDb->Execute($sQuery);
             return true;
         }
 
@@ -73,9 +73,9 @@ class OxidEE_Events
      * 
      * @return boolean true or false if query was executed
      */
-    private static function deleteRowIfExists($sTableName, $aKeyValue)
+    private static function _deleteRowIfExists($sTableName, $aKeyValue)
     {
-        $db = oxDb::getDb();
+        $oDb = oxDb::getDb();
 
         $sWhere = '';
 
@@ -83,10 +83,8 @@ class OxidEE_Events
             $sWhere .= " AND $key = '$value'";
         }
 
-        echo $where;
-
-        if ($db->getOne("SELECT * FROM {$sTableName} WHERE 1" . $sWhere)) {
-            $db->Execute("DELETE FROM {$sTableName} WHERE 1" . $sWhere);
+        if ($oDb->getOne("SELECT * FROM {$sTableName} WHERE 1" . $sWhere)) {
+            $oDb->Execute("DELETE FROM {$sTableName} WHERE 1" . $sWhere);
             return true;
         }
 
@@ -104,12 +102,12 @@ class OxidEE_Events
      * 
      * @return boolean true or false if query was executed
      */
-    private static function changeColumnTypeIfWrong($sTableName, $sColumnName, $sExpectedType, $sQuery)
+    private static function _changeColumnTypeIfWrong($sTableName, $sColumnName, $sExpectedType, $sQuery)
     {
-        $db = oxDb::getDb();
+        $oDb = oxDb::getDb();
 
-        if (!$db->getOne("SHOW COLUMNS FROM {$sTableName} WHERE FIELD = '{$sColumnName}' AND TYPE = '{$sExpectedType}'")) {
-            $db->Execute($sQuery);
+        if (!$oDb->getOne("SHOW COLUMNS FROM {$sTableName} WHERE FIELD = '{$sColumnName}' AND TYPE = '{$sExpectedType}'")) {
+            $oDb->Execute($sQuery);
             return true;
         }
 
@@ -119,37 +117,37 @@ class OxidEE_Events
     /**
      * Extends OXID's internal payment methods table with the fields required by the module.
      */
-    private static function extendPaymentMethodTable()
+    private static function _extendPaymentMethodTable()
     {
         $sQueryAlterPaymentsTableLabel = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_LABEL` varchar(128) default '' NOT NULL";
-        self::addColumnIfNotExists('oxpayments', 'WDOXIDEE_LABEL', $sQueryAlterPaymentsTableLabel);
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_LABEL', $sQueryAlterPaymentsTableLabel);
 
         $sQueryAlterPaymentsTableLogo = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_LOGO` varchar(256) default '' NOT NULL";
-        self::addColumnIfNotExists('oxpayments', 'WDOXIDEE_LOGO', $sQueryAlterPaymentsTableLogo);
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_LOGO', $sQueryAlterPaymentsTableLogo);
 
         $sQueryAlterPaymentsTableTransactionType = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_TRANSACTIONTYPE` enum('authorize-capture','purchase') default 'authorize-capture' NOT NULL";
-        self::addColumnIfNotExists('oxpayments', 'WDOXIDEE_TRANSACTIONTYPE', $sQueryAlterPaymentsTableTransactionType);
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_TRANSACTIONTYPE', $sQueryAlterPaymentsTableTransactionType);
 
         $sQueryAlterPaymentsTableApiUrl = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_APIURL` varchar(128) default '' NOT NULL";
-        self::addColumnIfNotExists('oxpayments', 'WDOXIDEE_APIURL', $sQueryAlterPaymentsTableApiUrl);
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_APIURL', $sQueryAlterPaymentsTableApiUrl);
 
         $sQueryAlterPaymentsTableMaid = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_MAID` varchar(128) default '' NOT NULL";
-        self::addColumnIfNotExists('oxpayments', 'WDOXIDEE_MAID', $sQueryAlterPaymentsTableMaid);
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_MAID', $sQueryAlterPaymentsTableMaid);
 
         $sQueryAlterPaymentsTableSecret = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_SECRET` varchar(128) default '' NOT NULL";
-        self::addColumnIfNotExists('oxpayments', 'WDOXIDEE_SECRET', $sQueryAlterPaymentsTableSecret);
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_SECRET', $sQueryAlterPaymentsTableSecret);
 
         $sQueryAlterPaymentsTableHttpUser = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_HTTPUSER` varchar(128) default '' NOT NULL";
-        self::addColumnIfNotExists('oxpayments', 'WDOXIDEE_HTTPUSER', $sQueryAlterPaymentsTableHttpUser);
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_HTTPUSER', $sQueryAlterPaymentsTableHttpUser);
 
         $sQueryAlterPaymentsTableHttpPass = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_HTTPPASS` varchar(128) default '' NOT NULL";
-        self::addColumnIfNotExists('oxpayments', 'WDOXIDEE_HTTPPASS', $sQueryAlterPaymentsTableHttpPass);
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_HTTPPASS', $sQueryAlterPaymentsTableHttpPass);
     }
         
     /**
      * Creates the module's order table
      */
-    private static function createOrderTable()
+    private static function _createOrderTable()
     {
         $sQuery = "CREATE TABLE IF NOT EXISTS `wdoxidee_orders` (
                 `wdoxidee_orderid` char(32) character set latin1 collate latin1_general_ci NOT NULL,
@@ -164,14 +162,14 @@ class OxidEE_Events
                 KEY `wdoxidee_paymentstate` (`wdoxidee_paymentstate`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 
-            $db = oxDb::getDb();
-            $db->Execute($sQuery);
+            $oDb = oxDb::getDb();
+            $oDb->Execute($sQuery);
     }
 
     /**
      * Creates the module's order transaction table
 */
-    private static function createOrderTransactionTable()
+    private static function _createOrderTransactionTable()
     {
         $sQuery = "CREATE TABLE IF NOT EXISTS `wdoxidee_ordertransactions`(
             `wdoxidee_transactionid` int(11) unsigned NOT NULL AUTO_INCREMENT,
@@ -190,30 +188,30 @@ class OxidEE_Events
             KEY `wdoxidee_transactiondate` (`wdoxidee_transactiondate`)
         ) Engine=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 
-        $db = oxDb::getDb();
-        $db->Execute($sQuery);
+        $oDb = oxDb::getDb();
+        $oDb->Execute($sQuery);
     }
 
     /**
      * Delete the module's order transaction table (ONLY FOR DEVELOPMENT PURPOSES, NOT TO BE USED IN PRODUCTION!)
 */
-    private static function deleteOrderTable()
+    private static function _deleteOrderTable()
     {
         $sQuery = "DROP TABLE IF EXISTS `wdoxidee_orders`";
 
-        $db = oxDb::getDb();
-        $db->Execute($sQuery);
+        $oDb = oxDb::getDb();
+        $oDb->Execute($sQuery);
     }
     
     /**
      * Delete the module's order transaction table (ONLY FOR DEVELOPMENT PURPOSES, NOT TO BE USED IN PRODUCTION!)
     */
-    private static function deleteOrderTransactionTable()
+    private static function _deleteOrderTransactionTable()
     {
         $sQuery = "DROP TABLE IF EXISTS `wdoxidee_ordertransactions`";
 
-        $db = oxDb::getDb();
-        $db->Execute($sQuery);
+        $oDb = oxDb::getDb();
+        $oDb->Execute($sQuery);
     }
         
     /**
@@ -221,13 +219,13 @@ class OxidEE_Events
     */
     public static function onActivate() {
         // extend OXID's payment method table
-        self::extendPaymentMethodTable();
+        self::_extendPaymentMethodTable();
 
         // create the module's own order table
-        self::createOrderTable();
+        self::_createOrderTable();
 
         // create the module's own order transaction table
-        self::createOrderTransactionTable();
+        self::_createOrderTransactionTable();
     }
 
     /**
@@ -239,8 +237,8 @@ class OxidEE_Events
 
         // if development, delete the database tables on module de-activation
         if ($environmentVar === 'development') {
-            self::deleteOrderTransactionTable();
-            self::deleteOrderTable();
+            self::_deleteOrderTransactionTable();
+            self::_deleteOrderTable();
         }
     }
 }
