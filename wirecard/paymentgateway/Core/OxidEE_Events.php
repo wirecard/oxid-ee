@@ -168,7 +168,7 @@ class OxidEE_Events
 
     /**
      * Creates the module's order transaction table
-*/
+    */
     private static function _createOrderTransactionTable()
     {
         $sQuery = "CREATE TABLE IF NOT EXISTS `wdoxidee_ordertransactions`(
@@ -194,7 +194,7 @@ class OxidEE_Events
 
     /**
      * Delete the module's order transaction table (ONLY FOR DEVELOPMENT PURPOSES, NOT TO BE USED IN PRODUCTION!)
-*/
+    */
     private static function _deleteOrderTable()
     {
         $sQuery = "DROP TABLE IF EXISTS `wdoxidee_orders`";
@@ -217,7 +217,8 @@ class OxidEE_Events
     /**
      * Handle OXID's onActivate event
     */
-    public static function onActivate() {
+    public static function onActivate()
+    {
         // extend OXID's payment method table
         self::_extendPaymentMethodTable();
 
@@ -231,7 +232,8 @@ class OxidEE_Events
     /**
      * Handle OXID's onDeactivate event
      */
-    public static function onDeactivate() {
+    public static function onDeactivate()
+    {
         // read the OXID_ENVIRONMENT variable set in the .env and docker-compose files
         $environmentVar = getenv('OXID_ENVIRONMENT');
 
