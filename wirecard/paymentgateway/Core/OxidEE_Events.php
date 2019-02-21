@@ -115,6 +115,16 @@ class OxidEE_Events
     } 
 
     /**
+     * Regenerates database view-tables
+     * 
+     * @return void
+     */
+    private static function _regenerateViews() {
+        $oShop = oxNew('oxShop');
+        $oShop->generateViews();
+    }
+
+    /**
      * Extends OXID's internal payment methods table with the fields required by the module
      * 
      * @return void
@@ -241,6 +251,9 @@ class OxidEE_Events
 
         // create the module's own order transaction table
         self::_createOrderTransactionTable();
+
+        // after modifying an internal OXID table it is necessary to regenerate the view tables
+        self::_regenerateViews();
     }
 
     /**
