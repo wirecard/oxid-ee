@@ -15,6 +15,7 @@ $aModule = array(
         'de' => 'Modul für Zahlung mit Wirecard paymentSDK',
         'en' => 'Module for payment with Wirecard paymentSDK'
     ),
+    'lang'              => 'en',
     'thumbnail'         => 'wirecard-logo.png',
     'version'           => '1.0.0',
     'author'            => 'Wirecard',
@@ -23,6 +24,9 @@ $aModule = array(
     'files'             => array(
         // core
         'OxidEE_Events'         => 'paymentgateway/Core/OxidEE_Events.php'
+    ),
+    'blocks' => array(
+        array('template' => 'home.tpl', 'block'=>'admin_home_head', 'file'=>'application/views/terms_modal.tpl')
     ),
     'events'            => array(
         'onActivate'        => 'OxidEE_Events::onActivate',
