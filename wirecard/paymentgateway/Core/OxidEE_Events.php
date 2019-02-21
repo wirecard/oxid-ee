@@ -9,9 +9,9 @@ class OxidEE_Events
      * Database helper function
      * Executes the query if the specified column does not exist in the table.
      * 
-     * @param string $sTableName         database table name
-     * @param string $sColumnName        database column name
-     * @param string $sQuery      SQL query to execute if column does not exist in the table
+     * @param string $sTableName database table name
+     * @param string $sColumnName database column name
+     * @param string $sQuery SQL query to execute if column does not exist in the table
      * 
      * @return boolean true or false if query was executed
      */
@@ -37,9 +37,9 @@ class OxidEE_Events
      * Database helper function
      * Executes the query if no row with the specified criteria exists in the table.
      * 
-     * @param string $sTableName            database table name
-     * @param array $aKeyValue              key-value array to build where query string
-     * @param string $sQuery                SQL query to execute if no row with the search criteria exists in the table
+     * @param string $sTableName database table name
+     * @param array $aKeyValue key-value array to build where query string
+     * @param string $sQuery SQL query to execute if no row with the search criteria exists in the table
      * 
      * @return boolean true or false if query was executed
      */
@@ -68,8 +68,8 @@ class OxidEE_Events
      * Database helper function  
      * Executes the query if a row with the specified criteria exists in the table.
      * 
-     * @param string $sTableName            database table name
-     * @param array $aKeyValue              key-value array to build where query string
+     * @param string $sTableName database table name
+     * @param array $aKeyValue key-value array to build where query string
      * 
      * @return boolean true or false if query was executed
      */
@@ -95,10 +95,10 @@ class OxidEE_Events
      * Database helper function
      * Executes the query if the column type does not match the exepcted criteria.
      * 
-     * @param string $sTableName            database table name
-     * @param string $sColumnName           database column name
-     * @param string $sExpectedType         expected column type
-     * @param string $sQuery                SQL query to execute if no column with the expected structure exists
+     * @param string $sTableName database table name
+     * @param string $sColumnName database column name
+     * @param string $sExpectedType expected column type
+     * @param string $sQuery SQL query to execute if no column with the expected structure exists
      * 
      * @return boolean true or false if query was executed
      */
