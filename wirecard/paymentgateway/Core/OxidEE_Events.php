@@ -37,11 +37,11 @@ class OxidEE_Events
     /**
      * Database helper function
      * Executes the query if the specified column does not exist in the table.
-     * 
+     *
      * @param string $sTableName database table name
      * @param string $sColumnName database column name
      * @param string $sQuery SQL query to execute if column does not exist in the table
-     * 
+     *
      * @return boolean true or false if query was executed
      */
     private static function _addColumnIfNotExists($sTableName, $sColumnName, $sQuery)
@@ -65,11 +65,11 @@ class OxidEE_Events
     /**
      * Database helper function
      * Executes the query if no row with the specified criteria exists in the table.
-     * 
+     *
      * @param string $sTableName database table name
      * @param array $aKeyValue key-value array to build where query string
      * @param string $sQuery SQL query to execute if no row with the search criteria exists in the table
-     * 
+     *
      * @return boolean true or false if query was executed
      */
     private static function _insertRowIfNotExists($sTableName, $aKeyValue, $sQuery)
@@ -94,12 +94,12 @@ class OxidEE_Events
     }
 
     /**
-     * Database helper function  
+     * Database helper function
      * Executes the query if a row with the specified criteria exists in the table.
-     * 
+     *
      * @param string $sTableName database table name
      * @param array $aKeyValue key-value array to build where query string
-     * 
+     *
      * @return boolean true or false if query was executed
      */
     private static function _deleteRowIfExists($sTableName, $aKeyValue)
@@ -123,12 +123,12 @@ class OxidEE_Events
     /**
      * Database helper function
      * Executes the query if the column type does not match the exepcted criteria.
-     * 
+     *
      * @param string $sTableName database table name
      * @param string $sColumnName database column name
      * @param string $sExpectedType expected column type
      * @param string $sQuery SQL query to execute if no column with the expected structure exists
-     * 
+     *
      * @return boolean true or false if query was executed
      */
     private static function _changeColumnTypeIfWrong($sTableName, $sColumnName, $sExpectedType, $sQuery)
@@ -141,11 +141,11 @@ class OxidEE_Events
         }
 
         return false;
-    } 
+    }
 
     /**
      * Regenerates database view-tables
-     * 
+     *
      * @return void
      */
     private static function _regenerateViews()
@@ -156,7 +156,7 @@ class OxidEE_Events
 
     /**
      * Extends OXID's internal payment methods table with the fields required by the module
-     * 
+     *
      * @return void
      */
     private static function _extendPaymentMethodTable()
@@ -185,10 +185,10 @@ class OxidEE_Events
         $sQueryAlterPaymentsTableHttpPass = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_HTTPPASS` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_HTTPPASS', $sQueryAlterPaymentsTableHttpPass);
     }
-        
+
     /**
      * Creates the module's order table
-     * 
+     *
      * @return void
      */
     private static function _createOrderTable()
@@ -212,7 +212,7 @@ class OxidEE_Events
 
     /**
      * Creates the module's order transaction table
-     * 
+     *
      * @return void
      */
     private static function _createOrderTransactionTable()
@@ -241,7 +241,7 @@ class OxidEE_Events
     /**
      * Delete the module's order transaction table
      * ONLY FOR DEVELOPMENT PURPOSES, NOT TO BE USED IN PRODUCTION!
-     * 
+     *
      * @return void
      */
     private static function _deleteOrderTable()
@@ -251,11 +251,11 @@ class OxidEE_Events
         $oDb = oxDb::getDb();
         $oDb->Execute($sQuery);
     }
-    
+
     /**
      * Delete the module's order transaction table
      * ONLY FOR DEVELOPMENT PURPOSES, NOT TO BE USED IN PRODUCTION!
-     * 
+     *
      * @return void
      */
     private static function _deleteOrderTransactionTable()
@@ -265,10 +265,10 @@ class OxidEE_Events
         $oDb = oxDb::getDb();
         $oDb->Execute($sQuery);
     }
-        
+
     /**
      * Handle OXID's onActivate event
-     * 
+     *
      * @return void
      */
     public static function onActivate()
@@ -288,7 +288,7 @@ class OxidEE_Events
 
     /**
      * Handle OXID's onDeactivate event
-     * 
+     *
      * @return void
      */
     public static function onDeactivate()

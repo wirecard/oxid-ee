@@ -29,36 +29,18 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
-/**
- * Metadata version
- */
-$metadataVersion = '1.0';
+class BasicAcceptanceCest
+{
+    public function _before(AcceptanceTester $I)
+    {
+    }
 
-/**
- * Module information
- */
-$aModule = array(
-    'id'                => 'paymentgateway',
-    'title'             => 'Wirecard Oxid EE Paymentgateway',
-    'description'       => array(
-        'de' => 'Modul für Zahlung mit Wirecard paymentSDK',
-        'en' => 'Module for payment with Wirecard paymentSDK'
-    ),
-    'lang'              => 'en',
-    'thumbnail'         => 'wirecard-logo.png',
-    'version'           => '1.0.0',
-    'author'            => 'Wirecard',
-    'url'               => 'https://www.wirecard.com',
-    'email'             => 'developer.center@wirecard.com',
-    'files'             => array(
-        // core
-        'OxidEE_Events'         => 'paymentgateway/Core/OxidEE_Events.php'
-    ),
-    'blocks' => array(
-        array('template' => 'home.tpl', 'block'=>'admin_home_head', 'file'=>'application/views/terms_modal.tpl')
-    ),
-    'events'            => array(
-        'onActivate'        => 'OxidEE_Events::onActivate',
-        'onDeactivate'      => 'OxidEE_Events::onDeactivate'
-    )
-);
+    // tests
+    public function tryToTest(AcceptanceTester $I)
+    {
+        $I->amOnPage('/');
+        $I->fillField('searchparam', 'kite');
+        $I->click('button[title="Suchen"]');
+        $I->see('25 Treffer für "kite"');
+    }
+}
