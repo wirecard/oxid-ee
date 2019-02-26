@@ -55,7 +55,6 @@ class OxidEE_Events
                 $oDb->Execute($sQuery);
                 return true;
             } catch (Exception $e) {
-
             }
         }
 
@@ -135,7 +134,8 @@ class OxidEE_Events
     {
         $oDb = oxDb::getDb();
 
-        if (!$oDb->getOne("SHOW COLUMNS FROM {$sTableName} WHERE FIELD = '{$sColumnName}' AND TYPE = '{$sExpectedType}'")) {
+        $sColumnQuery = "SHOW COLUMNS FROM {$sTableName} WHERE FIELD = '{$sColumnName}' AND TYPE = '{$sExpectedType}'";
+        if (!$oDb->getOne($sColumnQuery)) {
             $oDb->Execute($sQuery);
             return true;
         }
@@ -161,29 +161,30 @@ class OxidEE_Events
      */
     private static function _extendPaymentMethodTable()
     {
-        $sQueryAlterPaymentsTableLabel = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_LABEL` varchar(128) default '' NOT NULL";
-        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_LABEL', $sQueryAlterPaymentsTableLabel);
+        $sQueryAddLabel = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_LABEL` varchar(128) default '' NOT NULL";
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_LABEL', $sQueryAddLabel);
 
-        $sQueryAlterPaymentsTableLogo = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_LOGO` varchar(256) default '' NOT NULL";
-        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_LOGO', $sQueryAlterPaymentsTableLogo);
+        $sQueryAddLogo = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_LOGO` varchar(256) default '' NOT NULL";
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_LOGO', $sQueryAddLogo);
 
-        $sQueryAlterPaymentsTableTransactionType = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_TRANSACTIONTYPE` enum('authorize-capture','purchase') default 'authorize-capture' NOT NULL";
-        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_TRANSACTIONTYPE', $sQueryAlterPaymentsTableTransactionType);
+        $sQueryAddTransactionType = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_TRANSACTIONTYPE`
+            enum('authorize-capture','purchase') default 'authorize-capture' NOT NULL";
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_TRANSACTIONTYPE', $sQueryAddTransactionType);
 
-        $sQueryAlterPaymentsTableApiUrl = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_APIURL` varchar(128) default '' NOT NULL";
-        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_APIURL', $sQueryAlterPaymentsTableApiUrl);
+        $sQueryAddApiUrl = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_APIURL` varchar(128) default '' NOT NULL";
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_APIURL', $sQueryAddApiUrl);
 
-        $sQueryAlterPaymentsTableMaid = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_MAID` varchar(128) default '' NOT NULL";
-        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_MAID', $sQueryAlterPaymentsTableMaid);
+        $sQueryAddMaid = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_MAID` varchar(128) default '' NOT NULL";
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_MAID', $sQueryAddMaid);
 
-        $sQueryAlterPaymentsTableSecret = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_SECRET` varchar(128) default '' NOT NULL";
-        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_SECRET', $sQueryAlterPaymentsTableSecret);
+        $sQueryAddSecret = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_SECRET` varchar(128) default '' NOT NULL";
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_SECRET', $sQueryAddSecret);
 
-        $sQueryAlterPaymentsTableHttpUser = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_HTTPUSER` varchar(128) default '' NOT NULL";
-        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_HTTPUSER', $sQueryAlterPaymentsTableHttpUser);
+        $sQueryAddHttpUser = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_HTTPUSER` varchar(128) default '' NOT NULL";
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_HTTPUSER', $sQueryAddHttpUser);
 
-        $sQueryAlterPaymentsTableHttpPass = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_HTTPPASS` varchar(128) default '' NOT NULL";
-        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_HTTPPASS', $sQueryAlterPaymentsTableHttpPass);
+        $sQueryAddHttpPass = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_HTTPPASS` varchar(128) default '' NOT NULL";
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_HTTPPASS', $sQueryAddHttpPass);
     }
 
     /**

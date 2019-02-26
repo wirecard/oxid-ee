@@ -51,8 +51,11 @@ $aModule = array(
     'url'               => 'https://www.wirecard.com',
     'email'             => 'developer.center@wirecard.com',
     'files'             => array(
+        // all file paths need to include the actual full installation path of the module
+        // in this case 'wirecard/paymentgateway'
+
         // core
-        'OxidEE_Events'         => 'paymentgateway/Core/OxidEE_Events.php'
+        'OxidEE_Events'         => 'wirecard/paymentgateway/Core/OxidEE_Events.php'
     ),
     'blocks' => array(
         array('template' => 'home.tpl', 'block'=>'admin_home_head', 'file'=>'application/views/terms_modal.tpl')

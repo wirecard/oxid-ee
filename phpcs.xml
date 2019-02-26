@@ -43,14 +43,6 @@
         <exclude-pattern>*</exclude-pattern>
     </rule>
 
-    <rule ref="Generic.Files.LineLength.TooLong">
-        <exclude-pattern>*</exclude-pattern>
-    </rule>
-
-    <rule ref="Oxid.Commenting.FunctionComment.MissingParamComment">
-        <exclude-pattern>*</exclude-pattern>
-    </rule>
-
     <rule ref="PSR2.Classes.PropertyDeclaration.Underscore">
         <exclude-pattern>*</exclude-pattern>
     </rule>
@@ -67,6 +59,14 @@
     <rule ref="PSR1">
         <exclude name="PSR1.Classes.ClassDeclaration"/><!--namespaces are not used yet-->
         <exclude name="PSR1.Files.SideEffects"/><!--separation of logic is not used yet-->
+    </rule>
+
+    <!-- Maximum number of characters on one line -->
+    <rule ref="Generic.Files.LineLength">
+    <properties>
+        <property name="lineLimit" value="120"/>
+        <property name="absoluteLineLimit" value="120"/>
+    </properties>
     </rule>
 
 </ruleset>
