@@ -26,7 +26,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Wirecard\\PaymentSDKModule\\": "../../../source/modules/wirecard/paymentgateway"
+            "Wirecard\\PaymentGateway\\": "../../../source/modules/wirecard/paymentgateway"
         }
     }
 }
