@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<OX>
+    <OXMENU id="heading_title">
+        <MAINMENU id="config">
+            <SUBMENU id="mxpaymeth" cl="admin_payment" list="payment_list"></SUBMENU>
+        </MAINMENU>
+    </OXMENU>
+</OX>
