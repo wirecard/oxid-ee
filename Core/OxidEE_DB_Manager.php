@@ -70,12 +70,12 @@ class OxidEE_DB_Manager
      *
      * @return object config object
      */
-    public static function getModuleConfigById($sconfigId)
+    public static function getModuleConfigById($sConfigId)
     {
         $oDb = oxDb::getDb();
         $config = $oDb->getRow(
             "SELECT * FROM " . self::CONFIG_TABLE_NAME . " WHERE OXID = ?",
-            array($sconfigId)
+            array($sConfigId)
         );
         return $config;
     }
