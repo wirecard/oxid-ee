@@ -3,11 +3,17 @@
     "description": "Wirecard paymentSDK module for the OXID eShop",
     "type": "oxideshop-module",
     "keywords": ["oxid", "modules", "eShop", "payment"],
+    "repositories": {
+        "oxid-esales/coding-standards": {
+            "type": "vcs",
+            "url": "https://github.com/OXID-eSales/coding_standards.git"
+        }
+    },
     "require": {
         "php": ">=7.0"
     },
     "require-dev": {
-        "squizlabs/php_codesniffer": "3.*"
+        "oxid-esales/coding-standards": "^2.0.0"
     },
     "extra": {
         "oxideshop": {
@@ -22,7 +28,7 @@
         }
     },
     "scripts": {
-        "cs-check": "./vendor/bin/phpcs ./"
+        "cs-check": "./vendor/bin/phpcsoxid"
     },
     "autoload": {
         "psr-4": {
