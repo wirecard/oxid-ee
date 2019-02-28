@@ -290,7 +290,6 @@ class OxidEE_DB_Manager
      *
      * @param string $configId
      * @param string $description
-     * @param string $label
      * @param string $logo
      * @param string $transactionType
      * @param string $apiurl
