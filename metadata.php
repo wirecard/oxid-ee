@@ -49,7 +49,7 @@ $aModule = array(
     'version'           => '1.0.0',
     'author'            => 'Wirecard',
     'url'               => 'https://www.wirecard.com',
-    'email'             => 'developer.center@wirecard.com',
+    'email'             => 'support.at@wirecard.com',
     'files'             => array(
         // all file paths need to include the actual full installation path of the module
         // in this case 'wirecard/paymentgateway'
