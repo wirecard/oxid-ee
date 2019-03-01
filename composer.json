@@ -7,13 +7,18 @@
         "oxid-esales/coding-standards": {
             "type": "vcs",
             "url": "https://github.com/OXID-eSales/coding_standards.git"
+        },
+        "phpmd/oxmd": {
+            "type": "vcs",
+            "url": "https://github.com/OXID-eSales/oxmd"
         }
     },
     "require": {
         "php": ">=7.0"
     },
     "require-dev": {
-        "oxid-esales/coding-standards": "^2.0.0"
+        "oxid-esales/coding-standards": "^2.0.0",
+        "phpmd/oxmd": "^1.0.0"
     },
     "extra": {
         "oxideshop": {
