@@ -28,7 +28,8 @@
         }
     },
     "scripts": {
-        "cs-check": "./vendor/bin/phpcsoxid"
+        "cs-check": "./vendor/bin/phpcsoxid",
+        "cs-fix": "./vendor/bin/phpcbf ."
     },
     "autoload": {
         "psr-4": {
