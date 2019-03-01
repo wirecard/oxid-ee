@@ -39,7 +39,7 @@ class BasicAcceptanceCest
      *
      * @param AcceptanceTester $I implementation of acceptance tester class
      */
-    public function _before(AcceptanceTester $I)
+    public function before(AcceptanceTester $I)
     {
     }
 

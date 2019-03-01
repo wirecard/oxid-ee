@@ -41,7 +41,7 @@ class OxidEE_DB_Manager
 
     /**
      * Adds OXID's config in the config table
-     *
+     *ln
      * @param string $configId
      * @param string $varName
      * @param string $varType
@@ -70,7 +70,7 @@ class OxidEE_DB_Manager
      *
      * @return object config object
      */
-    public static function getModuleConfigById($sConfigId)
+    private static function _getModuleConfigById($sConfigId)
     {
         $oDb = oxDb::getDb();
         $config = $oDb->getRow(
