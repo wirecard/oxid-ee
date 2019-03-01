@@ -17,8 +17,5 @@
     <!-- including the OXID ruleset here is only for interoperability with the "phpcs" extension for Visual Code
          otherwise there would be no inline error messages in the IDE -->
     <rule ref="vendor/oxid-esales/coding-standards/Oxid/ruleset.xml">
-        <exclude-pattern>/Users/mstifter/Documents/Wirecard/wirecard-ops/oxid-ee/ox61-php71/plugin/views/</exclude-pattern>
-        <exclude-pattern>/translations/</exclude-pattern>
-        <exclude-pattern>/Users/mstifter/Documents/Wirecard/wirecard-ops/oxid-ee/ox61-php71/plugin/Sniffs/</exclude-pattern>
     </rule>
 </ruleset>
