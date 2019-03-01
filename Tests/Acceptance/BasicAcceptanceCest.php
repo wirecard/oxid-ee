@@ -29,13 +29,25 @@
  * Please do not use the plugin if you do not agree to these terms of use!
  */
 
+ /**
+  * Reference implementation for a basic acceptance cest
+  */
 class BasicAcceptanceCest
 {
+    /**
+     * Code to be executed in order to prepare the test scenario
+     *
+     * @param AcceptanceTester $I implementation of acceptance tester class
+     */
     public function _before(AcceptanceTester $I)
     {
     }
 
-    // tests
+    /**
+     * Basic search test case
+     *
+     * @param AcceptanceTester $I implementation of acceptance tester class
+     */
     public function tryToTest(AcceptanceTester $I)
     {
         $I->amOnPage('/');

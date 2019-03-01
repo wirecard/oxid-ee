@@ -66,7 +66,7 @@ class OxidEE_DB_Manager
      * Database helper function
      * Returns config with the requested ID
      *
-     * @param string $sconfigId config ID
+     * @param string $sConfigId config ID
      *
      * @return object config object
      */
@@ -152,7 +152,7 @@ class OxidEE_DB_Manager
     /**
      * Database helper function
      *
-     * @param string $sOrderId order ID
+     * @param string $sOrderId  order ID
      * @param string $aKeyValue values array
      *
      * @throws DatabaseErrorException

@@ -1,65 +1,10 @@
 <?xml version="1.0"?>
-<ruleset name="Oxid">
-    <description>OXID coding standards.</description>
+<ruleset name="Wirecard_Oxid">
+    <description>Wirecard OXID extension</description>
 
     <!-- Ignore patterns -->
-    <exclude-pattern>*/Application/views/*</exclude-pattern>
-    <exclude-pattern>*/oxfunctions.php*</exclude-pattern>
-    <exclude-pattern>*/Core/Smarty/*</exclude-pattern>
-    <exclude-pattern>*/Core/tcpdf/*</exclude-pattern>
-    <exclude-pattern>*/Core/adodblite/*</exclude-pattern>
-    <exclude-pattern>*/out/*</exclude-pattern>
-    <exclude-pattern>*/Setup/tpl/*</exclude-pattern>
-    <exclude-pattern>*/tmp[^/]*/*</exclude-pattern>
-    <exclude-pattern>/config.inc.php</exclude-pattern>
     <exclude-pattern>/vendor/</exclude-pattern>
-    <exclude-pattern>/tests/</exclude-pattern>
     <exclude-pattern>.phpstorm.meta.php/*</exclude-pattern>
-
-    <!--  Include specific sniffs from the other standards. -->
-    <rule ref="Generic.Metrics.CyclomaticComplexity"/>
-    <rule ref="PEAR.Commenting.InlineComment"/>
-    <rule ref="PEAR.Files.IncludingFile"/>
-    <rule ref="Zend.NamingConventions.ValidVariableName" />
-
-    <!-- Set specific rules for certain sniffs. -->
-    <rule ref="Zend.NamingConventions.ValidVariableName.NotCamelCaps">
-        <exclude-pattern>*</exclude-pattern>
-    </rule>
-
-    <rule ref="Zend.NamingConventions.ValidVariableName.MemberVarContainsNumbers">
-        <exclude-pattern>*</exclude-pattern>
-    </rule>
-
-    <rule ref="Zend.NamingConventions.ValidVariableName.ContainsNumbers">
-        <exclude-pattern>*</exclude-pattern>
-    </rule>
-
-    <rule ref="Zend.NamingConventions.ValidVariableName.StringVarContainsNumbers">
-        <exclude-pattern>*</exclude-pattern>
-    </rule>
-
-    <rule ref="Zend.NamingConventions.ValidVariableName.PrivateNoUnderscore">
-        <exclude-pattern>*</exclude-pattern>
-    </rule>
-
-    <rule ref="PSR2.Classes.PropertyDeclaration.Underscore">
-        <exclude-pattern>*</exclude-pattern>
-    </rule>
-
-    <rule ref="PSR2.Methods.MethodDeclaration.Underscore">
-        <exclude-pattern>*</exclude-pattern>
-    </rule>
-
-    <rule ref="PSR2">
-        <exclude name="Squiz.Classes.ValidClassName"/>
-        <exclude name="Generic.NamingConventions.CamelCapsFunctionName"/>
-    </rule>
-
-    <rule ref="PSR1">
-        <exclude name="PSR1.Classes.ClassDeclaration"/><!--namespaces are not used yet-->
-        <exclude name="PSR1.Files.SideEffects"/><!--separation of logic is not used yet-->
-    </rule>
 
     <!-- Maximum number of characters on one line -->
     <rule ref="Generic.Files.LineLength">
@@ -69,4 +14,11 @@
     </properties>
     </rule>
 
+    <!-- including the OXID ruleset here is only for interoperability with the "phpcs" extension for Visual Code
+         otherwise there would be no inline error messages in the IDE -->
+    <rule ref="vendor/oxid-esales/coding-standards/Oxid/ruleset.xml">
+        <exclude-pattern>/Users/mstifter/Documents/Wirecard/wirecard-ops/oxid-ee/ox61-php71/plugin/views/</exclude-pattern>
+        <exclude-pattern>/translations/</exclude-pattern>
+        <exclude-pattern>/Users/mstifter/Documents/Wirecard/wirecard-ops/oxid-ee/ox61-php71/plugin/Sniffs/</exclude-pattern>
+    </rule>
 </ruleset>

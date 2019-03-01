@@ -36,14 +36,23 @@ class BasicUnitTest extends \Codeception\Test\Unit
      */
     protected $tester;
 
+    /**
+     * Code to be executed in order to prepare the test scenario
+     */
     protected function _before()
     {
     }
 
+    /**
+     * Code to be executed after the test has been run
+     */
     protected function _after()
     {
     }
 
+    /**
+     * Dummy test case
+     */
     public function testSomeFeature()
     {
         $this->assertTrue(true);
