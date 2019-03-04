@@ -288,31 +288,14 @@ class OxidEE_DB_Manager
     /**
      * Adds payment in the oxpayments table
      *
-     * @param string $configId
-     * @param string $description
-     * @param string $logo
-     * @param string $transactionType
-     * @param string $apiurl
-     * @param string $maid
-     * @param string $secret
-     * @param string $httpuser
-     * @param string $httppass
+     * @param PaymentMethod $oPaymentMethod payment method object
      *
      * @throws DatabaseErrorException
      *
      * @return integer Number of rows affected by the SQL statement
      */
-    public static function addPaymentMethod(
-        $configId,
-        $description,
-        $logo,
-        $transactionType,
-        $apiurl,
-        $maid,
-        $secret,
-        $httpuser,
-        $httppass
-    ) {
+    public static function addPaymentMethod($oPaymentMethod)
+    {
         $oDb = oxDb::getDb();
         return $oDb->Execute(
             "INSERT INTO " . self::PAYMENT_TABLE_NAME . " (`OXID`, `OXACTIVE`,
@@ -320,8 +303,16 @@ class OxidEE_DB_Manager
             `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`, `WDOXIDEE_SECRET`, `WDOXIDEE_HTTPUSER`,
             `WDOXIDEE_HTTPPASS`) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
             array(
-                $configId, '0', $description, $logo, $transactionType, $apiurl,
-                $maid, $secret, $httpuser, $httppass
+                $oPaymentMethod->getConfigId(),
+                '0',
+                $oPaymentMethod->getDescription(),
+                $oPaymentMethod->getLogoPath(),
+                $oPaymentMethod->getTransactionType(),
+                $oPaymentMethod->getApiUrl(),
+                $oPaymentMethod->getMaid(),
+                $oPaymentMethod->getSecret(),
+                $oPaymentMethod->getHttpUser(),
+                $oPaymentMethod->getHttpPass()
             )
         );
     }
