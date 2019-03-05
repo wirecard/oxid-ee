@@ -36,7 +36,16 @@ $aModule = array(
         'OxidEE_Events'         => 'wirecard/paymentgateway/Core/OxidEE_Events.php'
     ),
     'blocks' => array(
-        array('template' => 'home.tpl', 'block'=>'admin_home_head', 'file'=>'views/terms_modal.tpl')
+        array(
+            'template' => 'home.tpl',
+            'block'=>'admin_home_head',
+            'file'=>'views/terms_modal.tpl'
+        ),
+        array(
+            'template' => 'payment_main.tpl',
+            'block' => 'admin_payment_main_form',
+            'file' => 'out/blocks/wd_admin_payment_main_form.tpl'
+        ),
     ),
     'events'            => array(
         'onActivate'        => 'OxidEE_Events::onActivate',

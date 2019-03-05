@@ -11,6 +11,8 @@ $sLangName = "Deutsch";
 
 $aLang = array(
     "config" => "Wirecard Konfiguration",
+    "yes" => 'Ja',
+    "no" => 'Nein',
 
     "charset" => "UTF-8",
     "account_holder_title" => "Kontoinhaber",
