@@ -15,6 +15,7 @@
  */
 class OxidEE_Events
 {
+    const PAYMENT_TABLE_NAME = "oxpayments";
     /**
      * Database helper function
      * Executes the query if the specified column does not exist in the table.
@@ -72,6 +73,9 @@ class OxidEE_Events
         $sQueryAddMaid = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_MAID` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_MAID', $sQueryAddMaid);
 
+        $sQueryAddIsWirecard = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_ISWIRECARD` tinyint(1) default 0 NOT NULL";
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_ISWIRECARD', $sQueryAddIsWirecard);
+
         $sQueryAddSecret = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_SECRET` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_SECRET', $sQueryAddSecret);
 
@@ -80,6 +84,15 @@ class OxidEE_Events
 
         $sQueryAddHttpPass = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_HTTPPASS` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_HTTPPASS', $sQueryAddHttpPass);
+
+        $sQueryAddBasket = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_BASKET` tinyint(1) default 0 NOT NULL";
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_BASKET', $sQueryAddBasket);
+
+        $sQueryAddDescriptor = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_DESCRIPTOR` tinyint(1) default 0 NOT NULL";
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_DESCRIPTOR', $sQueryAddDescriptor);
+
+        $sQueryAddAdditionalInfo = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_ADDITIONAL_INFO` tinyint(1) default 0 NOT NULL";
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_ADDITIONAL_INFO', $sQueryAddAdditionalInfo);
     }
 
     /**
@@ -168,8 +181,30 @@ class OxidEE_Events
         // create the module's own order transaction table
         self::_createOrderTransactionTable();
 
+        $array = array(
+            "OXID" => "wdpaypal"
+        );
+        $sQuery = "INSERT INTO " . 'oxpayments' . "(`OXID`, `OXACTIVE`, `OXDESC`, `OXDESC_1`,
+        `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONTYPE`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`,
+        `WDOXIDEE_SECRET`, `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`, `WDOXIDEE_ISWIRECARD`,
+         `WDOXIDEE_BASKET`, `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`)
+         VALUES ('wdpaypal', 0, 'Wirecard PayPal', 'Wirecard PayPal', 'paypal.png', 'purchase',
+         'https://api-test.wirecard.com', '9abf05c1-c266-46ae-8eac-7f87ca97af28',
+         '5fca2a83-89ca-4f9e-8cf7-4ca74a02773f', '70000-APITEST-AP', 'qD2wzQ_hrc!8', 1, 1, 1, 1);";
+        self::_insertRowIfNotExists('oxpayments', $array, $sQuery);
+
         // view tables must be regenerated after modifying database table structure
         self::_regenerateViews();
+
+        $sTmpDir = getShopBasePath() . "/tmp/";
+        $sSmartyDir = $sTmpDir . "smarty/";
+
+        foreach (glob($sTmpDir . "*.txt") as $sFileName) {
+            @unlink($sFileName);
+        }
+        foreach (glob($sSmartyDir . "*.php") as $sFileName) {
+            @unlink($sFileName);
+        }
     }
 
     /**
