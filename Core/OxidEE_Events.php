@@ -7,6 +7,8 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+namespace Wirecard\Oxid;
+
 /**
  * Class handles module behaviour on shop installation events
  *

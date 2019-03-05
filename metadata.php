@@ -28,12 +28,9 @@ $aModule = array(
     'author'            => 'Wirecard',
     'url'               => 'https://www.wirecard.com',
     'email'             => 'support.at@wirecard.com',
-    'files'             => array(
-        // all file paths need to include the actual full installation path of the module
-        // in this case 'wirecard/paymentgateway'
-
-        // core
-        'OxidEE_Events'         => 'wirecard/paymentgateway/Core/OxidEE_Events.php'
+    'extend'            => array (
+        \OxidEsales\Eshop\Application\Model\Order::class          => \Wirecard\Oxid\Extend\Order::class,
+        \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \Wirecard\Oxid\Extend\Payment_Gateway::class,
     ),
     'blocks' => array(
         array(
@@ -48,7 +45,7 @@ $aModule = array(
         ),
     ),
     'events'            => array(
-        'onActivate'        => 'OxidEE_Events::onActivate',
-        'onDeactivate'      => 'OxidEE_Events::onDeactivate'
+        'onActivate'        => '\Wirecard\Oxid\Core\OxidEE_Events::onActivate',
+        'onDeactivate'      => '\Wirecard\Oxid\Core\OxidEE_Events::onDeactivate'
     )
 );
