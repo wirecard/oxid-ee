@@ -1,10 +1,20 @@
 <?xml version="1.0"?>
-<ruleset name="Wirecard_Oxid">
+<ruleset name="WirecardOxidRuleset">
     <description>Wirecard OXID extension</description>
 
     <!-- Ignore patterns -->
     <exclude-pattern>/vendor/</exclude-pattern>
+    <exclude-pattern>/translations/</exclude-pattern>
+    <exclude-pattern>/views/</exclude-pattern>
     <exclude-pattern>.phpstorm.meta.php/*</exclude-pattern>
+
+    <!-- including the OXID ruleset here is only for interoperability with the "phpcs" extension for Visual Code
+         otherwise there would be no inline error messages in the IDE -->
+    <rule ref="vendor/oxid-esales/coding-standards/Oxid/ruleset.xml">
+    </rule>
+
+    <rule ref="WirecardOxidRuleset/Sniffs/Functions/FunctionNameUnderscoreSniff.php">
+    </rule>
 
     <!-- Maximum number of characters on one line -->
     <rule ref="Generic.Files.LineLength">
@@ -12,10 +22,5 @@
         <property name="lineLimit" value="120"/>
         <property name="absoluteLineLimit" value="120"/>
     </properties>
-    </rule>
-
-    <!-- including the OXID ruleset here is only for interoperability with the "phpcs" extension for Visual Code
-         otherwise there would be no inline error messages in the IDE -->
-    <rule ref="vendor/oxid-esales/coding-standards/Oxid/ruleset.xml">
     </rule>
 </ruleset>

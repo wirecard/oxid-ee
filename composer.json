@@ -33,11 +33,8 @@
         }
     },
     "scripts": {
-        "ln-sniff-function-name": "ln -f Sniffs/FunctionNameUnderscore.php vendor/oxid-esales/coding-standards/Oxid/Sniffs/Functions/FunctionNameUnderscoreSniff.php",
-        "cs-check": "phpcsoxid",
-        "cs-fix": "phpcbf .",
-        "post-install-cmd": "composer ln-sniff-function-name",
-        "post-update-cmd": "composer ln-sniff-function-name"
+        "cs-check": "phpcs --standard=./phpcs.xml .",
+        "cs-fix": "phpcbf --standard=./phpcs.xml ."
     },
     "autoload": {
         "psr-4": {
