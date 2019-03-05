@@ -6,3 +6,6 @@
 
 # dependencies
 vendor/
+
+# PHP Storm
+.idea/
