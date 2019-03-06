@@ -39,6 +39,17 @@ class OxidEE_DB_Manager
     const PAYMENT_TABLE_NAME = "oxpayments";
     const TRANSACTION_TABLE_NAME = "wdoxidee_ordertransactions";
 
+    // OXID DB object
+    private $oDb;
+
+    /**
+     * DB Manager constructor
+     */
+    public function __construct()
+    {
+        $this->oDb = oxDb::getDb();
+    }
+
     /**
      * Adds OXID's config in the config table
      *ln
@@ -51,10 +62,9 @@ class OxidEE_DB_Manager
      *
      * @return integer Number of rows affected by the SQL statement
      */
-    public static function addModuleConfig($configId, $varName, $varType, $varValue)
+    public function addModuleConfig($configId, $varName, $varType, $varValue)
     {
-        $oDb = oxDb::getDb();
-        return $oDb->Execute(
+        return $this->oDb->Execute(
             "INSERT INTO " . self::CONFIG_TABLE_NAME . "
             (`OXID`, `OXMODULE`, `OXVARNAME`, `OXVARTYPE`, `OXVARVALUE`) VALUES
             (?, ?, ?, ?, ?)",
@@ -70,10 +80,9 @@ class OxidEE_DB_Manager
      *
      * @return object config object
      */
-    private static function _getModuleConfigById($sConfigId)
+    public function getModuleConfigById($sConfigId)
     {
-        $oDb = oxDb::getDb();
-        $config = $oDb->getRow(
+        $config = $this->oDb->getRow(
             "SELECT * FROM " . self::CONFIG_TABLE_NAME . " WHERE OXID = ?",
             array($sConfigId)
         );
@@ -90,9 +99,8 @@ class OxidEE_DB_Manager
      *
      * @return integer Number of rows affected by the SQL statement
      */
-    public static function updateModuleConfig($sConfigId, $aKeyValue)
+    public function updateModuleConfig($sConfigId, $aKeyValue)
     {
-        $oDb = oxDb::getDb();
         $sQuery = "UPDATE " . self::CONFIG_TABLE_NAME . " SET ";
         $array = array();
 
@@ -106,7 +114,7 @@ class OxidEE_DB_Manager
 
         $sQuery .= " WHERE OXID = ?";
         array_push($array, $sConfigId);
-        return $oDb->Execute(
+        return $this->oDb->Execute(
             $sQuery,
             $array
         );
@@ -122,10 +130,9 @@ class OxidEE_DB_Manager
      *
      * @return integer Number of rows affected by the SQL statement
      */
-    public static function deleteModuleConfigById($sConfigId)
+    public function deleteModuleConfigById($sConfigId)
     {
-        $oDb = oxDb::getDb();
-        return $oDb->Execute(
+        return $this->oDb->Execute(
             "DELETE FROM " . self::CONFIG_TABLE_NAME . " WHERE OXID = ?",
             array($sConfigId)
         );
@@ -139,10 +146,9 @@ class OxidEE_DB_Manager
      *
      * @return object order object
      */
-    public static function getOrderById($sOrderId)
+    public function getOrderById($sOrderId)
     {
-        $oDb = oxDb::getDb();
-        $order = $oDb->getRow(
+        $order = $this->oDb->getRow(
             "SELECT * FROM " . self::ORDER_TABLE_NAME . " WHERE wdoxidee_orderid = ?",
             array($sOrderId)
         );
@@ -159,9 +165,8 @@ class OxidEE_DB_Manager
      *
      * @return integer Number of rows affected by the SQL statement
      */
-    public static function updateOrder($sOrderId, $aKeyValue)
+    public function updateOrder($sOrderId, $aKeyValue)
     {
-        $oDb = oxDb::getDb();
         $sQuery = "UPDATE " . self::ORDER_TABLE_NAME . " SET ";
         $array = array();
 
@@ -174,7 +179,7 @@ class OxidEE_DB_Manager
         $sQuery = trim($sQuery, ',');
         $sQuery .= " WHERE wdoxidee_orderid = ?";
         array_push($array, $sOrderId);
-        return $oDb->Execute(
+        return $this->oDb->Execute(
             $sQuery,
             $array
         );
@@ -188,10 +193,9 @@ class OxidEE_DB_Manager
      *
      * @return object transaction object
      */
-    public static function getTransactionById($sTransactionId)
+    public function getTransactionById($sTransactionId)
     {
-        $oDb = oxDb::getDb();
-        $transaction = $oDb->getRow(
+        $transaction = $this->oDb->getRow(
             "SELECT * FROM " . self::TRANSACTION_TABLE_NAME . " WHERE wdoxidee_transactionid = ?",
             array($sTransactionId)
         );
@@ -208,10 +212,9 @@ class OxidEE_DB_Manager
      *
      * @return integer Number of rows affected by the SQL statement
      */
-    public static function deleteTransactionById($sTransactionId)
+    public function deleteTransactionById($sTransactionId)
     {
-        $oDb = oxDb::getDb();
-        return $oDb->Execute(
+        return $this->oDb->Execute(
             "DELETE FROM " . self::TRANSACTION_TABLE_NAME . " WHERE wdoxidee_transactionid = ?",
             array($sTransactionId)
         );
@@ -225,10 +228,9 @@ class OxidEE_DB_Manager
      *
      * @return object payment object
      */
-    public static function getPaymentMethodById($sPaymentId)
+    public function getPaymentMethodById($sPaymentId)
     {
-        $oDb = oxDb::getDb();
-        $payment = $oDb->getRow(
+        $payment = $this->oDb->getRow(
             "SELECT * FROM " . self::PAYMENT_TABLE_NAME . " WHERE OXID = ?",
             array($sPaymentId)
         );
@@ -245,10 +247,9 @@ class OxidEE_DB_Manager
      *
      * @return integer Number of rows affected by the SQL statement
      */
-    public static function deletePaymentMethodById($sPaymentId)
+    public function deletePaymentMethodById($sPaymentId)
     {
-        $oDb = oxDb::getDb();
-        return $oDb->Execute(
+        return $this->oDb->Execute(
             "DELETE FROM " . self::PAYMENT_TABLE_NAME . " WHERE OXID = ?",
             array($sPaymentId)
         );
@@ -264,9 +265,8 @@ class OxidEE_DB_Manager
      *
      * @return integer Number of rows affected by the SQL statement
      */
-    public static function updatePaymentMethod($paymentId, $aKeyValue)
+    public function updatePaymentMethod($paymentId, $aKeyValue)
     {
-        $oDb = oxDb::getDb();
         $sQuery = "UPDATE " . self::PAYMENT_TABLE_NAME . " SET ";
         $array = array();
 
@@ -279,7 +279,7 @@ class OxidEE_DB_Manager
         $sQuery = trim($sQuery, ',');
         $sQuery .= " WHERE OXID = ?";
         array_push($array, $paymentId);
-        return $oDb->Execute(
+        return $this->oDb->Execute(
             $sQuery,
             $array
         );
@@ -294,10 +294,9 @@ class OxidEE_DB_Manager
      *
      * @return integer Number of rows affected by the SQL statement
      */
-    public static function addPaymentMethod($oPaymentMethod)
+    public function addPaymentMethod($oPaymentMethod)
     {
-        $oDb = oxDb::getDb();
-        return $oDb->Execute(
+        return $this->oDb->Execute(
             "INSERT INTO " . self::PAYMENT_TABLE_NAME . " (`OXID`, `OXACTIVE`,
             `OXDESC`, `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONTYPE`,
             `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`, `WDOXIDEE_SECRET`, `WDOXIDEE_HTTPUSER`,
