@@ -18,7 +18,8 @@
     },
     "require-dev": {
         "oxid-esales/coding-standards": "^2.0.0",
-        "phpmd/oxmd": "^1.0.0"
+        "phpmd/phpmd": "^2.6.0",
+        "codeception/codeception": "^2.5"
     },
     "extra": {
         "oxideshop": {
@@ -34,7 +35,9 @@
     },
     "scripts": {
         "cs-check": "phpcs --standard=./phpcs.xml .",
-        "cs-fix": "phpcbf --standard=./phpcs.xml ."
+        "cs-fix": "phpcbf --standard=./phpcs.xml .",
+        "test": "codecept run --coverage --coverage-xml",
+        "test-coverage": "phpmd Core,Model text cleancode,codesize,unusedcode,naming,phpmd/rulesets/oxid.xml"
     },
     "autoload": {
         "psr-4": {
