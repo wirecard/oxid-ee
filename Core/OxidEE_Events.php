@@ -81,9 +81,9 @@ class OxidEE_Events
         $sQueryAddLogo = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_LOGO` varchar(256) default '' NOT NULL";
         self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_LOGO', $sQueryAddLogo);
 
-        $sQueryAddTransactionType = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_TRANSACTIONTYPE`
+        $sQueryAddTransType = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_TRANSACTIONTYPE`
             enum('authorize-capture','purchase') default 'authorize-capture' NOT NULL";
-        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_TRANSACTIONTYPE', $sQueryAddTransactionType);
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_TRANSACTIONTYPE', $sQueryAddTransType);
 
         $sQueryAddApiUrl = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_APIURL` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_APIURL', $sQueryAddApiUrl);
