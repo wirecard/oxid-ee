@@ -31,6 +31,8 @@
 
 /**
  * Class handles module behaviour on shop installation events
+ *
+ * @SuppressWarnings(PHPMD.StaticAccess)
  */
 class OxidEE_Events
 {
