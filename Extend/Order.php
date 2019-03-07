@@ -54,7 +54,6 @@ class Order extends Order_parent
      */
     public function isWirecardPaymentType()
     {
-        //TODO cgrach check USER PAYMENT
-        return in_array($this->getPaymentType(), $this->aWirecardPaymentTypes);
+        return in_array($this->getPaymentType()->oxuserpayments__oxpaymentsid->value, $this->aWirecardPaymentTypes);
     }
 }
