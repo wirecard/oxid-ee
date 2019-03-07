@@ -37,7 +37,7 @@
         "cs-check": "phpcs --standard=./phpcs.xml .",
         "cs-fix": "phpcbf --standard=./phpcs.xml .",
         "test": "codecept run --coverage --coverage-xml",
-        "test-coverage": "phpmd Core,Model text cleancode,codesize,unusedcode,naming,phpmd/rulesets/oxid.xml"
+        "test-coverage": "phpmd Core,Extend,Model text cleancode,codesize,unusedcode,naming,phpmd/rulesets/oxid.xml"
     },
     "autoload": {
         "psr-4": {
