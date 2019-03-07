@@ -33,6 +33,7 @@
  * Class handles DB manipulation
  *
  * @SuppressWarnings(PHPMD.StaticAccess)
+ * @SuppressWarnings(PHPMD.Coverage)
  */
 class OxidEE_DB_Manager
 {

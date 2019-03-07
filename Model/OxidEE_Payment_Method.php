@@ -31,6 +31,8 @@
 
 /**
  * Payment method
+ *
+ * @SuppressWarnings(PHPMD.Coverage)
  */
 class OxidEE_Payment_Method
 {
