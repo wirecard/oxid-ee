@@ -1,47 +1,58 @@
 {
-    "name": "wirecard/paymentgateway",
-    "description": "Wirecard paymentSDK module for the OXID eShop",
-    "type": "oxideshop-module",
-    "keywords": ["oxid", "modules", "eShop", "payment"],
-    "repositories": {
-        "oxid-esales/coding-standards": {
-            "type": "vcs",
-            "url": "https://github.com/OXID-eSales/coding_standards.git"
-        },
-        "phpmd/oxmd": {
-            "type": "vcs",
-            "url": "https://github.com/OXID-eSales/oxmd"
-        }
+  "name": "wirecard/paymentgateway",
+  "description": "Wirecard paymentSDK module for the OXID eShop",
+  "type": "oxideshop-module",
+  "keywords": [
+    "oxid",
+    "modules",
+    "eShop",
+    "payment"
+  ],
+  "repositories": {
+    "oxid-esales/coding-standards": {
+      "type": "vcs",
+      "url": "https://github.com/OXID-eSales/coding_standards.git"
     },
-    "require": {
-        "php": ">=7.0"
-    },
-    "require-dev": {
-        "oxid-esales/coding-standards": "^2.0.0",
-        "phpmd/phpmd": "^2.6.0",
-        "codeception/codeception": "^2.5"
-    },
-    "extra": {
-        "oxideshop": {
-            "blacklist-filter": [
-                "documentation/**/*.*",
-                "CHANGELOG.md",
-                "composer.json",
-                "CONTRIBUTING.md",
-                "README.md"
-            ],
-            "target-directory": "wirecard/paymentgateway"
-        }
-    },
-    "scripts": {
-        "cs-check": "phpcs --standard=./phpcs.xml .",
-        "cs-fix": "phpcbf --standard=./phpcs.xml .",
-        "test": "codecept run --coverage --coverage-xml",
-        "test-coverage": "phpmd Core,Extend,Model text cleancode,codesize,unusedcode,naming,phpmd/rulesets/oxid.xml"
-    },
-    "autoload": {
-        "psr-4": {
-            "Wirecard\\PaymentGateway\\": "../../../source/modules/wirecard/paymentgateway"
-        }
+    "phpmd/oxmd": {
+      "type": "vcs",
+      "url": "https://github.com/OXID-eSales/oxmd"
     }
+  },
+  "require": {
+    "php": ">=7.0"
+  },
+  "require-dev": {
+    "oxid-esales/coding-standards": "^2.0.0",
+    "phpmd/phpmd": "^2.6.0",
+    "codeception/codeception": "^2.5"
+  },
+  "extra": {
+    "oxideshop": {
+      "blacklist-filter": [
+        "documentation/**/*.*",
+        "CHANGELOG.md",
+        "composer.json",
+        "CONTRIBUTING.md",
+        "README.md"
+      ],
+      "target-directory": "wirecard/paymentgateway"
+    }
+  },
+  "scripts": {
+    "cs-check": "phpcs --standard=./phpcs.xml .",
+    "cs-fix": "phpcbf --standard=./phpcs.xml .",
+    "test": "codecept run",
+    "test-coverage": "codecept run --coverage --coverage-xml",
+    "md": "phpmd Core,Model text cleancode,codesize,unusedcode,naming,phpmd.xml"
+  },
+  "autoload": {
+    "psr-4": {
+      "Wirecard\\PaymentGateway\\": "../../../source/modules/wirecard/paymentgateway"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "PHPMD\\OXMD\\": "phpmd/oxmd"
+    }
+  }
 }
