@@ -30,7 +30,7 @@ $aModule = array(
     'email'             => 'support.at@wirecard.com',
     'extend'            => array (
         \OxidEsales\Eshop\Application\Model\Order::class          => \Wirecard\Oxid\Extend\Order::class,
-        \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \Wirecard\Oxid\Extend\Payment_Gateway::class,
+        \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \Wirecard\Oxid\Extend\Payment_Gateway::class
     ),
     'blocks' => array(
         array(
@@ -42,7 +42,7 @@ $aModule = array(
             'template' => 'payment_main.tpl',
             'block' => 'admin_payment_main_form',
             'file' => 'out/blocks/wd_admin_payment_main_form.tpl'
-        ),
+        )
     ),
     'events'            => array(
         'onActivate'        => '\Wirecard\Oxid\Core\OxidEE_Events::onActivate',

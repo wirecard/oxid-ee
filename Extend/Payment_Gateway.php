@@ -95,7 +95,6 @@ class Payment_Gateway extends Payment_Gateway_parent
         }
 
         $sErrorText = $this->oLang->translateString('order_error');
-
         $oRedirect = new Redirect(
             $sShopUrl . 'index.php?cl=thankyou' . $sSid,
             $sShopUrl . 'index.php?type=cancel&cl=payment',
@@ -105,14 +104,18 @@ class Payment_Gateway extends Payment_Gateway_parent
         $oResponse = null;
 
         try {
-            $oPaymentMethod = Payment_Method_Factory::create($oOrder->getPaymentType());
-            $oTransactionService = new TransactionService($oPaymentMethod->getConfig(), $$this->oLogger);
+            //fixme: remove hard coded payment title
+            $oPaymentMethod = Payment_Method_Factory::create("paypal");
+            $oTransactionService = new TransactionService($oPaymentMethod->getConfig(), $this->oLogger);
 
             $oTransaction = $oPaymentMethod->getTransaction();
             $oTransaction->setRedirect($oRedirect);
-            $oTransaction->setAmount(new Amount($dAmount, $oOrder->sgetOrderCurrency()));
-            $oTransaction->setNotificationUrl($sShopUrl . 'notify.php');
 
+            $config = \OxidEsales\Eshop\Core\Registry::getConfig();
+            $currency = $config->getActShopCurrencyObject();
+            $oTransaction->setAmount(new Amount($dAmount, $currency->name));
+
+            $oTransaction->setNotificationUrl($sShopUrl . 'notify.php');
             $oResponse = $oTransactionService->pay($oTransaction);
         } catch (\Exception $exc) {
             $this->oLogger->error("Error processing transaction", [$exc]);
@@ -133,7 +136,6 @@ class Payment_Gateway extends Payment_Gateway_parent
             }
             return false;
         }
-
         $sPageUrl = null;
 
         if ($oResponse instanceof InteractionResponse) {

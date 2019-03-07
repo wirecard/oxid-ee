@@ -41,17 +41,6 @@ use \Wirecard\PaymentSdk\Transaction\Transaction;
  */
 abstract class Payment_Method
 {
-    /*
-     * Get the Payments method configuration
-     *
-     * @return Config
-     */
-    public function getConfig(): Config
-    {
-        //FIXME cgrach: get values from config
-        $config = new Config('baseUrl', 'httpUser', 'httpPasswd');
-        return $config;
-    }
 
     /**
      * Get the payments method transaction configuration
@@ -59,4 +48,11 @@ abstract class Payment_Method
      * @return Transaction
      */
     public abstract function getTransaction(): Transaction;
+
+    /**
+     * Get the payments method configuration
+     *
+     * @return Config
+     */
+    public abstract function getConfig(): Config;
 }

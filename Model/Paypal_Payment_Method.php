@@ -39,9 +39,24 @@ use \Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use \Wirecard\PaymentSdk\Entity\AccountHolder;
 use \Wirecard\PaymentSdk\Entity\Address;
 
+use \OxidEsales\Eshop\Core\Registry;
+
 class Paypal_Payment_Method extends Payment_Method
 {
-    const NAME = 'wdpaypal';
+    const NAME = 'paypal';
+
+    /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $oLogger;
+
+    /**
+     * Paypal_Payment_Method constructor.
+     */
+    public function __construct()
+    {
+        $this->oLogger = Registry::getLogger();
+    }
 
     /**
      * Get the payment method's configuration
@@ -50,13 +65,14 @@ class Paypal_Payment_Method extends Payment_Method
      */
     public function getConfig(): Config
     {
+        $payment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
+        $payment->load(self::NAME);
 
-        $oConfig = parent::getConfig();
-        // TODO cgrach: get maid and secret from shop
-        $oPaymentMethodConfig = new PaymentMethodConfig(PayPalTransaction::NAME, "maid", "secret");
-        $oConfig->add($oPaymentMethodConfig);
+        $config = new Config($payment->oxpayments__wdoxidee_apiurl->value, $payment->oxpayments__wdoxidee_httpuser->value, $payment->oxpayments__wdoxidee_httppass->value);
+        $oPaymentMethodConfig = new PaymentMethodConfig(PayPalTransaction::NAME, $payment->oxpayments__wdoxidee_maid->value, $payment->oxpayments__wdoxidee_secret->value);
+        $config->add($oPaymentMethodConfig);
 
-        return $oConfig;
+        return $config;
     }
 
     /**
@@ -73,13 +89,6 @@ class Paypal_Payment_Method extends Payment_Method
 
         //FIXME cgrach: set details
         $oTransaction->setOrderDetail("details");
-
-        $oAccountHolder = new AccountHolder();
-
-        //TODO cgrach: get account holder info from order billing address
-        $oAccountHolder->setAddress(new Address("AT", "Graz", "Marienplatz 1"));
-
-        $oTransaction->setAccountHolder($oAccountHolder);
 
         return $oTransaction;
     }
