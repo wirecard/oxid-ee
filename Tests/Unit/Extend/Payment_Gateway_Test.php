@@ -25,6 +25,7 @@ class Payment_Gateway_Test extends OxidEsales\TestingLibrary\UnitTestCase
 
     protected function setUp()
     {
+        $this->markTestSkipped('Figure out how to mock TransactionService');
         parent::setUp();
         $this->oOrderMock = $this->getMockBuilder(Order::class)
             ->disableOriginalConstructor()
@@ -34,17 +35,17 @@ class Payment_Gateway_Test extends OxidEsales\TestingLibrary\UnitTestCase
         $this->oPaymentGateway = oxNew(Payment_Gateway::class);
     }
 
-    //TODO cgrach: Check wrong behavior
-//    public function testExecutePayment()
-//    {
-//        $this->oOrderMock->expects($this->once())
-//            ->method('isWirecardPaymentType')
-//            ->willReturn(true);
-//
-//        $this->oOrderMock->expects($this->once())
-//            ->method('getPaymentType')
-//            ->willReturn(Paypal_Payment_Method::NAME);
-//
-//        $this->assertTrue($this->oPaymentGateway->executePayment(1.5, $this->oOrderMock));
-//    }
+    //TODO cgrach: Figure out how to mock TransactionService
+    public function testExecutePayment()
+    {
+        $this->oOrderMock->expects($this->once())
+            ->method('isWirecardPaymentType')
+            ->willReturn(true);
+
+        $this->oOrderMock->expects($this->once())
+            ->method('getPaymentType')
+            ->willReturn(Paypal_Payment_Method::NAME);
+
+        $this->assertTrue($this->oPaymentGateway->executePayment(1.5, $this->oOrderMock));
+    }
 }

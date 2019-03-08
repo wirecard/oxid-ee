@@ -104,7 +104,7 @@ class Transaction_Handler
         }
 
         if ($oResponse instanceof FailureResponse) {
-            return ['status' => 'error', 'message' => $this->oLang->translateString('error_tranaction_cancel')];
+            return ['status' => 'error', 'message' => $this->oLang->translateString('error_transaction_cancel')];
         }
     }
 
