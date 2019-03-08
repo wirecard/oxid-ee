@@ -21,6 +21,7 @@ use \oxDb;
 class OxidEE_Events
 {
     const PAYMENT_TABLE_NAME = "oxpayments";
+
     /**
      * Database helper function
      * Executes the query if the specified column does not exist in the table.
@@ -138,7 +139,7 @@ class OxidEE_Events
     private static function _createOrderTable()
     {
         $sQuery = "CREATE TABLE IF NOT EXISTS `wdoxidee_orders` (
-                `wdoxidee_orderid` char(32) character set latin1 collate latin1_general_ci NOT NULL,
+                `oxid` char(32) character set latin1 collate latin1_general_ci NOT NULL,
                 `wdoxidee_paymentstate` enum('pending','completed','failed','cancelled') NOT NULL DEFAULT 'pending',
                 `wdoxidee_totalordersum` decimal(9,2) NOT NULL,
                 `wdoxidee_capturedamount` decimal(9,2) NOT NULL,
@@ -146,12 +147,12 @@ class OxidEE_Events
                 `wdoxidee_voidedamount` decimal(9,2) NOT NULL,
                 `wdoxidee_currency` varchar(32) NOT NULL,
                 `wdoxidee_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-                PRIMARY KEY (`wdoxidee_orderid`),
+                PRIMARY KEY (`oxid`),
                 KEY `wdoxidee_paymentstate` (`wdoxidee_paymentstate`)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 
-            $oDb = oxDb::getDb();
-            $oDb->Execute($sQuery);
+        $oDb = oxDb::getDb();
+        $oDb->Execute($sQuery);
     }
 
     /**
@@ -160,7 +161,7 @@ class OxidEE_Events
     private static function _createOrderTransactionTable()
     {
         $sQuery = "CREATE TABLE IF NOT EXISTS `wdoxidee_ordertransactions`(
-            `wdoxidee_transactionid` int(11) unsigned NOT NULL AUTO_INCREMENT,
+            `oxid` char(32) character set latin1 collate latin1_general_ci NOT NULL,
             `wdoxidee_orderid` char(32) character set latin1 collate latin1_general_ci NOT NULL,
             `wdoxidee_requestid` varchar(256) NOT NULL,
             `wdoxidee_transactiontype` varchar(128) NOT NULL,
@@ -168,10 +169,10 @@ class OxidEE_Events
             `wdoxidee_refundedamount` decimal(9,2) NOT NULL,
             `wdoxidee_currency` varchar(32) NOT NULL,
             `wdoxidee_transactiondate` datetime NOT NULL,
-            `wdoxidee_transactionstatus` enum('pending','success','error') NOT NULL DEFAULT 'pending',
+            `wdoxidee_transactionstatus` enum('pending','success','error', 'cancelled') NOT NULL DEFAULT 'pending',
             `wdoxidee_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
             `wdoxidee_comment` mediumtext,
-            PRIMARY KEY (`wdoxidee_transactionid`),
+            PRIMARY KEY (`oxid`),
             KEY `wdoxidee_orderid` (`wdoxidee_orderid`),
             KEY `wdoxidee_transactiondate` (`wdoxidee_transactiondate`)
         ) Engine=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";

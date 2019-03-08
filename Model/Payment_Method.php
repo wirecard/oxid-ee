@@ -32,4 +32,11 @@ abstract class Payment_Method
      * @SuppressWarnings(PHPMD.Coverage)
      */
     abstract public function getConfig(): Config;
+
+    /**
+     *
+     * Get the payments method cancel transaction
+     * @return Transaction
+     */
+    abstract public function getCancelTransaction(): Transaction;
 }

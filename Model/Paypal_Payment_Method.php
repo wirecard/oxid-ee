@@ -12,10 +12,10 @@ namespace Wirecard\Oxid\Model;
 use \Wirecard\Oxid\Extend\Order;
 use \Wirecard\PaymentSdk\Config\Config;
 use \Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use \Wirecard\PaymentSdk\Transaction\Transaction;
 use \Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 use \OxidEsales\Eshop\Core\Registry;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Payment method implementation for Paypal
@@ -40,11 +40,7 @@ class Paypal_Payment_Method extends Payment_Method
     }
 
     /**
-     * Get the payment method's configuration
-     *
-     * @return Config
-     *
-     * @SuppressWarnings(PHPMD.Coverage)
+     * @inheritdoc
      */
     public function getConfig(): Config
     {
@@ -66,18 +62,19 @@ class Paypal_Payment_Method extends Payment_Method
     }
 
     /**
-     * Get the current transaction to be processed
-     *
-     * @var double $dAmount
-     * @var Order $oOrder
-     *
-     * @return \Wirecard\PaymentSdk\Transaction\Transaction
-     *
-     * @SuppressWarnings(PHPMD.Coverage)
+     * @inheritdoc
      */
-    public function getTransaction(): Transaction
+    public function getTransaction(): \Wirecard\PaymentSdk\Transaction\Transaction
     {
         $oTransaction = new PayPalTransaction();
         return $oTransaction;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function getCancelTransaction(): Transaction
+    {
+        return new PayPalTransaction;
     }
 }
