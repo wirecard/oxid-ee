@@ -107,6 +107,39 @@ class ResponseMapper
     }
 
     /**
+     * Returns the whole data from the response xml in a human-readable form.
+     *
+     * @return array
+     */
+    public function getDataReadable(): array
+    {
+        $aResponseData = $this->oResponse->getData();
+
+        $aSortKeys = [
+            'payment-methods.0.name',
+            'order-number',
+            'request-id',
+            'transaction-id',
+            'transaction-state',
+            'statuses.0.provider-transaction-id',
+        ];
+
+        $aRestOfKeys = array_diff(array_keys($aResponseData), $aSortKeys);
+        $aSortedKeys = array_merge($aSortKeys, $aRestOfKeys);
+
+        $aList = [];
+
+        foreach ($aSortedKeys as $sKey) {
+            $aList[] = [
+                'title' => $sKey,
+                'value' => $aResponseData[$sKey] ?? null,
+            ];
+        }
+
+        return $aList;
+    }
+
+    /**
      * Returns an array with the given object's data
      *
      * @param PaymentDetails|TransactionDetails|AccountHolder|Basket|Card $oResponseObject

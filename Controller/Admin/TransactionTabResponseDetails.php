@@ -10,9 +10,9 @@
 namespace Wirecard\Oxid\Controller\Admin;
 
 /**
- * Controls the view for the order transaction details tab.
+ * Controls the view for the order details tab.
  */
-class OrderTabTransactionDetails extends OrderTab
+class TransactionTabResponseDetails extends TransactionTab
 {
     /**
      * @inheritdoc

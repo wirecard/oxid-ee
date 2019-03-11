@@ -10,7 +10,6 @@
 namespace Wirecard\Oxid\Controller\Admin;
 
 use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Model\Transaction;
 
 /**
  * Controls the view for the order transaction tab.

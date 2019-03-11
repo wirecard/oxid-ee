@@ -42,7 +42,6 @@ class Transaction extends MultiLanguageModel
     public function __construct()
     {
         parent::__construct();
-        // allow Oxid's magic getters for database table
         $this->init('wdoxidee_ordertransactions');
     }
 
@@ -113,6 +112,20 @@ class Transaction extends MultiLanguageModel
     }
 
     /**
+     * Creates a transaction and saves it in the database.
+     *
+     * @param array $aArgs associative array containing the fields to be set on the transaction object
+     *
+     * @return string|bool indicating whether the creation of the database entry was successful
+     */
+    public static function createDbEntryFromArray(array $aArgs)
+    {
+        $oTransaction = oxNew(Transaction::class);
+        $oTransaction->assign($aArgs);
+        return $oTransaction->save();
+    }
+
+    /**
      * Returns an associative array of available actions and their translation.
      *
      * @return array
@@ -148,5 +161,13 @@ class Transaction extends MultiLanguageModel
             self::STATE_AWAITING,
             self::STATE_CLOSED
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getPaymentType(): string
+    {
+        return $this->getTransactionOrder()->oxorder__oxpaymenttype->value;
     }
 }

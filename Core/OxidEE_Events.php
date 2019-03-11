@@ -163,9 +163,17 @@ class OxidEE_Events
             " ADD COLUMN `WDOXIDEE_DESCRIPTOR` tinyint(1) default 0 NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_DESCRIPTOR', $sQueryAddDescriptor);
 
-        $sQueryAddInfo = "ALTER TABLE " . self::PAYMENT_TABLE . " ADD COLUMN `WDOXIDEE_ADDITIONAL_INFO`
-         tinyint(1) default 0 NOT NULL";
+        $sQueryAddInfo = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_ADDITIONAL_INFO` tinyint(1) default 0 NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_ADDITIONAL_INFO', $sQueryAddInfo);
+
+        $sQueryAddDelCanceled = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_DELETE_CANCELED_ORDER` tinyint(1) default 0 NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_DELETE_CANCELED_ORDER', $sQueryAddDelCanceled);
+
+        $sQueryAddDelFailed = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_DELETE_FAILED_ORDER` tinyint(1) default 0 NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_DELETE_FAILED_ORDER', $sQueryAddDelFailed);
     }
 
     /**

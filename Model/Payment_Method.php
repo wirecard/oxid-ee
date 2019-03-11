@@ -12,6 +12,8 @@ namespace Wirecard\Oxid\Model;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
+use Wirecard\PaymentSdk\Transaction\Transaction;
+
 use \OxidEsales\Eshop\Core\Registry;
 
 use \Psr\Log\LoggerInterface;
@@ -54,15 +56,11 @@ abstract class Payment_Method
 
     /**
      * Get the payments method transaction configuration
-     *
-     * @SuppressWarnings(PHPMD.Coverage)
      */
     abstract public function getTransaction();
 
     /**
      * Get the payments method configuration
-     *
-     * @SuppressWarnings(PHPMD.Coverage)
      */
     abstract public function getConfig();
 
@@ -164,6 +162,66 @@ abstract class Payment_Method
                 'title'       => Helper::translate('config_payment_action'),
                 'description' => Helper::translate('config_payment_action_desc'),
             ],
+            'deleteCanceledOrder' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_delete_canceled_order',
+                'options'     => [
+                    '1'       => Helper::translate('yes'),
+                    '0'       => Helper::translate('no'),
+                ],
+                'title'       => Helper::translate('config_delete_cancel_order'),
+                'description' => Helper::translate('config_delete_cancel_order_desc'),
+            ],
+            'deleteFailedOrder' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_delete_failed_order',
+                'options'     => [
+                    '1'       => Helper::translate('yes'),
+                    '0'       => Helper::translate('no'),
+                ],
+                'title'       => Helper::translate('config_delete_failure_order'),
+                'description' => Helper::translate('config_delete_failure_order_desc'),
+            ],
         ];
+    }
+
+    /**
+     * Get the payment method's cancel transaction
+     *
+     * @return Transaction
+     */
+    public function getCancelTransaction(): Transaction
+    {
+        return $this->getTransaction();
+    }
+
+    /**
+     * Get the payment methods's refund transaction
+     *
+     * @return Transaction
+     */
+    public function getRefundTransaction(): Transaction
+    {
+        return $this->getTransaction();
+    }
+
+    /**
+     * Get the payment methods's capture transaction
+     *
+     * @return Transaction
+     */
+    public function getCaptureTransaction(): Transaction
+    {
+        return $this->getTransaction();
+    }
+
+    /**
+     * Get the payment methods's credit transaction
+     *
+     * @return Transaction
+     */
+    public function getCreditTransaction(): Transaction
+    {
+        return $this->getTransaction();
     }
 }

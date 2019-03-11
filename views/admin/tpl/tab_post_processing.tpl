@@ -15,6 +15,7 @@
             </td>
         </tr>
         [{/if}]
+        [{if $actions|@count > 0}]
         <tr>
             <td width="25%">[{oxmultilang ident="amount"}] ([{$currency}])</td>
             <td><input type="text" name="amount" value="[{$requestParameters.amount}]" size="25"></td>
@@ -26,8 +27,19 @@
                 [{/foreach}]
             </td>
         </tr>
+        [{else}]
+            <div class="messagebox">
+                [{$noOperationsAvailableString}]
+            </div>
+        [{/if}]
     </table>
 </form>
+
+[{if $alert.type === 'success'}]
+    <script type="text/javascript">
+        top.oxid.admin.updateList();
+    </script>
+[{/if}]
 
 [{include file="bottomnaviitem.tpl"}]
 

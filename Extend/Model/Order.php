@@ -9,9 +9,12 @@
 
 namespace Wirecard\Oxid\Extend\Model;
 
+use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\OrderArticle;
 
+use Psr\Log\LoggerInterface;
+use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 use Wirecard\Oxid\Core\Helper;
@@ -22,17 +25,27 @@ use Wirecard\Oxid\Core\AccountHolderHelper;
 /**
  * Class Order
  *
- * @package Wirecard\Extend
- *
  * @mixin \OxidEsales\Eshop\Application\Model\Order
  */
 class Order extends Order_parent
 {
-    const STATE_PENDING = 'pending';
-    const STATE_AUTHORIZED = 'authorized';
-    const STATE_PROCESSING = 'processing';
     const STATE_CANCELED = 'canceled';
-    const STATE_REFUNDED = 'refunded';
+    const STATE_FAILED = 'failed';
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $oLogger;
+
+    /**
+     * @inheritdoc
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->oLogger = Registry::getLogger();
+    }
 
     /**
      * Loads order data from DB.
@@ -147,8 +160,8 @@ class Order extends Order_parent
      */
     public function isPaymentSuccess()
     {
-        return $this->oxorder__wdoxidee_orderstate->value === self::STATE_AUTHORIZED
-            || $this->oxorder__wdoxidee_orderstate->value === self::STATE_PROCESSING;
+        return $this->oxorder__wdoxidee_orderstate->value === BackendService::TYPE_AUTHORIZED
+            || $this->oxorder__wdoxidee_orderstate->value === BackendService::TYPE_PROCESSING;
     }
 
     /**
@@ -175,11 +188,11 @@ class Order extends Order_parent
     public static function getTranslatedStates()
     {
         return [
-            self::STATE_PENDING => Helper::translate('order_status_pending'),
-            self::STATE_AUTHORIZED => Helper::translate('order_status_authorized'),
-            self::STATE_PROCESSING => Helper::translate('order_status_purchased'),
-            self::STATE_CANCELED => Helper::translate('order_status_cancelled'),
-            self::STATE_REFUNDED => Helper::translate('order_status_refunded'),
+            BackendService::TYPE_PENDING => Helper::translate('order_status_pending'),
+            BackendService::TYPE_AUTHORIZED => Helper::translate('order_status_authorized'),
+            BackendService::TYPE_PROCESSING => Helper::translate('order_status_purchased'),
+            BackendService::TYPE_CANCELLED => Helper::translate('order_status_cancelled'),
+            BackendService::TYPE_REFUNDED => Helper::translate('order_status_refunded'),
         ];
     }
 
@@ -266,5 +279,39 @@ class Order extends Order_parent
     public function getTranslatedState()
     {
         return self::getTranslatedStates()[$this->oxorder__wdoxidee_orderstate->value] ?? '';
+    }
+
+    /**
+     * Handles the order after a transaction failed or was canceled.
+     *
+     * @param string $sState 'canceled' or 'failed'
+     */
+    public function handleCanceledFailed($sState)
+    {
+        if ($this->_shouldBeDeletedOnCanceledFailed($sState)) {
+            if ($this->delete()) {
+                $this->oLogger->info(
+                    "Order `{$this->getId()}` was deleted as requested by the payment method config."
+                );
+            } else {
+                $this->oLogger->error(
+                    "Order {$this->getId()} could not be deleted as requested by the payment method config."
+                );
+            }
+        }
+    }
+
+    /**
+     * Checks if the order should be deleted if a transaction failed or was canceled.
+     *
+     * @param string $sState 'canceled' or 'failed'
+     * @return bool
+     */
+    private function _shouldBeDeletedOnCanceledFailed($sState)
+    {
+        $oPayment = $this->getOrderPayment();
+
+        return ($sState === self::STATE_CANCELED && $oPayment->oxpayments__wdoxidee_delete_canceled_order->value) ||
+            ($sState === self::STATE_FAILED && $oPayment->oxpayments__wdoxidee_delete_failed_order->value);
     }
 }

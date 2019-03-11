@@ -9,7 +9,6 @@
 
 namespace Wirecard\Oxid\Core;
 
-use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\Voucher;

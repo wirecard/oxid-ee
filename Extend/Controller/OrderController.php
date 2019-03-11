@@ -17,6 +17,7 @@ use \OxidEsales\Eshop\Core\Exception\NoArticleException;
 use \OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use \OxidEsales\Eshop\Application\Model\User;
 
+use \Wirecard\PaymentSdk\BackendService;
 use \Wirecard\PaymentSdk\Response\FailureResponse;
 use \Wirecard\PaymentSdk\Response\InteractionResponse;
 use \Wirecard\PaymentSdk\Response\Response;
@@ -29,7 +30,7 @@ use \Wirecard\Oxid\Extend\Model\Payment;
 use \Psr\Log\LoggerInterface;
 
 /**
- * Class Order
+ * Class OrderController
  *
  * @mixin \OxidEsales\Eshop\Application\Controller\OrderController
  */
@@ -218,6 +219,7 @@ class OrderController extends OrderController_parent
             $oResponse = $oPaymentGateway->makeTransaction($oBasket->getPrice()->getBruttoPrice(), $oOrder);
         } catch (\Exception $exc) {
             $oLogger->error(__METHOD__ . ": Error processing transaction: " . $exc->getMessage(), [$exc]);
+            $oOrder->handleCanceledFailed(Order::STATE_FAILED);
             return;
         }
 
@@ -247,10 +249,13 @@ class OrderController extends OrderController_parent
                 $sDescription = $oStatus->getDescription();
                 $oLogger->error("\t$sSeverity with code $sCode and message '$sDescription' occurred.");
             }
+
+            $oOrder->handleCanceledFailed(Order::STATE_FAILED);
+
             return;
         }
 
-        $oOrder->oxorder__wdoxidee_orderstate = new Field(Order::STATE_PENDING);
+        $oOrder->oxorder__wdoxidee_orderstate = new Field(BackendService::TYPE_PENDING);
         $oOrder->oxorder__wdoxidee_transactionid = new Field($oResponse->getTransactionId());
         $oOrder->save();
 

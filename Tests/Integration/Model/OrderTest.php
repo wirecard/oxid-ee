@@ -11,6 +11,7 @@ use Wirecard\Oxid\Model\TransactionList;
 use Wirecard\Oxid\Extend\Model\Order as WdOrder;
 use Wirecard\Oxid\Extend\Model\Payment;
 
+use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 use OxidEsales\Eshop\Application\Model\Country;
@@ -30,9 +31,9 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
                     'wdoxidee_transactionid',
                 ],
                 'rows' => [
-                    ['1', 'wdpaypal', WdOrder::STATE_AUTHORIZED, '1'],
-                    ['2', 'oxidinvoice', WdOrder::STATE_PROCESSING, '2'],
-                    ['3', 'wdcreditcard', WdOrder::STATE_CANCELED, '3'],
+                    ['1', 'wdpaypal', BackendService::TYPE_AUTHORIZED, '1'],
+                    ['2', 'oxidinvoice', BackendService::TYPE_PROCESSING, '2'],
+                    ['3', 'wdcreditcard', BackendService::TYPE_CANCELLED, '3'],
                 ],
             ],
             [
@@ -47,6 +48,20 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
                     ['2', '2', null],
                 ],
             ],
+            [
+                'table' => 'oxpayments',
+                'columns' => [
+                    'oxid',
+                    'wdoxidee_isours',
+                    'wdoxidee_delete_canceled_order',
+                    'wdoxidee_delete_failed_order',
+                ],
+                'rows' => [
+                    ['oxidinvoice', false, false, false],
+                    ['wdpaypal', true, true, false],
+                    ['wdcreditcard', true, true, true],
+                ],
+            ]
         ];
     }
 
@@ -88,12 +103,12 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
     /**
      * @dataProvider testIsCustomPaymentMethodProvider
      */
-    public function testIsCustomPaymentMethod($input, $expected)
+    public function testIsCustomPaymentMethod($orderId, $isCustomPaymentMethod)
     {
         $oOrder = oxNew(Order::class);
-        $oOrder->load($input);
+        $oOrder->load($orderId);
 
-        $this->assertEquals($oOrder->isCustomPaymentMethod(), $expected);
+        $this->assertEquals($oOrder->isCustomPaymentMethod(), $isCustomPaymentMethod);
     }
 
     public function testIsCustomPaymentMethodProvider()
@@ -107,12 +122,12 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
     /**
      * @dataProvider testIsPaymentPendingProvider
      */
-    public function testIsPaymentPending($input, $expected)
+    public function testIsPaymentPending($orderId, $isPaymentPending)
     {
         $oOrder = oxNew(Order::class);
-        $oOrder->load($input);
+        $oOrder->load($orderId);
 
-        $this->assertEquals($oOrder->isPaymentPending(), $expected);
+        $this->assertEquals($oOrder->isPaymentPending(), $isPaymentPending);
     }
 
     public function testIsPaymentPendingProvider()
@@ -126,12 +141,12 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
     /**
      * @dataProvider testIsPaymentSuccessProvider
      */
-    public function testIsPaymentSuccess($input, $expected)
+    public function testIsPaymentSuccess($orderId, $isPaymentSuccess)
     {
         $oOrder = oxNew(Order::class);
-        $oOrder->load($input);
+        $oOrder->load($orderId);
 
-        $this->assertEquals($oOrder->isPaymentSuccess(), $expected);
+        $this->assertEquals($oOrder->isPaymentSuccess(), $isPaymentSuccess);
     }
 
     public function testIsPaymentSuccessProvider()
@@ -155,5 +170,29 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
         $oOrder = oxNew(Order::class);
 
         $this->assertInstanceOf(AccountHolder::class, $oOrder->getShippingAccountHolder());
+    }
+
+    /**
+     * @dataProvider testHandleCanceledFailedProvider
+     */
+    public function testHandleCanceledFailed($orderId, $state, $shouldBeDeleted)
+    {
+        $oOrder = oxNew(Order::class);
+        $oOrder->load($orderId);
+        $oOrder->handleCanceledFailed($state);
+
+        $this->assertEquals(!$oOrder->load($orderId), $shouldBeDeleted);
+    }
+
+    public function testHandleCanceledFailedProvider()
+    {
+        return [
+            'order with foreign payment method: canceled' => ['2', WdOrder::STATE_CANCELED, false],
+            'order with foreign payment method: failed' => ['2', WdOrder::STATE_FAILED, false],
+            'order to delete on canceled but not on failed: canceled' => ['1', WdOrder::STATE_CANCELED, true],
+            'order to delete on canceled but not on failed: failed' => ['1', WdOrder::STATE_FAILED, false],
+            'order to delete on both canceled and failed: canceled' => ['3', WdOrder::STATE_CANCELED, true],
+            'order to delete on both canceled and failed: failed' => ['3', WdOrder::STATE_FAILED, true],
+        ];
     }
 }

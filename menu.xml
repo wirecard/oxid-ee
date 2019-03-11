@@ -4,7 +4,7 @@
         <MAINMENU id="mxorders">
             <SUBMENU id="mxdisplayorders" cl="admin_order" list="order_list">
                 <TAB id="text_list" pg_translate="1" cl="wcpg_order_transactions"/>
-                <TAB id="transaction_details_title" pg_translate="1" cl="wcpg_order_transaction_details"/>
+                <TAB id="transaction_response_details" pg_translate="1" cl="wcpg_order_transaction_details"/>
             </SUBMENU>
         </MAINMENU>
     </OXMENU>
@@ -15,6 +15,7 @@
                 <TAB id="transaction_details_title" pg_translate="1" cl="wcpg_transaction_transaction_details" />
                 <TAB id="account_holder_title" pg_translate="1" cl="wcpg_transaction_account_holder" />
                 <TAB id="shipping_title" pg_translate="1" cl="wcpg_transaction_shipping" />
+                <TAB id="transaction_response_details" pg_translate="1" cl="wcpg_transaction_response_details" />
                 <TAB id="text_backend_operations" pg_translate="1" cl="wcpg_transaction_post_processing" />
             </SUBMENU>
         </MAINMENU>

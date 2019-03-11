@@ -57,6 +57,8 @@ $aModule = array(
             => \Wirecard\Oxid\Extend\Controller\OrderController::class,
         \OxidEsales\Eshop\Application\Model\Payment::class
             => \Wirecard\Oxid\Extend\Model\Payment::class,
+        \OxidEsales\Eshop\Application\Controller\PaymentController::class
+            => \Wirecard\Oxid\Extend\Controller\PaymentController::class,
         \OxidEsales\Eshop\Application\Model\PaymentGateway::class
             => \Wirecard\Oxid\Extend\Model\Payment_Gateway::class,
         \OxidEsales\Eshop\Application\Controller\Admin\PaymentMainAjax::class
@@ -86,7 +88,9 @@ $aModule = array(
         'wcpg_order_transaction_details'
             => \Wirecard\Oxid\Controller\Admin\OrderTabTransactionDetails::class,
         'wcpg_notifyhandler'
-            => \Wirecard\Oxid\Controller\NotifyHandler::class
+            => \Wirecard\Oxid\Controller\NotifyHandler::class,
+        'wcpg_transaction_response_details'
+            => \Wirecard\Oxid\Controller\Admin\TransactionTabResponseDetails::class,
     ),
     'blocks' => array(
         array(

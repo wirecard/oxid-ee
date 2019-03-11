@@ -16,24 +16,34 @@ class Paypal_Payment_Method_Test extends OxidEsales\TestingLibrary\UnitTestCase
     /**
      * @var Paypal_Payment_Method
      */
-    private $oPaymentMethod;
+    private $_oPaymentMethod;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->oPaymentMethod = new Paypal_Payment_Method;
+        $this->_oPaymentMethod = new Paypal_Payment_Method;
     }
 
     public function testGetConfig()
     {
-        $oConfig = $this->oPaymentMethod->getConfig();
+        $oConfig = $this->_oPaymentMethod->getConfig();
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('paypal'));
     }
 
     public function testGetTransaction()
     {
-        $oTransaction = $this->oPaymentMethod->getTransaction();
-        $this->assertInstanceOf(PayPalTransaction::class, $oTransaction);
+        $oTransaction = $this->_oPaymentMethod->getTransaction();
+        $this->assertTrue($oTransaction instanceof \Wirecard\PaymentSdk\Transaction\PayPalTransaction);
+    }
+
+    public function testGetCancelTransaction() {
+        $oTransaction = $this->_oPaymentMethod->getCancelTransaction();
+        $this->assertTrue($oTransaction instanceof \Wirecard\PaymentSdk\Transaction\PayPalTransaction);
+    }
+
+    public function testGetRefundTransaction() {
+        $oTransaction = $this->_oPaymentMethod->getRefundTransaction();
+        $this->assertTrue($oTransaction instanceof \Wirecard\PaymentSdk\Transaction\PayPalTransaction);
     }
 }

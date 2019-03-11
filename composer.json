@@ -17,7 +17,7 @@
   },
   "require": {
     "php": "^7.1",
-    "wirecard/payment-sdk-php": "3.6.2",
+    "wirecard/payment-sdk-php": "3.6.4",
     "php-http/guzzle6-adapter": "^1.1.1"
   },
   "require-dev": {
@@ -42,7 +42,7 @@
     "cs-check": "phpcs --standard=./phpcs.xml .",
     "cs-fix": "phpcbf --standard=./phpcs.xml .",
     "upload-coverage": "codacycoverage clover Tests/reports/clover.xml",
-    "md": "phpmd Core,Extend,Model text phpmd.xml"
+    "md": "phpmd Controller,Core,Extend,Model text phpmd.xml"
   },
   "autoload": {
     "psr-4": {

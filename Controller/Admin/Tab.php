@@ -24,7 +24,7 @@ class Tab extends AdminDetailsController
     protected $sListObjectId;
 
     /**
-     * @inheritdoc
+     * Template file name
      */
     protected $_sThisTemplate = 'tab_simple.tpl';
 

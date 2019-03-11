@@ -9,8 +9,10 @@
 
 namespace Wirecard\Oxid\Controller;
 
+use \Wirecard\Oxid\Model\Payment_Method;
 use \Wirecard\Oxid\Core\Payment_Method_Factory;
 use \Wirecard\Oxid\Model\Transaction;
+use \Wirecard\Oxid\Extend\Model\Order;
 
 use \Wirecard\PaymentSdk\BackendService;
 use \Wirecard\PaymentSdk\Response\Response;
@@ -64,7 +66,7 @@ class NotifyHandler extends FrontendController
 
         try {
             $oService = new BackendService($oConfig, $this->_oLogger);
-            $oNotificationResponse = $oService->handleNotification($sPostData);
+            $oNotificationResp = $oService->handleNotification($sPostData);
         } catch (InvalidArgumentException $exception) {
             $this->_oLogger->error(__METHOD__ . ': Invalid argument set: '. $exception->getMessage(), [$exception]);
             return;
@@ -73,11 +75,22 @@ class NotifyHandler extends FrontendController
             return;
         }
 
+        $this->_handleNotificationResponse($oNotificationResp, $oService);
+    }
+
+    /**
+     * Handles the success and error response coming from the paymentSDK.
+     *
+     * @param Response       $oNotificationResp
+     * @param BackendService $oService
+     */
+    private function _handleNotificationResponse($oNotificationResp, $oService)
+    {
         // Return the response or log errors if any happen.
-        if ($oNotificationResponse instanceof SuccessResponse && $oNotificationResponse->isValidSignature()) {
-            $this->_onNotificationSuccess($oNotificationResponse, $oService);
+        if ($oNotificationResp instanceof SuccessResponse && $oNotificationResp->isValidSignature()) {
+            $this->_onNotificationSuccess($oNotificationResp, $oService);
         } else {
-            $this->_onNotificationError($oNotificationResponse);
+            $this->_onNotificationError($oNotificationResp);
         }
     }
 
@@ -116,12 +129,20 @@ class NotifyHandler extends FrontendController
         $oTransaction->wdoxidee_ordertransactions__action
             = new Field($oPayment->oxpayments__wdoxidee_transactionaction->value);
         $oTransaction->wdoxidee_ordertransactions__type = new Field($oResponse->getTransactionType());
-        $oTransaction->wdoxidee_ordertransactions__state = new Field($aData['transaction-state']);
         $oTransaction->wdoxidee_ordertransactions__amount = new Field($oResponse->getRequestedAmount()->getValue());
         $oTransaction->wdoxidee_ordertransactions__currency
             = new Field($oResponse->getRequestedAmount()->getCurrency());
         $oTransaction->wdoxidee_ordertransactions__responsexml = new Field(base64_encode($oResponse->getRawData()));
         $oTransaction->wdoxidee_ordertransactions__date = new Field($sConvertedTimestamp);
+
+        // by default the transaction state is success now
+        $oTransaction->wdoxidee_ordertransactions__state = new Field(Transaction::STATE_SUCCESS);
+
+        // set the transaction state to closed if no further operations are possible anymore
+        if ($oBackendService->isFinal($oResponse->getTransactionType())) {
+            $oTransaction->wdoxidee_ordertransactions__state = new Field(Transaction::STATE_CLOSED);
+        }
+
         $oTransaction->save();
 
         $oOrder->oxorder__wdoxidee_providertransactionid = new Field($aData['statuses.0.provider-transaction-id']);
@@ -154,6 +175,10 @@ class NotifyHandler extends FrontendController
                 "\t Status with code ". $oItem->getCode() ." and message ". $oItem->getDescription()
             );
         }
+
+        $oOrder = oxNew(Oxid_Order::class);
+        $oOrder->loadWithTransactionId($oResponse->getParentTransactionId());
+        $oOrder->handleCanceledFailed(Order::STATE_FAILED);
     }
 
     /**
@@ -171,5 +196,21 @@ class NotifyHandler extends FrontendController
         }
 
         return $sParentTransactionId;
+    }
+
+    /**
+     * Returns the URL of the notification handler
+     *
+     * @param Payment_Method $oPaymentMethod
+     *
+     * @return string
+     */
+    public static function getNotificationUrl($oPaymentMethod)
+    {
+        $sShopUrl = Registry::getConfig()->getCurrentShopUrl();
+
+        return $sShopUrl
+                . 'index.php?cl=wcpg_notifyhandler&fnc=handleRequest&pmt='
+                . Payment_Method::getOxidFromSDKName($oPaymentMethod->getTransaction()->getConfigKey());
     }
 }

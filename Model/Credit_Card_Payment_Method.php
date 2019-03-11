@@ -121,6 +121,45 @@ class Credit_Card_Payment_Method extends Payment_Method
         return array_merge($parentConfigFields, $additionalFields);
     }
 
+    /**
+     * @inheritdoc
+     *
+     * @return Transaction
+     */
+    public function getCancelTransaction(): Transaction
+    {
+        return new CreditCardTransaction();
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return Transaction
+     */
+    public function getRefundTransaction(): Transaction
+    {
+        return new CreditCardTransaction();
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return Transaction
+     */
+    public function getCaptureTransaction(): Transaction
+    {
+        return new CreditCardTransaction();
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return Transaction
+     */
+    public function getCreditTransaction(): Transaction
+    {
+        return new CreditCardTransaction();
+    }
 
     /**
      * Return array for currency select options

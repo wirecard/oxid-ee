@@ -30,11 +30,9 @@ class Paypal_Payment_Method extends Payment_Method
     protected static $_sName = "paypal";
 
     /**
-     * Get the payment method's configuration
+     * @inheritdoc
      *
      * @return Config
-     *
-     * @SuppressWarnings(PHPMD.Coverage)
      */
     public function getConfig(): Config
     {

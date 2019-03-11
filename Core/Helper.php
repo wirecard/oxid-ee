@@ -13,6 +13,8 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Model\ListModel;
 use OxidEsales\Eshop\Application\Model\Payment;
 
+use Wirecard\Oxid\Model\Transaction;
+
 use Exception;
 use DateTime;
 
