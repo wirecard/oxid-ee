@@ -65,7 +65,9 @@ $aModule = array(
         'wcpg_transaction_account_holder'
             => \Wirecard\Oxid\Controller\Admin\TransactionTabAccountHolder::class,
         'wcpg_transaction_shipping'
-            => \Wirecard\Oxid\Controller\Admin\TransactionTabShipping::class
+            => \Wirecard\Oxid\Controller\Admin\TransactionTabShipping::class,
+        'wcpg_transaction_post_processing'
+            => \Wirecard\Oxid\Controller\Admin\TransactionTabPostProcessing::class
     ),
     'blocks' => array(
         array(
@@ -82,7 +84,8 @@ $aModule = array(
     'templates'         => array(
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
         'transaction_list.tpl'              => 'wirecard/paymentgateway/views/admin/tpl/transaction_list.tpl',
-        'transaction_tab.tpl'               => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab.tpl'
+        'transaction_tab.tpl'               => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab.tpl',
+        'transaction_tab_pp.tpl'            => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab_pp.tpl'
     ),
     'events'            => array(
         'onActivate'        => '\Wirecard\Oxid\Core\OxidEE_Events::onActivate',

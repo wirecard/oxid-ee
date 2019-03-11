@@ -78,4 +78,16 @@ class Helper
             return $oPayment->oxpayments__wdoxidee_iswirecard->value;
         });
     }
+
+    /**
+     * Converts a string to float while acknowledging different number formats with diferent decimal points and
+     * thousand separators.
+     *
+     * @param string $sNumber
+     * @return float
+     */
+    public static function getFloatFromString(string $sNumber): float
+    {
+        return (float) preg_replace('/\.(?=.*\.)/', '', str_replace(',', '.', $sNumber));
+    }
 }

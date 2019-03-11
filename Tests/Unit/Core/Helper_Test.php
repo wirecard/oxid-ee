@@ -43,4 +43,26 @@ class Helper_Test extends OxidEsales\TestingLibrary\UnitTestCase
             $this->assertTrue(!!$payment->oxpayments__wdoxidee_iswirecard->value);
         }
     }
+
+    /**
+     * @dataProvider testGetFloatFromStringProvider
+     */
+    public function testGetFloatFromString($input, $expected)
+    {
+        $this->assertEquals(Helper::getFloatFromString($input), $expected);
+    }
+
+    public function testGetFloatFromStringProvider()
+    {
+        return [
+            'decimals English' => ['1.234', 1.234],
+            'decimals German' => ['1,234', 1.234],
+            'thousands English' => ['1,234.00', 1234],
+            'thousands German' => ['1.234,00', 1234],
+            'millions English' => ['1,234,567.00', 1234567],
+            'millions German' => ['1.234.567,00', 1234567],
+            'mixed English' => ['1,234,567.89', 1234567.89],
+            'mixed German' => ['1.234.567,89', 1234567.89],
+        ];
+    }
 }
