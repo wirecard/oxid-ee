@@ -96,7 +96,8 @@ class OxidEE_Events
         $sQueryAddDescriptor = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_DESCRIPTOR` tinyint(1) default 0 NOT NULL";
         self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_DESCRIPTOR', $sQueryAddDescriptor);
 
-        $sQueryAddAdditionalInfo = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_ADDITIONAL_INFO` tinyint(1) default 0 NOT NULL";
+        $sQueryAddAdditionalInfo = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_ADDITIONAL_INFO`
+         tinyint(1) default 0 NOT NULL";
         self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_ADDITIONAL_INFO', $sQueryAddAdditionalInfo);
     }
 
@@ -186,23 +187,25 @@ class OxidEE_Events
         // create the module's own order transaction table
         self::_createOrderTransactionTable();
 
-        //fixme: add prefix wd to paypal payment method
         $array = array(
-            "OXID" => "paypal"
+            "OXID" => "wdpaypal"
         );
         $sQuery = "INSERT INTO " . 'oxpayments' . "(`OXID`, `OXACTIVE`, `OXTOAMOUNT`, `OXDESC`, `OXDESC_1`,
         `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONTYPE`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`,
         `WDOXIDEE_SECRET`, `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`, `WDOXIDEE_ISWIRECARD`,
          `WDOXIDEE_BASKET`, `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`)
-         VALUES ('paypal', 0, 1000000, 'Wirecard PayPal', 'Wirecard PayPal', 'paypal.png', 'purchase',
+         VALUES ('wdpaypal', 0, 1000000, 'Wirecard PayPal', 'Wirecard PayPal', 'paypal.png', 'purchase',
          'https://api-test.wirecard.com', '2a0e9351-24ed-4110-9a1b-fd0fee6bec26',
          'dbc5a498-9a66-43b9-bf1d-a618dd399684', '70000-APITEST-AP', 'qD2wzQ_hrc!8', 1, 1, 1, 1);";
         self::_insertRowIfNotExists('oxpayments', $array, $sQuery);
 
-        $random = substr(str_shuffle(md5(time())),0,15);
-        self::_insertRowIfNotExists('oxobject2payment', array('OXPAYMENTID' => 'paypal'),
-        "INSERT INTO oxobject2payment (`OXID`, `OXPAYMENTID`, `OXOBJECTID`, `OXTYPE`) VALUES
-         ('{$random}', 'paypal', 'oxidstandard', 'oxdelset');");
+        $random = substr(str_shuffle(md5(time())), 0, 15);
+        self::_insertRowIfNotExists(
+            'oxobject2payment',
+            array('OXPAYMENTID' => 'paypal'),
+            "INSERT INTO oxobject2payment (`OXID`, `OXPAYMENTID`, `OXOBJECTID`, `OXTYPE`) VALUES
+         ('{$random}', 'wdpaypal', 'oxidstandard', 'oxdelset');"
+        );
 
         // view tables must be regenerated after modifying database table structure
         self::_regenerateViews();
