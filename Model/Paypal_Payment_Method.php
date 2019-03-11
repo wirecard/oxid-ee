@@ -43,7 +43,7 @@ use \OxidEsales\Eshop\Core\Registry;
 
 class Paypal_Payment_Method extends Payment_Method
 {
-    const NAME = 'paypal';
+    const NAME = "wdpaypal";
 
     /**
      * @var \Psr\Log\LoggerInterface
@@ -67,9 +67,16 @@ class Paypal_Payment_Method extends Payment_Method
     {
         $payment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
         $payment->load(self::NAME);
-
-        $config = new Config($payment->oxpayments__wdoxidee_apiurl->value, $payment->oxpayments__wdoxidee_httpuser->value, $payment->oxpayments__wdoxidee_httppass->value);
-        $oPaymentMethodConfig = new PaymentMethodConfig(PayPalTransaction::NAME, $payment->oxpayments__wdoxidee_maid->value, $payment->oxpayments__wdoxidee_secret->value);
+        $config = new Config(
+            $payment->oxpayments__wdoxidee_apiurl->value,
+            $payment->oxpayments__wdoxidee_httpuser->value,
+            $payment->oxpayments__wdoxidee_httppass->value
+        );
+        $oPaymentMethodConfig = new PaymentMethodConfig(
+            PayPalTransaction::NAME,
+            $payment->oxpayments__wdoxidee_maid->value,
+            $payment->oxpayments__wdoxidee_secret->value
+        );
         $config->add($oPaymentMethodConfig);
 
         return $config;
@@ -86,10 +93,6 @@ class Paypal_Payment_Method extends Payment_Method
     public function getTransaction(): Transaction
     {
         $oTransaction = new PayPalTransaction();
-
-        //FIXME cgrach: set details
-        $oTransaction->setOrderDetail("details");
-
         return $oTransaction;
     }
 }

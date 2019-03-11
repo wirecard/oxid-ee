@@ -55,7 +55,7 @@ class Payment_Method_Factory
             case Paypal_Payment_Method::NAME:
                 return new Paypal_Payment_Method();
             default:
-                throw new \Exception("payemnt type not registered: $sPaymentMethodType");
+                throw new \Exception("payment type not registered: $sPaymentMethodType");
         }
     }
 }
