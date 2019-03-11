@@ -4,5 +4,13 @@
         <MAINMENU id="config">
             <SUBMENU id="mxpaymeth" cl="admin_payment" list="payment_list"></SUBMENU>
         </MAINMENU>
+        <MAINMENU id="heading_title_transaction_details">
+            <SUBMENU id="text_list" cl="wcpg_transaction" list="wcpg_transaction_list">
+                <TAB id="panel_details" cl="wcpg_transaction_payment_details" />
+                <TAB id="transaction_details_title" cl="wcpg_transaction_transaction_details" />
+                <TAB id="account_holder_title" cl="wcpg_transaction_account_holder" />
+                <TAB id="shipping_title" cl="wcpg_transaction_shipping" />
+            </SUBMENU>
+        </MAINMENU>
     </OXMENU>
 </OX>
