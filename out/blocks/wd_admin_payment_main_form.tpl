@@ -1,5 +1,3 @@
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
 <style>
     .pb-35 {
         padding-bottom: 35px;
@@ -80,15 +78,6 @@
     </td>
     <td>
       <span id="test_credentials_result"></span>
-    </td>
-  </tr>
-  <tr>
-    <td class="edittext" width="100">
-      <input type="button" value="[{oxmultilang ident="test_credentials"}]" onclick="testPaymentMethodCredentials()" />
-    </td>
-    <td>
-      <span id="test_credentials_result_success" class="hidden">[{oxmultilang ident="success_credentials"}]</span>
-      <span id="test_credentials_result_error" class="hidden">[{oxmultilang ident="error_credentials"}]</span>
     </td>
   </tr>
   <tr>
