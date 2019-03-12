@@ -58,6 +58,37 @@ class OxidEE_Events
     }
 
     /**
+     * Database helper function
+     * Executes the query if no row with the specified criteria exists in the table.
+     *
+     * @param string $sTableName database table name
+     * @param array $aKeyValue key-value array to build where query string
+     * @param string $sQuery SQL query to execute if no row with the search criteria exists in the table
+     *
+     * @return boolean true or false if query was executed
+     */
+    private static function _insertRowIfNotExists($sTableName, $aKeyValue, $sQuery)
+    {
+        $oDb = oxDb::getDb();
+
+        $sWhere = '';
+
+        foreach ($aKeyValue as $key => $value) {
+            $sWhere .= " AND $key = '$value'";
+        }
+
+        $sCheckQuery = "SELECT * FROM {$sTableName} WHERE 1" . $sWhere;
+        $sExisting = $oDb->getOne($sCheckQuery);
+
+        if (!$sExisting) {
+            $oDb->Execute($sQuery);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Extends OXID's internal payment methods table with the fields required by the module
      */
     private static function _extendPaymentMethodTable()
@@ -202,7 +233,7 @@ class OxidEE_Events
         $random = substr(str_shuffle(md5(time())), 0, 15);
         self::_insertRowIfNotExists(
             'oxobject2payment',
-            array('OXPAYMENTID' => 'paypal'),
+            array('OXPAYMENTID' => 'wdpaypal'),
             "INSERT INTO oxobject2payment (`OXID`, `OXPAYMENTID`, `OXOBJECTID`, `OXTYPE`) VALUES
          ('{$random}', 'wdpaypal', 'oxidstandard', 'oxdelset');"
         );
