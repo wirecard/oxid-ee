@@ -12,7 +12,6 @@
     // clear any previous test results
     resultSpan.innerHTML = '';
 
-    // get the payment method credentials from the page
     var bodyParams = {
       apiUrl: document.getElementById('configApiUrl').value,
       httpUser: document.getElementById('configHttpUser').value,
@@ -22,11 +21,18 @@
     var successText = '[{oxmultilang ident="success_credentials"}]';
     var failureText = '[{oxmultilang ident="error_credentials"}]';
 
-    $.post('[{ $oViewConf->getAjaxLink() }]cmpid=container&container=payment_main&fnc=checkPaymentMethodCredentials', bodyParams, function(data) {
-      data = JSON.parse(data);
+    var requestUrl = '[{ $oViewConf->getAjaxLink() }]cmpid=container&container=payment_main&fnc=checkPaymentMethodCredentials';
 
-      resultSpan.innerHTML = data.success === true ? successText : failureText;
+    jQuery.post(requestUrl, bodyParams, function(response) {
+      try {
+        response = JSON.parse(response);
+      } catch {
+
+      }
+
+      resultSpan.innerHTML = response && response.success === true ? successText : failureText;
     });
+
   }
 </script>
 

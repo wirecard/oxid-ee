@@ -36,6 +36,9 @@ use \Wirecard\PaymentSdk\Config\Config;
 
 use \OxidEsales\Eshop\Core\Registry;
 
+/**
+ * Extends the AJAX handler of OXID's payment method confiuration page
+ */
 class Payment_Main_Ajax extends Payment_Main_Ajax_parent
 {
     /**
@@ -72,7 +75,7 @@ class Payment_Main_Ajax extends Payment_Main_Ajax_parent
         // filter the POST input array
         $aPostParams = filter_input_array(INPUT_POST);
 
-        if ($aPostParams !== null && $aPostParams !== false) {
+        if ($aPostParams) {
             // get the needed params
             $sApiUrl = $aPostParams['apiUrl'];
             $sHttpUser = $aPostParams['httpUser'];
