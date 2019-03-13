@@ -62,8 +62,8 @@ class OxidEE_Events
      * Executes the query if no row with the specified criteria exists in the table.
      *
      * @param string $sTableName database table name
-     * @param array $aKeyValue key-value array to build where query string
-     * @param string $sQuery SQL query to execute if no row with the search criteria exists in the table
+     * @param array  $aKeyValue  key-value array to build where query string
+     * @param string $sQuery     SQL query to execute if no row with the search criteria exists in the table
      *
      * @return boolean true or false if query was executed
      */
@@ -133,25 +133,22 @@ class OxidEE_Events
     }
 
     /**
-     * Creates the module's order table
+     * Extends OXID's internal order table with the fields required by the module
      */
-    private static function _createOrderTable()
+    private static function _extendOrderTable()
     {
-        $sQuery = "CREATE TABLE IF NOT EXISTS `wdoxidee_orders` (
-                `wdoxidee_orderid` char(32) character set latin1 collate latin1_general_ci NOT NULL,
-                `wdoxidee_paymentstate` enum('pending','completed','failed','cancelled') NOT NULL DEFAULT 'pending',
-                `wdoxidee_totalordersum` decimal(9,2) NOT NULL,
-                `wdoxidee_capturedamount` decimal(9,2) NOT NULL,
-                `wdoxidee_refundedamount` decimal(9,2) NOT NULL,
-                `wdoxidee_voidedamount` decimal(9,2) NOT NULL,
-                `wdoxidee_currency` varchar(32) NOT NULL,
-                `wdoxidee_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-                PRIMARY KEY (`wdoxidee_orderid`),
-                KEY `wdoxidee_paymentstate` (`wdoxidee_paymentstate`)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
+        $sQueryAddPaymentState = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_PAYMENTSTATE` enum('pending','completed',
+        'failed','cancelled')";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_PAYMENTSTATE', $sQueryAddPaymentState);
 
-            $oDb = oxDb::getDb();
-            $oDb->Execute($sQuery);
+        $sQueryAddCaptureAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_CAPTUREAMOUNT` decimal(9,2) NOT NULL";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_CAPTUREAMOUNT', $sQueryAddCaptureAmount);
+
+        $sQueryAddRefundedAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_REFUNDEDAMOUNT` decimal(9,2) NOT NULL";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_REFUNDEDAMOUNT', $sQueryAddRefundedAmount);
+
+        $sQueryAddVoidedAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_VOIDEDAMOUNT` decimal(9,2) NOT NULL";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_VOIDEDAMOUNT', $sQueryAddVoidedAmount);
     }
 
     /**
@@ -160,33 +157,23 @@ class OxidEE_Events
     private static function _createOrderTransactionTable()
     {
         $sQuery = "CREATE TABLE IF NOT EXISTS `wdoxidee_ordertransactions`(
-            `wdoxidee_transactionid` int(11) unsigned NOT NULL AUTO_INCREMENT,
-            `wdoxidee_orderid` char(32) character set latin1 collate latin1_general_ci NOT NULL,
-            `wdoxidee_requestid` varchar(256) NOT NULL,
-            `wdoxidee_transactiontype` varchar(128) NOT NULL,
-            `wdoxidee_amount` decimal(9,2) NOT NULL,
-            `wdoxidee_refundedamount` decimal(9,2) NOT NULL,
-            `wdoxidee_currency` varchar(32) NOT NULL,
-            `wdoxidee_transactiondate` datetime NOT NULL,
-            `wdoxidee_transactionstatus` enum('pending','success','error') NOT NULL DEFAULT 'pending',
-            `wdoxidee_timestamp` timestamp NOT NULL default CURRENT_TIMESTAMP on update CURRENT_TIMESTAMP,
-            `wdoxidee_comment` mediumtext,
-            PRIMARY KEY (`wdoxidee_transactionid`),
-            KEY `wdoxidee_orderid` (`wdoxidee_orderid`),
-            KEY `wdoxidee_transactiondate` (`wdoxidee_transactiondate`)
+            `OXID` int(11) unsigned NOT NULL AUTO_INCREMENT,
+            `WDOXIDEE_ORDERNUMBER` varchar(32) NOT NULL,
+            `WDOXIDEE_ORDERID` varchar(32) NOT NULL,
+            `WDOXIDEE_TRANSACTIONID` varchar(32) NOT NULL,
+            `WDOXIDEE_PARENTTRANSACTIONID` varchar(32),
+            `WDOXIDEE_ACTION` enum('purchase','authorization') NOT NULL DEFAULT 'purchase',
+            `WDOXIDEE_STATUS` enum('success','error','pending'),
+            `WDOXIDEE_TRANSACTIONTYPE` varchar(32),
+            `WDOXIDEE_STATE` varchar(32) NOT NULL,
+            `WDOXIDEE_AMOUNT` decimal(9,2) NOT NULL,
+            `WDOXIDEE_CURRENCY` varchar(32) NOT NULL,
+            `WDOXIDEE_IPADDRESS` varchar(32) NOT NULL,
+            `WDOXIDEE_REQUESTID` varchar(32) NOT NULL,
+            `WDOXIDEE_DESCRIPTOR` varchar(32) NOT NULL,
+            `WDOXIDEE_TRANSACTIONDATE` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            PRIMARY KEY (`OXID`)
         ) Engine=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
-
-        $oDb = oxDb::getDb();
-        $oDb->Execute($sQuery);
-    }
-
-    /**
-     * Delete the module's order transaction table
-     * ONLY FOR DEVELOPMENT PURPOSES, NOT TO BE USED IN PRODUCTION!
-     */
-    private static function _deleteOrderTable()
-    {
-        $sQuery = "DROP TABLE IF EXISTS `wdoxidee_orders`";
 
         $oDb = oxDb::getDb();
         $oDb->Execute($sQuery);
@@ -212,8 +199,8 @@ class OxidEE_Events
         // extend OXID's payment method table
         self::_extendPaymentMethodTable();
 
-        // create the module's own order table
-        self::_createOrderTable();
+        // extend OXID's payment method table
+        self::_extendOrderTable();
 
         // create the module's own order transaction table
         self::_createOrderTransactionTable();
@@ -263,7 +250,6 @@ class OxidEE_Events
         // if development, delete the database tables on module de-activation
         if ($environmentVar === 'development') {
             self::_deleteOrderTransactionTable();
-            self::_deleteOrderTable();
         }
     }
 }

@@ -52,8 +52,8 @@ class Payment_Gateway extends Payment_Gateway_parent
     /**
      * Executes payment, returns true on success.
      *
-     * @param double $dAmount Goods amount
-     * @param \Wirecard\Oxid\Extend\Order $oOrder User ordering object
+     * @param double                      $dAmount Goods amount
+     * @param \Wirecard\Oxid\Extend\Order $oOrder  User ordering object
      *
      * @return bool
      *
@@ -64,7 +64,6 @@ class Payment_Gateway extends Payment_Gateway_parent
         if (!$oOrder->isWirecardPaymentType()) {
             return parent::executePayment($dAmount, $oOrder);
         }
-
         $oResponse = null;
 
         try {
@@ -114,7 +113,7 @@ class Payment_Gateway extends Payment_Gateway_parent
     /**
      * Returns a descriptor
      *
-     * @param string $countryId
+     * @param string $orderId
      *
      * @return string
      *
