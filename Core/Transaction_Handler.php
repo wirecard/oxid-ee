@@ -20,6 +20,8 @@ use Wirecard\PaymentSdk\TransactionService;
 
 class Transaction_Handler
 {
+    const TRANSACTION_STATUS_SUCCESS = 'success';
+    const TRANSACTION_STATUS_ERROR = 'error';
 
     /**
      * @var \Psr\Log\LoggerInterface
@@ -47,7 +49,7 @@ class Transaction_Handler
             $oPayment = Payment_Method_Factory::create($oTransaction->getPaymentType());
         } catch (\Exception $oExc) {
             $this->oLogger->error("Error canceling transaction", [$oExc]);
-            return ['status' => 'error', 'message' => $oExc->getMessage()];
+            return ['status' => self::TRANSACTION_STATUS_ERROR, 'message' => $oExc->getMessage()];
         }
 
         $oConfig = $oPayment->getConfig();
@@ -77,11 +79,11 @@ class Transaction_Handler
             $this->_restockItems($oOrder);
             $oTransaction->wdoxidee_ordertransactions__wdoxidee_transactionstatus = new Field('cancelled');
             $oTransaction->save();
-            return ['status' => 'success'];
+            return ['status' => self::TRANSACTION_STATUS_SUCCESS];
         }
 
         if ($oResponse instanceof FailureResponse) {
-            return ['status' => 'error', 'message' => $this->oLang->translateString('error_transaction_cancel')];
+            return ['status' => self::TRANSACTION_STATUS_ERROR, 'message' => $this->oLang->translateString('error_transaction_cancel')];
         }
     }
 
