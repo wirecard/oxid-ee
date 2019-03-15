@@ -9,14 +9,24 @@
 
 namespace Wirecard\Oxid\Extend;
 
+use OxidEsales\EshopCommunity\Application\Model\State;
 use \Wirecard\Oxid\Core\Payment_Method_Factory;
 use \Wirecard\PaymentSdk\Entity\Amount;
+use \Wirecard\PaymentSdk\Response\Response;
+use \Wirecard\PaymentSdk\Response\SuccessResponse;
+use \Wirecard\PaymentSdk\Transaction\Transaction;
 use \Wirecard\PaymentSdk\TransactionService;
 use \Wirecard\PaymentSdk\Response\FailureResponse;
 use \Wirecard\PaymentSdk\Response\InteractionResponse;
 use \Wirecard\PaymentSdk\Entity\Redirect;
 
 use \OxidEsales\Eshop\Core\Registry;
+use \OxidEsales\Eshop\Application\Model\Payment;
+use \OxidEsales\Eshop\Application\Model\Basket;
+use \OxidEsales\Eshop\Application\Model\Order;
+use \OxidEsales\Eshop\Application\Model\User;
+
+
 
 /**
  * Class BasePaymentGateway
@@ -57,7 +67,7 @@ class Payment_Gateway extends Payment_Gateway_parent
      * @param double                      $dAmount Goods amount
      * @param \Wirecard\Oxid\Extend\Order $oOrder  User ordering object
      *
-     * @return bool
+     * @return Response|FailureResponse|S
      *
      * @override
      *
@@ -162,13 +172,15 @@ class Payment_Gateway extends Payment_Gateway_parent
     }
 
     /**
-     * Returns a redirect object
+     * Returns a "Response"
      *
-     * @param string $dAmount
+     * @param float $dAmount Amount to pay
      *
-     * @param string $oOrder
+     * @param Order $oOrder the actual Order object
      *
-     * @return object
+     * @return FailureResponse|InteractionResponse|Response|SuccessResponse
+     *
+     * @throws \Exception
      *
      * @SuppressWarnings(PHPMD.Coverage)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -187,48 +199,98 @@ class Payment_Gateway extends Payment_Gateway_parent
         $oTransaction = $oPaymentMethod->getTransaction();
         $oTransaction->setRedirect($oRedirect);
 
-        $config = \OxidEsales\Eshop\Core\Registry::getConfig();
-        $currency = $config->getActShopCurrencyObject();
-        $oTransaction->setAmount(new Amount($dAmount, $currency->name));
+        $oShopconfig = $this->getConfig();
+        $oCurrency = $oShopconfig->getActShopCurrencyObject();
+        $oTransaction->setAmount(new Amount($dAmount, $oCurrency->name));
 
-        $basket = $oSession->getBasket();
-        $user = $basket->getBasketUser();
+        $oBasket = $oSession->getBasket();
+        $oUser = $oBasket->getBasketUser();
 
+        //TODO cgrach: use order detail from oxid's order.
         $oTransaction->setOrderDetail(sprintf(
             '%s %s %s',
             $oOrder->oxorder__oxbillemail->value,
-            $user->oxuser__oxfname->value,
-            $user->oxuser__oxlname->value
+            $oUser->oxuser__oxfname->value,
+            $oUser->oxuser__oxlname->value
         ));
 
-        $payment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
-        $payment->load(self::NAME);
+        $oPayment = oxNew(Payment::class);
+        $oPayment->load(self::NAME);
 
-        if ($payment->oxpayments__wdoxidee_additional_info->value) {
-            $oViewConf = oxNew('oxViewConfig');
-            $sIp = $oViewConf->getRemoteAddress();
-            $oTransaction->setIpAddress($sIp);
-            $oTransaction->setConsumerId($user->oxuser__oxid->value);
-            $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
+
+        if ($oPayment->oxpayments__wdoxidee_additional_info->value) {
+            $this->_addAdditionalInfo($oTransaction, $oOrder, $oUser);
         }
 
-        if ($payment->oxpayments__wdoxidee_descriptor->value) {
+        if ($oPayment->oxpayments__wdoxidee_descriptor->value) {
             $descriptor = self::getDescriptor($oOrder->oxorder__oxid->value);
             $oTransaction->setDescriptor($descriptor);
         }
 
+        if ($oPayment->oxpayments__wdoxidee_basket->value) { //add basket data
+            $finalPrice = array();
+            $contents = $oBasket->getContents();
+            foreach ($contents as $content) {
+                $finalPrice[$content->getProductId()] = $content->getFUnitPrice();
+            }
+
+            $oWdBasket = new \Wirecard\PaymentSdk\Entity\Basket();
+            $oWdBasket->setVersion($oTransaction);
+            $oArticles = $oBasket->getBasketSummary()->aArticles;
+            $oCurrency = $this->getConfig()->getActShopCurrencyObject();
+
+            foreach ($oArticles as $key => $value) {
+                $oArticle = oxNew(\OxidEsales\EshopCommunity\Application\Model\Article::class);
+                $oArticle->load($key);
+                $item = new \Wirecard\PaymentSdk\Entity\Item(
+                    $oArticle->oxarticles__oxtitle->value,
+                    new Amount($finalPrice[$key], $oCurrency->name),
+                    $value
+                );
+                $oWdBasket->add($item);
+            }
+            $oTransaction->setBasket($oWdBasket);
+        }
+
+        $oTransaction->setNotificationUrl($sShopUrl . 'notify.php');
+        $oResponse = $oTransactionService->pay($oTransaction);
+        return $oResponse;
+    }
+
+    /**
+     * Add additional info to the transaction
+     *
+     * @param Transaction $oTransaction
+     * @param Order $oOrder
+     * @param User $oUser
+     */
+    private function _addAdditionalInfo(
+        Transaction &$oTransaction,
+        Order $oOrder,
+        User $oUser)
+    {
+        $oViewConfig = oxNew('oxViewConfig');
+        $ip = $oViewConfig->getRemoteAddress();
+        $oTransaction->setIpAddress($ip);
+
+        $oTransaction->setConsumerId($oUser->oxuser__oxid->value);
+        $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
+
         $address = new \Wirecard\PaymentSdk\Entity\Address(
-            self::getCountryCode($user->oxuser__oxcountryid),
-            $user->oxuser__oxcity->value,
-            $user->oxuser__oxstreet->value
+            self::getCountryCode($oUser->oxuser__oxcountryid),
+            $oUser->oxuser__oxcity->value,
+            $oUser->oxuser__oxstreet->value . ' ' . $oUser->oxuser__oxstreetnr->value
         );
-        $address->setPostalCode($user->oxuser__oxzip->value);
+        $address->setPostalCode($oUser->oxuser__oxzip->value);
+        $address->setState($oUser->getStateTitle());
+        $address->setStreet2($oUser->oxuser__oxaddinfo->value);
+
 
         $oAcHolder = new \Wirecard\PaymentSdk\Entity\AccountHolder();
         $oAcHolder->setAddress($address);
-        $oAcHolder->setFirstName($user->oxuser__oxfname->value);
-        $oAcHolder->setLastName($user->oxuser__oxlname->value);
-        $oAcHolder->setPhone($user->oxuser__oxfon->value);
+        $oAcHolder->setFirstName($oUser->oxuser__oxfname->value);
+        $oAcHolder->setLastName($oUser->oxuser__oxlname->value);
+        $oAcHolder->setPhone($oUser->oxuser__oxfon->value);
         $oAcHolder->setEmail($oOrder->oxorder__oxbillemail->value);
 
         $oTransaction->setAccountHolder($oAcHolder);
@@ -237,42 +299,23 @@ class Payment_Gateway extends Payment_Gateway_parent
             $addressShipping = new \Wirecard\PaymentSdk\Entity\Address(
                 self::getCountryCode($oOrder->oxorder__oxdelcountryid),
                 $oOrder->oxorder__oxdelcity->value,
-                $oOrder->oxorder__oxdelstreet->value
+                $oOrder->oxorder__oxdelstreet->value . ' ' . $oUser->oxuser__oxdelstreetnr->value
             );
             $addressShipping->setPostalCode($oOrder->oxorder__oxdelzip->value);
-            $oAcHolderShipping = new \Wirecard\PaymentSdk\Entity\AccountHolder();
-            $oAcHolderShipping->setAddress($addressShipping);
-            $oAcHolderShipping->setFirstName($oOrder->oxorder__oxdelfname->value);
-            $oAcHolderShipping->setLastName($oOrder->oxorder__oxdellname->value);
-            $oAcHolderShipping->setPhone($oOrder->oxorder__oxdelfon->value);
-            $oTransaction->setShipping($oAcHolderShipping);
+            $oState = oxNew(State::class);
+            $addressShipping->setState($oState->getTitleById($oOrder->oxOrder__oxdelstateid->value));
+            $addressShipping->setStreet2($oOrder->oxOrder__oxdeladdinfo->value);
+
+            $shippingAccount = new \Wirecard\PaymentSdk\Entity\AccountHolder();
+            $shippingAccount->setAddress($addressShipping);
+            $shippingAccount->setFirstName($oOrder->oxorder__oxdelfname->value);
+            $shippingAccount->setLastName($oOrder->oxorder__oxdellname->value);
+            $shippingAccount->setPhone($oOrder->oxorder__oxdelfon->value);
+            $oTransaction->setShipping($shippingAccount);
         } else {
             $oTransaction->setShipping($oAcHolder);
         }
 
-        if ($payment->oxpayments__wdoxidee_basket->value) { //add basket data
-            $finalPrice = array();
-            $contents = $basket->getContents();
-            foreach ($contents as $content) {
-                $finalPrice[$content->getProductId()] = $content->getFUnitPrice();
-            }
-
-            $wdBasket = new \Wirecard\PaymentSdk\Entity\Basket();
-            $articles = $basket->getBasketSummary()->aArticles;
-            foreach ($articles as $key => $value) {
-                $oArticle = oxNew(\OxidEsales\Eshop\Application\Model\Article::class);
-                $oArticle->load($key);
-                $item = new \Wirecard\PaymentSdk\Entity\Item(
-                    $oArticle->oxarticles__oxtitle->value,
-                    new Amount($finalPrice[$key], $currency->name),
-                    $value
-                );
-                $wdBasket->add($item);
-            }
-            $oTransaction->setBasket($wdBasket);
-        }
-        $oTransaction->setNotificationUrl($sShopUrl . 'notify.php');
-        $oResponse = $oTransactionService->pay($oTransaction);
-        return $oResponse;
+        //TODO cgrach: add device info https://document-center.wirecard.com/pages/viewpage.action?pageId=3702802
     }
 }
