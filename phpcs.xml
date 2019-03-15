@@ -7,6 +7,7 @@
   <exclude-pattern>/phpmd/</exclude-pattern>
   <exclude-pattern>*/de/</exclude-pattern>
   <exclude-pattern>*/en/</exclude-pattern>
+  <exclude-pattern>Tests/*</exclude-pattern>
 
   <rule ref="vendor/oxid-esales/coding-standards/Oxid/ruleset.xml">
   </rule>

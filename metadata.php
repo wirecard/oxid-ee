@@ -46,16 +46,25 @@ $aModule = array(
     'author'            => 'Wirecard',
     'url'               => 'https://www.wirecard.com',
     'email'             => 'shop-systems-support@wirecard.com',
-    'extend'            => array(
-    // @codingStandardsIgnoreStart Generic.Files.LineLength
-        \OxidEsales\Eshop\Core\ViewConfig::class                              => \Wirecard\Oxid\Extend\View_Config::class,
-        \OxidEsales\Eshop\Application\Controller\Admin\OrderList::class       => \Wirecard\Oxid\Extend\Controller\Admin\OrderList::class,
-        \OxidEsales\Eshop\Application\Model\Order::class                      => \Wirecard\Oxid\Extend\Model\Order::class,
-        \OxidEsales\Eshop\Application\Model\PaymentGateway::class             => \Wirecard\Oxid\Extend\Model\Payment_Gateway::class,
-        \OxidEsales\Eshop\Application\Model\Payment::class                    => \Wirecard\Oxid\Extend\Model\Payment::class,
-        \OxidEsales\Eshop\Application\Controller\Admin\PaymentMainAjax::class => \Wirecard\Oxid\Extend\Payment_Main_Ajax::class,
-        \OxidEsales\Eshop\Application\Model\Basket::class                     => \Wirecard\Oxid\Extend\Basket::class
-    // @codingStandardsIgnoreEnd Generic.Files.LineLength
+    'extend'            => array (
+        \OxidEsales\Eshop\Core\ViewConfig::class
+            => \Wirecard\Oxid\Extend\View_Config::class,
+        \OxidEsales\Eshop\Application\Controller\Admin\OrderList::class
+            => \Wirecard\Oxid\Extend\Controller\Admin\OrderList::class,
+        \OxidEsales\Eshop\Application\Model\Order::class
+            => \Wirecard\Oxid\Extend\Model\Order::class,
+        \OxidEsales\Eshop\Application\Controller\OrderController::class
+            => \Wirecard\Oxid\Extend\Controller\OrderController::class,
+        \OxidEsales\Eshop\Application\Model\Payment::class
+            => \Wirecard\Oxid\Extend\Model\Payment::class,
+        \OxidEsales\Eshop\Application\Model\PaymentGateway::class
+            => \Wirecard\Oxid\Extend\Model\Payment_Gateway::class,
+        \OxidEsales\Eshop\Application\Controller\Admin\PaymentMainAjax::class
+            => \Wirecard\Oxid\Extend\Payment_Main_Ajax::class,
+        \OxidEsales\Eshop\Application\Model\Basket::class
+            => \Wirecard\Oxid\Extend\Model\Basket::class,
+        \OxidEsales\Eshop\Application\Controller\ThankYouController::class
+            => \Wirecard\Oxid\Extend\Controller\ThankYouController::class
     ),
     'controllers'       => array(
         'wcpg_transaction'
@@ -84,11 +93,6 @@ $aModule = array(
             'file' => 'out/blocks/wd_admin_payment_main_form.tpl'
         ),
         array(
-            'template' => 'page/checkout/order.tpl',
-            'block' => 'checkout_order_main',
-            'file' => 'out/blocks/profiling_tags.tpl'
-        ),
-        array(
             'template' => 'order_list.tpl',
             'block' => 'admin_order_list_colgroup',
             'file' => 'out/blocks/wd_admin_order_list_colgroup.tpl',
@@ -112,6 +116,32 @@ $aModule = array(
             'file' => 'out/blocks/wd_admin_order_list_item.tpl',
             'position' => 10,
         ),
+        array(
+            'template' => 'page/checkout/order.tpl',
+            'block' => 'checkout_order_main',
+            'file' => 'out/blocks/profiling_tags.tpl'
+        ),
+        array(
+            'template' => 'page/checkout/payment.tpl',
+            'block' => 'checkout_payment_errors',
+            'file' => 'out/blocks/checkout_errors.tpl'
+        ),
+        array(
+            'template' => 'page/checkout/thankyou.tpl',
+            'block' => 'checkout_thankyou_info',
+            'file' => 'views/blocks/thankyou.tpl'
+        ),
+        array(
+            'template' => 'page/account/order.tpl',
+            'block' => 'account_order_history_cart_items',
+            'file' => 'views/blocks/accountorder.tpl'
+        ),
+        array(
+            'theme' => 'azure-theme',
+            'template' => 'page/account/order.tpl',
+            'block' => 'account_order_persparams',
+            'file' => 'views/blocks/accountorder_azure.tpl'
+        )
     ),
     'templates'         => array(
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',

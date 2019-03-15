@@ -9,14 +9,15 @@
 
 namespace Wirecard\Oxid\Extend\Model;
 
-use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Core\AccountHolderHelper;
-
-use Wirecard\PaymentSdk\Entity\Address;
-use Wirecard\PaymentSdk\Entity\AccountHolder;
-
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Application\Model\OrderArticle;
+
+use Wirecard\PaymentSdk\Entity\AccountHolder;
+
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Model\Transaction;
+use Wirecard\Oxid\Core\AccountHolderHelper;
 
 /**
  * Class Order
@@ -73,11 +74,66 @@ class Order extends Order_parent
     }
 
     /**
+     * Returns true if the payment is one of the module's.
+     *
+     * @return bool
+     */
+    public function isCustomPaymentMethod()
+    {
+        return $this->getOrderPayment()->isCustomPaymentMethod();
+    }
+
+    /**
+     * Checks if the payment is pending
+     *
+     * @return bool
+     */
+    public function isPaymentPending()
+    {
+        $sTransactionId = $this->oxorder__wdoxidee_transactionid->value;
+        if ($sTransactionId) {
+            $oTransaction = oxNew(Transaction::class);
+            if ($oTransaction->loadWithTransactionId($sTransactionId)) {
+                return strpos($oTransaction->wdoxidee_ordertransactions__type->value, 'pending') !== false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if the payment was successful
+     *
+     * @return bool
+     */
+    public function isPaymentSuccess()
+    {
+        return $this->oxorder__wdoxidee_orderstate->value === self::STATE_AUTHORIZED
+            || $this->oxorder__wdoxidee_orderstate->value === self::STATE_PROCESSING;
+    }
+
+    /**
+     * Returns true if it is the last article in the order
+     *
+     * @param OrderArticle $oOrderItem
+     * @return bool
+     */
+    public function isLastArticle($oOrderItem)
+    {
+        $aArticles = $this->getOrderArticles(true)->getArray();
+        foreach ($aArticles as $oArticle) {
+            $oLastItem = $oArticle;
+        }
+
+        return $oLastItem->oxorderarticles__oxartid->value === $oOrderItem->oxorderarticles__oxartid->value;
+    }
+
+        /**
      * Returns an associative array of available states and their translation.
      *
      * @return array
      */
-    public static function getTranslatedStates(): array
+    public static function getTranslatedStates()
     {
         return [
             self::STATE_PENDING => Helper::translate('order_status_pending'),
@@ -158,7 +214,7 @@ class Order extends Order_parent
      *
      * @return array
      */
-    public static function getStates(): array
+    public static function getStates()
     {
         return array_keys(self::getTranslatedStates());
     }
@@ -168,7 +224,7 @@ class Order extends Order_parent
      *
      * @return string
      */
-    public function getTranslatedState(): string
+    public function getTranslatedState()
     {
         return self::getTranslatedStates()[$this->oxorder__wdoxidee_orderstate->value] ?? '';
     }

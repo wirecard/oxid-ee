@@ -7,7 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Extend;
+namespace Wirecard\Oxid\Extend\Model;
 
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\EshopCommunity\Core\Registry;

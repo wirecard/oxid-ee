@@ -181,6 +181,9 @@ class OxidEE_Events
 
         $sAddTransactionID = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_TRANSACTIONID` varchar(36) NOT NULL";
         self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_TRANSACTIONID', $sAddTransactionID);
+
+        $sAddFinalizeOrder = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_FINALIZEORDERSTATE` int NOT NULL";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_FINALIZEORDERSTATE', $sAddFinalizeOrder);
     }
 
     /**
