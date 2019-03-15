@@ -46,7 +46,7 @@
     "cs-fix": "phpcbf --standard=./phpcs.xml .",
     "test": "codecept run",
     "test-coverage": "codecept run --coverage --coverage-xml",
-    "md": "phpmd Core,Model text cleancode,codesize,unusedcode,naming,phpmd.xml"
+    "md": "phpmd Core,Extend,Model text phpmd.xml"
   },
   "autoload": {
     "psr-4": {
