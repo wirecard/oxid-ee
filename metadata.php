@@ -10,7 +10,7 @@
 /**
  * Metadata version
  */
-$metadataVersion = '1.0';
+$metadataVersion = '2.0';
 
 /**
  * Module information
