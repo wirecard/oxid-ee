@@ -42,6 +42,8 @@ class Payment_Gateway extends Payment_Gateway_parent
 
     /**
      * BasePaymentGateway constructor.
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     public function __construct()
     {
@@ -58,6 +60,9 @@ class Payment_Gateway extends Payment_Gateway_parent
      * @return bool
      *
      * @override
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function executePayment($dAmount, &$oOrder)
     {
@@ -103,6 +108,7 @@ class Payment_Gateway extends Payment_Gateway_parent
      *
      * @return string
      *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     public function getCountryCode($countryId)
     {
@@ -117,6 +123,8 @@ class Payment_Gateway extends Payment_Gateway_parent
      * @param string $orderId the order ID to get the descriptor from
      *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     public function getDescriptor($orderId)
     {
@@ -135,6 +143,7 @@ class Payment_Gateway extends Payment_Gateway_parent
      *
      * @return string
      *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     public function getRedirectUrls($oSession, $sShopUrl)
     {
@@ -161,6 +170,10 @@ class Payment_Gateway extends Payment_Gateway_parent
      *
      * @return object
      *
+     * @SuppressWarnings(PHPMD.Coverage)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ElseExpression)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function makeTransaction($dAmount, $oOrder)
     {
@@ -193,8 +206,8 @@ class Payment_Gateway extends Payment_Gateway_parent
 
         if ($payment->oxpayments__wdoxidee_additional_info->value) {
             $oViewConf = oxNew('oxViewConfig');
-            $ip = $oViewConf->getRemoteAddress();
-            $oTransaction->setIpAddress($ip);
+            $sIp = $oViewConf->getRemoteAddress();
+            $oTransaction->setIpAddress($sIp);
             $oTransaction->setConsumerId($user->oxuser__oxid->value);
             $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
         }
@@ -211,14 +224,14 @@ class Payment_Gateway extends Payment_Gateway_parent
         );
         $address->setPostalCode($user->oxuser__oxzip->value);
 
-        $accountHolder = new \Wirecard\PaymentSdk\Entity\AccountHolder();
-        $accountHolder->setAddress($address);
-        $accountHolder->setFirstName($user->oxuser__oxfname->value);
-        $accountHolder->setLastName($user->oxuser__oxlname->value);
-        $accountHolder->setPhone($user->oxuser__oxfon->value);
-        $accountHolder->setEmail($oOrder->oxorder__oxbillemail->value);
+        $oAcHolder = new \Wirecard\PaymentSdk\Entity\AccountHolder();
+        $oAcHolder->setAddress($address);
+        $oAcHolder->setFirstName($user->oxuser__oxfname->value);
+        $oAcHolder->setLastName($user->oxuser__oxlname->value);
+        $oAcHolder->setPhone($user->oxuser__oxfon->value);
+        $oAcHolder->setEmail($oOrder->oxorder__oxbillemail->value);
 
-        $oTransaction->setAccountHolder($accountHolder);
+        $oTransaction->setAccountHolder($oAcHolder);
 
         if ($oOrder->oxorder__oxdelfname->value) { //shipping address exists
             $addressShipping = new \Wirecard\PaymentSdk\Entity\Address(
@@ -227,14 +240,14 @@ class Payment_Gateway extends Payment_Gateway_parent
                 $oOrder->oxorder__oxdelstreet->value
             );
             $addressShipping->setPostalCode($oOrder->oxorder__oxdelzip->value);
-            $accountHolderShipping = new \Wirecard\PaymentSdk\Entity\AccountHolder();
-            $accountHolderShipping->setAddress($addressShipping);
-            $accountHolderShipping->setFirstName($oOrder->oxorder__oxdelfname->value);
-            $accountHolderShipping->setLastName($oOrder->oxorder__oxdellname->value);
-            $accountHolderShipping->setPhone($oOrder->oxorder__oxdelfon->value);
-            $oTransaction->setShipping($accountHolderShipping);
+            $oAcHolderShipping = new \Wirecard\PaymentSdk\Entity\AccountHolder();
+            $oAcHolderShipping->setAddress($addressShipping);
+            $oAcHolderShipping->setFirstName($oOrder->oxorder__oxdelfname->value);
+            $oAcHolderShipping->setLastName($oOrder->oxorder__oxdellname->value);
+            $oAcHolderShipping->setPhone($oOrder->oxorder__oxdelfon->value);
+            $oTransaction->setShipping($oAcHolderShipping);
         } else {
-            $oTransaction->setShipping($accountHolder);
+            $oTransaction->setShipping($oAcHolder);
         }
 
         if ($payment->oxpayments__wdoxidee_basket->value) { //add basket data

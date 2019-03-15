@@ -26,6 +26,8 @@ class Payment_Method_Factory
      * @param string $sPaymentMethodType
      * @return Payment_Method
      * @throws \Exception if $sPaymentMethodType is not registered
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     public static function create(string $sPaymentMethodType): Payment_Method
     {

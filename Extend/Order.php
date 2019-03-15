@@ -29,6 +29,8 @@ class Order extends Order_parent
      * Checks if the Paymenttype is one of wirecard's
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     public function isWirecardPaymentType()
     {

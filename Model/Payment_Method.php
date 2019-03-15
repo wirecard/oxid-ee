@@ -22,11 +22,15 @@ abstract class Payment_Method
 
     /**
      * Get the payments method transaction configuration
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     abstract public function getTransaction(): Transaction;
 
     /**
      * Get the payments method configuration
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     abstract public function getConfig(): Config;
 }
