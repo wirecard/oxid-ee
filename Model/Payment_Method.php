@@ -22,15 +22,11 @@ abstract class Payment_Method
 
     /**
      * Get the payments method transaction configuration
-     *
-     * @return Transaction
      */
-    public abstract function getTransaction(): Transaction;
+    abstract public function getTransaction(): Transaction;
 
     /**
      * Get the payments method configuration
-     *
-     * @return Config
      */
-    public abstract function getConfig(): Config;
+    abstract public function getConfig(): Config;
 }
