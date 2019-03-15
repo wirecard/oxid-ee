@@ -19,6 +19,9 @@ use \Wirecard\PaymentSdk\Entity\Address;
 
 use \OxidEsales\Eshop\Core\Registry;
 
+/**
+ * Payment method implementation for Paypal
+ */
 class Paypal_Payment_Method extends Payment_Method
 {
     const NAME = "wdpaypal";

@@ -62,8 +62,8 @@ class OxidEE_Events
      * Executes the query if no row with the specified criteria exists in the table.
      *
      * @param string $sTableName database table name
-     * @param array $aKeyValue key-value array to build where query string
-     * @param string $sQuery SQL query to execute if no row with the search criteria exists in the table
+     * @param array  $aKeyValue  key-value array to build where query string
+     * @param string $sQuery     SQL query to execute if no row with the search criteria exists in the table
      *
      * @return boolean true or false if query was executed
      */

@@ -11,8 +11,14 @@ require_once dirname(__FILE__) . "/../../../bootstrap.php";
 
 use \OxidEsales\Eshop\Core\Registry;
 
+/**
+ * Handles all incomingnotifications coming from paymentSDK
+ */
 class Notification_Handler extends Base
 {
+    /**
+     * Processes the content of the notification
+     */
     public function handle()
     {
 
@@ -25,6 +31,5 @@ class Notification_Handler extends Base
     }
 }
 
-
 $handler = oxNew('Notification_Handler');
-$handler->handler();
+$handler->handle();
