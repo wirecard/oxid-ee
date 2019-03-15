@@ -33,6 +33,8 @@ class Paypal_Payment_Method extends Payment_Method
 
     /**
      * Paypal_Payment_Method constructor.
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     public function __construct()
     {
@@ -43,6 +45,8 @@ class Paypal_Payment_Method extends Payment_Method
      * Get the payment method's configuration
      *
      * @return Config
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     public function getConfig(): Config
     {
@@ -70,6 +74,8 @@ class Paypal_Payment_Method extends Payment_Method
      * @var Order $oOrder
      *
      * @return \Wirecard\PaymentSdk\Transaction\Transaction
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     public function getTransaction(): Transaction
     {

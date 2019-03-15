@@ -127,9 +127,9 @@ class OxidEE_Events
         $sQueryAddDescriptor = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_DESCRIPTOR` tinyint(1) default 0 NOT NULL";
         self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_DESCRIPTOR', $sQueryAddDescriptor);
 
-        $sQueryAddAdditionalInfo = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_ADDITIONAL_INFO`
+        $sQueryAddInfo = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_ADDITIONAL_INFO`
          tinyint(1) default 0 NOT NULL";
-        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_ADDITIONAL_INFO', $sQueryAddAdditionalInfo);
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_ADDITIONAL_INFO', $sQueryAddInfo);
     }
 
     /**
