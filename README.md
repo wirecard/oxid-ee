@@ -1,6 +1,7 @@
 # WIP: Work in progress
 Wirecard Payment Processing Gateway Extension for Oxid 6
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/f93b8dbbac4c455c8e216916cfab0b66)](https://app.codacy.com/app/Wirecard/oxid-ee?utm_source=github.com&utm_medium=referral&utm_content=wirecard/oxid-ee&utm_campaign=Badge_Grade_Settings)
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/wirecard/oxid-ee/master/LICENSE)
 [![PHP v7.0](https://img.shields.io/badge/php-v7.0-yellow.svg)](http://www.php.net)
 [![PHP v7.1](https://img.shields.io/badge/php-v7.1-yellow.svg)](http://www.php.net)
