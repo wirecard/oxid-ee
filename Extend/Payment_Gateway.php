@@ -175,7 +175,7 @@ class Payment_Gateway extends Payment_Gateway_parent
     }
 
     /**
-     * Returns a "Response"
+     * Executes the transaction through EE
      *
      * @param float $dAmount Amount to pay
      *
@@ -229,7 +229,7 @@ class Payment_Gateway extends Payment_Gateway_parent
             $oTransaction->setDescriptor($descriptor);
         }
 
-        if ($oPayment->oxpayments__wdoxidee_basket->value) { //add basket data
+        if ($oPayment->oxpayments__wdoxidee_basket->value) {
             $this->_addBasketInfo($oTransaction, $oBasket);
         }
 
@@ -275,7 +275,7 @@ class Payment_Gateway extends Payment_Gateway_parent
 
     /**
      *
-     * build an account holder
+     * Build an account holder
      *
      * @param Order $oOrder
      * @param User $oUser
@@ -314,7 +314,7 @@ class Payment_Gateway extends Payment_Gateway_parent
 
     /**
      *
-     * build the shipping account holder
+     * Build the shipping account holder
      *
      * @param Order $oOrder
      * @param User $oUser
@@ -349,6 +349,13 @@ class Payment_Gateway extends Payment_Gateway_parent
         return $oAccount;
     }
 
+    /**
+     *
+     * Add the basket info to transaction
+     *
+     * @param Transaction $oTransaction
+     * @param Basket $oBasket
+     */
     private function _addBasketInfo(Transaction &$oTransaction, Basket $oBasket)
     {
         $finalPrice = array();
