@@ -1,7 +1,6 @@
 exclude_paths:
  - 'composer.json'
  - 'metadata.php'
- - 'phpcs.xml'
  - 'README.md'
  - 'Tests/**'
  - 'phpmd/**'
