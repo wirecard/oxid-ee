@@ -14,6 +14,8 @@ use \Wirecard\Oxid\Core\Helper;
 
 /**
  * Extends the OXID ViewConfig
+ *
+ * @extends \OxidEsales\Eshop\Core\ViewConfig
  */
 class View_Config extends View_Config_parent
 {
@@ -32,7 +34,7 @@ class View_Config extends View_Config_parent
 
     /**
      *
-     * check id payment id is a Wirecard id i.e. wdpaypal
+     * Checks if payment id is a Wirecard id i.e. wdpaypal
      *
      * @param $sPaymentId
      * @return bool
