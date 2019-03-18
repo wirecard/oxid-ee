@@ -32,7 +32,7 @@ class Helper
 
     /**
      *
-     * check id payment id is a Wirecard id i.e. wdpaypal
+     * Check if payment id is a Wirecard id i.e. wdpaypal
      *
      * @param $sPaymentId
      * @return bool
