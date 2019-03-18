@@ -18,14 +18,27 @@ use \Wirecard\Oxid\Core\Helper;
 class ViewConfig extends ViewConfig_parent
 {
 
-    public function getWirecardDeviceId(string $sMaid)
+    /**
+     *
+     * Returns the device id for the fraud protection script in out/blocks/profiling_tags.tpl
+     *
+     * @param string $sMaid
+     * @return string
+     */
+    public function getWirecardDeviceId(string $sMaid): string
     {
         return Helper::createDeviceId($sMaid, $this->getSessionId());
     }
 
-    public function isWirecardPaymentMethod($sPaymentId)
+    /**
+     *
+     * check id payment id is a Wirecard id i.e. wdpaypal
+     *
+     * @param $sPaymentId
+     * @return bool
+     */
+    public function isWirecardPaymentMethod($sPaymentId): bool
     {
-        //FIXME: check for all payment methods
-        return strcmp($sPaymentId, "wdpaypal") == 0;
+        return Helper::isWirecardPaymentMethod($sPaymentId);
     }
 }
