@@ -33,4 +33,6 @@ abstract class Payment_Method
      * @SuppressWarnings(PHPMD.Coverage)
      */
     abstract public function getConfig(): Config;
+
+
 }
