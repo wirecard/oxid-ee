@@ -14,8 +14,6 @@ use \Wirecard\PaymentSdk\Config\Config;
 use \Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use \Wirecard\PaymentSdk\Transaction\Transaction;
 use \Wirecard\PaymentSdk\Transaction\PayPalTransaction;
-use \Wirecard\PaymentSdk\Entity\AccountHolder;
-use \Wirecard\PaymentSdk\Entity\Address;
 
 use \OxidEsales\Eshop\Core\Registry;
 
