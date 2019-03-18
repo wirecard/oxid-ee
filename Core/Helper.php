@@ -10,11 +10,35 @@
 
 namespace Wirecard\Oxid\Core;
 
-
+/**
+ * Util functions
+ */
 class Helper
 {
-    public static function createDeviceId(string $sMaid, string $sSessionId)
+    /**
+     *
+     * Create a Fingerprint for the Device.fingerprint fraud protection
+     *
+     * also used in out/blocks/profiling_tags.tpl for the session id
+     *
+     * @param string $sMaid
+     * @param string $sSessionId
+     * @return string
+     */
+    public static function createDeviceId(string $sMaid, string $sSessionId): string
     {
         return $sMaid . '_' . $sSessionId;
+    }
+
+    /**
+     *
+     * check id payment id is a Wirecard id i.e. wdpaypal
+     *
+     * @param $sPaymentId
+     * @return bool
+     */
+    public static function isWirecardPaymentMethod($sPaymentId): bool
+    {
+        return strpos($sPaymentId, "wd") === 0;
     }
 }

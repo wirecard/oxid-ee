@@ -19,7 +19,6 @@ use \Wirecard\PaymentSdk\Transaction\Transaction;
  */
 abstract class Payment_Method
 {
-
     /**
      * Get the payments method transaction configuration
      *
@@ -33,6 +32,4 @@ abstract class Payment_Method
      * @SuppressWarnings(PHPMD.Coverage)
      */
     abstract public function getConfig(): Config;
-
-
 }
