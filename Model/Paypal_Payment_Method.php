@@ -64,7 +64,7 @@ class Paypal_Payment_Method extends Payment_Method
     /**
      * @inheritdoc
      */
-    public function getTransaction(): \Wirecard\PaymentSdk\Transaction\Transaction
+    public function getTransaction(): Transaction
     {
         $oTransaction = new PayPalTransaction();
         return $oTransaction;

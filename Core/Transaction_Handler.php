@@ -9,14 +9,16 @@
 
 namespace Wirecard\Oxid\Core;
 
-use OxidEsales\Eshop\Application\Model\Order;
-use OxidEsales\Eshop\Core\Registry;
+use \OxidEsales\Eshop\Application\Model\Order;
+use \OxidEsales\Eshop\Core\Registry;
+use \OxidEsales\EshopCommunity\Core\Field;
 
-use OxidEsales\EshopCommunity\Core\Field;
-use Wirecard\PaymentSdk\Entity\Amount;
-use Wirecard\PaymentSdk\Response\FailureResponse;
-use Wirecard\PaymentSdk\Response\SuccessResponse;
-use Wirecard\PaymentSdk\TransactionService;
+use \Wirecard\PaymentSdk\Entity\Amount;
+use \Wirecard\PaymentSdk\Response\FailureResponse;
+use \Wirecard\PaymentSdk\Response\SuccessResponse;
+use \Wirecard\PaymentSdk\TransactionService;
+
+use \Wirecard\Oxid\Model\Transaction;
 
 class Transaction_Handler
 {
@@ -26,29 +28,29 @@ class Transaction_Handler
     /**
      * @var \Psr\Log\LoggerInterface
      */
-    private $oLogger;
+    private $_oLogger;
 
     /**
      * @var \OxidEsales\EshopCommunity\Core\Language
      */
-    private $oLang;
+    private $_oLang;
 
     public function __construct()
     {
-        $this->oLogger = Registry::getLogger();
-        $this->oLang = Registry::getLang();
+        $this->_oLogger = Registry::getLogger();
+        $this->_oLang = Registry::getLang();
     }
 
     /**
-     * @param \Wirecard\Oxid\Model\Transaction $oTransaction
+     * @param Transaction $oTransaction
      * @return array either [status => success] or [status => error, message => errorMessage]
      */
-    public function processCancel(\Wirecard\Oxid\Model\Transaction $oTransaction): array
+    public function processCancel(Transaction $oTransaction): array
     {
         try {
             $oPayment = Payment_Method_Factory::create($oTransaction->getPaymentType());
         } catch (\Exception $oExc) {
-            $this->oLogger->error("Error canceling transaction", [$oExc]);
+            $this->_oLogger->error("Error canceling transaction", [$oExc]);
             return ['status' => self::TRANSACTION_STATUS_ERROR, 'message' => $oExc->getMessage()];
         }
 
@@ -65,14 +67,14 @@ class Transaction_Handler
             $oOrder->oxorder__oxcurrency->name
         ));
 
-        $oTransactionService = new TransactionService($oConfig, $this->oLogger);
+        $oTransactionService = new TransactionService($oConfig, $this->_oLogger);
         try {
             /**
              * @var $oResponse \Wirecard\PaymentSdk\Response\Response
              */
             $oResponse = $oTransactionService->cancel($oCancelTransaction);
         } catch (\Exception $oExc) {
-            $this->oLogger->error("Error canceling transaction", [$oExc]);
+            $this->_oLogger->error("Error canceling transaction", [$oExc]);
         }
 
         if ($oResponse instanceof SuccessResponse) {
@@ -83,7 +85,7 @@ class Transaction_Handler
         }
 
         if ($oResponse instanceof FailureResponse) {
-            return ['status' => self::TRANSACTION_STATUS_ERROR, 'message' => $this->oLang->translateString('error_transaction_cancel')];
+            return ['status' => self::TRANSACTION_STATUS_ERROR, 'message' => $this->_oLang->translateString('error_transaction_cancel')];
         }
     }
 
