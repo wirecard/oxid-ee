@@ -9,10 +9,11 @@
 
 namespace Wirecard\Oxid\Extend;
 
-use \OxidEsales\Eshop\Application\Model\State;
-use \OxidEsales\Eshop\Application\Model\Payment;
+use \OxidEsales\Eshop\Application\Model\Article;
 use \OxidEsales\Eshop\Application\Model\Basket;
+use \OxidEsales\Eshop\Application\Model\State;
 use \OxidEsales\Eshop\Application\Model\Order;
+use \OxidEsales\Eshop\Application\Model\Payment;
 use \OxidEsales\Eshop\Application\Model\User;
 use \OxidEsales\Eshop\Core\Registry;
 use \OxidEsales\Eshop\Core\Session;
@@ -30,6 +31,7 @@ use \Wirecard\PaymentSdk\TransactionService;
 use \Wirecard\PaymentSdk\Response\FailureResponse;
 use \Wirecard\PaymentSdk\Response\InteractionResponse;
 use \Wirecard\PaymentSdk\Entity\Redirect;
+use \Wirecard\PaymentSdk\Entity\Basket as WdBasket;
 
 /**
  * Class BasePaymentGateway
@@ -70,7 +72,7 @@ class Payment_Gateway extends Payment_Gateway_parent
      * @param double $dAmount Goods amount
      * @param \Wirecard\Oxid\Extend\Order $oOrder User ordering object
      *
-     * @return Response|FailureResponse|S
+     * @return Response|FailureResponse|SuccessResponse
      *
      * @override
      *
@@ -179,7 +181,7 @@ class Payment_Gateway extends Payment_Gateway_parent
      *
      * @param float $dAmount Amount to pay
      *
-     * @param Order $oOrder the actual Order object
+     * @param Order $oOrder
      *
      * @return FailureResponse|InteractionResponse|Response|SuccessResponse
      *
@@ -262,7 +264,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         $oTransaction->setAccountHolder($oAccountHolder);
 
         if ($oOrder->oxorder__oxdelfname->value) { //shipping address exists
-            $oTransaction->setShipping($this->_buildShipping($oOrder, $oUser));
+            $oTransaction->setShipping($this->_buildShipping($oOrder));
         } else {
             $oTransaction->setShipping($oAccountHolder);
         }
@@ -320,12 +322,12 @@ class Payment_Gateway extends Payment_Gateway_parent
      * @param User $oUser
      * @return AccountHolder
      */
-    private function _buildShipping(Order $oOrder, User $oUser): AccountHolder
+    private function _buildShipping(Order $oOrder): AccountHolder
     {
         $oAddress = new \Wirecard\PaymentSdk\Entity\Address(
             self::_getCountryCode($oOrder->oxorder__oxdelcountryid),
             $oOrder->oxorder__oxdelcity->value,
-            $oOrder->oxorder__oxdelstreet->value . ' ' . $oUser->oxuser__oxdelstreetnr->value
+            $oOrder->oxorder__oxdelstreet->value . ' ' . $oOrder->oxorder__oxdelstreetnr->value
         );
         $oAddress->setPostalCode($oOrder->oxorder__oxdelzip->value);
 
@@ -358,28 +360,41 @@ class Payment_Gateway extends Payment_Gateway_parent
      */
     private function _addBasketInfo(Transaction &$oTransaction, Basket $oBasket)
     {
-        $finalPrice = array();
+        $finalPrices = array();
         $contents = $oBasket->getContents();
         foreach ($contents as $content) {
-            $finalPrice[$content->getProductId()] = $content->getFUnitPrice();
+            $finalPrices[$content->getProductId()] = $content->getFUnitPrice();
         }
 
-        $oWdBasket = new \Wirecard\PaymentSdk\Entity\Basket();
+        $oWdBasket = new WdBasket;
         $oWdBasket->setVersion($oTransaction);
         $oArticles = $oBasket->getBasketSummary()->aArticles;
         $oCurrency = $this->getConfig()->getActShopCurrencyObject();
 
         foreach ($oArticles as $key => $value) {
-            $oArticle = oxNew(\OxidEsales\EshopCommunity\Application\Model\Article::class);
-            $oArticle->load($key);
-            $item = new \Wirecard\PaymentSdk\Entity\Item(
-                $oArticle->oxarticles__oxtitle->value,
-                new Amount($finalPrice[$key], $oCurrency->name),
-                $value
-            );
-            $item->setTaxRate($oArticle->oxarticles__oxvat->value);
-            $oWdBasket->add($item);
+            $this->_addItemToBasket($oWdBasket, $key, $value, $finalPrices, $oCurrency);
         }
         $oTransaction->setBasket($oWdBasket);
+    }
+
+    /**
+     * Adds an article to the basket
+     *
+     * @param WdBasket $oBasket
+     * @param string $sArticleKey
+     * @param int $iQuantity
+     * @param array $aPrices
+     * @param $oCurrency
+     */
+    private function _addItemToBasket(WdBasket &$oBasket, string $sArticleKey, int $iQuantity, array $aPrices, $oCurrency) {
+        $oArticle = oxNew(\OxidEsales\EshopCommunity\Application\Model\Article::class);
+        $oArticle->load($sArticleKey);
+        $item = new \Wirecard\PaymentSdk\Entity\Item(
+            $oArticle->oxarticles__oxtitle->value,
+            new Amount($aPrices[$sArticleKey], $oCurrency->name),
+            $iQuantity
+        );
+        $item->setTaxRate($oArticle->oxarticles__oxvat->value);
+        $oBasket->add($item);
     }
 }
