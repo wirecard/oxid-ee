@@ -25,7 +25,7 @@ class Helper
      * @param string $sSessionId
      * @return string
      */
-    public static function createDeviceId(string $sMaid, string $sSessionId): string
+    public static function createDeviceFingerprint(string $sMaid, string $sSessionId = null): string
     {
         return $sMaid . '_' . $sSessionId;
     }

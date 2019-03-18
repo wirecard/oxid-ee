@@ -268,7 +268,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         }
 
         $oDevice = new Device($_SERVER['HTTP_USER_AGENT']);
-        $sDeviceId = Helper::createDeviceId($oPayment->oxpayments__wdoxidee_maid->value, $this->getSession()->getId());
+        $sDeviceId = Helper::createDeviceFingerprint($oPayment->oxpayments__wdoxidee_maid->value, $this->getSession()->getId());
         $oDevice->setFingerprint($sDeviceId);
         $oTransaction->setDevice($oDevice);
     }
