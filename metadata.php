@@ -29,6 +29,7 @@ $aModule = array(
     'url'               => 'https://www.wirecard.com',
     'email'             => 'support.at@wirecard.com',
     'extend'            => array (
+        \OxidEsales\Eshop\Core\ViewConfig::class                  => \Wirecard\Oxid\Extend\ViewConfig::class,
         \OxidEsales\Eshop\Application\Model\Order::class          => \Wirecard\Oxid\Extend\Order::class,
         \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \Wirecard\Oxid\Extend\Payment_Gateway::class
     ),
@@ -42,6 +43,11 @@ $aModule = array(
             'template' => 'payment_main.tpl',
             'block' => 'admin_payment_main_form',
             'file' => 'out/blocks/wd_admin_payment_main_form.tpl'
+        ),
+        array(
+            'template' => 'page/checkout/order.tpl',
+            'block' => 'checkout_order_main',
+            'file' => 'out/blocks/profiling_tags.tpl'
         )
     ),
     'events'            => array(
