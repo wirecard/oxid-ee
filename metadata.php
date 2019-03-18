@@ -29,7 +29,7 @@ $aModule = array(
     'url'               => 'https://www.wirecard.com',
     'email'             => 'support.at@wirecard.com',
     'extend'            => array (
-        \OxidEsales\Eshop\Core\ViewConfig::class                  => \Wirecard\Oxid\Extend\ViewConfig::class,
+        \OxidEsales\Eshop\Core\ViewConfig::class                  => \Wirecard\Oxid\Extend\View_Config::class,
         \OxidEsales\Eshop\Application\Model\Order::class          => \Wirecard\Oxid\Extend\Order::class,
         \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \Wirecard\Oxid\Extend\Payment_Gateway::class
     ),

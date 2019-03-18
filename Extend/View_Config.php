@@ -15,7 +15,7 @@ use \Wirecard\Oxid\Core\Helper;
 /**
  * Extends the OXID ViewConfig
  */
-class ViewConfig extends ViewConfig_parent
+class View_Config extends View_Config_parent
 {
 
     /**
@@ -27,7 +27,7 @@ class ViewConfig extends ViewConfig_parent
      */
     public function getWirecardDeviceId(string $sMaid): string
     {
-        return Helper::createDeviceId($sMaid, $this->getSessionId());
+        return Helper::createDeviceFingerprint($sMaid, $this->getSessionId());
     }
 
     /**
