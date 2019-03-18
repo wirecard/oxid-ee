@@ -209,7 +209,6 @@ class Payment_Gateway extends Payment_Gateway_parent
         $oBasket = $oSession->getBasket();
         $oUser = $oBasket->getBasketUser();
 
-        //TODO cgrach: use order detail from oxid's order.
         $oTransaction->setOrderDetail(sprintf(
             '%s %s %s',
             $oOrder->oxorder__oxbillemail->value,
