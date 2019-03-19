@@ -13,76 +13,19 @@
 $sMetadataVersion = '2.1';
 
 // method to toggle the visibility of the DOM elements for the module terms and conditions content
-$sToggleJs = '<script type="text/javascript">
-                // initial state is collapsed
-                var wdTermsCollapseState = "collapse";
+$sToggleJs = file_get_contents(dirname(__FILE__) . '/out/html/toggle-terms-of-use-js.html');
 
-                // ids of the DOM elements visible in collapsed state
-                var ITEMS_COLLAPSE_STATE = ["wd-terms-show-link"];
+// currently, the terms of use only exist in English and are thus used for English and German
+$sTermsContentEn = file_get_contents(dirname(__FILE__) . '/out/html/terms-of-use.en.html');
 
-                // ids of the DOM elements visible in expanded state
-                var ITEMS_EXPAND_STATE = ["wd-terms-hide-link", "wd-terms-content"];
+// module description blocks in English and German
+$sModuleDescriptionDe = file_get_contents(dirname(__FILE__) . '/out/html/module-description.de.html');
+$sModuleDescriptionEn = file_get_contents(dirname(__FILE__) . '/out/html/module-description.en.html');
 
-                // sets the visibility of the element accordingly
-                var wdSetElementVisibility = function(elemId, visibility) {
-                    var elem = document.getElementById(elemId);
-
-                    if (elem) {
-                        elem.style.display = visibility;
-                    }
-                };
-
-                var wdShowElement = function(elemId) {
-                    wdSetElementVisibility(elemId, "inline-block");
-                };
-
-                var wdHideElement = function(elemId) {
-                    wdSetElementVisibility(elemId, "none");
-                };
-
-                var wdToggleTermsVisibility = function() {
-                    if (wdTermsCollapseState === "collapse") {
-                        ITEMS_COLLAPSE_STATE.forEach(wdHideElement);
-                        ITEMS_EXPAND_STATE.forEach(wdShowElement);
-                        wdTermsCollapseState = "expand";
-                    } else {
-                        ITEMS_EXPAND_STATE.forEach(wdHideElement);
-                        ITEMS_COLLAPSE_STATE.forEach(wdShowElement);
-                        wdTermsCollapseState = "collapse";
-                    }
-                }
-            </script>';
-
-$sTermsContent = "
-    <h4>Terms of use</h4>
-    <p>The plugins offered are provided free of charge by Wirecard AG (abbreviated to Wirecard) and are explicitly not part of the Wirecard range of products and services.</p>
-    <p>They have been tested and approved for full functionality in the standard configuration (status on delivery) of the corresponding shop system. They are under General Public License Version 3 (GPLv3) and can be used, developed and passed on to third parties under the same terms.</p>
-    <p>However, Wirecard does not provide any guarantee or accept any liability for any errors occurring when used in an enhanced, customized shop system configuration.</p>
-    <p>Operation in an enhanced, customized configuration is at your own risk and requires a comprehensive test phase by the user of the plugin.</p>
-    <p>Customers use the plugins at their own risk. Wirecard does not guarantee their full functionality neither does Wirecard assume liability for any disadvantages related to the use of the plugins. Additionally, Wirecard does not guarantee the full functionality for customized shop systems or installed plugins of  other vendors of plugins within the same shop system.</p>
-    <p>Customers are responsible for testing the plugin's functionality before starting productive operation.</p>
-    <p>By installing the plugin into the shop system the customer agrees to these terms of use. Please do not use the plugin if you do not agree to these terms of use!</p>
-    <p>Uninstalling the plugin may result in the loss of data.</p>
-    <h4>Legal notice</h4>
-    <p>Wirecard will only be made liable for specifications and functions as described within this documentation.</p>
-    <p>No warranty whatsoever can be granted on any alterations and/or new implementations as well as resulting diverging usage not supported or described within this documentation.</p>
-";
-
-$aTermsAndConditions = array(
-    'de' => $sToggleJs . '<h3>Modul für Zahlung mit Wirecard paymentSDK</h3>
-            <p>
-                General Information regarding Wirecard Shop Plugins
-                <a id="wd-terms-show-link" style="color: blue;" href="#" onclick="wdToggleTermsVisibility()">(show)</a>
-                <a id="wd-terms-hide-link" style="color: blue; display: none;" href="#" onclick="wdToggleTermsVisibility()">(hide)</a>
-            </p>
-            <div id="wd-terms-content" style="display: none;">' . $sTermsContent . '</div>',
-    'en' => $sToggleJs . '<h3>Module for payment with Wirecard paymentSDK</h3>
-            <p>
-                General Information regarding Wirecard Shop Plugins
-                <a id="wd-terms-show-link" style="color: blue;" href="#" onclick="wdToggleTermsVisibility()">(show)</a>
-                <a id="wd-terms-hide-link" style="color: blue; display: none;" href="#" onclick="wdToggleTermsVisibility()">(hide)</a>
-            </p>
-            <div id="wd-terms-content" style="display: none;">' . $sTermsContent . '</div>'
+// the array contains the complete description HTML string
+$aModuleDescriptions = array(
+    'de' => $sToggleJs . str_replace('{{ TERMS_CONTENT }}', $sTermsContentEn, $sModuleDescriptionDe),
+    'en' => $sToggleJs . str_replace('{{ TERMS_CONTENT }}', $sTermsContentEn, $sModuleDescriptionEn)
 );
 
 /**
@@ -92,8 +35,8 @@ $aModule = array(
     'id'                => 'paymentgateway',
     'title'             => 'Wirecard Oxid EE Paymentgateway',
     'description'       => array(
-        'de' => $aTermsAndConditions['de'],
-        'en' => $aTermsAndConditions['en']
+        'de' => $aModuleDescriptions['de'],
+        'en' => $aModuleDescriptions['en']
     ),
     'lang'              => 'en',
     'thumbnail'         => 'wirecard-logo.png',
