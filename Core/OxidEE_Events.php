@@ -31,9 +31,9 @@ class OxidEE_Events
      * Database helper function
      * Executes the query if the specified column does not exist in the table.
      *
-     * @param string $sTableName  database table name
+     * @param string $sTableName database table name
      * @param string $sColumnName database column name
-     * @param string $sQuery      SQL query to execute if column does not exist in the table
+     * @param string $sQuery SQL query to execute if column does not exist in the table
      *
      * @return boolean true or false if query was executed
      */
@@ -67,8 +67,8 @@ class OxidEE_Events
      * Executes the query if no row with the specified criteria exists in the table.
      *
      * @param string $sTableName database table name
-     * @param array  $aKeyValue  key-value array to build where query string
-     * @param string $sQuery     SQL query to execute if no row with the search criteria exists in the table
+     * @param array $aKeyValue key-value array to build where query string
+     * @param string $sQuery SQL query to execute if no row with the search criteria exists in the table
      *
      * @return boolean true or false if query was executed
      */
@@ -312,5 +312,16 @@ class OxidEE_Events
         if ($environmentVar === 'development') {
             self::_deleteOrderTransactionTable();
         }
+
+        self::_disablePaymentTypes();
+    }
+
+    private static function _disablePaymentTypes()
+    {
+        $sQuery = "UPDATE oxpayments SET `OXACTIVE` = 0 WHERE `OXID` LIKE 'wd%'";
+
+        $iNumRowsAffected = self::$oDb->execute($sQuery);
+
+        Registry::getLogger()->info("$iNumRowsAffected payment methods disabled");
     }
 }
