@@ -15,16 +15,17 @@ $sMetadataVersion = '2.1';
 // method to toggle the visibility of the DOM elements for the module terms and conditions content
 $sToggleJs = file_get_contents(dirname(__FILE__) . '/out/html/toggle-terms-of-use-js.html');
 
-// currently, the terms of use only exist in English and are thus used for English and German
+// currently, the terms of use only exist in English and are thus used for both English and German
 $sTermsContentEn = file_get_contents(dirname(__FILE__) . '/out/html/terms-of-use.en.html');
+$sTermsContentDe = $sTermsContentEn;
 
 // module description blocks in English and German
-$sModuleDescriptionDe = file_get_contents(dirname(__FILE__) . '/out/html/module-description.de.html');
 $sModuleDescriptionEn = file_get_contents(dirname(__FILE__) . '/out/html/module-description.en.html');
+$sModuleDescriptionDe = file_get_contents(dirname(__FILE__) . '/out/html/module-description.de.html');
 
-// the array contains the complete description HTML string
+// the array contains the complete description HTML string for each language
 $aModuleDescriptions = array(
-    'de' => $sToggleJs . str_replace('{{ TERMS_CONTENT }}', $sTermsContentEn, $sModuleDescriptionDe),
+    'de' => $sToggleJs . str_replace('{{ TERMS_CONTENT }}', $sTermsContentDe, $sModuleDescriptionDe),
     'en' => $sToggleJs . str_replace('{{ TERMS_CONTENT }}', $sTermsContentEn, $sModuleDescriptionEn)
 );
 
