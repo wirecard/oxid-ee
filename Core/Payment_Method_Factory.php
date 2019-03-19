@@ -32,7 +32,7 @@ class Payment_Method_Factory
     public static function create(string $sPaymentMethodType): Payment_Method
     {
         switch ($sPaymentMethodType) {
-            case Paypal_Payment_Method::NAME:
+            case Paypal_Payment_Method::getName(true):
                 return new Paypal_Payment_Method();
             default:
                 throw new \Exception("payment type not registered: $sPaymentMethodType");

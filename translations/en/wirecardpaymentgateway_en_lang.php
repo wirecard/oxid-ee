@@ -250,6 +250,7 @@ $aLang = array(
     "panel_currency" => "Currency",
     "panel_details" => "Details",
     "panel_order_number" => "Order Number",
+    "panel_order_id" => "Order Reference",
     "panel_parent_transaction_id" => "Parent Transaction ID",
     "panel_payment_method" => "Payment Method",
     "panel_provider_transaction_id" => "Provider transaction ID",

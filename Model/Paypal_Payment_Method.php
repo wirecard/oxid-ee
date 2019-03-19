@@ -15,29 +15,17 @@ use \Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use \Wirecard\PaymentSdk\Transaction\Transaction;
 use \Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
-use \OxidEsales\Eshop\Core\Registry;
+use \OxidEsales\Eshop\Application\Model\Payment;
 
 /**
  * Payment method implementation for Paypal
  */
 class Paypal_Payment_Method extends Payment_Method
 {
-    const NAME = "wdpaypal";
-
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @inheritdoc
      */
-    private $oLogger;
-
-    /**
-     * Paypal_Payment_Method constructor.
-     *
-     * @SuppressWarnings(PHPMD.Coverage)
-     */
-    public function __construct()
-    {
-        $this->oLogger = Registry::getLogger();
-    }
+    protected static $_sName = "paypal";
 
     /**
      * Get the payment method's configuration
@@ -48,21 +36,21 @@ class Paypal_Payment_Method extends Payment_Method
      */
     public function getConfig(): Config
     {
-        $payment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
-        $payment->load(self::NAME);
-        $config = new Config(
-            $payment->oxpayments__wdoxidee_apiurl->value,
-            $payment->oxpayments__wdoxidee_httpuser->value,
-            $payment->oxpayments__wdoxidee_httppass->value
+        $oPayment = oxNew(Payment::class);
+        $oPayment->load(self::getName(true));
+        $oConfig = new Config(
+            $oPayment->oxpayments__wdoxidee_apiurl->value,
+            $oPayment->oxpayments__wdoxidee_httpuser->value,
+            $oPayment->oxpayments__wdoxidee_httppass->value
         );
         $oPaymentMethodConfig = new PaymentMethodConfig(
-            PayPalTransaction::NAME,
-            $payment->oxpayments__wdoxidee_maid->value,
-            $payment->oxpayments__wdoxidee_secret->value
+            self::getName(),
+            $oPayment->oxpayments__wdoxidee_maid->value,
+            $oPayment->oxpayments__wdoxidee_secret->value
         );
-        $config->add($oPaymentMethodConfig);
+        $oConfig->add($oPaymentMethodConfig);
 
-        return $config;
+        return $oConfig;
     }
 
     /**
@@ -71,13 +59,12 @@ class Paypal_Payment_Method extends Payment_Method
      * @var double $dAmount
      * @var Order $oOrder
      *
-     * @return \Wirecard\PaymentSdk\Transaction\Transaction
+     * @return Transaction
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
     public function getTransaction(): Transaction
     {
-        $oTransaction = new PayPalTransaction();
-        return $oTransaction;
+        return new PayPalTransaction();
     }
 }

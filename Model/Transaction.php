@@ -24,9 +24,10 @@ class Transaction extends MultiLanguageModel
     const ACTION_AUTHORIZE_CAPTURE = 'authorize-capture';
     const ACTION_PURCHASE = 'purchase';
 
+    const STATE_AWAITING = 'awaiting';
     const STATE_SUCCESS = 'success';
+    const STATE_CLOSED = 'closed';
     const STATE_ERROR = 'error';
-    const STATE_PENDING = 'pending';
 
     /**
      * @inheritdoc
@@ -51,7 +52,7 @@ class Transaction extends MultiLanguageModel
     public function getOrder(): Order
     {
         $oOrder = oxNew(Order::class);
-        $oOrder->load($this->wdoxidee_ordertransactions__wdoxidee_orderid->value);
+        $oOrder->load($this->wdoxidee_ordertransactions__orderid->value);
 
         return $oOrder;
     }
@@ -76,7 +77,25 @@ class Transaction extends MultiLanguageModel
      */
     public function getResponseXML(): string
     {
-        return base64_decode($this->wdoxidee_ordertransactions__wdoxidee_responsexml->rawValue);
+        return base64_decode($this->wdoxidee_ordertransactions__responsexml->rawValue);
+    }
+
+    /**
+     * Loads transaction data from DB.
+     * Returns true on success.
+     *
+     * @param string $sTransactionId
+     *
+     * @return bool
+     */
+    public function loadWithTransactionId(string $sTransactionId)
+    {
+        //getting at least one field before lazy loading the object
+        $this->_addField('transactionid', 0);
+        $query = $this->buildSelectString([$this->getViewName() . '.transactionid' => $sTransactionId]);
+        $this->_isLoaded = $this->assignRecord($query);
+
+        return $this->_isLoaded;
     }
 
     /**
@@ -112,7 +131,8 @@ class Transaction extends MultiLanguageModel
         return [
             self::STATE_SUCCESS,
             self::STATE_ERROR,
-            self::STATE_PENDING,
+            self::STATE_AWAITING,
+            self::STATE_CLOSED
         ];
     }
 }

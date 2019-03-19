@@ -9,17 +9,17 @@
 
 namespace Wirecard\Oxid\Extend;
 
+use \OxidEsales\Eshop\Application\Model\Shop;
 use \OxidEsales\Eshop\Application\Model\Article;
+use \OxidEsales\Eshop\Application\Model\Country;
 use \OxidEsales\Eshop\Application\Model\Basket;
 use \OxidEsales\Eshop\Application\Model\State;
-use \OxidEsales\Eshop\Application\Model\Order;
 use \OxidEsales\Eshop\Application\Model\Payment;
 use \OxidEsales\Eshop\Application\Model\User;
 use \OxidEsales\Eshop\Core\Registry;
 use \OxidEsales\Eshop\Core\Session;
-
-use \Wirecard\Oxid\Core\Helper;
-use \Wirecard\Oxid\Core\Payment_Method_Factory;
+use \OxidEsales\Eshop\Core\Field;
+use \OxidEsales\Eshop\Core\Language;
 
 use \Wirecard\PaymentSdk\Entity\AccountHolder;
 use \Wirecard\PaymentSdk\Entity\Amount;
@@ -33,28 +33,35 @@ use \Wirecard\PaymentSdk\Response\InteractionResponse;
 use \Wirecard\PaymentSdk\Entity\Redirect;
 use \Wirecard\PaymentSdk\Entity\Basket as WdBasket;
 use \Wirecard\PaymentSdk\Entity\Item;
+use \Wirecard\PaymentSdk\Entity\Address;
+use \Wirecard\PaymentSdk\Entity\Status;
+
+use \Wirecard\Oxid\Core\Payment_Method_Factory;
+use \Wirecard\Oxid\Model\Payment_Method;
+use \Wirecard\Oxid\Extend\Order;
+use \Wirecard\Oxid\Core\Helper;
+
+use \Psr\Log\LoggerInterface;
 
 /**
  * Class BasePaymentGateway
  *
  * Base class for all payment methods
  *
- * @mixin  \OxidEsales\Eshop\Application\Model\PaymentGateway
+ * @mixin \OxidEsales\Eshop\Application\Model\PaymentGateway
  *
  */
 class Payment_Gateway extends Payment_Gateway_parent
 {
-    const NAME = 'wdpaypal';
+    /**
+     * @var LoggerInterface
+     */
+    private $_oLogger;
 
     /**
-     * @var \Psr\Log\LoggerInterface
+     * @var Language
      */
-    private $oLogger;
-
-    /**
-     * @var \OxidEsales\Eshop\Core\Language
-     */
-    private $oLang;
+    private $_oLang;
 
     /**
      * BasePaymentGateway constructor.
@@ -63,15 +70,15 @@ class Payment_Gateway extends Payment_Gateway_parent
      */
     public function __construct()
     {
-        $this->oLogger = Registry::getLogger();
-        $this->oLang = Registry::getLang();
+        $this->_oLogger = Registry::getLogger();
+        $this->_oLang = Registry::getLang();
     }
 
     /**
      * Executes payment, returns true on success.
      *
-     * @param double                      $dAmount Goods amount
-     * @param \Wirecard\Oxid\Extend\Order $oOrder  User ordering object
+     * @param float $fAmount Goods amount
+     * @param Order $oOrder  User ordering object
      *
      * @return Response|FailureResponse|SuccessResponse
      *
@@ -80,31 +87,30 @@ class Payment_Gateway extends Payment_Gateway_parent
      * @SuppressWarnings(PHPMD.Coverage)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function executePayment($dAmount, &$oOrder)
+    public function executePayment(float $fAmount, Order &$oOrder): bool
     {
-        if (!$oOrder->isWirecardPaymentType()) {
-            return parent::executePayment($dAmount, $oOrder);
+        if (!$oOrder->isModulePaymentType()) {
+            return parent::executePayment($fAmount, $oOrder);
         }
-        $oResponse = null;
 
         try {
-            $oResponse = self::makeTransaction($dAmount, $oOrder);
+            $oResponse = self::_makeTransaction($fAmount, $oOrder);
         } catch (\Exception $exc) {
-            $this->oLogger->error("Error processing transaction", [$exc]);
+            $this->_oLogger->error("Error processing transaction", [$exc]);
             return false;
         }
 
         if ($oResponse instanceof FailureResponse) {
-            $this->oLogger->error('Error processing transaction:');
+            $this->_oLogger->error('Error processing transaction:');
 
             foreach ($oResponse->getStatusCollection() as $oStatus) {
                 /**
-                 * @var $oStatus \Wirecard\PaymentSdk\Entity\Status
+                 * @var Status $oStatus
                  */
                 $sSeverity = ucfirst($oStatus->getSeverity());
                 $sCode = $oStatus->getCode();
                 $sDescription = $oStatus->getDescription();
-                $this->oLogger->error("\t$sSeverity with code $sCode and message '$sDescription' occurred.");
+                $this->_oLogger->error("\t$sSeverity with code $sCode and message '$sDescription' occurred.");
             }
             return false;
         }
@@ -112,6 +118,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         if ($oResponse instanceof InteractionResponse) {
             $sPageUrl = $oResponse->getRedirectUrl();
         }
+
         Registry::getUtils()->redirect($sPageUrl);
         return true;
     }
@@ -119,55 +126,54 @@ class Payment_Gateway extends Payment_Gateway_parent
     /**
      * Returns country code
      *
-     * @param string $countryId
+     * @param string $sCountryId
      *
      * @return string
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    private static function _getCountryCode($countryId)
+    private function _getCountryCode(string $sCountryId): string
     {
-        $country = oxNew(\OxidEsales\Eshop\Application\Model\Country::class);
-        $country->load($countryId);
+        $country = oxNew(Country::class);
+        $country->load($sCountryId);
         return $country->oxcountry__oxisoalpha2->value;
     }
 
     /**
      * Returns a descriptor
      *
-     * @param string $orderId the order ID to get the descriptor from
+     * @param string $sOrderId the order ID to get the descriptor from
      *
      * @return string
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    public function getDescriptor($orderId): string
+    public function getDescriptor(string $sOrderId): string
     {
-        $shopId = \OxidEsales\Eshop\Core\Registry::getConfig()->getShopId();
-        $shop = oxNew(\OxidEsales\Eshop\Application\Model\Shop::class);
+        $shopId = Registry::getConfig()->getShopId();
+        $shop = oxNew(Shop::class);
         $shop->load($shopId);
-        return $shop->oxshops__oxname->value . " " . $orderId;
+        return $shop->oxshops__oxname->value . " " . $sOrderId;
     }
 
     /**
      * Returns a redirect object
      *
      * @param Session $oSession
-     *
      * @param string  $sShopUrl
      *
      * @return string
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    public function getRedirectUrls($oSession, $sShopUrl)
+    public function getRedirectUrls(Session $oSession, string $sShopUrl): Redirect
     {
         $sSid = $oSession->sid(true);
         if ($sSid != '') {
             $sSid = '&' . $sSid;
         }
 
-        $sErrorText = $this->oLang->translateString('order_error');
+        $sErrorText = $this->_oLang->translateString('order_error');
         $oRedirect = new Redirect(
             $sShopUrl . 'index.php?cl=thankyou' . $sSid,
             $sShopUrl . 'index.php?type=cancel&cl=payment',
@@ -179,9 +185,8 @@ class Payment_Gateway extends Payment_Gateway_parent
     /**
      * Executes the transaction through EE
      *
-     * @param float $dAmount Amount to pay
-     *
-     * @param Order $oOrder
+     * @param float                       $fAmount
+     * @param \Wirecard\Oxid\Extend\Order $oOrder
      *
      * @return FailureResponse|InteractionResponse|Response|SuccessResponse
      *
@@ -192,21 +197,22 @@ class Payment_Gateway extends Payment_Gateway_parent
      * @SuppressWarnings(PHPMD.ElseExpression)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function makeTransaction($dAmount, $oOrder)
+    private function _makeTransaction(float $fAmount, Order $oOrder): Response
     {
+        $sPaymentMethod = $oOrder->oxorder__oxpaymenttype->value;
         $sShopUrl = $this->getConfig()->getCurrentShopUrl();
         $oSession = $this->getSession();
 
         $oRedirect = self::getRedirectUrls($oSession, $sShopUrl);
-        $oPaymentMethod = Payment_Method_Factory::create(self::NAME);
-        $oTransactionService = new TransactionService($oPaymentMethod->getConfig(), $this->oLogger);
+        $oPaymentMethod = Payment_Method_Factory::create($sPaymentMethod);
+        $oTransactionService = new TransactionService($oPaymentMethod->getConfig(), $this->_oLogger);
 
         $oTransaction = $oPaymentMethod->getTransaction();
         $oTransaction->setRedirect($oRedirect);
 
         $oShopconfig = $this->getConfig();
         $oCurrency = $oShopconfig->getActShopCurrencyObject();
-        $oTransaction->setAmount(new Amount($dAmount, $oCurrency->name));
+        $oTransaction->setAmount(new Amount($fAmount, $oCurrency->name));
 
         $oBasket = $oSession->getBasket();
         $oUser = $oBasket->getBasketUser();
@@ -235,8 +241,14 @@ class Payment_Gateway extends Payment_Gateway_parent
             $this->_addBasketInfo($oTransaction, $oBasket);
         }
 
-        $oTransaction->setNotificationUrl($sShopUrl . 'notify.php');
+        $oTransaction->setNotificationUrl($sShopUrl
+            . 'index.php?cl=wcpg_notifyhandler&fnc=handleRequest&pmt='
+            . Payment_Method::getOxidFromSDKName($oPaymentMethod->getTransaction()->getConfigKey()));
         $oResponse = $oTransactionService->pay($oTransaction);
+
+        $oOrder->oxorder__wdoxidee_orderstate = new Field(Order::STATE_PENDING);
+        $oOrder->save();
+
         return $oResponse;
     }
 
@@ -288,9 +300,9 @@ class Payment_Gateway extends Payment_Gateway_parent
      */
     private function _buildAccountHolder(Order $oOrder, User $oUser): AccountHolder
     {
-        $oAccountHolder = new \Wirecard\PaymentSdk\Entity\AccountHolder();
+        $oAccountHolder = new AccountHolder();
 
-        $oAddress = new \Wirecard\PaymentSdk\Entity\Address(
+        $oAddress = new Address(
             self::_getCountryCode($oUser->oxuser__oxcountryid),
             $oUser->oxuser__oxcity->value,
             $oUser->oxuser__oxstreet->value . ' ' . $oUser->oxuser__oxstreetnr->value
@@ -328,7 +340,7 @@ class Payment_Gateway extends Payment_Gateway_parent
      */
     private function _buildShipping(Order $oOrder): AccountHolder
     {
-        $oAddress = new \Wirecard\PaymentSdk\Entity\Address(
+        $oAddress = new Address(
             self::_getCountryCode($oOrder->oxorder__oxdelcountryid),
             $oOrder->oxorder__oxdelcity->value,
             $oOrder->oxorder__oxdelstreet->value . ' ' . $oOrder->oxorder__oxdelstreetnr->value
@@ -346,7 +358,7 @@ class Payment_Gateway extends Payment_Gateway_parent
             $oAddress->setStreet2($sStreet2);
         }
 
-        $oAccount = new \Wirecard\PaymentSdk\Entity\AccountHolder();
+        $oAccount = new AccountHolder();
         $oAccount->setAddress($oAddress);
         $oAccount->setFirstName($oOrder->oxorder__oxdelfname->value);
         $oAccount->setLastName($oOrder->oxorder__oxdellname->value);

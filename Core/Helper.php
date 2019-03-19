@@ -44,12 +44,12 @@ class Helper
     }
 
     /**
-     * Check if payment id is a Wirecard id i.e. wdpaypal
+     * Check if payment id is a module id i.e. wdpaypal
      *
      * @param string $sPaymentId
      * @return bool
      */
-    public static function isWirecardPaymentMethod($sPaymentId): bool
+    public static function isModulePaymentMethod(string $sPaymentId): bool
     {
         return strpos($sPaymentId, "wd") === 0;
     }
@@ -68,14 +68,14 @@ class Helper
     }
 
     /**
-     * Returns a list of available payments added by the plugin.
+     * Returns a list of available payments added by the module.
      *
      * @return array
      */
-    public static function getPluginPayments(): array
+    public static function getModulePayments(): array
     {
         return array_filter(self::getPayments(), function ($oPayment) {
-            return $oPayment->oxpayments__wdoxidee_iswirecard->value;
+            return $oPayment->oxpayments__wdoxidee_isours->value;
         });
     }
 

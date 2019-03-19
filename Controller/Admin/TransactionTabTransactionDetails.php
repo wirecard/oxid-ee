@@ -19,8 +19,11 @@ class TransactionTabTransactionDetails extends TransactionTab
      *
      * @return array
      */
-    public function getListData(): array
+    protected function _getListData(): array
     {
-        return $this->_getListDataFromArray($this->oResponseMapper->getTransactionDetails());
+        return $this->_getListDataFromArray(
+            $this->oResponseMapper->getTransactionDetails(),
+            $this->oTransaction->wdoxidee_ordertransactions__state->value
+        );
     }
 }

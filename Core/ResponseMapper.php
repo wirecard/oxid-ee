@@ -1,7 +1,19 @@
 <?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/oxid-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
+ */
 
 namespace Wirecard\Oxid\Core;
 
+use Wirecard\PaymentSdk\Entity\AccountHolder;
+use Wirecard\PaymentSdk\Entity\Basket;
+use Wirecard\PaymentSdk\Entity\Card;
+use Wirecard\PaymentSdk\Entity\PaymentDetails;
+use Wirecard\PaymentSdk\Entity\TransactionDetails;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
@@ -29,7 +41,7 @@ class ResponseMapper
      *
      * @param string $sXml
      */
-    public function setResponse(string $sXml): void
+    public function setResponse(string $sXml)
     {
         $this->oResponse = new SuccessResponse(simplexml_load_string($sXml));
     }
@@ -41,9 +53,7 @@ class ResponseMapper
      */
     public function getPaymentDetails(): array
     {
-        $oPaymentDetails = $this->oResponse->getPaymentDetails();
-
-        return $oPaymentDetails ? $this->_parseHtml($oPaymentDetails->getAsHtml()) : [];
+        return $this->_getObjectDataArray($this->oResponse->getPaymentDetails());
     }
 
     /**
@@ -53,9 +63,7 @@ class ResponseMapper
      */
     public function getTransactionDetails(): array
     {
-        $oTransactionDetails = $this->oResponse->getTransactionDetails();
-
-        return $oTransactionDetails ? $this->_parseHtml($oTransactionDetails->getAsHtml()) : [];
+        return $this->_getObjectDataArray($this->oResponse->getTransactionDetails());
     }
 
     /**
@@ -65,9 +73,7 @@ class ResponseMapper
      */
     public function getAccountHolder(): array
     {
-        $oAccountHolder = $this->oResponse->getAccountHolder();
-
-        return $oAccountHolder ? $this->_parseHtml($oAccountHolder->getAsHtml()) : [];
+        return $this->_getObjectDataArray($this->oResponse->getAccountHolder());
     }
 
     /**
@@ -77,9 +83,7 @@ class ResponseMapper
      */
     public function getShipping(): array
     {
-        $oShipping = $this->oResponse->getShipping();
-
-        return $oShipping ? $this->_parseHtml($oShipping->getAsHtml()) : [];
+        return $this->_getObjectDataArray($this->oResponse->getShipping());
     }
 
     /**
@@ -89,9 +93,7 @@ class ResponseMapper
      */
     public function getBasket(): array
     {
-        $oBasket = $this->oResponse->getBasket();
-
-        return $oBasket ? $this->_parseHtml($oBasket->getAsHtml()) : [];
+        return $this->_getObjectDataArray($this->oResponse->getBasket());
     }
 
     /**
@@ -101,9 +103,28 @@ class ResponseMapper
      */
     public function getCard(): array
     {
-        $oCard = $this->oResponse->getCard();
+        return $this->_getObjectDataArray($this->oResponse->getCard());
+    }
 
-        return $oCard ? $this->_parseHtml($oCard->getAsHtml()) : [];
+    /**
+     * Returns the whole data from the response xml.
+     *
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->oResponse->getData();
+    }
+
+    /**
+     * Returns an array with the given object's data
+     *
+     * @param PaymentDetails|TransactionDetails|AccountHolder|Basket|Card $oResponseObject
+     * @return array
+     */
+    private function _getObjectDataArray($oResponseObject)
+    {
+        return $oResponseObject ? $this->_parseHtml($oResponseObject->getAsHtml()) : [];
     }
 
     /**

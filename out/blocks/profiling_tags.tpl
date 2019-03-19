@@ -1,6 +1,6 @@
 [{assign var="oPayment" value=$oView->getPayment()}]
 
-[{if $oViewConf->isWirecardPaymentMethod($oPayment->oxpayments__oxid->value)}]
+[{if $oViewConf->isModulePaymentMethod($oPayment->oxpayments__oxid->value)}]
 
   [{assign var="sDeviceId" value=$oViewConf->getWirecardDeviceId($oPayment->oxpayments__wdoxidee_maid)}]
 

@@ -13,20 +13,14 @@ use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\ResponseMapper;
 use Wirecard\Oxid\Model\Transaction;
 
-use OxidEsales\Eshop\Application\Controller\Admin\AdminDetailsController;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\Payment;
 
 /**
  * Controls the view for a single transaction tab.
  */
-class TransactionTab extends AdminDetailsController
+class TransactionTab extends ListTab
 {
-    /**
-     * @inheritdoc
-     */
-    protected $_sThisTemplate = 'transaction_tab.tpl';
-
     /**
      * @var Transaction
      */
@@ -58,11 +52,9 @@ class TransactionTab extends AdminDetailsController
         $this->setOrder();
         $this->setPayment();
 
-        $sTransactionId = $this->getEditObjectId();
-
-        if (isset($sTransactionId) && $sTransactionId !== '-1') {
-            $this->oTransaction->load($sTransactionId);
-            $this->oOrder->load($this->oTransaction->wdoxidee_ordertransactions__wdoxidee_orderid->value);
+        if ($this->_isListObjectIdSet()) {
+            $this->oTransaction->load($this->sListObjectId);
+            $this->oOrder->load($this->oTransaction->wdoxidee_ordertransactions__orderid->value);
             $this->oPayment->load($this->oOrder->oxorder__oxpaymenttype->value);
 
             $this->setResponseMapper();
@@ -102,41 +94,24 @@ class TransactionTab extends AdminDetailsController
     }
 
     /**
-     * @inheritdoc
-     *
-     * @return string
-     */
-    public function render(): string
-    {
-        $this->_aViewData += [
-            'listData' => $this->oTransaction->getId() ? $this->getListData() : [],
-            'controller' => $this->classKey,
-        ];
-
-        return parent::render();
-    }
-
-    /**
-     * Returns an array of data used to populate the view.
-     *
-     * @return array
-     */
-    public function getListData(): array
-    {
-        return [];
-    }
-
-    /**
      * Transforms an associative array to a list data array.
      *
-     * @param array $aArray
+     * @param array  $aArray
+     * @param string $sTransactionState
      * @return array
      */
-    protected function _getListDataFromArray(array $aArray): array
+    protected function _getListDataFromArray(array $aArray, string $sTransactionState = null): array
     {
         $aListData = [];
 
         foreach ($aArray as $sKey => $sValue) {
+            // add current transaction state as a hint if it differs from the response transaction state
+            if ($sTransactionState && $sKey === 'transactionState') {
+                $sValue = $sTransactionState !== Transaction::STATE_AWAITING
+                    ? $sValue
+                    : $sValue . ' (confirmation awaiting)';
+            }
+
             $aListData[] = [
                 'title' => Helper::translate($sKey),
                 'value' => $sValue,
