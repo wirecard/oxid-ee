@@ -1,0 +1,39 @@
+<script type="text/javascript">
+  // initial state is collapsed
+  var wdTermsCollapseState = 'collapse';
+
+  // ids of the DOM elements visible in collapsed state
+  var ITEMS_COLLAPSE_STATE = ['wd-terms-show-link'];
+
+  // ids of the DOM elements visible in expanded state
+  var ITEMS_EXPAND_STATE = ['wd-terms-hide-link', 'wd-terms-content'];
+
+  // sets the visibility of the element accordingly
+  var wdSetElementVisibility = function(elemId, visibility) {
+    var elem = document.getElementById(elemId);
+
+    if (elem) {
+      elem.style.display = visibility;
+    }
+  };
+
+  var wdShowElement = function(elemId) {
+    wdSetElementVisibility(elemId, 'inline-block');
+  };
+
+  var wdHideElement = function(elemId) {
+    wdSetElementVisibility(elemId, 'none');
+  };
+
+  var wdToggleTermsVisibility = function() {
+    if (wdTermsCollapseState === 'collapse') {
+      ITEMS_COLLAPSE_STATE.forEach(wdHideElement);
+      ITEMS_EXPAND_STATE.forEach(wdShowElement);
+      wdTermsCollapseState = 'expand';
+    } else {
+      ITEMS_EXPAND_STATE.forEach(wdHideElement);
+      ITEMS_COLLAPSE_STATE.forEach(wdShowElement);
+      wdTermsCollapseState = 'collapse';
+    }
+  };
+</script>
