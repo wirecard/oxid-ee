@@ -119,6 +119,57 @@
         [{oxinputhelp ident="config_three_d_merchant_secret_desc"}]
     </td>
   </tr>
+
+  [{if $edit->oxpayments__oxid->value == "wdcreditcard"}]
+    <tr>
+      <td class="edittext" width="70">
+        [{oxmultilang ident="config_three_d_merchant_account_id"}]
+      </td>
+      <td class="edittext">
+          <input type="text" class="editinput" size="25" name="editval[oxpayments__wdoxidee_three_d_maid]" value="[{$edit->oxpayments__wdoxidee_three_d_maid}]">
+          [{oxinputhelp ident="config_three_d_merchant_account_id_desc"}]
+      </td>
+    </tr>
+    <tr>
+      <td class="edittext" width="70">
+        [{oxmultilang ident="config_three_d_merchant_secret"}]
+      </td>
+      <td class="edittext">
+          <input type="text" class="editinput" size="25" name="editval[oxpayments__wdoxidee_three_d_secret]" value="[{$edit->oxpayments__wdoxidee_three_d_secret}]">
+          [{oxinputhelp ident="config_three_d_merchant_secret_desc"}]
+      </td>
+    </tr>
+    <tr>
+      <td class="edittext" width="70">
+        [{oxmultilang ident="config_ssl_max_limit"}]
+      </td>
+      <td class="edittext">
+          <input type="text" class="editinput" size="25" name="editval[oxpayments__wdoxidee_non_three_d_max_limit]" value="[{$edit->oxpayments__wdoxidee_non_three_d_max_limit}]">
+          [{oxinputhelp ident="config_ssl_max_limit_desc"}]
+      </td>
+    </tr>
+    <tr>
+      <td class="edittext" width="70">
+        [{oxmultilang ident="config_three_d_min_limit"}]
+      </td>
+      <td class="edittext">
+          <input type="text" class="editinput" size="25" name="editval[oxpayments__wdoxidee_three_d_min_limit]" value="[{$edit->oxpayments__wdoxidee_three_d_min_limit}]">
+          [{oxinputhelp ident="config_three_d_min_limit_desc"}]
+      </td>
+    </tr>
+    <tr>
+      <td class="edittext" width="70">
+        [{oxmultilang ident="default_currency"}]
+      </td>
+      <td class="edittext">
+        <select name="editval[oxpayments__wdoxidee_default_currency]">
+          [{foreach from=$currencies item=currency}]
+            <option value="[{$currency->name}]" [{if $currency->name == $edit->oxpayments__wdoxidee_default_currency->value}]SELECTED[{/if}]>[{$currency->name}]</option>
+          [{/foreach}]
+        </select>
+      </td>
+    </tr>
+  [{/if}]
   <tr>
     <td class="edittext" width="70">
       [{oxmultilang ident="config_shopping_basket"}]

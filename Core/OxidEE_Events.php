@@ -113,17 +113,37 @@ class OxidEE_Events
             " ADD COLUMN `WDOXIDEE_APIURL` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_APIURL', $sQueryAddApiUrl);
 
-        $sQueryAddMaid = "ALTER TABLE " . self::PAYMENT_TABLE .
-            " ADD COLUMN `WDOXIDEE_MAID` varchar(128) default '' NOT NULL";
-        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_MAID', $sQueryAddMaid);
-
         $sQueryAddIsWirecard = "ALTER TABLE " . self::PAYMENT_TABLE .
             " ADD COLUMN `WDOXIDEE_ISWIRECARD` tinyint(1) default 0 NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_ISWIRECARD', $sQueryAddIsWirecard);
 
+        $sQueryAddMaid = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_MAID` varchar(128) default '' NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_MAID', $sQueryAddMaid);
+
         $sQueryAddSecret = "ALTER TABLE " . self::PAYMENT_TABLE .
             " ADD COLUMN `WDOXIDEE_SECRET` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_SECRET', $sQueryAddSecret);
+
+        $sQueryAddThreeDMaid = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_THREE_D_MAID` varchar(128) default '' NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_THREE_D_MAID', $sQueryAddThreeDMaid);
+
+        $sQueryThreeDSecret = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_THREE_D_SECRET` varchar(128) default '' NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_THREE_D_SECRET', $sQueryThreeDSecret);
+
+        $sQueryAddMaxLimit = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_NON_THREE_D_MAX_LIMIT` varchar(128) default '' NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_NON_THREE_D_MAX_LIMIT', $sQueryAddMaxLimit);
+
+        $sQueryAddMinLimit = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_THREE_D_MIN_LIMIT` varchar(128) default '' NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_THREE_D_MIN_LIMIT', $sQueryAddMinLimit);
+
+        $sQueryDefCurrency = "ALTER TABLE " . self::PAYMENT_TABLE . "
+            ADD COLUMN `WDOXIDEE_DEFAULT_CURRENCY` varchar(128) default '' NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_DEFAULT_CURRENCY', $sQueryDefCurrency);
 
         $sQueryAddHttpUser = "ALTER TABLE " . self::PAYMENT_TABLE .
             " ADD COLUMN `WDOXIDEE_HTTPUSER` varchar(128) default '' NOT NULL";
@@ -228,8 +248,9 @@ class OxidEE_Events
 
         $sQuery = "INSERT INTO " . self::PAYMENT_TABLE . "(`OXID`, `OXACTIVE`, `OXTOAMOUNT`, `OXDESC`, `OXDESC_1`,
          `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONTYPE`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`, `WDOXIDEE_SECRET`,
-         `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`, `WDOXIDEE_ISWIRECARD`, `WDOXIDEE_BASKET`,
-         `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`) VALUES (
+         `WDOXIDEE_THREE_D_MAID`, `WDOXIDEE_THREE_D_SECRET`, `WDOXIDEE_NON_THREE_D_MAX_LIMIT`,
+         `WDOXIDEE_THREE_D_MIN_LIMIT`, `WDOXIDEE_DEFAULT_CURRENCY`, `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`,
+         `WDOXIDEE_ISWIRECARD`, `WDOXIDEE_BASKET`, `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`) VALUES (
              '{$oPayment->oxid}',
              '{$oPayment->oxactive}',
              '{$oPayment->oxtoamount}',
@@ -240,6 +261,11 @@ class OxidEE_Events
              '{$oPayment->wdoxidee_apiurl}',
              '{$oPayment->wdoxidee_maid}',
              '{$oPayment->wdoxidee_secret}',
+             '{$oPayment->wdoxidee_three_d_maid}',
+             '{$oPayment->wdoxidee_three_d_secret}',
+             '{$oPayment->wdoxidee_non_three_d_max_limit}',
+             '{$oPayment->wdoxidee_three_d_min_limit}',
+             '{$oPayment->wdoxidee_default_currency}',
              '{$oPayment->wdoxidee_httpuser}',
              '{$oPayment->wdoxidee_httppass}',
              '1',

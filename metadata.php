@@ -51,9 +51,10 @@ $aModule = array(
         \OxidEsales\Eshop\Application\Model\Order::class          => \Wirecard\Oxid\Extend\Order::class,
         \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \Wirecard\Oxid\Extend\Payment_Gateway::class,
         \OxidEsales\Eshop\Application\Controller\Admin\PaymentMainAjax::class =>
-                    \Wirecard\Oxid\Extend\Payment_Main_Ajax::class
+                    \Wirecard\Oxid\Extend\Payment_Main_Ajax::class,
+        \OxidEsales\Eshop\Application\Controller\Admin\PaymentMain::class => \Wirecard\Oxid\Extend\Payment_Main::class
     ),
-    'controllers'       => array(
+    'controllers' => array(
         'wcpg_transaction'
             => \Wirecard\Oxid\Controller\Admin\TransactionController::class,
         'wcpg_transaction_list'
@@ -77,12 +78,18 @@ $aModule = array(
             'template' => 'page/checkout/order.tpl',
             'block' => 'checkout_order_main',
             'file' => 'out/blocks/profiling_tags.tpl'
+        ),
+        array(
+            'template' => 'page/checkout/payment.tpl',
+            'block' => 'select_payment',
+            'file' => 'views/blocks/paymentselector.tpl'
         )
     ),
     'templates'         => array(
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
         'transaction_list.tpl'              => 'wirecard/paymentgateway/views/admin/tpl/transaction_list.tpl',
-        'transaction_tab.tpl'               => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab.tpl'
+        'transaction_tab.tpl'               => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab.tpl',
+        'payment_other.tpl'                 => 'wirecard/paymentgateway/views/blocks/payment_other.tpl'
     ),
     'events'            => array(
         'onActivate'        => '\Wirecard\Oxid\Core\OxidEE_Events::onActivate',
