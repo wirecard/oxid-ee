@@ -1,0 +1,28 @@
+<style>
+  .wd-container {
+    display: block;
+    padding: 1px 5px;
+    margin-bottom: 12px;
+  }
+  .wd-title {
+    display: block;
+    font-weight: bold;
+    margin: 6px 0;
+  }
+  .wd-block {
+    display: block;
+    margin-bottom: 6px;
+  }
+</style>
+<script type="text/javascript">
+  var elemIds = ['wd-terms-show-link', 'wd-terms-hide-link', 'wd-terms-content'];
+  var wdToggleTerms = function() {
+    elemIds.forEach(function(elemId) {
+      var element = document.getElementById(elemId);
+
+      if (element) {
+        element.classList.toggle('mask');
+      }
+    });
+  };
+</script>
