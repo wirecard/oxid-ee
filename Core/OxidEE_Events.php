@@ -11,7 +11,7 @@ namespace Wirecard\Oxid\Core;
 
 use \OxidEsales\Eshop\Core\DatabaseProvider;
 use \OxidEsales\Eshop\Core\Registry;
-use \Wirecard\Oxid\Extend\Order;
+use \Wirecard\Oxid\Extend\Model\Order;
 use \Wirecard\Oxid\Model\Transaction;
 
 /**
@@ -156,7 +156,7 @@ class OxidEE_Events
     {
         $aOrderStates = Order::getStates();
         $sOrderStates = implode("','", $aOrderStates);
-        $sAddOrderState = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_ORDERSTATE` 
+        $sAddOrderState = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_ORDERSTATE`
             enum('{$sOrderStates}') default '{$aOrderStates[0]}' NOT NULL";
         self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_ORDERSTATE', $sAddOrderState);
 

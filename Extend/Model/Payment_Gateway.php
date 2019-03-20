@@ -7,7 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Extend;
+namespace Wirecard\Oxid\Extend\Model;
 
 use \OxidEsales\Eshop\Application\Model\Shop;
 use \OxidEsales\Eshop\Application\Model\Article;
@@ -39,6 +39,7 @@ use \Wirecard\PaymentSdk\Entity\Redirect;
 use \Wirecard\PaymentSdk\Entity\Address;
 use \Wirecard\PaymentSdk\Entity\Status;
 
+use \Wirecard\Oxid\Extend\Model\Order;
 use \Psr\Log\LoggerInterface;
 
 /**
