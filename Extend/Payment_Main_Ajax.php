@@ -47,11 +47,6 @@ class Payment_Main_Ajax extends Payment_Main_Ajax_parent
     private $oLogger;
 
     /**
-     * @var \OxidEsales\Eshop\Core\Language
-     */
-    private $oLang;
-
-    /**
      * @var \OxidEsales\Eshop\Core\Util
      */
     private $oUtils;
@@ -64,7 +59,6 @@ class Payment_Main_Ajax extends Payment_Main_Ajax_parent
     public function __construct()
     {
         $this->oLogger = Registry::getLogger();
-        $this->oLang = Registry::getLang();
         $this->oUtils = Registry::getUtils();
     }
 
@@ -72,14 +66,11 @@ class Payment_Main_Ajax extends Payment_Main_Ajax_parent
     {
         $bSuccess = false;
 
-        // filter the POST input array
-        $aPostParams = filter_input_array(INPUT_POST);
-
-        if ($aPostParams) {
-            // get the needed params
-            $sApiUrl = $aPostParams['apiUrl'];
-            $sHttpUser = $aPostParams['httpUser'];
-            $sHttpPass = $aPostParams['httpPass'];
+        if ($_POST) {
+            // get the needed params from the POST variable
+            $sApiUrl = $_POST['apiUrl'];
+            $sHttpUser = $_POST['httpUser'];
+            $sHttpPass = $_POST['httpPass'];
 
             // use the paymentSDK transaction service to validate the credentials
             $oConfig = new Config($sApiUrl, $sHttpUser, $sHttpPass);
