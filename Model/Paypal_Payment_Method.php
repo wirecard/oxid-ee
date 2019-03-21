@@ -9,6 +9,7 @@
 
 namespace Wirecard\Oxid\Model;
 
+use \OxidEsales\Eshop\Application\Model\Payment;
 use \Wirecard\Oxid\Extend\Order;
 use \Wirecard\PaymentSdk\Config\Config;
 use \Wirecard\PaymentSdk\Config\PaymentMethodConfig;
@@ -40,29 +41,22 @@ class Paypal_Payment_Method extends Payment_Method
     }
 
     /**
-     * Get the payment method's configuration
-     *
-     * @return Config
+     * @inheritdoc
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    public function getConfig(): Config
+    public function getConfig(Payment $oPayment): Config
     {
-        $payment = oxNew(\OxidEsales\Eshop\Application\Model\Payment::class);
-        $payment->load(self::NAME);
-        $config = new Config(
-            $payment->oxpayments__wdoxidee_apiurl->value,
-            $payment->oxpayments__wdoxidee_httpuser->value,
-            $payment->oxpayments__wdoxidee_httppass->value
-        );
-        $oPaymentMethodConfig = new PaymentMethodConfig(
-            PayPalTransaction::NAME,
-            $payment->oxpayments__wdoxidee_maid->value,
-            $payment->oxpayments__wdoxidee_secret->value
-        );
-        $config->add($oPaymentMethodConfig);
+        $oConfig = parent::getConfig($oPayment);
 
-        return $config;
+        $oPaymentMethodConfig = new PaymentMethodConfig(
+            substr(self::NAME, 2),
+            $oPayment->oxpayments__wdoxidee_maid->value,
+            $oPayment->oxpayments__wdoxidee_secret->value
+        );
+
+        $oConfig->add($oPaymentMethodConfig);
+        return $oConfig;
     }
 
     /**
