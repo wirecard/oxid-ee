@@ -16,7 +16,7 @@ $sMetadataVersion = '2.1';
  * Module information
  */
 $aModule = array(
-    'id'                => 'paymentgateway',
+    'id'                => 'wdoxidee',
     'title'             => 'Wirecard Oxid EE Paymentgateway',
     'description'       => array(
         'de' => 'Modul für Zahlung mit Wirecard paymentSDK',
