@@ -185,6 +185,16 @@ $aModule = array(
             'block' => 'admin_module_config_form',
             'file' => 'views/admin/blocks/admin_module_config_form.tpl'
         ),
+        array(
+            'template' => 'payment_main.tpl',
+            'block' => 'admin_payment_main_editor',
+            'file' => 'views/admin/blocks/admin_payment_main_editor.tpl'
+        ),
+        array(
+            'template' => 'module_config.tpl',
+            'block'    => 'admin_module_config_form',
+            'file'     => 'views/admin/blocks/admin_module_config_form.tpl'
+        ),
     ),
     'templates'         => array(
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
@@ -195,6 +205,7 @@ $aModule = array(
         'form_interaction.tpl'              => 'wirecard/paymentgateway/views/form_interaction.tpl',
         'module_support.tpl'                => 'wirecard/paymentgateway/views/admin/tpl/module_support.tpl',
         'module_support_email.tpl'          => 'wirecard/paymentgateway/views/admin/tpl/email/module_support_email.tpl',
+        'live_chat.tpl'                     => 'wirecard/paymentgateway/views/admin/inc/live_chat.tpl',
     ),
     'events'            => array(
         'onActivate'        => '\Wirecard\Oxid\Core\OxidEEEvents::onActivate',
