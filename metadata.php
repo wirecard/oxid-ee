@@ -34,7 +34,7 @@ $aModuleDescriptions = array(
  * Module information
  */
 $aModule = array(
-    'id'                => 'paymentgateway',
+    'id'                => 'wdoxidee',
     'title'             => 'Wirecard Oxid EE Paymentgateway',
     'description'       => array(
         'de' => $aModuleDescriptions['de'],

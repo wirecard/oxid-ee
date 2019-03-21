@@ -1,5 +1,5 @@
 {
-  "name": "wirecard/paymentgateway",
+  "name": "wirecard/oxid-ee",
   "description": "Wirecard paymentSDK module for the OXID eShop",
   "type": "oxideshop-module",
   "license": "GPL-3.0",
@@ -37,7 +37,7 @@
         "CONTRIBUTING.md",
         "README.md"
       ],
-      "target-directory": "wirecard/paymentgateway"
+      "target-directory": "wirecard/oxid-ee"
     }
   },
   "scripts": {
@@ -49,7 +49,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Wirecard\\Oxid\\": "../../../source/modules/wirecard/paymentgateway"
+      "Wirecard\\Oxid\\": "../../../source/modules/wirecard/oxid-ee"
     }
   },
   "autoload-dev": {
