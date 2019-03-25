@@ -37,7 +37,7 @@
         "CONTRIBUTING.md",
         "README.md"
       ],
-      "target-directory": "wirecard/oxid-ee"
+      "target-directory": "wirecard/paymentgateway"
     }
   },
   "scripts": {
@@ -49,7 +49,7 @@
   },
   "autoload": {
     "psr-4": {
-      "Wirecard\\Oxid\\": "../../../source/modules/wirecard/oxid-ee"
+      "Wirecard\\Oxid\\": "../../../source/modules/wirecard/paymentgateway"
     }
   },
   "autoload-dev": {

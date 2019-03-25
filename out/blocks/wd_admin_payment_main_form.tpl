@@ -7,7 +7,7 @@
 [{if $edit->oxpayments__wdoxidee_iswirecard->value == 1}]
   <tr>
     <td>
-      <img src="/modules/wirecard/oxid-ee/out/img/[{ $edit->oxpayments__wdoxidee_logo->value }]">
+      <img src="/modules/wirecard/paymentgateway/out/img/[{ $edit->oxpayments__wdoxidee_logo->value }]">
     </td>
   <tr>
   <tr>
