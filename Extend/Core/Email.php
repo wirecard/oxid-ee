@@ -21,6 +21,15 @@ use OxidEsales\Eshop\Core\Registry;
 class Email extends Email_parent
 {
     /**
+     * template for support email
+     *
+     * @var string
+     *
+     * @since 1.0.0
+     */
+    private $_sSupportEmailTemplate = 'module_support_email.tpl';
+
+    /**
      * @inheritdoc
      *
      * For custom payment method send the email in order language
@@ -105,5 +114,41 @@ class Email extends Email_parent
         }
 
         return $iReturn;
+    }
+
+    /**
+     * Send support email
+     *
+     * @param array $aEmailData Email data
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    public function sendSupportEmail($aEmailData)
+    {
+        $this->_clearMailer();
+        $oShop = $this->_getShop();
+        $oSmarty = $this->_getSmarty();
+
+        $this->setViewData('emailData', $aEmailData);
+        $this->setViewData('shopTemplateDir', $this->getConfig()->getTemplateDir(false));
+
+        $this->_processViewArray();
+
+        //set mail params (from, fromName, smtp)
+        $this->_setMailParams($oShop);
+
+        $this->setBody($oSmarty->fetch($this->_sSupportEmailTemplate));
+        $this->setSubject($aEmailData['subject']);
+
+        $this->setRecipient($aEmailData['recipient'], "");
+        $this->setFrom($aEmailData['from'], "");
+
+        $this->clearReplyTos();
+        $replyTo = !empty($aEmailData['replyTo']) ? $aEmailData['replyTo'] : $aEmailData['from'];
+        $this->setReplyTo($replyTo, "");
+
+        return $this->send();
     }
 }

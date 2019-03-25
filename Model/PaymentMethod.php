@@ -206,4 +206,34 @@ abstract class PaymentMethod
             ],
         ];
     }
+
+    /**
+     * Returns array of setting names which should be part of output debug infos
+     *
+     * @return array
+     *
+     * @since 1.0.0
+     */
+    public function getPublicFieldNames()
+    {
+        return ['apiUrl', 'maid', 'descriptor', 'additionalInfo', 'paymentAction'];
+    }
+
+    /**
+     * Returns an array of fields to be displayed in support email
+     *
+     * @return array
+     *
+     * @SuppressWarnings(PHPMD)
+     *
+     * @since 1.0.0
+     */
+    public function getSupportConfigFields()
+    {
+        $aFieldsPublic = array_filter($this->getConfigFields(), function ($field, $key) {
+            return in_array($key, $this->getPublicFieldNames());
+        }, ARRAY_FILTER_USE_BOTH);
+
+        return $aFieldsPublic;
+    }
 }

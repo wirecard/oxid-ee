@@ -15,6 +15,11 @@
         <TAB id="transaction_details_title" pg_translate="1" cl="wcpg_order_transaction_details"/>
       </SUBMENU>
     </MAINMENU>
+    <MAINMENU id="mxextensions">
+      <SUBMENU id="mxmodule" cl="module" list="module_list">
+          <TAB id="text_support" cl="wcpg_module_support" pg_translate="1"/>
+      </SUBMENU>
+    </MAINMENU>
   </OXMENU>
   <OXMENU id="heading_title" pg_translate="1">
     <MAINMENU id="heading_title_transaction_details" pg_translate="1">
