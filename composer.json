@@ -1,7 +1,8 @@
 {
-  "name": "wirecard/paymentgateway",
+  "name": "wirecard/oxid-ee",
   "description": "Wirecard paymentSDK module for the OXID eShop",
   "type": "oxideshop-module",
+  "license": "GPL-3.0",
   "keywords": [
     "oxid",
     "modules",
@@ -19,7 +20,9 @@
     }
   },
   "require": {
-    "php": ">=7.0"
+    "php": ">=7.0",
+    "wirecard/payment-sdk-php": "3.6.1",
+    "php-http/guzzle6-adapter": "1.1.1"
   },
   "require-dev": {
     "oxid-esales/coding-standards": "^2.0.0",
@@ -31,7 +34,6 @@
       "blacklist-filter": [
         "documentation/**/*.*",
         "CHANGELOG.md",
-        "composer.json",
         "CONTRIBUTING.md",
         "README.md"
       ],
@@ -43,11 +45,11 @@
     "cs-fix": "phpcbf --standard=./phpcs.xml .",
     "test": "codecept run",
     "test-coverage": "codecept run --coverage --coverage-xml",
-    "md": "phpmd Core,Model text cleancode,codesize,unusedcode,naming,phpmd.xml"
+    "md": "phpmd Core,Extend,Model text phpmd.xml"
   },
   "autoload": {
     "psr-4": {
-      "Wirecard\\PaymentGateway\\": "../../../source/modules/wirecard/paymentgateway"
+      "Wirecard\\Oxid\\": "../../../source/modules/wirecard/paymentgateway"
     }
   },
   "autoload-dev": {

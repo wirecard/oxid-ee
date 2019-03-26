@@ -10,13 +10,13 @@
 /**
  * Metadata version
  */
-$metadataVersion = '1.0';
+$sMetadataVersion = '2.1';
 
 /**
  * Module information
  */
 $aModule = array(
-    'id'                => 'paymentgateway',
+    'id'                => 'wdoxidee',
     'title'             => 'Wirecard Oxid EE Paymentgateway',
     'description'       => array(
         'de' => 'Modul für Zahlung mit Wirecard paymentSDK',
@@ -28,18 +28,30 @@ $aModule = array(
     'author'            => 'Wirecard',
     'url'               => 'https://www.wirecard.com',
     'email'             => 'support.at@wirecard.com',
-    'files'             => array(
-        // all file paths need to include the actual full installation path of the module
-        // in this case 'wirecard/paymentgateway'
-
-        // core
-        'OxidEE_Events'         => 'wirecard/paymentgateway/Core/OxidEE_Events.php'
+    'extend'            => array (
+        \OxidEsales\Eshop\Core\ViewConfig::class                  => \Wirecard\Oxid\Extend\View_Config::class,
+        \OxidEsales\Eshop\Application\Model\Order::class          => \Wirecard\Oxid\Extend\Order::class,
+        \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \Wirecard\Oxid\Extend\Payment_Gateway::class
     ),
     'blocks' => array(
-        array('template' => 'home.tpl', 'block'=>'admin_home_head', 'file'=>'views/terms_modal.tpl')
+        array(
+            'template' => 'home.tpl',
+            'block'=>'admin_home_head',
+            'file'=>'views/terms_modal.tpl'
+        ),
+        array(
+            'template' => 'payment_main.tpl',
+            'block' => 'admin_payment_main_form',
+            'file' => 'out/blocks/wd_admin_payment_main_form.tpl'
+        ),
+        array(
+            'template' => 'page/checkout/order.tpl',
+            'block' => 'checkout_order_main',
+            'file' => 'out/blocks/profiling_tags.tpl'
+        )
     ),
     'events'            => array(
-        'onActivate'        => 'OxidEE_Events::onActivate',
-        'onDeactivate'      => 'OxidEE_Events::onDeactivate'
+        'onActivate'        => '\Wirecard\Oxid\Core\OxidEE_Events::onActivate',
+        'onDeactivate'      => '\Wirecard\Oxid\Core\OxidEE_Events::onDeactivate'
     )
 );

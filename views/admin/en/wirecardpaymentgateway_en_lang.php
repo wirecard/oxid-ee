@@ -10,6 +10,10 @@
 $sLangName = "English";
 
 $aLang = array(
+    "config" => "Wirecard Configuration",
+    "yes" => 'Yes',
+    "no" => 'No',
+
     "charset" => "UTF-8",
     "account_holder_title" => "Account Owner",
     "alipay_crossborder" => "Alipay Cross-border",
