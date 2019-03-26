@@ -32,6 +32,7 @@ use \Wirecard\PaymentSdk\Response\FailureResponse;
 use \Wirecard\PaymentSdk\Response\InteractionResponse;
 use \Wirecard\PaymentSdk\Entity\Redirect;
 use \Wirecard\PaymentSdk\Entity\Basket as WdBasket;
+use \Wirecard\PaymentSdk\Entity\Item;
 
 /**
  * Class BasePaymentGateway
@@ -69,8 +70,8 @@ class Payment_Gateway extends Payment_Gateway_parent
     /**
      * Executes payment, returns true on success.
      *
-     * @param double $dAmount Goods amount
-     * @param \Wirecard\Oxid\Extend\Order $oOrder User ordering object
+     * @param double                      $dAmount Goods amount
+     * @param \Wirecard\Oxid\Extend\Order $oOrder  User ordering object
      *
      * @return Response|FailureResponse|SuccessResponse
      *
@@ -154,7 +155,7 @@ class Payment_Gateway extends Payment_Gateway_parent
      *
      * @param Session $oSession
      *
-     * @param string $sShopUrl
+     * @param string  $sShopUrl
      *
      * @return string
      *
@@ -244,18 +245,21 @@ class Payment_Gateway extends Payment_Gateway_parent
      * Add additional info to the transaction
      *
      * @param Transaction $oTransaction
-     * @param Order $oOrder
-     * @param User $oUser
+     * @param Order       $oOrder
+     * @param User        $oUser
+     * @param Payment     $oPayment
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     private function _addAdditionalInfo(
         Transaction &$oTransaction,
         Order $oOrder,
         User $oUser,
         Payment $oPayment
-    )
-    {
-        $ip = Registry::getUtilsServer()->getRemoteAddress();
-        $oTransaction->setIpAddress($ip);
+    ) {
+
+        $sRemoteAddress = Registry::getUtilsServer()->getRemoteAddress();
+        $oTransaction->setIpAddress($sRemoteAddress);
 
         $oTransaction->setConsumerId($oUser->oxuser__oxid->value);
         $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
@@ -263,14 +267,12 @@ class Payment_Gateway extends Payment_Gateway_parent
         $oAccountHolder = $this->_buildAccountHolder($oOrder, $oUser);
         $oTransaction->setAccountHolder($oAccountHolder);
 
-        if ($oOrder->oxorder__oxdelfname->value) { //shipping address exists
-            $oTransaction->setShipping($this->_buildShipping($oOrder));
-        } else {
-            $oTransaction->setShipping($oAccountHolder);
-        }
+        $sFirstName = $oOrder->oxorder__oxdelfname->value;
+        $oTransaction->setShipping($sFirstName ? $this->_buildShipping($oOrder) : $oAccountHolder);
 
         $oDevice = new Device($_SERVER['HTTP_USER_AGENT']);
-        $sDeviceId = Helper::createDeviceFingerprint($oPayment->oxpayments__wdoxidee_maid->value, $this->getSession()->getId());
+        $sMaid = $oPayment->oxpayments__wdoxidee_maid->value;
+        $sDeviceId = Helper::createDeviceFingerprint($sMaid, $this->getSession()->getId());
         $oDevice->setFingerprint($sDeviceId);
         $oTransaction->setDevice($oDevice);
     }
@@ -280,8 +282,10 @@ class Payment_Gateway extends Payment_Gateway_parent
      * Build an account holder
      *
      * @param Order $oOrder
-     * @param User $oUser
+     * @param User  $oUser
      * @return AccountHolder
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     private function _buildAccountHolder(Order $oOrder, User $oUser): AccountHolder
     {
@@ -319,8 +323,9 @@ class Payment_Gateway extends Payment_Gateway_parent
      * Build the shipping account holder
      *
      * @param Order $oOrder
-     * @param User $oUser
      * @return AccountHolder
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     private function _buildShipping(Order $oOrder): AccountHolder
     {
@@ -356,7 +361,9 @@ class Payment_Gateway extends Payment_Gateway_parent
      * Add the basket info to transaction
      *
      * @param Transaction $oTransaction
-     * @param Basket $oBasket
+     * @param Basket      $oBasket
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
     private function _addBasketInfo(Transaction &$oTransaction, Basket $oBasket)
     {
@@ -374,6 +381,17 @@ class Payment_Gateway extends Payment_Gateway_parent
         foreach ($oArticles as $key => $value) {
             $this->_addItemToBasket($oWdBasket, $key, $value, $finalPrices, $oCurrency);
         }
+        if ($oBasket->getDeliveryCosts()) {
+            $item = new Item(
+                "Shipping",
+                new Amount($oBasket->getDeliveryCosts(), $oCurrency->name),
+                1
+            );
+            $item->setTaxRate($oBasket->getDelCostVatPercent());
+            $item->setTaxAmount(new Amount($oBasket->getDeliveryCost()->getVatValue(), $oCurrency->name));
+
+            $oWdBasket->add($item);
+        }
         $oTransaction->setBasket($oWdBasket);
     }
 
@@ -381,20 +399,30 @@ class Payment_Gateway extends Payment_Gateway_parent
      * Adds an article to the basket
      *
      * @param WdBasket $oBasket
-     * @param string $sArticleKey
-     * @param int $iQuantity
-     * @param array $aPrices
-     * @param $oCurrency
+     * @param string   $sArticleKey
+     * @param int      $iQuantity
+     * @param array    $aPrices
+     * @param Currency $oCurrency
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
      */
-    private function _addItemToBasket(WdBasket &$oBasket, string $sArticleKey, int $iQuantity, array $aPrices, $oCurrency) {
-        $oArticle = oxNew(\OxidEsales\EshopCommunity\Application\Model\Article::class);
+    private function _addItemToBasket(
+        WdBasket &$oBasket,
+        string $sArticleKey,
+        int $iQuantity,
+        array $aPrices,
+        $oCurrency
+    ) {
+
+        $oArticle = oxNew(Article::class);
         $oArticle->load($sArticleKey);
-        $item = new \Wirecard\PaymentSdk\Entity\Item(
+        $item = new Item(
             $oArticle->oxarticles__oxtitle->value,
             new Amount($aPrices[$sArticleKey], $oCurrency->name),
             $iQuantity
         );
-        $item->setTaxRate($oArticle->oxarticles__oxvat->value);
+        $item->setTaxRate(floatval($oArticle->getPrice()->getVat()));
+        $item->setTaxAmount(new Amount($oArticle->getPrice()->getVatValue(), $oCurrency->name));
         $oBasket->add($item);
     }
 }
