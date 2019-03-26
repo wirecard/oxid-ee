@@ -4,9 +4,6 @@
   <script src="https://code.jquery.com/jquery-3.1.1.min.js" type="application/javascript"></script>
   <script src="https://api-test.wirecard.com/engine/hpp/paymentPageLoader.js" type="text/javascript"></script>
 
-  [{oxstyle include="out/css/wirecard-credid-card.css"}]
-
-  <div id="pg-spinner"></div>
   <div id="wirecard-cc-error"></div>
   <div>
     <form id="wirecard-cc-form" method="post" action="[{$oViewConf->getSslSelfLink()}]">
@@ -40,7 +37,6 @@
     });
 
     function callback(response) {
-      $("#pg-spinner").fadeOut();
       $("#creditcard-form-div").height(500).fadeIn();
       getOrderButton().prop("disabled", false);
 
@@ -55,14 +51,13 @@
       }
 
       if (debug) {
-        console.log(error);
+        console.log("Error on loading form:", error);
       }
     }
 
     function getOrderButton() {
       return $('#orderConfirmAgbBottom button[type = "submit"]');
     }
-
 
     $(document).ready(function () {
       var orderButton = getOrderButton();

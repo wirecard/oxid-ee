@@ -50,7 +50,7 @@ class Paypal_Payment_Method extends Payment_Method
         $oConfig = parent::getConfig($oPayment);
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
-            substr(self::NAME, 2),
+            PayPalTransaction::NAME,
             $oPayment->oxpayments__wdoxidee_maid->value,
             $oPayment->oxpayments__wdoxidee_secret->value
         );

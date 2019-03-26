@@ -11,7 +11,6 @@ namespace Wirecard\Oxid\Model;
 
 use \OxidEsales\EshopCommunity\Core\Config;
 use \OxidEsales\Eshop\Application\Model\Payment;
-use OxidEsales\EshopCommunity\Core\Registry;
 use \Wirecard\PaymentSdk\Config\Config as Wirecard_Config;
 use \Wirecard\PaymentSdk\Config\CreditCardConfig;
 use \Wirecard\PaymentSdk\Entity\Amount;
@@ -35,7 +34,15 @@ class Credit_Card_Payment_Method extends Payment_Method
      */
     public function getConfig(Payment $oPayment): Wirecard_Config
     {
-        $oConfig = parent::getConfig($oPayment);
+        $oConfig = new Wirecard_Config(
+            'https://api-test.wirecard.com',
+            '70000-APITEST-AP',
+            'qD2wzQ_hrc!8'
+        );
+        //TODO use parent
+        //$oConfig = parent::getConfig($oPayment);
+
+        //TODO set fields depending on configuration
 
         $oCreditCardConfig = new CreditCardConfig(
             '53f2895a-e4de-4e82-a813-0d87a10e55e6',//$oPayment->oxpayments__wdoxidee_maid->value,
