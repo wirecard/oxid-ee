@@ -47,9 +47,10 @@ $aModule = array(
     'url'               => 'https://www.wirecard.com',
     'email'             => 'support.at@wirecard.com',
     'extend'            => array (
-        \OxidEsales\Eshop\Core\ViewConfig::class                  => \Wirecard\Oxid\Extend\View_Config::class,
-        \OxidEsales\Eshop\Application\Model\Order::class          => \Wirecard\Oxid\Extend\Order::class,
-        \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \Wirecard\Oxid\Extend\Payment_Gateway::class
+        \OxidEsales\Eshop\Core\ViewConfig::class                        => \Wirecard\Oxid\Extend\View_Config::class,
+        \OxidEsales\Eshop\Application\Model\Order::class                => \Wirecard\Oxid\Extend\Order::class,
+        \OxidEsales\Eshop\Application\Model\PaymentGateway::class       => \Wirecard\Oxid\Extend\Payment_Gateway::class,
+        \OxidEsales\Eshop\Application\Controller\OrderController::class => \Wirecard\Oxid\Extend\Order_Controller::class,
     ),
     'blocks' => array(
         array(
@@ -61,6 +62,11 @@ $aModule = array(
             'template' => 'page/checkout/order.tpl',
             'block' => 'checkout_order_main',
             'file' => 'out/blocks/profiling_tags.tpl'
+        ),
+        array (
+            'template' => 'page/checkout/order.tpl',
+            'block' => 'shippingAndPayment',
+            'file' => 'out/blocks/wirecard_credit_card_fields.tpl'
         )
     ),
     'events'            => array(

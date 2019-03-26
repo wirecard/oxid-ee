@@ -11,6 +11,7 @@ namespace Wirecard\Oxid\Model;
 
 use \OxidEsales\EshopCommunity\Core\Config;
 use \OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\EshopCommunity\Core\Registry;
 use \Wirecard\PaymentSdk\Config\Config as Wirecard_Config;
 use \Wirecard\PaymentSdk\Config\CreditCardConfig;
 use \Wirecard\PaymentSdk\Entity\Amount;
@@ -36,19 +37,22 @@ class Credit_Card_Payment_Method extends Payment_Method
     {
         $oConfig = parent::getConfig($oPayment);
 
-        $oCreditCardConfig = new CreditCardConfig();
+        $oCreditCardConfig = new CreditCardConfig(
+            '53f2895a-e4de-4e82-a813-0d87a10e55e6',//$oPayment->oxpayments__wdoxidee_maid->value,
+            'dbc5a498-9a66-43b9-bf1d-a618dd399684'//$oPayment->oxpayments__wdoxidee_secret->value
+        );
 
         if (!is_null($oPayment->oxpayments__wdoxidee_maid->value)) {
-            $oCreditCardConfig->setNonThreeDCredentials(
-                $oPayment->oxpayments__wdoxidee_maid->value,
-                $oPayment->oxpayments__wdoxidee_secret->value
+            $oCreditCardConfig->setSSLCredentials(
+                '53f2895a-e4de-4e82-a813-0d87a10e55e6', //$oPayment->oxpayments__wdoxidee_maid->value,
+                'dbc5a498-9a66-43b9-bf1d-a618dd399684'//$oPayment->oxpayments__wdoxidee_secret->value
             );
         }
 
         if (!is_null($oPayment->oxpayments__wdoxidee_maid->value)) {
             $oCreditCardConfig->setThreeDCredentials(
-                $oPayment->oxpayments__wdoxidee_maid->value,
-                $oPayment->oxpayments__wdoxidee_three_d_secret->value
+                '508b8896-b37d-4614-845c-26bf8bf2c948',//$oPayment->oxpayments__wdoxidee_maid->value,
+                'bc5a498-9a66-43b9-bf1d-a618dd399684'//$oPayment->oxpayments__wdoxidee_three_d_secret->value
             );
         }
 
@@ -61,26 +65,28 @@ class Credit_Card_Payment_Method extends Payment_Method
         $oShopCurrency = $oShopConfig->getActShopCurrencyObject();
 
         if ($oPayment->oxpayments__wdoxidee_non_three_d_max_limit->value !== '') {
-            $oCreditCardConfig->addNonThreeDMaxLimit(new Amount(
-                $this->_convertAmountCurrency(
-                    $oPayment->oxpayments__wdoxidee_non_three_d_max_limit->value,
-                    $oThreeDCurrency->rate,
-                    $oShopCurrency->rate
-                ),
-                $oShopCurrency->name
+            $oCreditCardConfig->addSslMaxLimit(new Amount(
+                300,
+                'EUR'
+//                $this->_convertAmountCurrency(
+//                    $oPayment->oxpayments__wdoxidee_non_three_d_max_limit->value,
+//                    $oThreeDCurrency->rate,
+//                    $oShopCurrency->rate
+//                ),
+//                $oShopCurrency->name
             ));
         }
 
-        //FIXME cgrach: convert to current shop currency
-        // see /Core/Config.php::getCurrencyArray
         if ($oPayment->oxpayments__wdoxidee_three_d_min_limit->value !== '') {
             $oCreditCardConfig->addThreeDMinLimit(new Amount(
-                $this->_convertAmountCurrency(
-                    $oPayment->oxpayments__wdoxidee_three_d_min_limit->value,
-                    $oThreeDCurrency->rate,
-                    $oShopCurrency->rate
-                ),
-                $oShopCurrency->name
+                100,
+                'EUR'
+//                $this->_convertAmountCurrency(
+//                    $oPayment->oxpayments__wdoxidee_three_d_min_limit->value,
+//                    $oThreeDCurrency->rate,
+//                    $oShopCurrency->rate
+//                ),
+//                $oShopCurrency->name
             ));
         }
 

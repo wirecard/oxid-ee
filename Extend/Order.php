@@ -9,6 +9,7 @@
 
 namespace Wirecard\Oxid\Extend;
 
+use Wirecard\Oxid\Model\Credit_Card_Payment_Method;
 use \Wirecard\Oxid\Model\Paypal_Payment_Method;
 
 /**
@@ -22,7 +23,8 @@ class Order extends Order_parent
 {
 
     private $aWirecardPaymentTypes = array(
-        Paypal_Payment_Method::NAME
+        Paypal_Payment_Method::NAME,
+        Credit_Card_Payment_Method::NAME
     );
 
     /**
