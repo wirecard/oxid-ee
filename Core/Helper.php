@@ -34,7 +34,7 @@ class Helper
      *
      * Check if payment id is a Wirecard id i.e. wdpaypal
      *
-     * @param $sPaymentId
+     * @param string $sPaymentId
      * @return bool
      */
     public static function isWirecardPaymentMethod($sPaymentId): bool

@@ -36,7 +36,7 @@ class View_Config extends View_Config_parent
      *
      * Checks if payment id is a Wirecard id i.e. wdpaypal
      *
-     * @param $sPaymentId
+     * @param string $sPaymentId
      * @return bool
      */
     public function isWirecardPaymentMethod($sPaymentId): bool
