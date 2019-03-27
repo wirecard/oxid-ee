@@ -378,19 +378,24 @@ class Payment_Gateway extends Payment_Gateway_parent
         $oCurrency = $this->getConfig()->getActShopCurrencyObject();
 
         foreach ($oArticles as $key => $value) {
-            $this->_addItemToBasket($oWdBasket, $key, $value, $finalPrices, $oCurrency);
+            $this->_addArticleToBasket($oWdBasket, $key, $value, $finalPrices, $oCurrency);
         }
-        if ($oBasket->getDeliveryCosts()) {
-            $item = new Item(
-                "Shipping",
-                new Amount($oBasket->getDeliveryCosts(), $oCurrency->name),
-                1
-            );
-            $item->setTaxRate($oBasket->getDelCostVatPercent());
-            $item->setTaxAmount(new Amount($oBasket->getDeliveryCost()->getVatValue(), $oCurrency->name));
 
-            $oWdBasket->add($item);
-        }
+        // include shipping costs in basket
+        $this->_addShippingCostsToBasket($oWdBasket, $oBasket, $oCurrency);
+
+        // include voucher discounts in basket
+        $this->_addVoucherDicountsToBasket($oWdBasket, $oBasket, $oCurrency);
+
+        // include wrapping costs in basket
+        $this->_addWrappingCostsToBasket($oWdBasket, $oBasket, $oCurrency);
+
+        // include gift card costs in basket
+        $this->_addGiftCardCostsToBasket($oWdBasket, $oBasket, $oCurrency);
+
+        // include payment costs in basket
+        $this->_addPaymentCostsToBasket($oWdBasket, $oBasket, $oCurrency);
+
         $oTransaction->setBasket($oWdBasket);
     }
 
@@ -405,7 +410,7 @@ class Payment_Gateway extends Payment_Gateway_parent
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    private function _addItemToBasket(
+    private function _addArticleToBasket(
         WdBasket &$oBasket,
         string $sArticleKey,
         int $iQuantity,
@@ -423,5 +428,97 @@ class Payment_Gateway extends Payment_Gateway_parent
         $item->setTaxRate(floatval($oArticle->getPrice()->getVat()));
         $item->setTaxAmount(new Amount($oArticle->getPrice()->getVatValue(), $oCurrency->name));
         $oBasket->add($item);
+    }
+
+    /**
+     * Adds the shipping costs to the basket
+     *
+     * @param WdBasket $oWdBasket the paymentSDK basket item
+     * @param Basket   $oBasket   the OXID basket item
+     * @param Currency $oCurrency
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
+     */
+    private function _addShippingCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, Currency $oCurrency)
+    {
+        if ($oBasket->getDeliveryCosts()) {
+            $item = new Item(
+                "Shipping",
+                new Amount($oBasket->getDeliveryCosts(), $oCurrency->name),
+                1
+            );
+            $item->setTaxRate($oBasket->getDelCostVatPercent());
+            $item->setTaxAmount(new Amount($oBasket->getDeliveryCost()->getVatValue(), $oCurrency->name));
+
+            $oWdBasket->add($item);
+        }
+    }
+
+    /**
+     * Adds all voucher discounts to the basket
+     *
+     * @param WdBasket $oWdBasket the paymentSDK basket item
+     * @param Basket   $oBasket   the OXID basket item
+     * @param Currency $oCurrency
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
+     */
+    private function _addVoucherDiscountsToBasket(WdBasket &$oWdBasket, Basket $oBasket, Currency $oCurrency)
+    {
+        $aVouchers = $oBasket->getVouchers();
+
+        if (count($aVouchers) > 0) {
+            foreach ($aVouchers as $key => $value) {
+                $oItem = new Item(
+                    "Voucher",
+                    new Amount($value->dVoucherdiscount * -1, $oCurrency->name),
+                    1
+                );
+
+                $oWdBasket->add($oItem);
+            }
+        }
+    }
+
+    /**
+     * Adds all wrapping costs to the basket
+     *
+     * @param WdBasket $oWdBasket the paymentSDK basket item
+     * @param Basket   $oBasket   the OXID basket item
+     * @param Currency $oCurrency
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
+     */
+    private function _addWrappingCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, Currency $oCurrency)
+    {
+
+    }
+
+    /**
+     * Adds all gift card costs to the basket
+     *
+     * @param WdBasket $oWdBasket the paymentSDK basket item
+     * @param Basket   $oBasket   the OXID basket item
+     * @param Currency $oCurrency
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
+     */
+    private function _addGiftCardCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, Currency $oCurrency)
+    {
+
+    }
+
+    /**
+     * Adds all payment costs to the basket
+     *
+     * @param WdBasket $oWdBasket the paymentSDK basket item
+     * @param Basket   $oBasket   the OXID basket item
+     * @param Currency $oCurrency
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
+     */
+    private function _addPaymentCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, Currency $oCurrency)
+    {
+
     }
 }
