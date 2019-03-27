@@ -187,12 +187,14 @@ class OxidEE_Events
         $oConfig = Registry::getConfig();
         $sShopBaseURL = $oConfig->getShopUrl();
         $oXmldata = simplexml_load_file($sShopBaseURL . "modules/wirecard/paymentgateway/default_payment_config.xml");
-        if ($oXmldata) {
-            foreach ($oXmldata->payment as $oPayment) {
-                self::_addPaymentMethod($oPayment);
-            }
-        } else {
+
+        if (!$oXmldata) {
             $oLogger->error("default_payment_config.xml could not be loaded.");
+            return;
+        }
+
+        foreach ($oXmldata->payment as $oPayment) {
+            self::_addPaymentMethod($oPayment);
         }
     }
 
