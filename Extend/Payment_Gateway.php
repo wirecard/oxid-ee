@@ -85,7 +85,6 @@ class Payment_Gateway extends Payment_Gateway_parent
         if (!$oOrder->isWirecardPaymentType()) {
             return parent::executePayment($dAmount, $oOrder);
         }
-
         $oResponse = null;
 
         try {
