@@ -7,7 +7,8 @@
 [{if $edit->oxpayments__wdoxidee_iswirecard->value == 1}]
   <tr>
     <td>
-      <img src="/modules/wirecard/paymentgateway/out/img/[{ $edit->oxpayments__wdoxidee_logo->value }]">
+      [{assign var="oShopConf" value=$oViewConf->getConfig()}]
+      <img src="[{$oShopConf->getShopUrl()}]modules/wirecard/paymentgateway/out/img/[{ $edit->oxpayments__wdoxidee_logo->value }]">
     </td>
   <tr>
   <tr>
