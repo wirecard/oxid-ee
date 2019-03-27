@@ -140,15 +140,6 @@ class OxidEE_Events
         $sQueryState = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_PAYMENTSTATE` enum('pending','completed',
         'failed','cancelled')";
         self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_PAYMENTSTATE', $sQueryState);
-
-        $sQueryCapAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_CAPTUREAMOUNT` decimal(9,2) NOT NULL";
-        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_CAPTUREAMOUNT', $sQueryCapAmount);
-
-        $sQueryRefAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_REFUNDEDAMOUNT` decimal(9,2) NOT NULL";
-        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_REFUNDEDAMOUNT', $sQueryRefAmount);
-
-        $sQueryVoidedAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_VOIDEDAMOUNT` decimal(9,2) NOT NULL";
-        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_VOIDEDAMOUNT', $sQueryVoidedAmount);
     }
 
     /**
@@ -168,7 +159,7 @@ class OxidEE_Events
             `WDOXIDEE_AMOUNT` double NOT NULL,
             `WDOXIDEE_CURRENCY` varchar(32) NOT NULL,
             `WDOXIDEE_DESCRIPTOR` varchar(32) NOT NULL,
-            `WDOXIDEE_XML` mediumtext NOT NULL,
+            `WDOXIDEE_RESPONSEXML` mediumtext NOT NULL,
             `WDOXIDEE_DATE` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (`OXID`)
         ) Engine=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";

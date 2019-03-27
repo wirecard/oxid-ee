@@ -10,7 +10,7 @@
  namespace Wirecard\Oxid\Core;
 
 /**
- * Transaction manager
+ * Transaction
  *
  */
 class Transaction extends \OxidEsales\Eshop\Core\Model\MultiLanguageModel
