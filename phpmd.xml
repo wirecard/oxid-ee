@@ -76,6 +76,7 @@ the configured threshold.
     <rule ref="rulesets/cleancode.xml">
         <!-- exclude static access rule because OXID requires static access for a number of internal classes -->
         <exclude name="StaticAccess" />
+        <exclude name="ElseExpression" />
     </rule>
 
 </ruleset>
