@@ -51,7 +51,8 @@ $aModule = array(
         \OxidEsales\Eshop\Application\Model\Order::class          => \Wirecard\Oxid\Extend\Order::class,
         \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \Wirecard\Oxid\Extend\Payment_Gateway::class,
         \OxidEsales\Eshop\Application\Controller\Admin\PaymentMainAjax::class
-            => \Wirecard\Oxid\Extend\Payment_Main_Ajax::class
+            => \Wirecard\Oxid\Extend\Payment_Main_Ajax::class,
+        \OxidEsales\Eshop\Application\Model\Basket::class         => \Wirecard\Oxid\Extend\Basket::class
     ),
     'controllers'       => array(
         'wcpg_transaction'

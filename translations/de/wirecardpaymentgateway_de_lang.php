@@ -268,6 +268,7 @@ $aLang = array(
     "Payment Gateway for WooCommerce" => "Payment Gateway for WooCommerce",
     "paymentMethod" => "Zahlungsmittel",
     "payment_awaiting" => "Ausständige Zahlung von Wirecard.",
+    "payment_cost" => "Aufschlag Zahlungsart",
     "payment_details_title" => "Details",
     "payment_failed_text" => "Bezahloperation fehlgeschlagen.",
     "payment_from_applicable_countries" => "Zahlung aus folgenden Ländern",

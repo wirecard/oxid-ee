@@ -268,6 +268,7 @@ $aLang = array(
     "Payment Gateway for WooCommerce" => "Payment Gateway for WooCommerce",
     "paymentMethod" => "Payment Method",
     "payment_awaiting" => "Awaiting payment from Wirecard.",
+    "payment_cost" => "Payment cost",
     "payment_details_title" => "Details",
     "payment_failed_text" => "Payment operation failed.",
     "payment_from_applicable_countries" => "Payment from Applicable Countries",
