@@ -43,6 +43,10 @@ class Paypal_Payment_Method extends Payment_Method
     /**
      * @inheritdoc
      *
+     * @param Payment $oPayment
+     *
+     * @return Config
+     *
      * @SuppressWarnings(PHPMD.Coverage)
      */
     public function getConfig(Payment $oPayment): Config

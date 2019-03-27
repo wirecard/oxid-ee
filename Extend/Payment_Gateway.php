@@ -21,11 +21,14 @@ use \OxidEsales\Eshop\Core\Session;
 use \Wirecard\Oxid\Core\Helper;
 use \Wirecard\Oxid\Core\Payment_Method_Factory;
 
+use \Wirecard\Oxid\Model\Credit_Card_Payment_Method;
 use \Wirecard\PaymentSdk\Entity\AccountHolder;
 use \Wirecard\PaymentSdk\Entity\Amount;
 use \Wirecard\PaymentSdk\Entity\Device;
+use Wirecard\PaymentSdk\Response\FormInteractionResponse;
 use \Wirecard\PaymentSdk\Response\Response;
 use \Wirecard\PaymentSdk\Response\SuccessResponse;
+use \Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use \Wirecard\PaymentSdk\Transaction\Transaction;
 use \Wirecard\PaymentSdk\TransactionService;
 use \Wirecard\PaymentSdk\Response\FailureResponse;
@@ -44,8 +47,6 @@ use \Wirecard\PaymentSdk\Entity\Item;
  */
 class Payment_Gateway extends Payment_Gateway_parent
 {
-    const NAME = 'wdpaypal';
-
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -82,9 +83,12 @@ class Payment_Gateway extends Payment_Gateway_parent
      */
     public function executePayment($dAmount, &$oOrder)
     {
-        if (!$oOrder->isWirecardPaymentType()) {
-            return parent::executePayment($dAmount, $oOrder);
-        }
+
+        //TODO
+//        if (!$oOrder->isWirecardPaymentType()) {
+//            return parent::executePayment($dAmount, $oOrder);
+//        }
+
         $oResponse = null;
 
         try {
@@ -108,11 +112,18 @@ class Payment_Gateway extends Payment_Gateway_parent
             }
             return false;
         }
+
+        if ($oResponse instanceof FormInteractionResponse) {
+            $this->oLogger->error("FormInteractionResponse not handled yet!");
+        }
+
         $sPageUrl = null;
         if ($oResponse instanceof InteractionResponse) {
             $sPageUrl = $oResponse->getRedirectUrl();
+            $this->oLogger->debug($sPageUrl);
+            Registry::getUtils()->redirect($sPageUrl);
         }
-        Registry::getUtils()->redirect($sPageUrl);
+
         return true;
     }
 
@@ -196,27 +207,32 @@ class Payment_Gateway extends Payment_Gateway_parent
     {
         $sShopUrl = $this->getConfig()->getCurrentShopUrl();
         $oSession = $this->getSession();
+        $oShopConfig = $this->getConfig();
 
         $oRedirect = self::getRedirectUrls($oSession, $sShopUrl);
-        $oPaymentMethod = Payment_Method_Factory::create(self::NAME);
-        $oTransactionService = new TransactionService($oPaymentMethod->getConfig(), $this->oLogger);
+        $oPaymentMethod = Payment_Method_Factory::create(Credit_Card_Payment_Method::NAME);
+
+        $oPayment = oxNew(Payment::class);
+        $oPayment->load($oOrder->getPaymentType()->oxuserpayments__oxpaymentsid->value);
+
+        $oTransactionService = new TransactionService($oPaymentMethod->getConfig($oPayment), $this->oLogger);
+
+        if (!empty($oShopConfig->getRequestParameter('jsresponse'))) {
+            return $oTransactionService->processJsResponse($_POST, $sShopUrl . "termUrlInMakeTrnasaction.php");
+        }
 
         $oTransaction = $oPaymentMethod->getTransaction();
         $oTransaction->setRedirect($oRedirect);
 
-        $oShopconfig = $this->getConfig();
-        $oCurrency = $oShopconfig->getActShopCurrencyObject();
-        $oTransaction->setAmount(new Amount($dAmount, $oCurrency->name));
+        $oCurrency = $oShopConfig->getActShopCurrencyObject();
+
+
+        //TODO cgrach add back
+        //$oTransaction->setAmount(new Amount($dAmount, $oCurrency->name));
+        $oTransaction->setAmount(new Amount(0, "EUR"));
 
         $oBasket = $oSession->getBasket();
         $oUser = $oBasket->getBasketUser();
-
-        $oTransaction->setOrderDetail(sprintf(
-            '%s %s %s',
-            $oOrder->oxorder__oxbillemail->value,
-            $oUser->oxuser__oxfname->value,
-            $oUser->oxuser__oxlname->value
-        ));
 
         $sPaymentId = $oBasket->getPaymentId();
         $oPayment = oxNew(Payment::class);
@@ -236,7 +252,20 @@ class Payment_Gateway extends Payment_Gateway_parent
         }
 
         $oTransaction->setNotificationUrl($sShopUrl . 'notify.php');
-        $oResponse = $oTransactionService->pay($oTransaction);
+
+        if ($oTransaction instanceof PayPalTransaction) {
+            $oTransaction->setOrderDetail(sprintf(
+                '%s %s %s',
+                $oOrder->oxorder__oxbillemail->value,
+                $oUser->oxuser__oxfname->value,
+                $oUser->oxuser__oxlname->value
+            ));
+        }
+
+        //TODO cgrach add back
+//        $oResponse = $oTransactionService->process($oTransaction,
+// $oPayment->oxpayments__wdoxidee_transactiontype->value);
+        $oResponse = $oTransactionService->process($oTransaction, 'reserve');
         return $oResponse;
     }
 
@@ -256,6 +285,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         User $oUser,
         Payment $oPayment
     ) {
+    
 
         $sRemoteAddress = Registry::getUtilsServer()->getRemoteAddress();
         $oTransaction->setIpAddress($sRemoteAddress);
@@ -412,6 +442,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         array $aPrices,
         $oCurrency
     ) {
+    
 
         $oArticle = oxNew(Article::class);
         $oArticle->load($sArticleKey);

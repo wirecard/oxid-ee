@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Extend;
 
 use \OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\EshopCommunity\Core\Registry;
 use \Wirecard\Oxid\Model\Credit_Card_Payment_Method;
 use \Wirecard\PaymentSdk\Config\Config;
 use \Wirecard\PaymentSdk\Entity\Amount;
@@ -40,9 +41,18 @@ class Order_Controller extends Order_Controller_parent
      */
     private $_oPaymentMethodConfig;
 
-    public function getCreditCardUiWithData()
+    /**
+     *
+     * Returns the parameters used to render the credit card form
+     *
+     * @return string
+     */
+    public function getCreditCardUiWithData(): string
     {
         $oTransactionService = $this->_getTransactionService();
+        /**
+         * @var $oTransaction CreditCardTransaction
+         */
         $oTransaction = $this->_getCreditCardPaymentMethod()->getTransaction();
 
         /**
@@ -50,21 +60,30 @@ class Order_Controller extends Order_Controller_parent
          */
         $oBasket = $this->getBasket();
 
-        $oTransaction->setAmount(new Amount($oBasket->getPrice()->getBruttoPrice(), $oBasket->getBasketCurrency()->name));
-        $oTransaction->setConfig($this->_getConfig()->get(CreditCardTransaction::NAME));
+        //TODO
+        //$oTransaction->setAmount(new Amount(
+        //$oBasket->getPrice()->getBruttoPrice(),
+        // $oBasket->getBasketCurrency()->name)
+        //);
+        $oTransaction->setAmount(new Amount(0, "EUR"));
+        $oTransaction->setConfig($this->_getPaymentMethodConfig()->get(CreditCardTransaction::NAME));
 
-        //TODO set correct payment action
-        //TODO set correct language
-        return $oTransactionService->getCreditCardUiWithData($oTransaction, 'authorize');
+        //TODO correct setTermUrl
+        $oTransaction->setTermUrl($this->getConfig()->getCurrentShopUrl() . "/termUrl.php");
+        return $oTransactionService->getCreditCardUiWithData(
+            $oTransaction,
+            $this->_getPaymentAction("pay"),
+            Registry::getLang()->getLanguageAbbr()
+        );
     }
 
     /**
      * @return TransactionService
      */
-    private function _getTransactionService()
+    private function _getTransactionService(): TransactionService
     {
         if (is_null($this->_oTransactionService)) {
-            $this->_oTransactionService = new TransactionService($this->_getConfig());
+            $this->_oTransactionService = new TransactionService($this->_getPaymentMethodConfig());
         }
 
         return $this->_oTransactionService;
@@ -73,7 +92,7 @@ class Order_Controller extends Order_Controller_parent
     /**
      * @return Credit_Card_Payment_Method
      */
-    private function _getCreditCardPaymentMethod()
+    private function _getCreditCardPaymentMethod(): Credit_Card_Payment_Method
     {
         if (is_null($this->_oCreditCardPaymentMethod)) {
             $this->_oCreditCardPaymentMethod = new Credit_Card_Payment_Method();
@@ -82,7 +101,10 @@ class Order_Controller extends Order_Controller_parent
         return $this->_oCreditCardPaymentMethod;
     }
 
-    private function _getConfig()
+    /**
+     * @return Config
+     */
+    private function _getPaymentMethodConfig(): Config
     {
         if (is_null($this->_oPaymentMethodConfig)) {
             $oPayment = $this->getPayment();
@@ -90,6 +112,18 @@ class Order_Controller extends Order_Controller_parent
         }
 
         return $this->_oPaymentMethodConfig;
+    }
 
+    /**
+     * Converts the admin panel payment method action into a seamless
+     * @param string $sAction
+     * @return string
+     */
+    private function _getPaymentAction(string $sAction): string
+    {
+        if ($sAction == 'pay') {
+            return 'purchase';
+        }
+        return 'authorization';
     }
 }

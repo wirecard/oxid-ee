@@ -118,10 +118,10 @@
     </td>
     <td class="edittext">
       <select name="editval[oxpayments__wdoxidee_transactiontype]">
-        <option value="authorize-capture" [{if $edit->oxpayments__wdoxidee_transactiontype->value == 'authorize-capture'}]selected[{/if}]>
+        <option value="reserve" [{if $edit->oxpayments__wdoxidee_transactiontype->value == 'reserve'}]selected[{/if}]>
             [{oxmultilang ident="text_payment_action_reserve"}]
           </option>
-          <option value="purchase" [{if $edit->oxpayments__wdoxidee_transactiontype->value == 'purchase'}]selected[{/if}]>
+          <option value="pay" [{if $edit->oxpayments__wdoxidee_transactiontype->value == 'pay'}]selected[{/if}]>
             [{oxmultilang ident="text_payment_action_pay"}]
           </option>
       </select>

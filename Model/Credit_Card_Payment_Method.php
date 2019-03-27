@@ -17,12 +17,19 @@ use \Wirecard\PaymentSdk\Entity\Amount;
 use \Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use \Wirecard\PaymentSdk\Transaction\Transaction;
 
+/**
+ * Class Credit_Card_Payment_Method
+ *
+ * @package Wirecard\Oxid\Model
+ */
 class Credit_Card_Payment_Method extends Payment_Method
 {
     const NAME = "wdcreditcard";
 
     /**
      * @inheritdoc
+     *
+     * @return Transaction
      */
     public function getTransaction(): Transaction
     {
@@ -31,6 +38,10 @@ class Credit_Card_Payment_Method extends Payment_Method
 
     /**
      * @inheritdoc
+     *
+     * @param Payment $oPayment
+     *
+     * @return Config
      */
     public function getConfig(Payment $oPayment): Wirecard_Config
     {
@@ -44,13 +55,11 @@ class Credit_Card_Payment_Method extends Payment_Method
 
         //TODO set fields depending on configuration
 
-        $oCreditCardConfig = new CreditCardConfig(
-            '53f2895a-e4de-4e82-a813-0d87a10e55e6',//$oPayment->oxpayments__wdoxidee_maid->value,
-            'dbc5a498-9a66-43b9-bf1d-a618dd399684'//$oPayment->oxpayments__wdoxidee_secret->value
-        );
+        $oCreditCardConfig = new CreditCardConfig();
 
         if (!is_null($oPayment->oxpayments__wdoxidee_maid->value)) {
-            $oCreditCardConfig->setSSLCredentials(
+            $oCreditCardConfig->setNonThreeDCredentials(
+                //TODO
                 '53f2895a-e4de-4e82-a813-0d87a10e55e6', //$oPayment->oxpayments__wdoxidee_maid->value,
                 'dbc5a498-9a66-43b9-bf1d-a618dd399684'//$oPayment->oxpayments__wdoxidee_secret->value
             );
@@ -58,8 +67,9 @@ class Credit_Card_Payment_Method extends Payment_Method
 
         if (!is_null($oPayment->oxpayments__wdoxidee_maid->value)) {
             $oCreditCardConfig->setThreeDCredentials(
-                '508b8896-b37d-4614-845c-26bf8bf2c948',//$oPayment->oxpayments__wdoxidee_maid->value,
-                'bc5a498-9a66-43b9-bf1d-a618dd399684'//$oPayment->oxpayments__wdoxidee_three_d_secret->value
+                //TODO
+                '508b8896-b37d-4614-845c-26bf8bf2c948', //$oPayment->oxpayments__wdoxidee_maid->value,
+                'dbc5a498-9a66-43b9-bf1d-a618dd399684'//$oPayment->oxpayments__wdoxidee_three_d_secret->value
             );
         }
 
@@ -72,28 +82,30 @@ class Credit_Card_Payment_Method extends Payment_Method
         $oShopCurrency = $oShopConfig->getActShopCurrencyObject();
 
         if ($oPayment->oxpayments__wdoxidee_non_three_d_max_limit->value !== '') {
-            $oCreditCardConfig->addSslMaxLimit(new Amount(
-                300,
+            $oCreditCardConfig->addNonThreeDMaxLimit(new Amount(
+                100.0,
                 'EUR'
-//                $this->_convertAmountCurrency(
-//                    $oPayment->oxpayments__wdoxidee_non_three_d_max_limit->value,
-//                    $oThreeDCurrency->rate,
-//                    $oShopCurrency->rate
-//                ),
-//                $oShopCurrency->name
+                //TODO
+                //                $this->_convertAmountCurrency(
+                //                    $oPayment->oxpayments__wdoxidee_non_three_d_max_limit->value,
+                //                    $oThreeDCurrency->rate,
+                //                    $oShopCurrency->rate
+                //                ),
+                //                $oShopCurrency->name
             ));
         }
 
         if ($oPayment->oxpayments__wdoxidee_three_d_min_limit->value !== '') {
             $oCreditCardConfig->addThreeDMinLimit(new Amount(
-                100,
+                50.0,
                 'EUR'
-//                $this->_convertAmountCurrency(
-//                    $oPayment->oxpayments__wdoxidee_three_d_min_limit->value,
-//                    $oThreeDCurrency->rate,
-//                    $oShopCurrency->rate
-//                ),
-//                $oShopCurrency->name
+                //TODO
+                //                $this->_convertAmountCurrency(
+                //                    $oPayment->oxpayments__wdoxidee_three_d_min_limit->value,
+                //                    $oThreeDCurrency->rate,
+                //                    $oShopCurrency->rate
+                //                ),
+                //                $oShopCurrency->name
             ));
         }
 
@@ -102,7 +114,14 @@ class Credit_Card_Payment_Method extends Payment_Method
         return $oConfig;
     }
 
-    private function _convertAmountCurrency(float $fAmount, float $fFromFactor, float $fToFactor)
+    /**
+     * @param float $fAmount
+     * @param float $fFromFactor
+     * @param float $fToFactor
+     *
+     * @return float
+     */
+    private function _convertAmountCurrency(float $fAmount, float $fFromFactor, float $fToFactor): float
     {
         return $fAmount / $fFromFactor * $fToFactor;
     }

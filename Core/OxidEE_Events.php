@@ -168,7 +168,7 @@ class OxidEE_Events
             `WDOXIDEE_TRANSACTIONID` varchar(32) NOT NULL,
             `WDOXIDEE_PARENTTRANSACTIONID` varchar(32),
             `WDOXIDEE_REQUESTID` varchar(32) NOT NULL,
-            `WDOXIDEE_ACTION` enum('purchase','authorization') NOT NULL DEFAULT 'purchase',
+            `WDOXIDEE_ACTION` enum('pay','reserve') NOT NULL DEFAULT 'pay',
             `WDOXIDEE_STATE` enum('success','error','pending'),
             `WDOXIDEE_PAYMENTMETHOD` varchar(32) NOT NULL,
             `WDOXIDEE_AMOUNT` double NOT NULL,

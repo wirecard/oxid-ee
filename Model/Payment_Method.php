@@ -16,7 +16,6 @@ use \OxidEsales\Eshop\Core\Registry;
 use \Wirecard\PaymentSdk\Config\Config;
 use \Wirecard\PaymentSdk\Transaction\Transaction;
 
-
 /**
  * Class Payment_Method
  *
@@ -35,6 +34,8 @@ abstract class Payment_Method
      * Get the payments method configuration
      *
      * @param Payment $oPayment
+     *
+     * @return Config
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
