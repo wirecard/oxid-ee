@@ -137,18 +137,18 @@ class OxidEE_Events
      */
     private static function _extendOrderTable()
     {
-        $sQueryAddPaymentState = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_PAYMENTSTATE` enum('pending','completed',
+        $sQueryState = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_PAYMENTSTATE` enum('pending','completed',
         'failed','cancelled')";
-        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_PAYMENTSTATE', $sQueryAddPaymentState);
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_PAYMENTSTATE', $sQueryState);
 
-        $sQueryAddCaptureAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_CAPTUREAMOUNT` decimal(9,2) NOT NULL";
-        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_CAPTUREAMOUNT', $sQueryAddCaptureAmount);
+        $sQueryCapAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_CAPTUREAMOUNT` decimal(9,2) NOT NULL";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_CAPTUREAMOUNT', $sQueryCapAmount);
 
-        $sQueryAddRefundedAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_REFUNDEDAMOUNT` decimal(9,2) NOT NULL";
-        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_REFUNDEDAMOUNT', $sQueryAddRefundedAmount);
+        $sQueryRefAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_REFUNDEDAMOUNT` decimal(9,2) NOT NULL";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_REFUNDEDAMOUNT', $sQueryRefAmount);
 
-        $sQueryAddVoidedAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_VOIDEDAMOUNT` decimal(9,2) NOT NULL";
-        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_VOIDEDAMOUNT', $sQueryAddVoidedAmount);
+        $sQueryVoidedAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_VOIDEDAMOUNT` decimal(9,2) NOT NULL";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_VOIDEDAMOUNT', $sQueryVoidedAmount);
     }
 
     /**
