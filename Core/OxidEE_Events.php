@@ -158,7 +158,7 @@ class OxidEE_Events
             `WDOXIDEE_PAYMENTMETHOD` varchar(32) NOT NULL,
             `WDOXIDEE_AMOUNT` double NOT NULL,
             `WDOXIDEE_CURRENCY` varchar(32) NOT NULL,
-            `WDOXIDEE_DESCRIPTOR` varchar(32) NOT NULL,
+            `WDOXIDEE_RESPONSE` mediumtext NOT NULL,
             `WDOXIDEE_RESPONSEXML` mediumtext NOT NULL,
             `WDOXIDEE_DATE` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
             PRIMARY KEY (`OXID`)
