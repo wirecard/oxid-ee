@@ -62,6 +62,9 @@ class Payment_Main_Ajax extends Payment_Main_Ajax_parent
         $this->oUtils = Registry::getUtils();
     }
 
+    /**
+     * Checks the validity of the payment method credentials the merchant set on the frontend.
+     */
     public function checkPaymentMethodCredentials()
     {
         $bSuccess = false;
