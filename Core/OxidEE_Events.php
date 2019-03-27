@@ -197,7 +197,7 @@ class OxidEE_Events
         // extend OXID's payment method table
         self::_extendPaymentMethodTable();
 
-        // extend OXID's payment method table
+        // extend OXID's order table
         self::_extendOrderTable();
 
         // create the module's own order transaction table
