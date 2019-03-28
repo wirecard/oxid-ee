@@ -385,7 +385,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         $this->_addShippingCostsToBasket($oWdBasket, $oBasket, $oCurrency);
 
         // include voucher discounts in basket
-        $this->_addVoucherDicountsToBasket($oWdBasket, $oBasket, $oCurrency);
+        $this->_addVoucherDiscountsToBasket($oWdBasket, $oBasket, $oCurrency);
 
         // include wrapping costs in basket
         $this->_addWrappingCostsToBasket($oWdBasket, $oBasket, $oCurrency);
@@ -415,7 +415,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         string $sArticleKey,
         int $iQuantity,
         array $aPrices,
-        object $oCurrency
+        $oCurrency
     ) {
 
         $oArticle = oxNew(Article::class);
@@ -443,13 +443,13 @@ class Payment_Gateway extends Payment_Gateway_parent
     {
         $oShippingCost = $oBasket->getDeliveryCost();
 
-        if ($oShippingCost) {
+        if ($oShippingCost && !empty($oShippingCost->getPrice())) {
             $item = new Item(
                 "Shipping",
                 new Amount($oShippingCost->getPrice(), $oCurrency->name),
                 1
             );
-            $item->setTaxRate($oBasket->getDelCostVatPercent());
+            $item->setTaxRate($oShippingCost->getVat());
             $item->setTaxAmount(new Amount($oShippingCost->getVatValue(), $oCurrency->name));
 
             $oWdBasket->add($item);
@@ -495,13 +495,13 @@ class Payment_Gateway extends Payment_Gateway_parent
     {
         $oWrappingCost = $oBasket->getWrappingCost();
 
-        if ($oWrappingCost) {
+        if ($oWrappingCost && !empty($oWrappingCost->getPrice())) {
             $item = new Item(
                 "Wrapping",
                 new Amount($oWrappingCost->getPrice(), $oCurrency->name),
                 1
             );
-            $item->setTaxRate($oBasket->getWrappCostVatPercent());
+            $item->setTaxRate($oWrappingCost->getVat());
             $item->setTaxAmount(new Amount($oWrappingCost->getVatValue(), $oCurrency->name));
 
             $oWdBasket->add($item);
@@ -521,13 +521,13 @@ class Payment_Gateway extends Payment_Gateway_parent
     {
         $oGiftCardCost = $oBasket->getGiftCardCost();
 
-        if ($oGiftCardCost) {
+        if ($oGiftCardCost && !empty($oGiftCardCost->getPrice())) {
             $item = new Item(
                 "Gift card",
                 new Amount($oGiftCardCost->getPrice(), $oCurrency->name),
                 1
             );
-            $item->setTaxRate($oBasket->getGiftCardCostVatPercent());
+            $item->setTaxRate($oGiftCardCost->getVat());
             $item->setTaxAmount(new Amount($oGiftCardCost->getVatValue(), $oCurrency->name));
 
             $oWdBasket->add($item);
@@ -547,13 +547,13 @@ class Payment_Gateway extends Payment_Gateway_parent
     {
         $oPaymentCost = $oBasket->getPaymentCost();
 
-        if ($oPaymentCost) {
+        if ($oPaymentCost && !empty($oPaymentCost->getPrice)) {
             $item = new Item(
                 "Payment cost",
                 new Amount($oPaymentCost->getPrice(), $oCurrency->name),
                 1
             );
-            $item->setTaxRate($oBasket->getPayCostVatPercent());
+            $item->setTaxRate($oPaymentCost->getVat());
             $item->setTaxAmount(new Amount($oPaymentCost->getVatValue(), $oCurrency->name));
 
             $oWdBasket->add($item);
