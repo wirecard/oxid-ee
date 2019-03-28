@@ -406,7 +406,7 @@ class Payment_Gateway extends Payment_Gateway_parent
      * @param string   $sArticleKey
      * @param int      $iQuantity
      * @param array    $aPrices
-     * @param Currency $oCurrency
+     * @param object   $oCurrency
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
@@ -415,7 +415,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         string $sArticleKey,
         int $iQuantity,
         array $aPrices,
-        $oCurrency
+        object $oCurrency
     ) {
 
         $oArticle = oxNew(Article::class);
@@ -435,11 +435,11 @@ class Payment_Gateway extends Payment_Gateway_parent
      *
      * @param WdBasket $oWdBasket the paymentSDK basket item
      * @param Basket   $oBasket   the OXID basket item
-     * @param Currency $oCurrency
+     * @param object   $oCurrency
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    private function _addShippingCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, Currency $oCurrency)
+    private function _addShippingCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, $oCurrency)
     {
         $oShippingCost = $oBasket->getDeliveryCost();
 
@@ -461,11 +461,11 @@ class Payment_Gateway extends Payment_Gateway_parent
      *
      * @param WdBasket $oWdBasket the paymentSDK basket item
      * @param Basket   $oBasket   the OXID basket item
-     * @param Currency $oCurrency
+     * @param object   $oCurrency
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    private function _addVoucherDiscountsToBasket(WdBasket &$oWdBasket, Basket $oBasket, Currency $oCurrency)
+    private function _addVoucherDiscountsToBasket(WdBasket &$oWdBasket, Basket $oBasket, $oCurrency)
     {
         $aVouchers = $oBasket->getVouchers();
 
@@ -487,19 +487,25 @@ class Payment_Gateway extends Payment_Gateway_parent
      *
      * @param WdBasket $oWdBasket the paymentSDK basket item
      * @param Basket   $oBasket   the OXID basket item
-     * @param Currency $oCurrency
+     * @param object   $oCurrency
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    private function _addWrappingCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, Currency $oCurrency)
+    private function _addWrappingCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, $oCurrency)
     {
-        /*$aWrappingCosts = $oBasket->getWrappingCost();
+        $oWrappingCost = $oBasket->getWrappingCost();
 
-        if (count($aWrappingCosts) > 0) {
-            foreach ($aWrappingCosts as $key => $value) {
+        if ($oWrappingCost) {
+            $item = new Item(
+                "Wrapping",
+                new Amount($oWrappingCost->getPrice(), $oCurrency->name),
+                1
+            );
+            $item->setTaxRate($oBasket->getWrappCostVatPercent());
+            $item->setTaxAmount(new Amount($oWrappingCost->getVatValue(), $oCurrency->name));
 
-            }
-        }*/
+            $oWdBasket->add($item);
+        }
     }
 
     /**
