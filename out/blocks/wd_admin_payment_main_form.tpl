@@ -23,7 +23,7 @@
 
     var requestUrl = '[{ $oViewConf->getAjaxLink() }]cmpid=container&container=payment_main&fnc=checkPaymentMethodCredentials';
 
-    var paramString = Object.keys(bodyParams).map((key) => {
+    var paramString = Object.keys(bodyParams).map(function(key) {
       return encodeURIComponent(key) + '=' + encodeURIComponent(bodyParams[key]);
     }).join('&');
 
