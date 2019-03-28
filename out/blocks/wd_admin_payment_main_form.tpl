@@ -33,12 +33,12 @@
     xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
 
     xhr.onreadystatechange = function() {
-      var DONE = 4;
-      var OK = 200;
+      var DONE = 4;     // XMLHttpRequest finished state
+      var OK = 200;     // HTTP OK status code
 
       if (xhr.readyState === DONE) {
         if (xhr.status === OK) {
-          response = JSON.parse(xhr.responseText);
+          var response = JSON.parse(xhr.responseText);
 
           resultSpan.innerHTML = response && response.success === true ? successText : failureText;
         } else {
