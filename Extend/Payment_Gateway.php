@@ -513,11 +513,11 @@ class Payment_Gateway extends Payment_Gateway_parent
      *
      * @param WdBasket $oWdBasket the paymentSDK basket item
      * @param Basket   $oBasket   the OXID basket item
-     * @param Currency $oCurrency
+     * @param object   $oCurrency
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    private function _addGiftCardCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, Currency $oCurrency)
+    private function _addGiftCardCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, $oCurrency)
     {
         $oGiftCardCost = $oBasket->getGiftCardCost();
 
@@ -539,11 +539,11 @@ class Payment_Gateway extends Payment_Gateway_parent
      *
      * @param WdBasket $oWdBasket the paymentSDK basket item
      * @param Basket   $oBasket   the OXID basket item
-     * @param Currency $oCurrency
+     * @param object   $oCurrency
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    private function _addPaymentCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, Currency $oCurrency)
+    private function _addPaymentCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, $oCurrency)
     {
         $oPaymentCost = $oBasket->getPaymentCost();
 
