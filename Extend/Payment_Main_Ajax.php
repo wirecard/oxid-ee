@@ -52,6 +52,11 @@ class Payment_Main_Ajax extends Payment_Main_Ajax_parent
     private $oUtils;
 
     /**
+     * @var \OxidEsales\Eshop\Core\Config
+     */
+    private $oConfig;
+
+    /**
      * BasePaymentMain controller constructor.
      *
      * @SuppressWarnings(PHPMD.StaticAccess)
@@ -60,6 +65,7 @@ class Payment_Main_Ajax extends Payment_Main_Ajax_parent
     {
         $this->oLogger = Registry::getLogger();
         $this->oUtils = Registry::getUtils();
+        $this->oConfig = Registry::getConfig();
     }
 
     /**
@@ -69,12 +75,13 @@ class Payment_Main_Ajax extends Payment_Main_Ajax_parent
     {
         $bSuccess = false;
 
-        if ($_POST) {
-            // get the needed params from the POST variable
-            $sApiUrl = $_POST['apiUrl'];
-            $sHttpUser = $_POST['httpUser'];
-            $sHttpPass = $_POST['httpPass'];
+        // get the parameters from the request
+        $sApiUrl = $this->oConfig->getRequestParameter('apiUrl');
+        $sHttpUser = $this->oConfig->getRequestParameter('httpUser');
+        $sHttpPass = $this->oConfig->getRequestParameter('httpPass');
 
+        // only perform the check if all parameters were sent
+        if ($sApiUrl && $sHttpUser && $sHttpPass) {
             // use the paymentSDK transaction service to validate the credentials
             $oConfig = new Config($sApiUrl, $sHttpUser, $sHttpPass);
             $oTransactionService = new TransactionService($oConfig, $this->oLogger);
