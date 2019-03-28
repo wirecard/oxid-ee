@@ -441,14 +441,16 @@ class Payment_Gateway extends Payment_Gateway_parent
      */
     private function _addShippingCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, Currency $oCurrency)
     {
-        if ($oBasket->getDeliveryCosts()) {
+        $oShippingCost = $oBasket->getDeliveryCost();
+
+        if ($oShippingCost) {
             $item = new Item(
                 "Shipping",
-                new Amount($oBasket->getDeliveryCosts(), $oCurrency->name),
+                new Amount($oShippingCost->getPrice(), $oCurrency->name),
                 1
             );
             $item->setTaxRate($oBasket->getDelCostVatPercent());
-            $item->setTaxAmount(new Amount($oBasket->getDeliveryCost()->getVatValue(), $oCurrency->name));
+            $item->setTaxAmount(new Amount($oShippingCost->getVatValue(), $oCurrency->name));
 
             $oWdBasket->add($item);
         }
@@ -491,7 +493,13 @@ class Payment_Gateway extends Payment_Gateway_parent
      */
     private function _addWrappingCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, Currency $oCurrency)
     {
+        /*$aWrappingCosts = $oBasket->getWrappingCost();
 
+        if (count($aWrappingCosts) > 0) {
+            foreach ($aWrappingCosts as $key => $value) {
+
+            }
+        }*/
     }
 
     /**
@@ -505,7 +513,19 @@ class Payment_Gateway extends Payment_Gateway_parent
      */
     private function _addGiftCardCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, Currency $oCurrency)
     {
+        $oGiftCardCost = $oBasket->getGiftCardCost();
 
+        if ($oGiftCardCost) {
+            $item = new Item(
+                "Gift card",
+                new Amount($oGiftCardCost->getPrice(), $oCurrency->name),
+                1
+            );
+            $item->setTaxRate($oBasket->getGiftCardCostVatPercent());
+            $item->setTaxAmount(new Amount($oGiftCardCost->getVatValue(), $oCurrency->name));
+
+            $oWdBasket->add($item);
+        }
     }
 
     /**
@@ -519,6 +539,18 @@ class Payment_Gateway extends Payment_Gateway_parent
      */
     private function _addPaymentCostsToBasket(WdBasket &$oWdBasket, Basket $oBasket, Currency $oCurrency)
     {
+        $oPaymentCost = $oBasket->getPaymentCost();
 
+        if ($oPaymentCost) {
+            $item = new Item(
+                "Payment cost",
+                new Amount($oPaymentCost->getPrice(), $oCurrency->name),
+                1
+            );
+            $item->setTaxRate($oBasket->getPayCostVatPercent());
+            $item->setTaxAmount(new Amount($oPaymentCost->getVatValue(), $oCurrency->name));
+
+            $oWdBasket->add($item);
+        }
     }
 }
