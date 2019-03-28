@@ -23,16 +23,31 @@
 
     var requestUrl = '[{ $oViewConf->getAjaxLink() }]cmpid=container&container=payment_main&fnc=checkPaymentMethodCredentials';
 
-    jQuery.post(requestUrl, bodyParams, function(response) {
-      try {
-        response = JSON.parse(response);
-      } catch {
+    var paramString = Object.keys(bodyParams).map((key) => {
+      return encodeURIComponent(key) + '=' + encodeURIComponent(bodyParams[key]);
+    }).join('&');
 
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', requestUrl);
+    xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
+    xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+
+    xhr.onreadystatechange = function() {
+      var DONE = 4;
+      var OK = 200;
+
+      if (xhr.readyState === DONE) {
+        if (xhr.status === OK) {
+          response = JSON.parse(xhr.responseText);
+
+          resultSpan.innerHTML = response && response.success === true ? successText : failureText;
+        } else {
+          resultSpan.innerHTML = failureText;
+        }
       }
+    };
 
-      resultSpan.innerHTML = response && response.success === true ? successText : failureText;
-    });
-
+    xhr.send(paramString);
   }
 </script>
 

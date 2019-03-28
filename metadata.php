@@ -63,11 +63,6 @@ $aModule = array(
             'template' => 'page/checkout/order.tpl',
             'block' => 'checkout_order_main',
             'file' => 'out/blocks/profiling_tags.tpl'
-        ),
-        array(
-            'template' => 'headitem.tpl',
-            'block' => 'admin_headitem_incjs',
-            'file' => 'out/blocks/wd_admin_js_resources.tpl'
         )
     ),
     'events'            => array(
