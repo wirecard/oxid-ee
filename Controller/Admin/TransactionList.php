@@ -67,7 +67,10 @@ class TransactionList extends AdminListController
         $oViewNameGenerator = Registry::get(TableViewNameGenerator::class);
         $sLocalizedViewName = $oViewNameGenerator->getViewName('oxpayments');
 
-        // str_replace is used to add the JOIN statement to the initial SQL query and consider the localized view
+        // str_replace is used to add the JOIN statement to the initial SQL query and consider the localized view.
+        // The view needs to display data from OXID's order table, which is fetched through the JOIN statement.
+        // Because OXID uses different views per language, it is necessary to dynamically alter the base query
+        // at this point.
         $sQuery = str_replace(
             'from wdoxidee_ordertransactions',
             ", `{$sLocalizedViewName}`.`oxdesc` as `paymentname` from `wdoxidee_ordertransactions` LEFT JOIN `oxorder`
