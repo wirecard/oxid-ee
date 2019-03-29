@@ -445,7 +445,7 @@ class Payment_Gateway extends Payment_Gateway_parent
 
         if ($oShippingCost && !empty($oShippingCost->getPrice())) {
             $item = new Item(
-                "Shipping",
+                $this->oLang->translateString('shipping_title'),
                 new Amount($oShippingCost->getBruttoPrice(), $oCurrency->name),
                 1
             );
@@ -472,7 +472,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         if (count($aVouchers) > 0) {
             foreach ($aVouchers as $key => $value) {
                 $oItem = new Item(
-                    "Voucher",
+                    $this->oLang->translateString('voucher'),
                     new Amount($value->dVoucherdiscount * -1, $oCurrency->name),
                     1
                 );
@@ -497,7 +497,7 @@ class Payment_Gateway extends Payment_Gateway_parent
 
         if ($oWrappingCost && !empty($oWrappingCost->getPrice())) {
             $item = new Item(
-                "Wrapping",
+                $this->oLang->translateString('wrapping'),
                 new Amount($oWrappingCost->getBruttoPrice(), $oCurrency->name),
                 1
             );
@@ -523,7 +523,7 @@ class Payment_Gateway extends Payment_Gateway_parent
 
         if ($oGiftCardCost && !empty($oGiftCardCost->getPrice())) {
             $item = new Item(
-                "Gift card",
+                $this->oLang->translateString('gift_card'),
                 new Amount($oGiftCardCost->getBruttoPrice(), $oCurrency->name),
                 1
             );
@@ -549,7 +549,7 @@ class Payment_Gateway extends Payment_Gateway_parent
 
         if ($oPaymentCost && !empty($oPaymentCost->getPrice())) {
             $item = new Item(
-                "Payment cost",
+                $this->oLang->translateString('payment_cost'),
                 new Amount($oPaymentCost->getBruttoPrice(), $oCurrency->name),
                 1
             );
