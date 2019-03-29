@@ -23,10 +23,6 @@
   <exclude-pattern>*/en/</exclude-pattern>
   <exclude-pattern>metadata.php</exclude-pattern>
 
-
-
-  <!-- including the OXID ruleset here is only for interoperability with the "phpcs" extension for Visual Code
-         otherwise there would be no inline error messages in the IDE -->
   <rule ref="vendor/oxid-esales/coding-standards/Oxid/ruleset.xml">
   </rule>
 
