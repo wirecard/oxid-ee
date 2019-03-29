@@ -470,10 +470,10 @@ class Payment_Gateway extends Payment_Gateway_parent
         $aVouchers = $oBasket->getVouchers();
 
         if (count($aVouchers) > 0) {
-            foreach ($aVouchers as $key => $value) {
+            foreach ($aVouchers as $oVoucher) {
                 $oItem = new Item(
                     $this->oLang->translateString('voucher'),
-                    new Amount($value->dVoucherdiscount * -1, $oCurrency->name),
+                    new Amount($oVoucher->dVoucherdiscount * -1, $oCurrency->name),
                     1
                 );
 
