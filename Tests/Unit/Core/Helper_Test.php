@@ -8,7 +8,9 @@
  *
  */
 
-use \Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\Helper;
+
+use OxidEsales\Eshop\Application\Model\Payment;
 
 class Helper_Test extends OxidEsales\TestingLibrary\UnitTestCase
 {
@@ -24,6 +26,21 @@ class Helper_Test extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertTrue(Helper::isWirecardPaymentMethod("wdpaypal"));
         $this->assertFalse(Helper::isWirecardPaymentMethod("paypal"));
     }
+
+    public function testGetPaymentsReturnsAssociativeArray()
+    {
+        $this->assertContainsOnly('string', array_keys(Helper::getPayments()));
+    }
+
+    public function testGetPaymentsReturnsPayments()
+    {
+        $this->assertContainsOnlyInstancesOf(Payment::class, Helper::getPayments());
+    }
+
+    public function testGetPluginPayments()
+    {
+        foreach (Helper::getPluginPayments() as $key => $payment) {
+            $this->assertTrue(!!$payment->oxpayments__wdoxidee_iswirecard->value);
+        }
+    }
 }
-
-
