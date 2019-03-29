@@ -446,7 +446,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         if ($oShippingCost && !empty($oShippingCost->getPrice())) {
             $item = new Item(
                 "Shipping",
-                new Amount($oShippingCost->getPrice(), $oCurrency->name),
+                new Amount($oShippingCost->getBruttoPrice(), $oCurrency->name),
                 1
             );
             $item->setTaxRate($oShippingCost->getVat());
@@ -498,7 +498,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         if ($oWrappingCost && !empty($oWrappingCost->getPrice())) {
             $item = new Item(
                 "Wrapping",
-                new Amount($oWrappingCost->getPrice(), $oCurrency->name),
+                new Amount($oWrappingCost->getBruttoPrice(), $oCurrency->name),
                 1
             );
             $item->setTaxRate($oWrappingCost->getVat());
@@ -524,7 +524,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         if ($oGiftCardCost && !empty($oGiftCardCost->getPrice())) {
             $item = new Item(
                 "Gift card",
-                new Amount($oGiftCardCost->getPrice(), $oCurrency->name),
+                new Amount($oGiftCardCost->getBruttoPrice(), $oCurrency->name),
                 1
             );
             $item->setTaxRate($oGiftCardCost->getVat());
@@ -547,10 +547,10 @@ class Payment_Gateway extends Payment_Gateway_parent
     {
         $oPaymentCost = $oBasket->getPaymentCost();
 
-        if ($oPaymentCost && !empty($oPaymentCost->getPrice)) {
+        if ($oPaymentCost && !empty($oPaymentCost->getPrice())) {
             $item = new Item(
                 "Payment cost",
-                new Amount($oPaymentCost->getPrice(), $oCurrency->name),
+                new Amount($oPaymentCost->getBruttoPrice(), $oCurrency->name),
                 1
             );
             $item->setTaxRate($oPaymentCost->getVat());
