@@ -52,6 +52,12 @@ $aModule = array(
         \OxidEsales\Eshop\Application\Model\PaymentGateway::class       => \Wirecard\Oxid\Extend\Payment_Gateway::class,
         \OxidEsales\Eshop\Application\Controller\OrderController::class => \Wirecard\Oxid\Extend\Order_Controller::class,
     ),
+    'controllers' => array (
+      'wcpg_form_interaction' => \Wirecard\Oxid\Controller\Form_Interaction_Controller::class
+    ),
+    'templates' => array (
+        'wd_form_interaction.tpl' => "wirecard/paymentgateway/out/views/form_interaction.tpl"
+    ),
     'blocks' => array(
         array(
             'template' => 'payment_main.tpl',

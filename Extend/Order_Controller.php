@@ -10,7 +10,7 @@
 namespace Wirecard\Oxid\Extend;
 
 use \OxidEsales\Eshop\Application\Model\Basket;
-use OxidEsales\EshopCommunity\Core\Registry;
+use \OxidEsales\Eshop\Core\Registry;
 use \Wirecard\Oxid\Model\Credit_Card_Payment_Method;
 use \Wirecard\PaymentSdk\Config\Config;
 use \Wirecard\PaymentSdk\Entity\Amount;
@@ -60,16 +60,16 @@ class Order_Controller extends Order_Controller_parent
          */
         $oBasket = $this->getBasket();
 
-        //TODO
-        //$oTransaction->setAmount(new Amount(
-        //$oBasket->getPrice()->getBruttoPrice(),
-        // $oBasket->getBasketCurrency()->name)
-        //);
-        $oTransaction->setAmount(new Amount(0, "EUR"));
+        $oTransaction->setAmount(new Amount(
+            $oBasket->getPrice()->getBruttoPrice(),
+            $oBasket->getBasketCurrency()->name
+        ));
         $oTransaction->setConfig($this->_getPaymentMethodConfig()->get(CreditCardTransaction::NAME));
 
         //TODO correct setTermUrl
-        $oTransaction->setTermUrl($this->getConfig()->getCurrentShopUrl() . "/termUrl.php");
+        $oTransaction->setTermUrl($this->getConfig()->getShopUrl() . "/termUrl.php");
+
+        //TODO set correct payment action
         return $oTransactionService->getCreditCardUiWithData(
             $oTransaction,
             $this->_getPaymentAction("pay"),
@@ -116,7 +116,9 @@ class Order_Controller extends Order_Controller_parent
 
     /**
      * Converts the admin panel payment method action into a seamless
+     *
      * @param string $sAction
+     *
      * @return string
      */
     private function _getPaymentAction(string $sAction): string

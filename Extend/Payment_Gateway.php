@@ -20,12 +20,12 @@ use \OxidEsales\Eshop\Core\Session;
 
 use \Wirecard\Oxid\Core\Helper;
 use \Wirecard\Oxid\Core\Payment_Method_Factory;
-
 use \Wirecard\Oxid\Model\Credit_Card_Payment_Method;
+use \Wirecard\Oxid\Model\Form_Interaction_Response;
 use \Wirecard\PaymentSdk\Entity\AccountHolder;
 use \Wirecard\PaymentSdk\Entity\Amount;
 use \Wirecard\PaymentSdk\Entity\Device;
-use Wirecard\PaymentSdk\Response\FormInteractionResponse;
+use \Wirecard\PaymentSdk\Response\FormInteractionResponse;
 use \Wirecard\PaymentSdk\Response\Response;
 use \Wirecard\PaymentSdk\Response\SuccessResponse;
 use \Wirecard\PaymentSdk\Transaction\PayPalTransaction;
@@ -76,7 +76,7 @@ class Payment_Gateway extends Payment_Gateway_parent
      *
      * @return Response|FailureResponse|SuccessResponse
      *
-     * @override
+     * @inheritdoc
      *
      * @SuppressWarnings(PHPMD.Coverage)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -114,13 +114,32 @@ class Payment_Gateway extends Payment_Gateway_parent
         }
 
         if ($oResponse instanceof FormInteractionResponse) {
-            $this->oLogger->error("FormInteractionResponse not handled yet!");
+            /**
+             * @var $oSession \OxidEsales\Eshop\Core\Session
+             */
+            $oSession = Registry::getSession();
+            $oSession->setVariable(
+                "wdFormInteractionResponse",
+                new Form_Interaction_Response(
+                    $oResponse->getUrl(),
+                    $oResponse->getMethod(),
+                    $oResponse->getFormFields()
+                )
+            );
+
+            $sSid = $oSession->sid(true);
+            if ($sSid != '') {
+                $sSid = '&' . $sSid;
+            }
+
+            Registry::getUtils()->redirect(
+                $this->getConfig()->getShopUrl() . "index.php?cl=wcpg_form_interaction" . $sSid
+            );
         }
 
         $sPageUrl = null;
         if ($oResponse instanceof InteractionResponse) {
             $sPageUrl = $oResponse->getRedirectUrl();
-            $this->oLogger->debug($sPageUrl);
             Registry::getUtils()->redirect($sPageUrl);
         }
 
@@ -226,10 +245,7 @@ class Payment_Gateway extends Payment_Gateway_parent
 
         $oCurrency = $oShopConfig->getActShopCurrencyObject();
 
-
-        //TODO cgrach add back
-        //$oTransaction->setAmount(new Amount($dAmount, $oCurrency->name));
-        $oTransaction->setAmount(new Amount(0, "EUR"));
+        $oTransaction->setAmount(new Amount($dAmount, $oCurrency->name));
 
         $oBasket = $oSession->getBasket();
         $oUser = $oBasket->getBasketUser();
@@ -265,7 +281,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         //TODO cgrach add back
 //        $oResponse = $oTransactionService->process($oTransaction,
 // $oPayment->oxpayments__wdoxidee_transactiontype->value);
-        $oResponse = $oTransactionService->process($oTransaction, 'reserve');
+        $oResponse = $oTransactionService->process($oTransaction, 'pay');
         return $oResponse;
     }
 
@@ -286,6 +302,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         Payment $oPayment
     ) {
     
+
 
         $sRemoteAddress = Registry::getUtilsServer()->getRemoteAddress();
         $oTransaction->setIpAddress($sRemoteAddress);
@@ -443,6 +460,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         $oCurrency
     ) {
     
+
 
         $oArticle = oxNew(Article::class);
         $oArticle->load($sArticleKey);

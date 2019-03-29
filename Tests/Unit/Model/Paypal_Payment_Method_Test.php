@@ -8,7 +8,7 @@
  */
 
 use \Wirecard\Oxid\Model\Paypal_Payment_Method;
-use \OxidEsales\EshopCommunity\Application\Model\Payment;
+use \OxidEsales\Eshop\Application\Model\Payment;
 
 class Paypal_Payment_Method_Test extends OxidEsales\TestingLibrary\UnitTestCase
 {

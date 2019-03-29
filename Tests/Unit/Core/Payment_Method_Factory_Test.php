@@ -20,7 +20,7 @@ class Payment_Method_Factory_Test extends OxidEsales\TestingLibrary\UnitTestCase
     public function testCreateCreditCard()
     {
         $oPaymentMethod = Payment_Method_Factory::create("wdcreditcard");
-        $this->assertTrue($oPaymentMethod instanceof \Wirecard\Oxid\Model\Paypal_Payment_Method);
+        $this->assertTrue($oPaymentMethod instanceof \Wirecard\Oxid\Model\Credit_Card_Payment_Method);
     }
 
 }

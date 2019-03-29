@@ -47,7 +47,7 @@
   }
 
   function logError(where, error) {
-    if (typeof error === "string") {
+    if (typeof error == "string") {
       $("#wirecard-cc-error").html(error)
     }
 
