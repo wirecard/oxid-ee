@@ -12,6 +12,24 @@
  */
 $sMetadataVersion = '2.1';
 
+// method to toggle the visibility of the DOM elements for the module terms and conditions content
+$sToggleTermsJs = file_get_contents(dirname(__FILE__) . '/out/html/toggle-terms-of-use-css-js.html');
+
+// currently, the terms of use only exist in English and are thus used for both English and German
+$sTermsContentEn = file_get_contents(dirname(__FILE__) . '/out/html/terms-of-use.en.html');
+$sTermsContentDe = $sTermsContentEn;
+
+// module description blocks in English and German
+$sModuleDescriptionEn = file_get_contents(dirname(__FILE__) . '/out/html/module-description.en.html');
+$sModuleDescriptionDe = file_get_contents(dirname(__FILE__) . '/out/html/module-description.de.html');
+
+// the array contains the complete description HTML string for each language
+$sTermsContentPlaceholder = '{{ TERMS_CONTENT }}';
+$aModuleDescriptions = array(
+    'de' => $sToggleTermsJs . str_replace($sTermsContentPlaceholder, $sTermsContentDe, $sModuleDescriptionDe),
+    'en' => $sToggleTermsJs . str_replace($sTermsContentPlaceholder, $sTermsContentEn, $sModuleDescriptionEn)
+);
+
 /**
  * Module information
  */
@@ -19,8 +37,8 @@ $aModule = array(
     'id'                => 'wdoxidee',
     'title'             => 'Wirecard Oxid EE Paymentgateway',
     'description'       => array(
-        'de' => 'Modul für Zahlung mit Wirecard paymentSDK',
-        'en' => 'Module for payment with Wirecard paymentSDK'
+        'de' => $aModuleDescriptions['de'],
+        'en' => $aModuleDescriptions['en']
     ),
     'lang'              => 'en',
     'thumbnail'         => 'wirecard-logo.png',
@@ -34,11 +52,6 @@ $aModule = array(
         \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \Wirecard\Oxid\Extend\Payment_Gateway::class
     ),
     'blocks' => array(
-        array(
-            'template' => 'home.tpl',
-            'block'=>'admin_home_head',
-            'file'=>'views/terms_modal.tpl'
-        ),
         array(
             'template' => 'payment_main.tpl',
             'block' => 'admin_payment_main_form',
