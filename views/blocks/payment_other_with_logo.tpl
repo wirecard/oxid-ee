@@ -1,7 +1,12 @@
+[{*
+Uses the content of original OXID payment_other.tpl
+Rendering logo was needed but could not be achieved by extending the block
+*}]
 <dl>
     <dt>
         [{assign var="oShopConf" value=$oViewConf->getConfig()}]
         <input id="payment_[{$sPaymentID}]" type="radio" name="paymentid" value="[{$sPaymentID}]" [{if $oView->getCheckedPaymentId() == $paymentmethod->oxpayments__oxid->value}]checked[{/if}]>
+        [{* Logo added *}]
         <img src="[{$oShopConf->getShopUrl()}]modules/wirecard/paymentgateway/out/img/[{ $paymentmethod->oxpayments__wdoxidee_logo->value }]">
         <label for="payment_[{$sPaymentID}]"><b>[{$paymentmethod->oxpayments__oxdesc->value}]</b></label>
     </dt>

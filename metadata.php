@@ -89,7 +89,7 @@ $aModule = array(
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
         'transaction_list.tpl'              => 'wirecard/paymentgateway/views/admin/tpl/transaction_list.tpl',
         'transaction_tab.tpl'               => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab.tpl',
-        'payment_other.tpl'                 => 'wirecard/paymentgateway/views/blocks/payment_other.tpl'
+        'payment_other_with_logo.tpl'       => 'wirecard/paymentgateway/views/blocks/payment_other_with_logo.tpl'
     ),
     'events'            => array(
         'onActivate'        => '\Wirecard\Oxid\Core\OxidEE_Events::onActivate',
