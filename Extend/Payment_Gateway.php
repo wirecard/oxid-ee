@@ -52,11 +52,6 @@ class Payment_Gateway extends Payment_Gateway_parent
     private $oLogger;
 
     /**
-     * @var \OxidEsales\Eshop\Core\Language
-     */
-    private $oLang;
-
-    /**
      * BasePaymentGateway constructor.
      *
      * @SuppressWarnings(PHPMD.Coverage)
@@ -64,7 +59,6 @@ class Payment_Gateway extends Payment_Gateway_parent
     public function __construct()
     {
         $this->oLogger = Registry::getLogger();
-        $this->oLang = Registry::getLang();
     }
 
     /**
@@ -445,7 +439,7 @@ class Payment_Gateway extends Payment_Gateway_parent
 
         if ($oShippingCost && !empty($oShippingCost->getPrice())) {
             $item = new Item(
-                $this->oLang->translateString('shipping_title'),
+                Helper::translate('shipping_title'),
                 new Amount($oShippingCost->getBruttoPrice(), $oCurrency->name),
                 1
             );
@@ -472,7 +466,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         if (count($aVouchers) > 0) {
             foreach ($aVouchers as $oVoucher) {
                 $oItem = new Item(
-                    $this->oLang->translateString('voucher'),
+                    Helper::translate('voucher'),
                     new Amount($oVoucher->dVoucherdiscount * -1, $oCurrency->name),
                     1
                 );
@@ -497,7 +491,7 @@ class Payment_Gateway extends Payment_Gateway_parent
 
         if ($oWrappingCost && !empty($oWrappingCost->getPrice())) {
             $item = new Item(
-                $this->oLang->translateString('wrapping'),
+                Helper::translate('wrapping'),
                 new Amount($oWrappingCost->getBruttoPrice(), $oCurrency->name),
                 1
             );
@@ -523,7 +517,7 @@ class Payment_Gateway extends Payment_Gateway_parent
 
         if ($oGiftCardCost && !empty($oGiftCardCost->getPrice())) {
             $item = new Item(
-                $this->oLang->translateString('gift_card'),
+                Helper::translate('gift_card'),
                 new Amount($oGiftCardCost->getBruttoPrice(), $oCurrency->name),
                 1
             );
@@ -549,7 +543,7 @@ class Payment_Gateway extends Payment_Gateway_parent
 
         if ($oPaymentCost && !empty($oPaymentCost->getPrice())) {
             $item = new Item(
-                $this->oLang->translateString('payment_cost'),
+                Helper::translate('payment_cost'),
                 new Amount($oPaymentCost->getBruttoPrice(), $oCurrency->name),
                 1
             );
