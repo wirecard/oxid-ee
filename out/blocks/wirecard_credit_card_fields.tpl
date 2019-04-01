@@ -72,7 +72,7 @@
   $('#wirecard-cc-form').submit(submitPaymentForm);
 
   function submitPaymentForm(event) {
-    if (!$("input#jsresponse").length) {
+    if (!$("#wirecard-cc-form input#jsresponse").length) {
       event.preventDefault();
 
       WirecardPaymentPage.seamlessSubmitForm({
