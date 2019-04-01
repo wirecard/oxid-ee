@@ -161,7 +161,7 @@ class Payment_Gateway extends Payment_Gateway_parent
             $sSid = '&' . $sSid;
         }
 
-        $sErrorText = $this->oLang->translateString('order_error');
+        $sErrorText = Helper::translate('order_error');
         $oRedirect = new Redirect(
             $sShopUrl . 'index.php?cl=thankyou' . $sSid,
             $sShopUrl . 'index.php?type=cancel&cl=payment',
@@ -467,8 +467,7 @@ class Payment_Gateway extends Payment_Gateway_parent
             foreach ($aVouchers as $oVoucher) {
                 $oItem = new Item(
                     Helper::translate('voucher'),
-                    new Amount($oVoucher->dVoucherdiscount * -1, $oCurrency->name),
-                    1
+                    new Amount(round($oVoucher->dVoucherdiscount * -1, 2), $oCurrency->name)
                 );
 
                 $oWdBasket->add($oItem);
