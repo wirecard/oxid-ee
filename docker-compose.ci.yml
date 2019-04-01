@@ -1,0 +1,36 @@
+version: '3.5'
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: ci
+      args:
+        PHP_VERSION: ${TRAVIS_PHP_VERSION}
+        MODULE_NAME: ${MODULE_NAME}
+        MODULE_PATH: ${MODULE_PATH}
+        OXID_VERSION: ${OXID_VERSION}
+    image: oxid_ee:${OXID_VERSION}-php${TRAVIS_PHP_VERSION}
+    container_name: ${OXID_CONTAINER}
+    environment:
+      CODACY_PROJECT_TOKEN: ${CODACY_PROJECT_TOKEN}
+      MODULE_PATH: ${MODULE_PATH}
+      MYSQL_HOST: db
+      MYSQL_PORT: 3306
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      OXID_HOSTNAME: web
+      OXID_SERVICE: web # should be same as the service name
+    depends_on:
+      - db
+  db:
+    image: mysql:5.7
+    container_name: oxid_ee_db
+    environment:
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+  selenium:
+    image: selenium/standalone-firefox:2.53.1
+    container_name: oxid_ee_selenium
+    shm_size: 2g

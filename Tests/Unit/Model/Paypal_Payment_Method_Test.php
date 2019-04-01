@@ -26,13 +26,12 @@ class Paypal_Payment_Method_Test extends OxidEsales\TestingLibrary\UnitTestCase
     {
         $oConfig = $this->oPaymentMethod->getConfig();
         $this->assertNotNull($oConfig);
-        $this->assertNotNull($oConfig->get(Paypal_Payment_Method::getName()));
+        $this->assertNotNull($oConfig->get('paypal'));
     }
 
     public function testGetTransaction()
     {
         $oTransaction = $this->oPaymentMethod->getTransaction();
         $this->assertTrue($oTransaction instanceof \Wirecard\PaymentSdk\Transaction\PayPalTransaction);
-        $this->assertNotNull($oTransaction->getAccountHolder());
     }
 }

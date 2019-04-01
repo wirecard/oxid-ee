@@ -48,7 +48,7 @@ class Order extends Order_parent
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    public function isModulePaymentType(): bool
+    public function isModulePaymentType()
     {
         return in_array($this->getPaymentType()->oxuserpayments__oxpaymentsid->value, $this->_aModulePaymentTypes);
     }

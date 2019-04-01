@@ -34,17 +34,17 @@ class Payment_Gateway_Test extends OxidEsales\TestingLibrary\UnitTestCase
         $this->oPaymentGateway = oxNew(Payment_Gateway::class);
     }
 
-    //TODO cgrach: Check wrong behavior
-//    public function testExecutePayment()
-//    {
-//        $this->oOrderMock->expects($this->once())
-//            ->method('isModulePaymentType')
-//            ->willReturn(true);
-//
-//        $this->oOrderMock->expects($this->once())
-//            ->method('getPaymentType')
-//            ->willReturn(Paypal_Payment_Method::getName(true));
-//
-//        $this->assertTrue($this->oPaymentGateway->executePayment(1.5, $this->oOrderMock));
-//    }
+    public function testExecutePayment()
+    {
+    // TODO cgrach: Check wrong behavior
+    //    $this->oOrderMock->expects($this->once())
+    //        ->method('isWirecardPaymentType')
+    //        ->willReturn(true);
+
+    //    $this->oOrderMock->expects($this->once())
+    //        ->method('getPaymentType')
+    //        ->willReturn(Paypal_Payment_Method::NAME);
+
+    //    $this->assertTrue($this->oPaymentGateway->executePayment(1.5, $this->oOrderMock));
+    }
 }

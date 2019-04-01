@@ -1,0 +1,4 @@
+.env
+.travis.yml
+docker-compose.*
+Dockerfile

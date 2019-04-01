@@ -2,23 +2,51 @@ sudo: false
 dist: xenial
 language: php
 
+services:
+  - docker
+
 env:
   global:
-    - COMPOSER_NO_INTERACTION=1
-
-cache:
-  directories:
-    - $HOME/.cache/composer
+    - MYSQL_USER=root
+    - MYSQL_PASSWORD=root
+    - MYSQL_DATABASE=oxid_db
+    - OXID_CONTAINER=oxid_ee_web
+    - OXID_VERSION=dev-b-6.1-ce
+    - MODULE_NAME=${TRAVIS_REPO_SLUG}
+    - MODULE_PATH=wirecard/paymentgateway
 
 matrix:
   include:
     - php: 7.1
     - php: 7.2
-    - php: 7.3
 
 install:
-  - composer install
+  # build & start containers
+  - docker-compose -f docker-compose.ci.yml up --build -d
+  # wait till webserver ready
+  - timeout 300 bash -c 'while [[ "$(docker exec ${OXID_CONTAINER} curl -Ifs -o /dev/null -w ''%{http_code}'' http://localhost)" != "200" ]]; do sleep 2; done' || false
 
 script:
-  - composer cs-check
-  - composer md
+  - docker exec ${OXID_CONTAINER} phpcs.sh
+  - docker exec ${OXID_CONTAINER} phpmd.sh
+  - docker exec ${OXID_CONTAINER} runtests-unit-coverage.sh
+  - docker exec ${OXID_CONTAINER} bash -c 'reset-shop.sh && runtests-selenium.sh'
+
+after_script:
+  - .bin/generate-tag.sh
+
+before_deploy:
+  - export REPO_NAME=$(echo ${TRAVIS_REPO_SLUG} | awk -F'/' '{print $2}')
+  - export RELEASE_NOTES=$(composer make-release-notes)
+  - bash .bin/generate-readme-badge.sh
+
+deploy:
+  on:
+    repo: ${TRAVIS_REPO_SLUG}
+    tags: true
+  provider: releases
+  # api_key:
+    # secure:
+  name: "${REPO_NAME} ${TRAVIS_TAG}"
+  body: "${RELEASE_NOTES}"
+  skip_cleanup: true

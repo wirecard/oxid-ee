@@ -10,24 +10,20 @@
     "payment"
   ],
   "repositories": {
-    "oxid-esales/coding-standards": {
-      "type": "vcs",
-      "url": "https://github.com/OXID-eSales/coding_standards.git"
-    },
     "phpmd/oxmd": {
       "type": "vcs",
       "url": "https://github.com/OXID-eSales/oxmd"
     }
   },
   "require": {
-    "php": ">=7.0",
-    "wirecard/payment-sdk-php": "3.6.1",
-    "php-http/guzzle6-adapter": "1.1.1"
+    "php": "^7.1",
+    "wirecard/payment-sdk-php": "3.6.2",
+    "php-http/guzzle6-adapter": "^1.1.1"
   },
   "require-dev": {
-    "oxid-esales/coding-standards": "^2.0.0",
     "phpmd/phpmd": "^2.6.0",
-    "codeception/codeception": "^2.5"
+    "oxid-esales/coding-standards": "^3.0.0",
+    "codacy/coverage": "dev-master"
   },
   "extra": {
     "oxideshop": {
@@ -41,10 +37,13 @@
     }
   },
   "scripts": {
+    "make-readme-badge": "@php .bin/version-helper.php -r",
+    "make-release-notes": "@php .bin/version-helper.php",
     "cs-check": "phpcs --standard=./phpcs.xml .",
     "cs-fix": "phpcbf --standard=./phpcs.xml .",
-    "test": "codecept run",
-    "test-coverage": "codecept run --coverage --coverage-xml",
+    "cest": "codecept run",
+    "cest-coverage": "codecept run --coverage --coverage-xml",
+    "upload-coverage": "codacycoverage clover Tests/reports/clover.xml",
     "md": "phpmd Core,Extend,Model text phpmd.xml"
   },
   "autoload": {

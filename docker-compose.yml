@@ -1,0 +1,44 @@
+version: '3.5'
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: local-testing
+      args:
+        PHP_VERSION: ${PHP_VERSION}
+        MODULE_NAME: ${MODULE_NAME}
+        MODULE_PATH: ${MODULE_PATH}
+        OXID_VERSION: ${OXID_VERSION}
+    image: oxid_ee:${OXID_VERSION}-php${PHP_VERSION}
+    container_name: ${OXID_CONTAINER}
+    env_file: ./.env
+    ports:
+      - ${HTTP_PORT}:80
+      - ${HTTPS_PORT}:443
+    depends_on:
+      - db
+  db:
+    image: mysql:5.7
+    container_name: oxid_ee_db
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+    ports:
+      - ${MYSQL_PORT}:3306
+  pma:
+    image: phpmyadmin/phpmyadmin:4.8
+    container_name: oxid_ee_pma
+    links:
+      - db:db
+    ports:
+      - 8080:80
+    environment:
+      PMA_USER: root
+      PMA_PASSWORD: ${MYSQL_PASSWORD}
+  selenium:
+    image: selenium/standalone-firefox-debug:2.53.1
+    container_name: oxid_ee_selenium
+    shm_size: 2g
+    ports:
+      - ${SELENIUM_VNC_PORT}:5900
