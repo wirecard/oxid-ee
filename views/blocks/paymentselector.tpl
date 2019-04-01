@@ -1,4 +1,4 @@
-[{if substr($paymentmethod->oxpayments__oxid, 0, 2) === "wd"}]
+[{if $oViewConf->isWirecardPaymentMethod($paymentmethod->oxpayments__oxid->value)}]
   [{include file="payment_other_with_logo.tpl"}]
 [{else}]
     [{$smarty.block.parent}]
