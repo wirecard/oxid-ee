@@ -41,7 +41,7 @@ $aModule = array(
         'en' => $aModuleDescriptions['en']
     ),
     'lang'              => 'en',
-    'thumbnail'         => 'wirecard-logo.png',
+    'thumbnail'         => 'logo.png',
     'version'           => '0.1.0',
     'author'            => 'Wirecard',
     'url'               => 'https://www.wirecard.com',
