@@ -7,7 +7,6 @@
         <oxdesc>Wirecard PayPal</oxdesc>
         <oxdesc_1>Wirecard PayPal</oxdesc_1>
         <wdoxidee_logo>paypal.png</wdoxidee_logo>
-        <wdoxidee_logo_1>paypal.png</wdoxidee_logo_1>
         <wdoxidee_transactiontype>purchase</wdoxidee_transactiontype>
         <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
         <wdoxidee_maid>2a0e9351-24ed-4110-9a1b-fd0fee6bec26</wdoxidee_maid>
@@ -25,7 +24,6 @@
         <oxdesc>Wirecard Kreditkarte</oxdesc>
         <oxdesc_1>Wirecard Credit Card</oxdesc_1>
         <wdoxidee_logo>creditcard.png</wdoxidee_logo>
-        <wdoxidee_logo_1>creditcard.png</wdoxidee_logo_1>
         <wdoxidee_transactiontype>purchase</wdoxidee_transactiontype>
         <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
         <wdoxidee_maid>53f2895a-e4de-4e82-a813-0d87a10e55e6</wdoxidee_maid>

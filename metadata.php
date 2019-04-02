@@ -80,16 +80,15 @@ $aModule = array(
             'file' => 'out/blocks/profiling_tags.tpl'
         ),
         array(
-            'template' => 'page/checkout/payment.tpl',
-            'block' => 'select_payment',
-            'file' => 'views/blocks/paymentselector.tpl'
+            'template' => 'page/checkout/inc/payment_other.tpl',
+            'block' => 'checkout_payment_longdesc',
+            'file' => 'views/blocks/checkout_payment_longdesc.tpl'
         )
     ),
     'templates'         => array(
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
         'transaction_list.tpl'              => 'wirecard/paymentgateway/views/admin/tpl/transaction_list.tpl',
-        'transaction_tab.tpl'               => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab.tpl',
-        'payment_other_with_logo.tpl'       => 'wirecard/paymentgateway/views/blocks/payment_other_with_logo.tpl'
+        'transaction_tab.tpl'               => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab.tpl'
     ),
     'events'            => array(
         'onActivate'        => '\Wirecard\Oxid\Core\OxidEE_Events::onActivate',

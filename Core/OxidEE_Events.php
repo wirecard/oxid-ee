@@ -105,10 +105,6 @@ class OxidEE_Events
             " ADD COLUMN `WDOXIDEE_LOGO` varchar(256) default '' NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_LOGO', $sQueryAddLogo);
 
-        $sQueryAddLogo1 = "ALTER TABLE " . self::PAYMENT_TABLE .
-            " ADD COLUMN `WDOXIDEE_LOGO_1` varchar(256) default '' NOT NULL";
-        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_LOGO_1', $sQueryAddLogo1);
-
         $sQueryAddTransType = "ALTER TABLE " . self::PAYMENT_TABLE . " ADD COLUMN `WDOXIDEE_TRANSACTIONTYPE`
             enum('authorize-capture','purchase') default 'authorize-capture' NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_TRANSACTIONTYPE', $sQueryAddTransType);
@@ -251,7 +247,7 @@ class OxidEE_Events
         );
 
         $sQuery = "INSERT INTO " . self::PAYMENT_TABLE . "(`OXID`, `OXACTIVE`, `OXTOAMOUNT`, `OXDESC`, `OXDESC_1`,
-         `WDOXIDEE_LOGO`, `WDOXIDEE_LOGO_1`, `WDOXIDEE_TRANSACTIONTYPE`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`,
+         `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONTYPE`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`,
          `WDOXIDEE_SECRET`, `WDOXIDEE_THREE_D_MAID`, `WDOXIDEE_THREE_D_SECRET`, `WDOXIDEE_NON_THREE_D_MAX_LIMIT`,
          `WDOXIDEE_THREE_D_MIN_LIMIT`, `WDOXIDEE_DEFAULT_CURRENCY`, `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`,
          `WDOXIDEE_ISWIRECARD`, `WDOXIDEE_BASKET`, `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`) VALUES (
@@ -261,7 +257,6 @@ class OxidEE_Events
              '{$oPayment->oxdesc}',
              '{$oPayment->oxdesc_1}',
              '{$oPayment->wdoxidee_logo}',
-             '{$oPayment->wdoxidee_logo_1}',
              '{$oPayment->wdoxidee_transactiontype}',
              '{$oPayment->wdoxidee_apiurl}',
              '{$oPayment->wdoxidee_maid}',
