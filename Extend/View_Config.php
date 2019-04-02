@@ -33,14 +33,14 @@ class View_Config extends View_Config_parent
     }
 
     /**
+     * Returns HTML for the [{oxinputhelp}] Smarty function.
      *
-     * Checks if payment id is a module id i.e. wdpaypal
-     *
-     * @param string $sPaymentId
-     * @return bool
+     * @see Helper::getInputHelpHtml()
+     * @param string $sText
+     * @return string
      */
-    public function isModulePaymentMethod($sPaymentId): bool
+    public function getInputHelpHtml(string $sText): string
     {
-        return Helper::isModulePaymentMethod($sPaymentId);
+        return Helper::getInputHelpHtml($sText);
     }
 }

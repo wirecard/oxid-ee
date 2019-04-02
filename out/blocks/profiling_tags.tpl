@@ -1,6 +1,6 @@
 [{assign var="oPayment" value=$oView->getPayment()}]
 
-[{if $oViewConf->isModulePaymentMethod($oPayment->oxpayments__oxid->value)}]
+[{if $oPayment->isCustomPaymentMethod()}]
 
   [{assign var="sDeviceId" value=$oViewConf->getWirecardDeviceId($oPayment->oxpayments__wdoxidee_maid)}]
 
@@ -14,4 +14,3 @@
 [{/if}]
 
 [{$smarty.block.parent}]
-

@@ -12,19 +12,32 @@ use Wirecard\Oxid\Core\Helper;
 
 use OxidEsales\Eshop\Application\Model\Payment;
 
+use DateTime;
+
 class Helper_Test extends OxidEsales\TestingLibrary\UnitTestCase
 {
+    /**
+     * @dataProvider testTranslateProvider
+     */
+    public function testTranslate($input, $expected)
+    {
+        $this->assertEquals(Helper::translate($input), $expected);
+    }
+
+    public function testTranslateProvider()
+    {
+        return [
+            'OXID key' => ['WRAPPING', 'Verpackung'],
+            'module key' => ['config_sort_order', 'Reihenfolge'],
+            'unknown key' => ['foo', 'foo'],
+        ];
+    }
+
     public function testCreateDeviceId()
     {
         $expected = 'test-maid_123456789';
         $actual = Helper::createDeviceFingerprint('test-maid', '123456789');
         $this->assertEquals($expected, $actual);
-    }
-
-    public function testIsModulePaymentMethod()
-    {
-        $this->assertTrue(Helper::isModulePaymentMethod("wdpaypal"));
-        $this->assertFalse(Helper::isModulePaymentMethod("paypal"));
     }
 
     public function testGetPaymentsReturnsAssociativeArray()
@@ -40,7 +53,7 @@ class Helper_Test extends OxidEsales\TestingLibrary\UnitTestCase
     public function testGetModulePayments()
     {
         foreach (Helper::getModulePayments() as $key => $payment) {
-            $this->assertTrue(!!$payment->oxpayments__wdoxidee_isours->value);
+            $this->assertTrue($payment->isCustomPaymentMethod());
         }
     }
 
@@ -63,6 +76,42 @@ class Helper_Test extends OxidEsales\TestingLibrary\UnitTestCase
             'millions German' => ['1.234.567,00', 1234567],
             'mixed English' => ['1,234,567.89', 1234567.89],
             'mixed German' => ['1.234.567,89', 1234567.89],
+        ];
+    }
+
+    /**
+     * @dataProvider testGetGenderCodeForSalutationProvider
+     */
+    public function testGetGenderCodeForSalutation($input, $expected)
+    {
+        $this->assertEquals(Helper::getGenderCodeForSalutation($input), $expected);
+    }
+
+    public function testGetGenderCodeForSalutationProvider()
+    {
+        return [
+            'male' => ['MR', 'm'],
+            'female' => ['MRS', 'f'],
+            'unknown' => ['FOO', ''],
+        ];
+    }
+
+    /**
+     * @dataProvider testGetDateTimeFromStringProvider
+     */
+    public function testGetDateTimeFromString($input, $expected)
+    {
+        $this->assertEquals(Helper::getDateTimeFromString($input), $expected);
+    }
+
+    public function testGetDateTimeFromStringProvider()
+    {
+        return [
+            'date' => ['2010-10-10', new DateTime('2010-10-10')],
+            'date and time' => ['2010-10-10Z10:10:10', new DateTime('2010-10-10Z10:10:10')],
+            'invalid date' => ['2010-1000-1000', null],
+            'zero date' => ['0000-00-00', null],
+            'no date' => ['foo', null],
         ];
     }
 }
