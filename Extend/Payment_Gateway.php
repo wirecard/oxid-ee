@@ -467,7 +467,8 @@ class Payment_Gateway extends Payment_Gateway_parent
             foreach ($aVouchers as $oVoucher) {
                 $oItem = new Item(
                     Helper::translate('voucher'),
-                    new Amount(round($oVoucher->dVoucherdiscount * -1, 2), $oCurrency->name)
+                    new Amount(round($oVoucher->dVoucherdiscount * -1, 2), $oCurrency->name),
+                    1
                 );
 
                 $oWdBasket->add($oItem);
