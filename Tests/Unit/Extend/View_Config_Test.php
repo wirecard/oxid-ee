@@ -30,9 +30,9 @@ class View_Config_Test extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertTrue(strpos($this->oViewConfig->getWirecardDeviceId($sMaid), $sMaid) === 0);
     }
 
-    public function testIsWirecardPaymentMethod()
+    public function testIsModulePaymentMethod()
     {
-        $this->assertTrue($this->oViewConfig->isWirecardPaymentMethod("wdpaypal"));
-        $this->assertFalse($this->oViewConfig->isWirecardPaymentMethod("paypal"));
+        $this->assertTrue($this->oViewConfig->isModulePaymentMethod("wdpaypal"));
+        $this->assertFalse($this->oViewConfig->isModulePaymentMethod("paypal"));
     }
 }

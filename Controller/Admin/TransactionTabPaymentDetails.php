@@ -21,7 +21,7 @@ class TransactionTabPaymentDetails extends TransactionTab
      *
      * @return array
      */
-    public function getListData(): array
+    protected function _getListData(): array
     {
         $aListData = $this->_getListDataFromArray($this->oResponseMapper->getPaymentDetails());
         $aListData[] = [

@@ -30,31 +30,38 @@ window.onload = function ()
                     <td class="listfilter">
                         <div class="r1">
                             <div class="b1">
-                                <input class="listedit" type="text" size="20" name="where[wdoxidee_ordertransactions][wdoxidee_orderid]" value="[{$where.wdoxidee_ordertransactions.wdoxidee_orderid}]">
+                                <input class="listedit" type="text" size="20" name="where[wdoxidee_ordertransactions][orderid]" value="[{$where.wdoxidee_ordertransactions.orderid}]">
                             </div>
                         </div>
                     </td>
                     <td class="listfilter">
                         <div class="r1">
                             <div class="b1">
-                                <input class="listedit" type="text" size="20" name="where[wdoxidee_ordertransactions][wdoxidee_transactionid]" value="[{$where.wdoxidee_ordertransactions.wdoxidee_transactionid}]">
+                                <input class="listedit" type="text" size="20" name="where[wdoxidee_ordertransactions][ordernumber]" value="[{$where.wdoxidee_ordertransactions.ordernumber}]">
                             </div>
                         </div>
                     </td>
                     <td class="listfilter">
                         <div class="r1">
                             <div class="b1">
-                                <input class="listedit" type="text" size="20" name="where[wdoxidee_ordertransactions][wdoxidee_parenttransactionid]" value="[{$where.wdoxidee_ordertransactions.wdoxidee_parenttransactionid}]">
+                                <input class="listedit" type="text" size="20" name="where[wdoxidee_ordertransactions][transactionid]" value="[{$where.wdoxidee_ordertransactions.transactionid}]">
                             </div>
                         </div>
                     </td>
                     <td class="listfilter">
                         <div class="r1">
                             <div class="b1">
-                                <select name="where[wdoxidee_ordertransactions][wdoxidee_action]" onChange="document.search.submit();">
+                                <input class="listedit" type="text" size="20" name="where[wdoxidee_ordertransactions][parenttransactionid]" value="[{$where.wdoxidee_ordertransactions.parenttransactionid}]">
+                            </div>
+                        </div>
+                    </td>
+                    <td class="listfilter">
+                        <div class="r1">
+                            <div class="b1">
+                                <select name="where[wdoxidee_ordertransactions][action]" onChange="document.search.submit();">
                                     <option value="" style="color: #000000;">[{oxmultilang ident="ORDER_LIST_FOLDER_ALL"}]</option>
                                     [{foreach from=$actions item=action}]
-                                    <option value="[{$action}]" [{if $where.wdoxidee_ordertransactions.wdoxidee_action === $action}]selected[{/if}]>[{$action}]</option>
+                                    <option value="[{$action}]" [{if $where.wdoxidee_ordertransactions.action === $action}]selected[{/if}]>[{$action}]</option>
                                     [{/foreach}]
                                 </select>
                             </div>
@@ -75,10 +82,10 @@ window.onload = function ()
                     <td class="listfilter">
                         <div class="r1">
                             <div class="b1">
-                                <select name="where[wdoxidee_ordertransactions][wdoxidee_state]" onChange="document.search.submit();">
+                                <select name="where[wdoxidee_ordertransactions][state]" onChange="document.search.submit();">
                                     <option value="" style="color: #000000;">[{oxmultilang ident="ORDER_LIST_FOLDER_ALL"}]</option>
                                     [{foreach from=$states item=state}]
-                                    <option value="[{$state}]" [{if $where.wdoxidee_ordertransactions.wdoxidee_state === $state}]selected[{/if}]>[{$state}]</option>
+                                    <option value="[{$state}]" [{if $where.wdoxidee_ordertransactions.state === $state}]selected[{/if}]>[{$state}]</option>
                                     [{/foreach}]
                                 </select>
                             </div>
@@ -87,14 +94,14 @@ window.onload = function ()
                     <td class="listfilter">
                         <div class="r1">
                             <div class="b1">
-                                <input class="listedit" type="text" size="20" name="where[wdoxidee_ordertransactions][wdoxidee_amount]" value="[{$where.wdoxidee_ordertransactions.wdoxidee_amount}]">
+                                <input class="listedit" type="text" size="20" name="where[wdoxidee_ordertransactions][amount]" value="[{$where.wdoxidee_ordertransactions.amount}]">
                             </div>
                         </div>
                     </td>
                     <td class="listfilter">
                         <div class="r1">
                             <div class="b1">
-                                <input class="listedit" type="text" size="3" name="where[wdoxidee_ordertransactions][wdoxidee_currency]" value="[{$where.wdoxidee_ordertransactions.wdoxidee_currency}]">
+                                <input class="listedit" type="text" size="3" name="where[wdoxidee_ordertransactions][currency]" value="[{$where.wdoxidee_ordertransactions.currency}]">
                                 <div class="find"><input class="listedit" type="submit" name="submitit" value="[{oxmultilang ident="GENERAL_SEARCH"}]"></div>
                             </div>
                         </div>
@@ -105,14 +112,15 @@ window.onload = function ()
             <tr>
                 [{block name="admin_transaction_list_sorting"}]
                     <td class="listheader first" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'oxid', 'asc');document.search.submit();">[{oxmultilang ident="panel_transaction"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'wdoxidee_orderid', 'asc');document.search.submit();">[{oxmultilang ident="panel_order_number"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'wdoxidee_transactionid', 'asc');document.search.submit();">[{oxmultilang ident="panel_transcation_id"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'wdoxidee_parenttransactionid', 'asc');document.search.submit();">[{oxmultilang ident="panel_parent_transaction_id"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'wdoxidee_action', 'asc');document.search.submit();">[{oxmultilang ident="panel_action"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'orderid', 'asc');document.search.submit();">[{oxmultilang ident="panel_order_id"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'ordernumber', 'asc');document.search.submit();">[{oxmultilang ident="panel_order_number"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'transactionid', 'asc');document.search.submit();">[{oxmultilang ident="panel_transcation_id"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'parenttransactionid', 'asc');document.search.submit();">[{oxmultilang ident="panel_parent_transaction_id"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'action', 'asc');document.search.submit();">[{oxmultilang ident="panel_action"}]</a></td>
                     <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'oxpayments', 'oxdesc', 'asc');document.search.submit();">[{oxmultilang ident="panel_payment_method"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'wdoxidee_state', 'asc');document.search.submit();">[{oxmultilang ident="panel_transaction_state"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'wdoxidee_amount', 'asc');document.search.submit();">[{oxmultilang ident="panel_amount"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'wdoxidee_currency', 'asc');document.search.submit();">[{oxmultilang ident="panel_currency"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'state', 'asc');document.search.submit();">[{oxmultilang ident="panel_transaction_state"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'amount', 'asc');document.search.submit();">[{oxmultilang ident="panel_amount"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'currency', 'asc');document.search.submit();">[{oxmultilang ident="panel_currency"}]</a></td>
                 [{/block}]
             </tr>
 
@@ -129,28 +137,31 @@ window.onload = function ()
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__oxid->value}]</a>
                     </td>
                     <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__wdoxidee_orderid->value}]</a>
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__orderid->value}]</a>
                     </td>
                     <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__wdoxidee_transactionid->value}]</a>
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__ordernumber->value}]</a>
                     </td>
                     <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__wdoxidee_parenttransactionid->value}]</a>
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__transactionid->value}]</a>
                     </td>
                     <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__wdoxidee_action->value}]</a>
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__parenttransactionid->value}]</a>
+                    </td>
+                    <td class="[{$listclass}]">
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__action->value}]</a>
                     </td>
                     <td class="[{$listclass}]">
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$payment->oxpayments__oxdesc->value}]</a>
                     </td>
                     <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__wdoxidee_state->value}]</a>
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__state->value}]</a>
                     </td>
                     <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__wdoxidee_amount->value}]</a>
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__amount->value}]</a>
                     </td>
                     <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__wdoxidee_currency->value}]</a>
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__currency->value}]</a>
                     </td>
                 [{/block}]
             </tr>

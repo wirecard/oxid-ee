@@ -50,8 +50,8 @@ $aModule = array(
         \OxidEsales\Eshop\Core\ViewConfig::class                  => \Wirecard\Oxid\Extend\View_Config::class,
         \OxidEsales\Eshop\Application\Model\Order::class          => \Wirecard\Oxid\Extend\Order::class,
         \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \Wirecard\Oxid\Extend\Payment_Gateway::class,
-        \OxidEsales\Eshop\Application\Controller\Admin\PaymentMainAjax::class =>
-                    \Wirecard\Oxid\Extend\Payment_Main_Ajax::class
+        \OxidEsales\Eshop\Application\Controller\Admin\PaymentMainAjax::class
+            => \Wirecard\Oxid\Extend\Payment_Main_Ajax::class
     ),
     'controllers'       => array(
         'wcpg_transaction'
@@ -67,7 +67,11 @@ $aModule = array(
         'wcpg_transaction_shipping'
             => \Wirecard\Oxid\Controller\Admin\TransactionTabShipping::class,
         'wcpg_transaction_post_processing'
-            => \Wirecard\Oxid\Controller\Admin\TransactionTabPostProcessing::class
+            => \Wirecard\Oxid\Controller\Admin\TransactionTabPostProcessing::class,
+        'wcpg_order_details'
+            => \Wirecard\Oxid\Controller\Admin\OrderTabDetails::class,
+        'wcpg_notifyhandler'
+            => \Wirecard\Oxid\Controller\NotifyHandler::class
     ),
     'blocks' => array(
         array(
@@ -84,8 +88,8 @@ $aModule = array(
     'templates'         => array(
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
         'transaction_list.tpl'              => 'wirecard/paymentgateway/views/admin/tpl/transaction_list.tpl',
-        'transaction_tab.tpl'               => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab.tpl',
-        'transaction_tab_pp.tpl'            => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab_pp.tpl'
+        'transaction_tab_pp.tpl'            => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab_pp.tpl',
+        'list_tab.tpl'                      => 'wirecard/paymentgateway/views/admin/tpl/list_tab.tpl'
     ),
     'events'            => array(
         'onActivate'        => '\Wirecard\Oxid\Core\OxidEE_Events::onActivate',

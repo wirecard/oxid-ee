@@ -21,10 +21,10 @@ class Helper_Test extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals($expected, $actual);
     }
 
-    public function testIsWirecardPaymentMethod()
+    public function testIsModulePaymentMethod()
     {
-        $this->assertTrue(Helper::isWirecardPaymentMethod("wdpaypal"));
-        $this->assertFalse(Helper::isWirecardPaymentMethod("paypal"));
+        $this->assertTrue(Helper::isModulePaymentMethod("wdpaypal"));
+        $this->assertFalse(Helper::isModulePaymentMethod("paypal"));
     }
 
     public function testGetPaymentsReturnsAssociativeArray()
@@ -37,10 +37,10 @@ class Helper_Test extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertContainsOnlyInstancesOf(Payment::class, Helper::getPayments());
     }
 
-    public function testGetPluginPayments()
+    public function testGetModulePayments()
     {
-        foreach (Helper::getPluginPayments() as $key => $payment) {
-            $this->assertTrue(!!$payment->oxpayments__wdoxidee_iswirecard->value);
+        foreach (Helper::getModulePayments() as $key => $payment) {
+            $this->assertTrue(!!$payment->oxpayments__wdoxidee_isours->value);
         }
     }
 

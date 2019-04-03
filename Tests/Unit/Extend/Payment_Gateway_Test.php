@@ -28,7 +28,7 @@ class Payment_Gateway_Test extends OxidEsales\TestingLibrary\UnitTestCase
         parent::setUp();
         $this->oOrderMock = $this->getMockBuilder(Order::class)
             ->disableOriginalConstructor()
-            ->setMethods(['isWirecardPaymentType', 'getPaymentType'])
+            ->setMethods(['isModulePaymentType', 'getPaymentType'])
             ->getMock();
 
         $this->oPaymentGateway = oxNew(Payment_Gateway::class);
@@ -38,12 +38,12 @@ class Payment_Gateway_Test extends OxidEsales\TestingLibrary\UnitTestCase
 //    public function testExecutePayment()
 //    {
 //        $this->oOrderMock->expects($this->once())
-//            ->method('isWirecardPaymentType')
+//            ->method('isModulePaymentType')
 //            ->willReturn(true);
 //
 //        $this->oOrderMock->expects($this->once())
 //            ->method('getPaymentType')
-//            ->willReturn(Paypal_Payment_Method::NAME);
+//            ->willReturn(Paypal_Payment_Method::getName(true));
 //
 //        $this->assertTrue($this->oPaymentGateway->executePayment(1.5, $this->oOrderMock));
 //    }

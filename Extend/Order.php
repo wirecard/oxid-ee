@@ -20,20 +20,51 @@ use \Wirecard\Oxid\Model\Paypal_Payment_Method;
  */
 class Order extends Order_parent
 {
+    const STATE_PENDING = 'pending';
+    const STATE_AUTHORIZED = 'authorized';
+    const STATE_PROCESSING = 'processing';
+    const STATE_CANCELED = 'canceled';
+    const STATE_REFUNDED = 'refunded';
 
-    private $aWirecardPaymentTypes = array(
-        Paypal_Payment_Method::NAME
-    );
+    private $_aModulePaymentTypes = array();
 
     /**
-     * Checks if the Paymenttype is one of wirecard's
+     * Order constructor.
+     *
+     * @SuppressWarnings(PHPMD.Coverage)
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->_aModulePaymentTypes[] = Paypal_Payment_Method::getName(true);
+    }
+
+    /**
+     * Checks if the Paymenttype is one of the module's
      *
      * @return bool
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    public function isWirecardPaymentType()
+    public function isModulePaymentType(): bool
     {
-        return in_array($this->getPaymentType()->oxuserpayments__oxpaymentsid->value, $this->aWirecardPaymentTypes);
+        return in_array($this->getPaymentType()->oxuserpayments__oxpaymentsid->value, $this->_aModulePaymentTypes);
+    }
+
+    /**
+     * Returns an array of available states.
+     *
+     * @return array
+     */
+    public static function getStates(): array
+    {
+        return [
+            self::STATE_PENDING,
+            self::STATE_AUTHORIZED,
+            self::STATE_PROCESSING,
+            self::STATE_CANCELED,
+            self::STATE_REFUNDED,
+        ];
     }
 }

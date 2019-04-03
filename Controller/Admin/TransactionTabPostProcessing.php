@@ -9,20 +9,47 @@
 
 namespace Wirecard\Oxid\Controller\Admin;
 
-use Wirecard\Oxid\Core\Helper;
-
 use OxidEsales\Eshop\Core\Registry;
 use Exception;
+use Wirecard\Oxid\Model\Transaction;
+use Wirecard\Oxid\Core\Helper;
 
 /**
  * Controls the view for the post-processing tab.
  */
-class TransactionTabPostProcessing extends TransactionTab
+class TransactionTabPostProcessing extends ListTab
 {
+    /**
+     * @var Transaction
+     */
+    protected $oTransaction;
+
     /**
      * @inheritdoc
      */
     protected $_sThisTemplate = 'transaction_tab_pp.tpl';
+
+    /**
+     * TransactionTab constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->setTransaction();
+
+        if ($this->_isListObjectIdSet()) {
+            $this->oTransaction->load($this->sListObjectId);
+        }
+    }
+
+    /**
+     * Transaction setter.
+     */
+    public function setTransaction()
+    {
+        $this->oTransaction = oxNew(Transaction::class);
+    }
 
     /**
      * @inheritdoc
@@ -38,7 +65,7 @@ class TransactionTabPostProcessing extends TransactionTab
             'actions' => $this->_getPostProcessingActions(),
             'requestParameters' => $aRequestParameters,
             'alert' => $this->_processRequest($aRequestParameters),
-            'currency' => $this->oTransaction->wdoxidee_ordertransactions__wdoxidee_currency->value,
+            'currency' => $this->oTransaction->wdoxidee_ordertransactions__currency->value,
         ];
 
         return $sTemplate;
@@ -83,7 +110,7 @@ class TransactionTabPostProcessing extends TransactionTab
             throw new Exception(Helper::translate('text_generic_error'));
         }
 
-        if ($fAmount < 0 || $fAmount > $this->oTransaction->wdoxidee_ordertransactions__wdoxidee_amount->value) {
+        if ($fAmount < 0 || $fAmount > $this->oTransaction->wdoxidee_ordertransactions__amount->value) {
             throw new Exception(Helper::translate('total_amount_not_in_range_text'));
         }
     }
@@ -94,7 +121,7 @@ class TransactionTabPostProcessing extends TransactionTab
      * @param array $aRequestParameters
      * @return array|null
      */
-    private function _processRequest(array $aRequestParameters): ?array
+    private function _processRequest(array $aRequestParameters)
     {
         if (empty($aRequestParameters['action'])) {
             return null;

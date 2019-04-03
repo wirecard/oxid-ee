@@ -44,7 +44,7 @@ class TransactionList extends AdminListController
     public function render(): string
     {
         $this->_aViewData += [
-            'payments' => Helper::getPluginPayments(),
+            'payments' => Helper::getModulePayments(),
             'actions' => Transaction::getActions(),
             'states' => Transaction::getStates(),
         ];
@@ -72,7 +72,7 @@ class TransactionList extends AdminListController
         $sQuery = str_replace(
             'from wdoxidee_ordertransactions',
             ", `{$sLocalizedViewName}`.`oxdesc` as `paymentname` from `wdoxidee_ordertransactions` LEFT JOIN `oxorder`
-                ON `wdoxidee_ordertransactions`.`wdoxidee_orderid` = `oxorder`.`oxid` LEFT JOIN `{$sLocalizedViewName}`
+                ON `wdoxidee_ordertransactions`.`orderid` = `oxorder`.`oxid` LEFT JOIN `{$sLocalizedViewName}`
                 ON `oxorder`.`oxpaymenttype` = `{$sLocalizedViewName}`.`oxid` ",
             $sQuery
         );

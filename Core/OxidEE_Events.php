@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Shop System Plugins:
  * - Terms of Use can be found under:
@@ -12,6 +11,8 @@ namespace Wirecard\Oxid\Core;
 
 use \OxidEsales\Eshop\Core\DatabaseProvider;
 use \OxidEsales\Eshop\Core\Registry;
+use \Wirecard\Oxid\Extend\Order;
+use \Wirecard\Oxid\Model\Transaction;
 
 /**
  * Class handles module behaviour on shop installation events
@@ -105,9 +106,11 @@ class OxidEE_Events
             " ADD COLUMN `WDOXIDEE_LOGO` varchar(256) default '' NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_LOGO', $sQueryAddLogo);
 
-        $sQueryAddTransType = "ALTER TABLE " . self::PAYMENT_TABLE . " ADD COLUMN `WDOXIDEE_TRANSACTIONTYPE`
-            enum('authorize-capture','purchase') default 'authorize-capture' NOT NULL";
-        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_TRANSACTIONTYPE', $sQueryAddTransType);
+        $aTransactionActions = Transaction::getActions();
+        $sTransactionActions = implode("','", $aTransactionActions);
+        $sQueryAddTransAction = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_TRANSACTIONACTION`
+            enum('{$sTransactionActions}') default '{$aTransactionActions[0]}' NOT NULL";
+        self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_TRANSACTIONACTION', $sQueryAddTransAction);
 
         $sQueryAddApiUrl = "ALTER TABLE " . self::PAYMENT_TABLE .
             " ADD COLUMN `WDOXIDEE_APIURL` varchar(128) default '' NOT NULL";
@@ -117,9 +120,9 @@ class OxidEE_Events
             " ADD COLUMN `WDOXIDEE_MAID` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_MAID', $sQueryAddMaid);
 
-        $sQueryAddIsWirecard = "ALTER TABLE " . self::PAYMENT_TABLE .
-            " ADD COLUMN `WDOXIDEE_ISWIRECARD` tinyint(1) default 0 NOT NULL";
-        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_ISWIRECARD', $sQueryAddIsWirecard);
+        $sQueryAddIsOurs = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_ISOURS` tinyint(1) default 0 NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_ISOURS', $sQueryAddIsOurs);
 
         $sQueryAddSecret = "ALTER TABLE " . self::PAYMENT_TABLE .
             " ADD COLUMN `WDOXIDEE_SECRET` varchar(128) default '' NOT NULL";
@@ -151,10 +154,33 @@ class OxidEE_Events
      */
     private static function _extendOrderTable()
     {
-        $sQueryState = "ALTER TABLE " . self::ORDER_TABLE .
-            " ADD COLUMN `WDOXIDEE_PAYMENTSTATE` enum('pending','completed',
-        'failed','cancelled')";
-        self::_addColumnIfNotExists(self::ORDER_TABLE, 'WDOXIDEE_PAYMENTSTATE', $sQueryState);
+        $aOrderStates = Order::getStates();
+        $sOrderStates = implode("','", $aOrderStates);
+        $sAddOrderState = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_ORDERSTATE` 
+            enum('{$sOrderStates}') default '{$aOrderStates[0]}' NOT NULL";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_ORDERSTATE', $sAddOrderState);
+
+        $sAddCaptureAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_CAPTUREAMOUNT` decimal(9,2) NOT NULL";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_CAPTUREAMOUNT', $sAddCaptureAmount);
+
+        $sAddRefundedAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_REFUNDEDAMOUNT` decimal(9,2) NOT NULL";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_REFUNDEDAMOUNT', $sAddRefundedAmount);
+
+        $sAddVoidedAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_VOIDEDAMOUNT` decimal(9,2) NOT NULL";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_VOIDEDAMOUNT', $sAddVoidedAmount);
+
+        $sAddFinal = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_FINAL` tinyint(1) default 0 NOT NULL";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_FINAL', $sAddFinal);
+
+        $sAddProviderTID = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_PROVIDERTRANSACTIONID` varchar(36) NOT NULL";
+        self::_addColumnIfNotExists(
+            'oxorder',
+            'WDOXIDEE_PROVIDERTRANSACTIONID',
+            $sAddProviderTID
+        );
+
+        $sAddTransactionID = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_TRANSACTIONID` varchar(36) NOT NULL";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_TRANSACTIONID', $sAddTransactionID);
     }
 
     /**
@@ -162,19 +188,23 @@ class OxidEE_Events
      */
     private static function _createOrderTransactionTable()
     {
+        $sTransactionActions = implode("','", Transaction::getActions());
+        $sTransactionStates = implode("','", Transaction::getStates());
+
         $sQuery = "CREATE TABLE IF NOT EXISTS " . self::TRANSACTION_TABLE . "(
             `OXID` char(32) NOT NULL,
-            `WDOXIDEE_ORDERID` varchar(32) NOT NULL,
-            `WDOXIDEE_TRANSACTIONID` varchar(32) NOT NULL,
-            `WDOXIDEE_PARENTTRANSACTIONID` varchar(32),
-            `WDOXIDEE_REQUESTID` varchar(32) NOT NULL,
-            `WDOXIDEE_ACTION` enum('authorization','purchase') NOT NULL DEFAULT 'purchase',
-            `WDOXIDEE_STATE` enum('error','pending','success'),
-            `WDOXIDEE_AMOUNT` double NOT NULL,
-            `WDOXIDEE_CURRENCY` varchar(32) NOT NULL,
-            `WDOXIDEE_RESPONSE` mediumtext NOT NULL,
-            `WDOXIDEE_RESPONSEXML` mediumtext NOT NULL,
-            `WDOXIDEE_DATE` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+            `ORDERID` varchar(32) NOT NULL,
+            `ORDERNUMBER` int NOT NULL DEFAULT 0,
+            `TRANSACTIONID` varchar(36) NOT NULL,
+            `PARENTTRANSACTIONID` varchar(36),
+            `REQUESTID` varchar(36) NOT NULL,
+            `ACTION` enum('{$sTransactionActions}') NOT NULL,
+            `TYPE` varchar(32) NOT NULL,
+            `STATE` enum('{$sTransactionStates}') NOT NULL,
+            `AMOUNT` double NOT NULL,
+            `CURRENCY` varchar(32) NOT NULL,
+            `RESPONSEXML` mediumtext NOT NULL,
+            `DATE` TIMESTAMP NOT NULL,
             PRIMARY KEY (`OXID`)
         ) Engine=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 
@@ -227,8 +257,8 @@ class OxidEE_Events
         );
 
         $sQuery = "INSERT INTO " . self::PAYMENT_TABLE . "(`OXID`, `OXACTIVE`, `OXTOAMOUNT`, `OXDESC`, `OXDESC_1`,
-         `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONTYPE`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`, `WDOXIDEE_SECRET`,
-         `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`, `WDOXIDEE_ISWIRECARD`, `WDOXIDEE_BASKET`,
+         `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONACTION`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`, `WDOXIDEE_SECRET`,
+         `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`, `WDOXIDEE_ISOURS`, `WDOXIDEE_BASKET`,
          `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`) VALUES (
              '{$oPayment->oxid}',
              '{$oPayment->oxactive}',
@@ -236,7 +266,7 @@ class OxidEE_Events
              '{$oPayment->oxdesc}',
              '{$oPayment->oxdesc_1}',
              '{$oPayment->wdoxidee_logo}',
-             '{$oPayment->wdoxidee_transactiontype}',
+             '{$oPayment->wdoxidee_transactionaction}',
              '{$oPayment->wdoxidee_apiurl}',
              '{$oPayment->wdoxidee_maid}',
              '{$oPayment->wdoxidee_secret}',

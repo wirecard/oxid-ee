@@ -51,7 +51,7 @@
   }
 </script>
 
-[{if $edit->oxpayments__wdoxidee_iswirecard->value == 1}]
+[{if $edit->oxpayments__wdoxidee_isours->value == 1}]
   <tr>
     <td>
       [{assign var="oShopConf" value=$oViewConf->getConfig()}]
@@ -67,7 +67,7 @@
 
 [{$smarty.block.parent}]
 
-[{if $edit->oxpayments__wdoxidee_iswirecard->value == 1}]
+[{if $edit->oxpayments__wdoxidee_isours->value == 1}]
   <tr>
     <td class="edittext" width="70">
       [{oxmultilang ident="config_base_url"}]
@@ -172,11 +172,11 @@
       [{oxmultilang ident="config_payment_action"}]
     </td>
     <td class="edittext">
-      <select name="editval[oxpayments__wdoxidee_transactiontype]">
-        <option value="authorize-capture" [{if $edit->oxpayments__wdoxidee_transactiontype->value == 'authorize-capture'}]selected[{/if}]>
+      <select name="editval[oxpayments__wdoxidee_transactionaction]">
+        <option value="authorize-capture" [{if $edit->oxpayments__wdoxidee_transactionaction->value == 'authorize-capture'}]selected[{/if}]>
             [{oxmultilang ident="text_payment_action_reserve"}]
           </option>
-          <option value="purchase" [{if $edit->oxpayments__wdoxidee_transactiontype->value == 'purchase'}]selected[{/if}]>
+          <option value="purchase" [{if $edit->oxpayments__wdoxidee_transactionaction->value == 'purchase'}]selected[{/if}]>
             [{oxmultilang ident="text_payment_action_pay"}]
           </option>
       </select>
