@@ -41,7 +41,7 @@ class TransactionList extends AdminListController
      *
      * @return string
      */
-    public function render()
+    public function render(): string
     {
         $this->_aViewData += [
             'payments' => Helper::getPluginPayments(),
@@ -55,12 +55,10 @@ class TransactionList extends AdminListController
     /**
      * @inheritdoc
      *
-     * Builds the select string to fetch data from order transactions and OXID's order table
-     *
      * @param object $oListObject
      * @return string
      */
-    protected function _buildSelectString($oListObject = null)
+    protected function _buildSelectString($oListObject = null): string
     {
         $sQuery = parent::_buildSelectString($oListObject);
 

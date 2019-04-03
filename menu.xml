@@ -10,6 +10,7 @@
                 <TAB id="transaction_details_title" cl="wcpg_transaction_transaction_details" />
                 <TAB id="account_holder_title" cl="wcpg_transaction_account_holder" />
                 <TAB id="shipping_title" cl="wcpg_transaction_shipping" />
+                <TAB id="text_backend_operations" cl="wcpg_transaction_post_processing" />
             </SUBMENU>
         </MAINMENU>
     </OXMENU>
