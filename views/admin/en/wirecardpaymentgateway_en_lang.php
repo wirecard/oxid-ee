@@ -10,7 +10,6 @@
 $sLangName = "English";
 
 $aLang = array(
-    "config" => "Wirecard Configuration",
     "yes" => 'Yes',
     "no" => 'No',
 
