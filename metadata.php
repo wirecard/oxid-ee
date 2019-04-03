@@ -35,17 +35,17 @@ $aModuleDescriptions = array(
  */
 $aModule = array(
     'id'                => 'wdoxidee',
-    'title'             => 'Wirecard Oxid EE Paymentgateway',
+    'title'             => 'Wirecard OXID Module',
     'description'       => array(
         'de' => $aModuleDescriptions['de'],
         'en' => $aModuleDescriptions['en']
     ),
     'lang'              => 'en',
-    'thumbnail'         => 'wirecard-logo.png',
-    'version'           => '1.0.0',
+    'thumbnail'         => 'logo.png',
+    'version'           => '0.1.0',
     'author'            => 'Wirecard',
     'url'               => 'https://www.wirecard.com',
-    'email'             => 'support.at@wirecard.com',
+    'email'             => 'shop-systems-support@wirecard.com',
     'extend'            => array (
         \OxidEsales\Eshop\Core\ViewConfig::class                  => \Wirecard\Oxid\Extend\View_Config::class,
         \OxidEsales\Eshop\Application\Model\Order::class          => \Wirecard\Oxid\Extend\Order::class,
