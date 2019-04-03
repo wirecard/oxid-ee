@@ -153,7 +153,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         $shopId = Registry::getConfig()->getShopId();
         $shop = oxNew(Shop::class);
         $shop->load($shopId);
-        return $shop->oxshops__oxname->value . " " . $sOrderId;
+        return substr($shop->oxshops__oxname->value, 0, 9) . " " . $sOrderId;
     }
 
     /**
@@ -217,12 +217,10 @@ class Payment_Gateway extends Payment_Gateway_parent
         $oBasket = $oSession->getBasket();
         $oUser = $oBasket->getBasketUser();
 
-        $oTransaction->setOrderDetail(sprintf(
-            '%s %s %s',
-            $oOrder->oxorder__oxbillemail->value,
-            $oUser->oxuser__oxfname->value,
-            $oUser->oxuser__oxlname->value
-        ));
+        $sOrderDetails = $oOrder->oxorder__oxremark->value;
+        if (!empty($sOrderDetails)) {
+            $oTransaction->setOrderDetail($sOrderDetails);
+        }
 
         $sPaymentId = $oBasket->getPaymentId();
         $oPayment = oxNew(Payment::class);
@@ -294,6 +292,7 @@ class Payment_Gateway extends Payment_Gateway_parent
      *
      * @param Order $oOrder
      * @param User  $oUser
+     *
      * @return AccountHolder
      *
      * @SuppressWarnings(PHPMD.Coverage)
@@ -334,6 +333,7 @@ class Payment_Gateway extends Payment_Gateway_parent
      * Build the shipping account holder
      *
      * @param Order $oOrder
+     *
      * @return AccountHolder
      *
      * @SuppressWarnings(PHPMD.Coverage)
