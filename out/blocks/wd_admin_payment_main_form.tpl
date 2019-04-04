@@ -13,27 +13,19 @@
 </style>
 
 <script type="text/javascript">
-  function addClassToElements(elementIds, className) {
-    elementIds.forEach(function(elementId) {
-      var element = document.getElementById(elementId);
-
-      if (element) {
-        element.classList.add(className);
-      }
+  function addClassToElements(elements, className) {
+    elements.forEach(function(element) {
+      element.classList.add(className);
     });
   }
 
-  function removeClassFromElements(elementIds, className) {
-    elementIds.forEach(function(elementId) {
-      var element = document.getElementById(elementId);
-
-      if (element) {
-        // if no class name was passed, remove all classes from the element
-        if (!className) {
-          element.className = '';
-        } else {
-          element.classList.remove(className);
-        }
+  function removeClassFromElements(elements, className) {
+    elements.forEach(function(element) {
+      // if no class name was passed, remove all classes from the element
+      if (!className) {
+        element.className = '';
+      } else {
+        element.classList.remove(className);
       }
     });
   }
@@ -47,15 +39,18 @@
     var successClassName = 'color-success';
     var failureClassName = 'color-failure';
 
-    // the id of the DOM element the test result will be rendered to
-    var resultSpanId = 'test_credentials_result';
+    // the DOM element the test result will be rendered to
+    var resultSpan = document.getElementById('test_credentials_result');
 
-    // the ids of the DOM elements that should be marked red upon test failure
-    var labelConfigApiUrlId = 'labelConfigApiUrl';
-    var labelConfigHttpUserId = 'labelConfigHttpUser';
-    var labelConfigHttpPassId = 'labelConfigHttpPass';
+    // the DOM elements that are the labels for the configu values
+    var configApiUrlLabel = document.getElementById('labelConfigApiUrl');
+    var configHttpUserLabel = document.getElementById('labelConfigHttpUser');
+    var configHttpPassLabel = document.getElementById('labelConfigHttpPass');
 
-    var resultSpan = document.getElementById(resultSpanId);
+    // the DOM elements that contain the actual config values
+    var configApiUrlInput = document.getElementById('configApiUrl');
+    var configHttpUserInput = document.getElementById('configHttpUser');
+    var configHttpPassInput = document.getElementById('configHttpPass');
 
     var showCheckResultText = function(success) {
       resultSpan.innerHTML = success ? successText : failureText;
@@ -64,29 +59,29 @@
 
     // clear any previous test results
     resultSpan.innerHTML = '';
-    removeClassFromElements([resultSpanId, labelConfigApiUrlId, labelConfigHttpUserId, labelConfigHttpPassId]);
+    removeClassFromElements([resultSpan, configApiUrlLabel, configHttpUserLabel, configHttpPassLabel]);
+
+    // check if API URL is a root URL, if not there is no need to perform the request
+    var regexCheck = /^https\:\/\/[^\/]+$/;
+
+    if (!regexCheck.test(configApiUrlInput.value)) {
+      showCheckResultText(checkSuccess);
+      addClassToElements([configApiUrlLabel], failureClassName);
+      return;
+    }
 
     // build check configuration request
     var requestUrl = '[{ $oViewConf->getAjaxLink() }]cmpid=container&container=payment_main&fnc=checkPaymentMethodCredentials';
 
     var bodyParams = {
-      apiUrl: document.getElementById('configApiUrl').value,
-      httpUser: document.getElementById('configHttpUser').value,
-      httpPass: document.getElementById('configHttpPass').value
+      apiUrl: configApiUrlInput.value,
+      httpUser: configHttpUserInput.value,
+      httpPass: configHttpPassInput.value
     };
 
     var paramString = Object.keys(bodyParams).map(function(key) {
       return encodeURIComponent(key) + '=' + encodeURIComponent(bodyParams[key]);
     }).join('&');
-
-    // check if API URL is a root URL, if not there is no need to perform the request
-    var regexCheck = /^https\:\/\/[^\/]+$/;
-
-    if (!regexCheck.test(bodyParams.apiUrl)) {
-      showCheckResultText(checkSuccess);
-      addClassToElements([labelConfigApiUrlId], failureClassName);
-      return;
-    }
 
     // perform AJAX request to check credential validity
     var xhr = new XMLHttpRequest();
@@ -106,7 +101,7 @@
 
           if (!checkSuccess) {
             // additionally mark the labels red for easier visual identification
-            addClassToElements([labelConfigApiUrlId, labelConfigHttpUserId, labelConfigHttpPassId], failureClassName);
+            addClassToElements([configApiUrlLabel, configHttpUserLabel, configHttpPassLabel], failureClassName);
           }
         }
 
