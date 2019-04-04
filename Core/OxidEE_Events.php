@@ -144,8 +144,8 @@ class OxidEE_Events
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_THREE_D_MIN_LIMIT', $sQueryAddMinLimit);
 
         $sQueryDefCurrency = "ALTER TABLE " . self::PAYMENT_TABLE . "
-            ADD COLUMN `WDOXIDEE_DEFAULT_CURRENCY` varchar(128) default '' NOT NULL";
-        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_DEFAULT_CURRENCY', $sQueryDefCurrency);
+            ADD COLUMN `WDOXIDEE_LIMITS_CURRENCY` varchar(128) default '' NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_LIMITS_CURRENCY', $sQueryDefCurrency);
 
         $sQueryAddHttpUser = "ALTER TABLE " . self::PAYMENT_TABLE .
             " ADD COLUMN `WDOXIDEE_HTTPUSER` varchar(128) default '' NOT NULL";
@@ -281,7 +281,7 @@ class OxidEE_Events
         $sQuery = "INSERT INTO " . self::PAYMENT_TABLE . "(`OXID`, `OXACTIVE`, `OXTOAMOUNT`, `OXDESC`, `OXDESC_1`,
          `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONACTION`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`, `WDOXIDEE_SECRET`,
          `WDOXIDEE_THREE_D_MAID`, `WDOXIDEE_THREE_D_SECRET`, `WDOXIDEE_NON_THREE_D_MAX_LIMIT`,
-         `WDOXIDEE_THREE_D_MIN_LIMIT`, `WDOXIDEE_DEFAULT_CURRENCY`,
+         `WDOXIDEE_THREE_D_MIN_LIMIT`, `WDOXIDEE_LIMITS_CURRENCY`,
          `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`, `WDOXIDEE_ISOURS`, `WDOXIDEE_BASKET`,
          `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`) VALUES (
              '{$oPayment->oxid}',
@@ -298,7 +298,7 @@ class OxidEE_Events
              '{$oPayment->wdoxidee_three_d_secret}',
              '{$oPayment->wdoxidee_non_three_d_max_limit}',
              '{$oPayment->wdoxidee_three_d_min_limit}',
-             '{$oPayment->wdoxidee_default_currency}',
+             '{$oPayment->wdoxidee_limits_currency}',
              '{$oPayment->wdoxidee_httpuser}',
              '{$oPayment->wdoxidee_httppass}',
              '1',
