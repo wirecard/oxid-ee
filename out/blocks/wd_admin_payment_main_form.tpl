@@ -98,11 +98,11 @@
           var response = JSON.parse(xhr.responseText);
 
           checkSuccess = response && response.success === true;
+        }
 
-          if (!checkSuccess) {
-            // additionally mark the labels red for easier visual identification
-            addClassToElements([configApiUrlLabel, configHttpUserLabel, configHttpPassLabel], failureClassName);
-          }
+        if (!checkSuccess) {
+          // additionally mark the labels red for easier visual identification
+          addClassToElements([configApiUrlLabel, configHttpUserLabel, configHttpPassLabel], failureClassName);
         }
 
         showCheckResultText(checkSuccess);
