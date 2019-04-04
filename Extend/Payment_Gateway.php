@@ -142,6 +142,8 @@ class Payment_Gateway extends Payment_Gateway_parent
     /**
      * Returns a descriptor
      *
+     * If you want to customize the descriptor, override this function.
+     *
      * @param string $sOrderId the order ID to get the descriptor from
      *
      * @return string
