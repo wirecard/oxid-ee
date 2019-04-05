@@ -23,6 +23,7 @@ services:
     container_name: oxid_ee_db
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - ${MYSQL_PORT}:3306

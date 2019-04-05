@@ -16,6 +16,8 @@ mysql -h ${MYSQL_HOST} -u ${MYSQL_USER} --password="${MYSQL_PASSWORD}" ${MYSQL_D
 mysql -h ${MYSQL_HOST} -u ${MYSQL_USER} --password="${MYSQL_PASSWORD}" ${MYSQL_DATABASE} < \
     /var/www/html/vendor/oxid-esales/oxideshop-demodata-ce/src/demodata.sql
 
+/var/www/html/vendor/bin/oe-eshop-db_views_generate
+
 rm -rf /var/www/html/source/tmp/*
 
 echo "Shop restored to clean state!"
