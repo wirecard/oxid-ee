@@ -7,7 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use Wirecard\Oxid\Extend\Payment_Gateway;
+use Wirecard\Oxid\Extend\Model\Payment_Gateway;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Paypal_Payment_Method;
 
