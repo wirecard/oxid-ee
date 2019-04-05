@@ -8,13 +8,13 @@
  */
 
 use Wirecard\Oxid\Extend\Payment_Gateway;
-use Wirecard\Oxid\Extend\Order;
+use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Paypal_Payment_Method;
 
 class Payment_Gateway_Test extends OxidEsales\TestingLibrary\UnitTestCase
 {
     /**
-     * @var \Wirecard\Oxid\Extend\Order
+     * @var \Wirecard\Oxid\Extend\Model\Order
      */
     private $oOrderMock;
 

@@ -47,12 +47,18 @@ $aModule = array(
     'url'               => 'https://www.wirecard.com',
     'email'             => 'shop-systems-support@wirecard.com',
     'extend'            => array (
-        \OxidEsales\Eshop\Core\ViewConfig::class                  => \Wirecard\Oxid\Extend\View_Config::class,
-        \OxidEsales\Eshop\Application\Model\Order::class          => \Wirecard\Oxid\Extend\Order::class,
-        \OxidEsales\Eshop\Application\Model\PaymentGateway::class => \Wirecard\Oxid\Extend\Payment_Gateway::class,
+        \OxidEsales\Eshop\Core\ViewConfig::class
+            => \Wirecard\Oxid\Extend\View_Config::class,
+        \OxidEsales\Eshop\Application\Controller\Admin\OrderList::class
+            => \Wirecard\Oxid\Extend\Controller\Admin\OrderList::class,
+        \OxidEsales\Eshop\Application\Model\Order::class
+            => \Wirecard\Oxid\Extend\Model\Order::class,
+        \OxidEsales\Eshop\Application\Model\PaymentGateway::class
+            => \Wirecard\Oxid\Extend\Model\Payment_Gateway::class,
         \OxidEsales\Eshop\Application\Controller\Admin\PaymentMainAjax::class
             => \Wirecard\Oxid\Extend\Payment_Main_Ajax::class,
-        \OxidEsales\Eshop\Application\Model\Basket::class         => \Wirecard\Oxid\Extend\Basket::class
+        \OxidEsales\Eshop\Application\Model\Basket::class
+            => \Wirecard\Oxid\Extend\Basket::class
     ),
     'controllers'       => array(
         'wcpg_transaction'
@@ -84,7 +90,31 @@ $aModule = array(
             'template' => 'page/checkout/order.tpl',
             'block' => 'checkout_order_main',
             'file' => 'out/blocks/profiling_tags.tpl'
-        )
+        ),
+        array(
+            'template' => 'order_list.tpl',
+            'block' => 'admin_order_list_colgroup',
+            'file' => 'out/blocks/wd_admin_order_list_colgroup.tpl',
+            'position' => 10,
+        ),
+        array(
+            'template' => 'order_list.tpl',
+            'block' => 'admin_order_list_filter',
+            'file' => 'out/blocks/wd_admin_order_list_filter.tpl',
+            'position' => 10,
+        ),
+        array(
+            'template' => 'order_list.tpl',
+            'block' => 'admin_order_list_sorting',
+            'file' => 'out/blocks/wd_admin_order_list_sorting.tpl',
+            'position' => 10,
+        ),
+        array(
+            'template' => 'order_list.tpl',
+            'block' => 'admin_order_list_item',
+            'file' => 'out/blocks/wd_admin_order_list_item.tpl',
+            'position' => 10,
+        ),
     ),
     'templates'         => array(
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',

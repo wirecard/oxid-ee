@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Model;
 
-use \Wirecard\Oxid\Extend\Order;
+use \Wirecard\Oxid\Extend\Model\Order;
 use \Wirecard\PaymentSdk\Config\Config;
 use \Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use \Wirecard\PaymentSdk\Transaction\Transaction;

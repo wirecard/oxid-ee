@@ -7,9 +7,10 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Extend;
+namespace Wirecard\Oxid\Extend\Model;
 
-use \Wirecard\Oxid\Model\Paypal_Payment_Method;
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Model\Paypal_Payment_Method;
 
 /**
  * Class Order
@@ -53,18 +54,38 @@ class Order extends Order_parent
     }
 
     /**
+     * Returns an associative array of available states and their translation.
+     *
+     * @return array
+     */
+    public static function getTranslatedStates(): array
+    {
+        return [
+            self::STATE_PENDING => Helper::translate('order_status_pending'),
+            self::STATE_AUTHORIZED => Helper::translate('order_status_authorized'),
+            self::STATE_PROCESSING => Helper::translate('order_status_purchased'),
+            self::STATE_CANCELED => Helper::translate('order_status_cancelled'),
+            self::STATE_REFUNDED => Helper::translate('order_status_refunded'),
+        ];
+    }
+
+    /**
      * Returns an array of available states.
      *
      * @return array
      */
     public static function getStates(): array
     {
-        return [
-            self::STATE_PENDING,
-            self::STATE_AUTHORIZED,
-            self::STATE_PROCESSING,
-            self::STATE_CANCELED,
-            self::STATE_REFUNDED,
-        ];
+        return array_keys(self::getTranslatedStates());
+    }
+
+    /**
+     * Returns the translation for the order's state.
+     *
+     * @return string
+     */
+    public function getTranslatedState(): string
+    {
+        return self::getTranslatedStates()[$this->oxorder__wdoxidee_orderstate->value] ?? '';
     }
 }
