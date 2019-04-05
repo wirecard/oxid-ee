@@ -1,5 +1,7 @@
 exclude_paths:
+  - '.bin/**'
   - 'phpmd/**'
   - 'translations/**'
   - 'views/**'
   - 'WirecardOxidRuleset/**'
+  - 'Dockerfile'

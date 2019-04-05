@@ -80,7 +80,7 @@ class Payment_Gateway extends Payment_Gateway_parent
      * @SuppressWarnings(PHPMD.Coverage)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function executePayment(float $fAmount, Order &$oOrder): bool
+    public function executePayment($fAmount, &$oOrder)
     {
         if (!$oOrder->isModulePaymentType()) {
             return parent::executePayment($fAmount, $oOrder);

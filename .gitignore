@@ -1,11 +1,18 @@
-**/Tests/_output/
-**/Tests/_support/_generated/
-
-# Ignore Mac DS_Store files
+### OS-specific ###
 .DS_Store
+Thumbs.db
 
-# dependencies
-vendor/
-
-# PHP Storm
+### IDEs ###
 .idea/
+.vscode/
+
+### Composer ###
+/vendor/
+
+### Auto-generated files ###
+/Tests/_output/
+/Tests/_support/_generated/
+/Tests/reports
+
+### .env ###
+/.env
