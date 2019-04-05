@@ -204,8 +204,6 @@ class BasketHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $wdBasketIterator->seek(0);
         $currentItem = $wdBasketIterator->current()->mappedProperties();
 
-        var_dump($currentItem);
-
         $this->assertEquals(Helper::translate('shipping_title'), $currentItem['name']);
         $this->assertEquals(1, $currentItem['quantity']);
         $this->assertEquals('USD', $currentItem['amount']['currency']);
