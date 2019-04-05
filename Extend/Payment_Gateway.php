@@ -13,13 +13,18 @@ use \OxidEsales\Eshop\Application\Model\Shop;
 use \OxidEsales\Eshop\Application\Model\Article;
 use \OxidEsales\Eshop\Application\Model\Country;
 use \OxidEsales\Eshop\Application\Model\Basket;
+use \OxidEsales\Eshop\Application\Model\BasketItem;
 use \OxidEsales\Eshop\Application\Model\State;
 use \OxidEsales\Eshop\Application\Model\Payment;
 use \OxidEsales\Eshop\Application\Model\User;
+use \OxidEsales\Eshop\Core\Field;
 use \OxidEsales\Eshop\Core\Registry;
 use \OxidEsales\Eshop\Core\Session;
-use \OxidEsales\Eshop\Core\Field;
-use \OxidEsales\Eshop\Core\Language;
+
+use \Wirecard\Oxid\Core\BasketHelper;
+use \Wirecard\Oxid\Core\Helper;
+use \Wirecard\Oxid\Core\Payment_Method_Factory;
+use \Wirecard\Oxid\Model\Payment_Method;
 
 use \Wirecard\PaymentSdk\Entity\AccountHolder;
 use \Wirecard\PaymentSdk\Entity\Amount;
@@ -31,15 +36,8 @@ use \Wirecard\PaymentSdk\TransactionService;
 use \Wirecard\PaymentSdk\Response\FailureResponse;
 use \Wirecard\PaymentSdk\Response\InteractionResponse;
 use \Wirecard\PaymentSdk\Entity\Redirect;
-use \Wirecard\PaymentSdk\Entity\Basket as WdBasket;
-use \Wirecard\PaymentSdk\Entity\Item;
 use \Wirecard\PaymentSdk\Entity\Address;
 use \Wirecard\PaymentSdk\Entity\Status;
-
-use \Wirecard\Oxid\Core\Payment_Method_Factory;
-use \Wirecard\Oxid\Model\Payment_Method;
-use \Wirecard\Oxid\Extend\Order;
-use \Wirecard\Oxid\Core\Helper;
 
 use \Psr\Log\LoggerInterface;
 
@@ -59,11 +57,6 @@ class Payment_Gateway extends Payment_Gateway_parent
     private $_oLogger;
 
     /**
-     * @var Language
-     */
-    private $_oLang;
-
-    /**
      * BasePaymentGateway constructor.
      *
      * @SuppressWarnings(PHPMD.Coverage)
@@ -71,7 +64,6 @@ class Payment_Gateway extends Payment_Gateway_parent
     public function __construct()
     {
         $this->_oLogger = Registry::getLogger();
-        $this->_oLang = Registry::getLang();
     }
 
     /**
@@ -175,7 +167,7 @@ class Payment_Gateway extends Payment_Gateway_parent
             $sSid = '&' . $sSid;
         }
 
-        $sErrorText = $this->_oLang->translateString('order_error');
+        $sErrorText = Helper::translate('order_error');
         $oRedirect = new Redirect(
             $sShopUrl . 'index.php?cl=thankyou' . $sSid,
             $sShopUrl . 'index.php?type=cancel&cl=payment',
@@ -268,7 +260,6 @@ class Payment_Gateway extends Payment_Gateway_parent
         User $oUser,
         Payment $oPayment
     ) {
-
         $sRemoteAddress = Registry::getUtilsServer()->getRemoteAddress();
         $oTransaction->setIpAddress($sRemoteAddress);
 
@@ -316,11 +307,6 @@ class Payment_Gateway extends Payment_Gateway_parent
             $oAddress->setState($sState);
         }
 
-        $sStreet2 = $oUser->oxuser__oxaddinfo->value;
-        if (!empty($sStreet2)) {
-            $oAddress->setStreet2($sStreet2);
-        }
-
         $oAccountHolder->setAddress($oAddress);
         $oAccountHolder->setFirstName($oUser->oxuser__oxfname->value);
         $oAccountHolder->setLastName($oUser->oxuser__oxlname->value);
@@ -355,12 +341,8 @@ class Payment_Gateway extends Payment_Gateway_parent
             $oAddress->setState($oState->getTitleById($sStateId));
         }
 
-        $sStreet2 = $oOrder->oxOrder__oxdeladdinfo->value;
-        if (!empty($sStreet2)) {
-            $oAddress->setStreet2($sStreet2);
-        }
-
         $oAccount = new AccountHolder();
+
         $oAccount->setAddress($oAddress);
         $oAccount->setFirstName($oOrder->oxorder__oxdelfname->value);
         $oAccount->setLastName($oOrder->oxorder__oxdellname->value);
@@ -380,62 +362,8 @@ class Payment_Gateway extends Payment_Gateway_parent
      */
     private function _addBasketInfo(Transaction &$oTransaction, Basket $oBasket)
     {
-        $finalPrices = array();
-        $contents = $oBasket->getContents();
-        foreach ($contents as $content) {
-            $finalPrices[$content->getProductId()] = $content->getFUnitPrice();
-        }
-
-        $oWdBasket = new WdBasket;
+        $oWdBasket = $oBasket->createTransactionBasket();
         $oWdBasket->setVersion($oTransaction);
-        $oArticles = $oBasket->getBasketSummary()->aArticles;
-        $oCurrency = $this->getConfig()->getActShopCurrencyObject();
-
-        foreach ($oArticles as $key => $value) {
-            $this->_addItemToBasket($oWdBasket, $key, $value, $finalPrices, $oCurrency);
-        }
-        if ($oBasket->getDeliveryCosts()) {
-            $item = new Item(
-                "Shipping",
-                new Amount($oBasket->getDeliveryCosts(), $oCurrency->name),
-                1
-            );
-            $item->setTaxRate($oBasket->getDelCostVatPercent());
-            $item->setTaxAmount(new Amount($oBasket->getDeliveryCost()->getVatValue(), $oCurrency->name));
-
-            $oWdBasket->add($item);
-        }
         $oTransaction->setBasket($oWdBasket);
-    }
-
-    /**
-     * Adds an article to the basket
-     *
-     * @param WdBasket $oBasket
-     * @param string   $sArticleKey
-     * @param int      $iQuantity
-     * @param array    $aPrices
-     * @param Currency $oCurrency
-     *
-     * @SuppressWarnings(PHPMD.Coverage)
-     */
-    private function _addItemToBasket(
-        WdBasket &$oBasket,
-        string $sArticleKey,
-        int $iQuantity,
-        array $aPrices,
-        $oCurrency
-    ) {
-
-        $oArticle = oxNew(Article::class);
-        $oArticle->load($sArticleKey);
-        $item = new Item(
-            $oArticle->oxarticles__oxtitle->value,
-            new Amount($aPrices[$sArticleKey], $oCurrency->name),
-            $iQuantity
-        );
-        $item->setTaxRate(floatval($oArticle->getPrice()->getVat()));
-        $item->setTaxAmount(new Amount($oArticle->getPrice()->getVatValue(), $oCurrency->name));
-        $oBasket->add($item);
     }
 }
