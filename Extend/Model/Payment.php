@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Extend\Model;
 
 use Wirecard\Oxid\Core\Payment_Method_Factory;
+use Wirecard\Oxid\Model\Payment_Method;
 
 use OxidEsales\Eshop\Core\Registry;
 

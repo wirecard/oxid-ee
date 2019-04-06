@@ -10,7 +10,7 @@
 namespace Wirecard\Oxid\Extend\Model;
 
 use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Model\Paypal_Payment_Method;
+use Wirecard\Oxid\Core\AccountHolderHelper;
 
 use Wirecard\PaymentSdk\Entity\Address;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
@@ -89,60 +89,6 @@ class Order extends Order_parent
     }
 
     /**
-     * Creates an AccountHolder object from an array of arguments.
-     *
-     * @param array $aArgs
-     * @return AccountHolder
-     */
-    protected function _createAccountHolder(array $aArgs): AccountHolder
-    {
-        $oAccountHolder = new AccountHolder();
-
-        foreach ([
-            'firstName'      => 'setFirstName',
-            'lastName'       => 'setLastName',
-            'email'          => 'setEmail',
-            'phone'          => 'setPhone',
-            'gender'         => 'setGender',
-            'dateOfBirth'    => 'setDateOfBirth',
-        ] as $sKey => $sMethodName) {
-            if (!empty($aArgs[$sKey])) {
-                $oAccountHolder->$sMethodName($aArgs[$sKey]);
-            }
-        }
-
-        $oAccountHolder->setAddress($this->_createAddress($aArgs));
-
-        return $oAccountHolder;
-    }
-
-    /**
-     * Creates an Address object from an array of arguments.
-     *
-     * @param array $aArgs
-     * @return Address
-     */
-    protected function _createAddress(array $aArgs): Address
-    {
-        $oAddress = new Address(
-            $aArgs['countryCode'] ?? '',
-            $aArgs['city'] ?? '',
-            $aArgs['street'] ?? ''
-        );
-
-        foreach ([
-            'state'          => 'setState',
-            'postalCode'     => 'setPostalCode',
-        ] as $sKey => $sMethodName) {
-            if (!empty($aArgs[$sKey])) {
-                $oAddress->$sMethodName($aArgs[$sKey]);
-            }
-        }
-
-        return $oAddress;
-    }
-
-    /**
      * Creates an AccountHolder object for the order.
      *
      * @return AccountHolder
@@ -152,7 +98,9 @@ class Order extends Order_parent
         $oCountry = $this->getOrderBillingCountry();
         $oUser = $this->getOrderUser();
 
-        return $this->_createAccountHolder([
+        $oAdditionalInfo = new AccountHolderHelper;
+
+        return $oAdditionalInfo->_createAccountHolder([
             'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
             'city' => $this->oxorder__oxbillcity->value,
             'street' => $this->oxorder__oxbillstreet->value . ' ' . $this->oxorder__oxbillstreetnr->value,
@@ -160,8 +108,8 @@ class Order extends Order_parent
             'postalCode' => $this->oxorder__oxbillzip->value,
             'firstName' => $this->oxorder__oxbillfname->value,
             'lastName' => $this->oxorder__oxbilllname->value,
-            'email' => $this->oxorder__oxbillemail->value,
             'phone' => $this->oxorder__oxbillfon->value,
+            'email' => $this->oxorder__oxbillemail->value,
             'gender' => Helper::getGenderCodeForSalutation($this->oxorder__oxbillsal->value),
             'dateOfBirth' => Helper::getDateTimeFromString($oUser->oxuser__oxbirthdate->value),
         ]);
@@ -174,10 +122,12 @@ class Order extends Order_parent
      */
     public function getShippingAccountHolder(): AccountHolder
     {
+        $oAdditionalInfo = new AccountHolderHelper;
+
         // use shipping info if available
         $oCountry = $this->getOrderShippingCountry();
         if (!empty($oCountry->oxcountry__oxisoalpha2->value)) {
-            return $this->_createAccountHolder([
+            return $oAdditionalInfo->_createAccountHolder([
                 'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
                 'city' => $this->oxorder__oxdelcity->value,
                 'street' => $this->oxorder__oxdelstreet->value . ' ' . $this->oxorder__oxdelstreetnr->value,
@@ -191,7 +141,7 @@ class Order extends Order_parent
 
         // fallback to billing info
         $oCountry = $this->getOrderBillingCountry();
-        return $this->_createAccountHolder([
+        return $oAdditionalInfo->_createAccountHolder([
             'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
             'city' => $this->oxorder__oxbillcity->value,
             'street' => $this->oxorder__oxbillstreet->value . ' ' . $this->oxorder__oxbillstreetnr->value,
