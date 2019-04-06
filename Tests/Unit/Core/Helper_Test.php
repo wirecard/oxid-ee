@@ -12,8 +12,6 @@ use Wirecard\Oxid\Core\Helper;
 
 use OxidEsales\Eshop\Application\Model\Payment;
 
-use DateTime;
-
 class Helper_Test extends OxidEsales\TestingLibrary\UnitTestCase
 {
     /**

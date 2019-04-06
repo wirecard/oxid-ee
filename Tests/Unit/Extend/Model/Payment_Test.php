@@ -10,8 +10,6 @@
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\Paypal_Payment_Method;
 
-use oxField;
-
 class Payment_Test extends OxidEsales\TestingLibrary\UnitTestCase
 {
     /**
