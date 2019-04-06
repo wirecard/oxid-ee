@@ -9,6 +9,8 @@
 
 namespace Wirecard\Oxid\Core;
 
+use Wirecard\Oxid\Core\Helper;
+
 use Wirecard\PaymentSdk\Entity\Address;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 
@@ -32,11 +34,11 @@ class AccountHolderHelper
         $oAccountHolder->setLastName($aArgs['lastName']);
         $oAccountHolder->setEmail($aArgs['email']);
 
-        if ($this->_isPresentProperty($aArgs, 'phone')) {
+        if (Helper::isPresentProperty($aArgs, 'phone')) {
             $oAccountHolder->setPhone($aArgs['phone']);
         }
 
-        if ($this->_isPresentProperty($aArgs, 'gender')) {
+        if (Helper::isPresentProperty($aArgs, 'gender')) {
             $oAccountHolder->setGender($aArgs['gender']);
         }
 
@@ -61,26 +63,14 @@ class AccountHolderHelper
             $aArgs['street'] ?? ''
         );
 
-        if ($this->_isPresentProperty($aArgs, 'postalCode')) {
+        if (Helper::isPresentProperty($aArgs, 'postalCode')) {
             $oAddress->setPostalCode($aArgs['postalCode']);
         }
 
-        if ($this->_isPresentProperty($aArgs, 'state')) {
+        if (Helper::isPresentProperty($aArgs, 'state')) {
             $oAddress->setState($aArgs['state']);
         }
 
         return $oAddress;
-    }
-
-    /**
-     * Checks if a key is present and not empty in the array passed as an argument
-     *
-     * @param array  $aArgs
-     * @param string $sKey
-     * @return bool
-     */
-    private function _isPresentProperty(array $aArgs, string $sKey): bool
-    {
-        return isset($aArgs[$sKey]) && !empty($aArgs[$sKey]);
     }
 }

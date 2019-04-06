@@ -137,4 +137,16 @@ class Helper
 
         return $oSmarty->fetch('inputhelp.tpl');
     }
+
+    /**
+     * Checks if a key is present and not empty in the array passed as an argument
+     *
+     * @param array  $aArgs
+     * @param string $sKey
+     * @return bool
+     */
+    public static function isPresentProperty(array $aArgs, string $sKey): bool
+    {
+        return isset($aArgs[$sKey]) && !empty($aArgs[$sKey]);
+    }
 }
