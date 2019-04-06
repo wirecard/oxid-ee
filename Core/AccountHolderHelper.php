@@ -32,11 +32,11 @@ class AccountHolderHelper
         $oAccountHolder->setLastName($aArgs['lastName']);
         $oAccountHolder->setEmail($aArgs['email']);
 
-        if (isset($aArgs['phone']) && !empty($aArgs['phone'])) {
+        if ($this->_isPresentProperty($aArgs, 'phone')) {
             $oAccountHolder->setPhone($aArgs['phone']);
         }
 
-        if (isset($aArgs['gender']) && !empty($aArgs['gender'])) {
+        if ($this->_isPresentProperty($aArgs, 'gender')) {
             $oAccountHolder->setGender($aArgs['gender']);
         }
 
@@ -61,14 +61,26 @@ class AccountHolderHelper
             $aArgs['street'] ?? ''
         );
 
-        if (isset($aArgs['postalCode']) && !empty($aArgs['postalCode'])) {
+        if ($this->_isPresentProperty($aArgs, 'postalCode')) {
             $oAddress->setPostalCode($aArgs['postalCode']);
         }
 
-        if (isset($aArgs['state']) && !empty($aArgs['state'])) {
+        if ($this->_isPresentProperty($aArgs, 'state')) {
             $oAddress->setState($aArgs['state']);
         }
 
         return $oAddress;
+    }
+
+    /**
+     * Checks if a key is present and not empty in the array passed as an argument
+     *
+     * @param array  $aArgs
+     * @param string $sKey
+     * @return bool
+     */
+    private function _isPresentProperty(array $aArgs, string $sKey): bool
+    {
+        return isset($aArgs[$sKey]) && !empty($aArgs[$sKey]);
     }
 }

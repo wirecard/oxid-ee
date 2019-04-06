@@ -150,7 +150,7 @@ class Order extends Order_parent
             'firstName' => $this->oxorder__oxbillfname->value,
             'lastName' => $this->oxorder__oxbilllname->value,
             'phone' => $this->oxorder__oxbillfon->value,
-        ], );
+        ]);
     }
 
     /**
