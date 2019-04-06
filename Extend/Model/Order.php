@@ -98,9 +98,9 @@ class Order extends Order_parent
         $oCountry = $this->getOrderBillingCountry();
         $oUser = $this->getOrderUser();
 
-        $oAdditionalInfo = new AccountHolderHelper;
+        $oAccHolderHelper = new AccountHolderHelper;
 
-        return $oAdditionalInfo->createAccountHolder([
+        return $oAccHolderHelper->createAccountHolder([
             'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
             'city' => $this->oxorder__oxbillcity->value,
             'street' => $this->oxorder__oxbillstreet->value . ' ' . $this->oxorder__oxbillstreetnr->value,
@@ -122,12 +122,12 @@ class Order extends Order_parent
      */
     public function getShippingAccountHolder(): AccountHolder
     {
-        $oAdditionalInfo = new AccountHolderHelper;
+        $oAccHolderHelper = new AccountHolderHelper;
 
         // use shipping info if available
         $oCountry = $this->getOrderShippingCountry();
         if (!empty($oCountry->oxcountry__oxisoalpha2->value)) {
-            return $oAdditionalInfo->createAccountHolder([
+            return $oAccHolderHelper->createAccountHolder([
                 'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
                 'city' => $this->oxorder__oxdelcity->value,
                 'street' => $this->oxorder__oxdelstreet->value . ' ' . $this->oxorder__oxdelstreetnr->value,
@@ -141,7 +141,7 @@ class Order extends Order_parent
 
         // fallback to billing info
         $oCountry = $this->getOrderBillingCountry();
-        return $oAdditionalInfo->createAccountHolder([
+        return $oAccHolderHelper->createAccountHolder([
             'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
             'city' => $this->oxorder__oxbillcity->value,
             'street' => $this->oxorder__oxbillstreet->value . ' ' . $this->oxorder__oxbillstreetnr->value,
@@ -150,7 +150,7 @@ class Order extends Order_parent
             'firstName' => $this->oxorder__oxbillfname->value,
             'lastName' => $this->oxorder__oxbilllname->value,
             'phone' => $this->oxorder__oxbillfon->value,
-        ]);
+        ], );
     }
 
     /**
