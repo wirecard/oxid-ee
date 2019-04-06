@@ -66,10 +66,10 @@ class NotifyHandler extends FrontendController
             $oService = new BackendService($oConfig, $this->_oLogger);
             $oNotificationResponse = $oService->handleNotification($sPostData);
         } catch (InvalidArgumentException $exception) {
-            $this->_oLogger->error($exception->getMessage());
+            $this->_oLogger->error(__METHOD__ . ': Invalid argument set: '. $exception->getMessage(), [$exception]);
             return;
         } catch (MalformedResponseException $exception) {
-            $this->_oLogger->error($exception->getMessage());
+            $this->_oLogger->error(__METHOD__ . ': Response is malformed: '. $exception->getMessage(), [$exception]);
             return;
         }
 
@@ -147,8 +147,10 @@ class NotifyHandler extends FrontendController
      */
     private function _onNotificationError(Response $oResponse)
     {
+        $this->_oLogger->error(__METHOD__ . ': Error processing transaction:');
+
         foreach ($oResponse->getStatusCollection()->getIterator() as $oItem) {
-            $this->_oLogger->error($oItem->getDescription());
+            $this->_oLogger->error("\t Status with code ". $oItem->getCode() ." and message ". $oItem->getDescription());
         }
     }
 
