@@ -100,7 +100,7 @@ class Order extends Order_parent
 
         $oAdditionalInfo = new AccountHolderHelper;
 
-        return $oAdditionalInfo->_createAccountHolder([
+        return $oAdditionalInfo->createAccountHolder([
             'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
             'city' => $this->oxorder__oxbillcity->value,
             'street' => $this->oxorder__oxbillstreet->value . ' ' . $this->oxorder__oxbillstreetnr->value,
@@ -127,7 +127,7 @@ class Order extends Order_parent
         // use shipping info if available
         $oCountry = $this->getOrderShippingCountry();
         if (!empty($oCountry->oxcountry__oxisoalpha2->value)) {
-            return $oAdditionalInfo->_createAccountHolder([
+            return $oAdditionalInfo->createAccountHolder([
                 'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
                 'city' => $this->oxorder__oxdelcity->value,
                 'street' => $this->oxorder__oxdelstreet->value . ' ' . $this->oxorder__oxdelstreetnr->value,
@@ -141,7 +141,7 @@ class Order extends Order_parent
 
         // fallback to billing info
         $oCountry = $this->getOrderBillingCountry();
-        return $oAdditionalInfo->_createAccountHolder([
+        return $oAdditionalInfo->createAccountHolder([
             'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
             'city' => $this->oxorder__oxbillcity->value,
             'street' => $this->oxorder__oxbillstreet->value . ' ' . $this->oxorder__oxbillstreetnr->value,
