@@ -127,7 +127,8 @@ window.onload = function ()
             [{foreach from=$mylist item=listitem}]
             <tr>
                 [{block name="admin_transaction_list_item"}]
-                    [{assign var="payment" value=$listitem->getPayment()}]
+                    [{assign var="order" value=$listitem->getTransactionOrder()}]
+                    [{assign var="payment" value=$order->getOrderPayment()}]
                     [{if $listitem->getId() == $oxid}]
                         [{assign var="listclass" value=listitem4}]
                     [{else}]

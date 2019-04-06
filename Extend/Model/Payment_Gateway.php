@@ -26,7 +26,6 @@ use \Wirecard\Oxid\Core\Helper;
 use \Wirecard\Oxid\Core\Payment_Method_Factory;
 use \Wirecard\Oxid\Model\Payment_Method;
 
-use \Wirecard\PaymentSdk\Entity\AccountHolder;
 use \Wirecard\PaymentSdk\Entity\Amount;
 use \Wirecard\PaymentSdk\Entity\Device;
 use \Wirecard\PaymentSdk\Response\Response;
@@ -82,7 +81,9 @@ class Payment_Gateway extends Payment_Gateway_parent
      */
     public function executePayment($fAmount, &$oOrder)
     {
-        if (!$oOrder->isModulePaymentType()) {
+        $oPayment = $oOrder->getOrderPayment();
+
+        if (!$oPayment->isCustomPaymentMethod()) {
             return parent::executePayment($fAmount, $oOrder);
         }
 
@@ -114,22 +115,6 @@ class Payment_Gateway extends Payment_Gateway_parent
 
         Registry::getUtils()->redirect($sPageUrl);
         return true;
-    }
-
-    /**
-     * Returns country code
-     *
-     * @param string $sCountryId
-     *
-     * @return string
-     *
-     * @SuppressWarnings(PHPMD.Coverage)
-     */
-    private function _getCountryCode(string $sCountryId): string
-    {
-        $country = oxNew(Country::class);
-        $country->load($sCountryId);
-        return $country->oxcountry__oxisoalpha2->value;
     }
 
     /**
@@ -210,7 +195,6 @@ class Payment_Gateway extends Payment_Gateway_parent
         $oTransaction->setAmount(new Amount($fAmount, $oCurrency->name));
 
         $oBasket = $oSession->getBasket();
-        $oUser = $oBasket->getBasketUser();
 
         $sOrderDetails = $oOrder->oxorder__oxremark->value;
         if (!empty($sOrderDetails)) {
@@ -222,7 +206,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         $oPayment->load($sPaymentId);
 
         if ($oPayment->oxpayments__wdoxidee_additional_info->value) {
-            $this->_addAdditionalInfo($oTransaction, $oOrder, $oUser, $oPayment);
+            $this->_addAdditionalInfo($oTransaction, $oOrder, $oPayment);
         }
 
         if ($oPayment->oxpayments__wdoxidee_descriptor->value) {
@@ -250,7 +234,6 @@ class Payment_Gateway extends Payment_Gateway_parent
      *
      * @param Transaction $oTransaction
      * @param Order       $oOrder
-     * @param User        $oUser
      * @param Payment     $oPayment
      *
      * @SuppressWarnings(PHPMD.Coverage)
@@ -258,98 +241,20 @@ class Payment_Gateway extends Payment_Gateway_parent
     private function _addAdditionalInfo(
         Transaction &$oTransaction,
         Order $oOrder,
-        User $oUser,
         Payment $oPayment
     ) {
         $sRemoteAddress = Registry::getUtilsServer()->getRemoteAddress();
+
         $oTransaction->setIpAddress($sRemoteAddress);
-
-        $oTransaction->setConsumerId($oUser->oxuser__oxid->value);
         $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
-
-        $oAccountHolder = $this->_buildAccountHolder($oOrder, $oUser);
-        $oTransaction->setAccountHolder($oAccountHolder);
-
-        $sFirstName = $oOrder->oxorder__oxdelfname->value;
-        $oTransaction->setShipping($sFirstName ? $this->_buildShipping($oOrder) : $oAccountHolder);
+        $oTransaction->setAccountHolder($oOrder->getAccountHolder());
+        $oTransaction->setShipping($oOrder->getShippingAccountHolder());
 
         $oDevice = new Device($_SERVER['HTTP_USER_AGENT']);
         $sMaid = $oPayment->oxpayments__wdoxidee_maid->value;
         $sDeviceId = Helper::createDeviceFingerprint($sMaid, $this->getSession()->getId());
         $oDevice->setFingerprint($sDeviceId);
         $oTransaction->setDevice($oDevice);
-    }
-
-    /**
-     *
-     * Build an account holder
-     *
-     * @param Order $oOrder
-     * @param User  $oUser
-     *
-     * @return AccountHolder
-     *
-     * @SuppressWarnings(PHPMD.Coverage)
-     */
-    private function _buildAccountHolder(Order $oOrder, User $oUser): AccountHolder
-    {
-        $oAccountHolder = new AccountHolder();
-
-        $oAddress = new Address(
-            self::_getCountryCode($oUser->oxuser__oxcountryid),
-            $oUser->oxuser__oxcity->value,
-            $oUser->oxuser__oxstreet->value . ' ' . $oUser->oxuser__oxstreetnr->value
-        );
-
-        $oAddress->setPostalCode($oUser->oxuser__oxzip->value);
-
-        $sState = $oUser->getStateTitle();
-        if (!empty($sState)) {
-            $oAddress->setState($sState);
-        }
-
-        $oAccountHolder->setAddress($oAddress);
-        $oAccountHolder->setFirstName($oUser->oxuser__oxfname->value);
-        $oAccountHolder->setLastName($oUser->oxuser__oxlname->value);
-        $oAccountHolder->setPhone($oUser->oxuser__oxfon->value);
-        $oAccountHolder->setEmail($oOrder->oxorder__oxbillemail->value);
-
-        return $oAccountHolder;
-    }
-
-    /**
-     *
-     * Build the shipping account holder
-     *
-     * @param Order $oOrder
-     *
-     * @return AccountHolder
-     *
-     * @SuppressWarnings(PHPMD.Coverage)
-     */
-    private function _buildShipping(Order $oOrder): AccountHolder
-    {
-        $oAddress = new Address(
-            self::_getCountryCode($oOrder->oxorder__oxdelcountryid),
-            $oOrder->oxorder__oxdelcity->value,
-            $oOrder->oxorder__oxdelstreet->value . ' ' . $oOrder->oxorder__oxdelstreetnr->value
-        );
-        $oAddress->setPostalCode($oOrder->oxorder__oxdelzip->value);
-
-        $sStateId = $oOrder->oxOrder__oxdelstateid->value;
-        if (!empty($sStateId)) {
-            $oState = oxNew(State::class);
-            $oAddress->setState($oState->getTitleById($sStateId));
-        }
-
-        $oAccount = new AccountHolder();
-
-        $oAccount->setAddress($oAddress);
-        $oAccount->setFirstName($oOrder->oxorder__oxdelfname->value);
-        $oAccount->setLastName($oOrder->oxorder__oxdellname->value);
-        $oAccount->setPhone($oOrder->oxorder__oxdelfon->value);
-
-        return $oAccount;
     }
 
     /**

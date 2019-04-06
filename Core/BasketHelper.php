@@ -20,7 +20,7 @@ use Wirecard\PaymentSdk\Entity\Basket as WdBasket;
 use Wirecard\PaymentSdk\Entity\Item;
 
 /**
- * Helpler class to handle Basket Items
+ * Helper class to handle Basket Items
  */
 class BasketHelper
 {

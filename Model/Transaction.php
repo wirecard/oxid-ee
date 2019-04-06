@@ -13,7 +13,6 @@ use Wirecard\Oxid\Core\Helper;
 
 use OxidEsales\Eshop\Core\Model\MultiLanguageModel;
 use OxidEsales\Eshop\Application\Model\Order;
-use OxidEsales\Eshop\Application\Model\Payment;
 
 /**
  * Transaction
@@ -49,25 +48,12 @@ class Transaction extends MultiLanguageModel
      *
      * @return Order
      */
-    public function getOrder(): Order
+    public function getTransactionOrder(): Order
     {
         $oOrder = oxNew(Order::class);
         $oOrder->load($this->wdoxidee_ordertransactions__orderid->value);
 
         return $oOrder;
-    }
-
-    /**
-     * Returns the payment associated with the transaction's order.
-     *
-     * @return Payment
-     */
-    public function getPayment(): Payment
-    {
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load($this->getOrder()->oxorder__oxpaymenttype->value);
-
-        return $oPayment;
     }
 
     /**

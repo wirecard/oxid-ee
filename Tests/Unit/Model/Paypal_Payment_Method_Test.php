@@ -7,7 +7,9 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use \Wirecard\Oxid\Model\Paypal_Payment_Method;
+use Wirecard\Oxid\Model\Paypal_Payment_Method;
+
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 class Paypal_Payment_Method_Test extends OxidEsales\TestingLibrary\UnitTestCase
 {
@@ -32,6 +34,6 @@ class Paypal_Payment_Method_Test extends OxidEsales\TestingLibrary\UnitTestCase
     public function testGetTransaction()
     {
         $oTransaction = $this->oPaymentMethod->getTransaction();
-        $this->assertTrue($oTransaction instanceof \Wirecard\PaymentSdk\Transaction\PayPalTransaction);
+        $this->assertInstanceOf(PayPalTransaction::class, $oTransaction);
     }
 }

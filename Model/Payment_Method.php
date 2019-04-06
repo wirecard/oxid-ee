@@ -9,8 +9,11 @@
 
 namespace Wirecard\Oxid\Model;
 
-use \Wirecard\PaymentSdk\Config\Config;
-use \Wirecard\PaymentSdk\Transaction\Transaction;
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Model\Transaction as TransactionModel;
+
+use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 use \OxidEsales\Eshop\Core\Registry;
 
@@ -99,5 +102,81 @@ abstract class Payment_Method
     public static function getOxidFromSDKName(string $sSDKName): string
     {
         return self::OXID_NAME_PREFIX . $sSDKName;
+    }
+
+    /**
+     * Returns an array of fields to be displayed in the payment method config.
+     *
+     * @return array
+     */
+    public function getConfigFields(): array
+    {
+        return [
+            'apiUrl' => [
+                'type'        => 'text',
+                'field'       => 'oxpayments__wdoxidee_apiurl',
+                'title'       => Helper::translate('config_base_url'),
+                'description' => Helper::translate('config_base_url_desc'),
+            ],
+            'httpUser' => [
+                'type'        => 'text',
+                'field'       => 'oxpayments__wdoxidee_httpuser',
+                'title'       => Helper::translate('config_http_user'),
+            ],
+            'httpPassword' => [
+                'type'        => 'text',
+                'field'       => 'oxpayments__wdoxidee_httppass',
+                'title'       => Helper::translate('config_http_password'),
+            ],
+            'maid' => [
+                'type'        => 'text',
+                'field'       => 'oxpayments__wdoxidee_maid',
+                'title'       => Helper::translate('config_merchant_account_id'),
+                'description' => Helper::translate('config_three_d_merchant_account_id_desc'),
+            ],
+            'secret' => [
+                'type'        => 'text',
+                'field'       => 'oxpayments__wdoxidee_secret',
+                'title'       => Helper::translate('config_merchant_secret'),
+                'description' => Helper::translate('config_three_d_merchant_secret_desc'),
+            ],
+            'basket' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_basket',
+                'options'     => [
+                    '1'       => Helper::translate('yes'),
+                    '0'       => Helper::translate('no'),
+                ],
+                'title'       => Helper::translate('config_shopping_basket'),
+                'description' => Helper::translate('config_shopping_basket_desc'),
+            ],
+            'descriptor' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_descriptor',
+                'options'     => [
+                    '1'       => Helper::translate('yes'),
+                    '0'       => Helper::translate('no'),
+                ],
+                'title'       => Helper::translate('config_descriptor'),
+                'description' => Helper::translate('config_descriptor_desc'),
+            ],
+            'additionalInfo' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_additional_info',
+                'options'     => [
+                    '1'       => Helper::translate('yes'),
+                    '0'       => Helper::translate('no'),
+                ],
+                'title'       => Helper::translate('config_additional_info'),
+                'description' => Helper::translate('config_additional_info_desc'),
+            ],
+            'paymentAction' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_transactiontype',
+                'options'     => TransactionModel::getTranslatedActions(),
+                'title'       => Helper::translate('config_payment_action'),
+                'description' => Helper::translate('config_payment_action_desc'),
+            ],
+        ];
     }
 }

@@ -13,6 +13,9 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Model\ListModel;
 use OxidEsales\Eshop\Application\Model\Payment;
 
+use Exception;
+use DateTime;
+
 /**
  * Util functions
  */
@@ -24,7 +27,7 @@ class Helper
      * @param string $sKey
      * @return string
      */
-    public static function translate(string $sKey): string
+    public static function translate($sKey)
     {
         return Registry::getLang()->translateString($sKey);
     }
@@ -38,20 +41,9 @@ class Helper
      * @param string $sSessionId
      * @return string
      */
-    public static function createDeviceFingerprint(string $sMaid, string $sSessionId = null): string
+    public static function createDeviceFingerprint($sMaid, $sSessionId = null)
     {
         return $sMaid . '_' . $sSessionId;
-    }
-
-    /**
-     * Check if payment id is a module id i.e. wdpaypal
-     *
-     * @param string $sPaymentId
-     * @return bool
-     */
-    public static function isModulePaymentMethod(string $sPaymentId): bool
-    {
-        return strpos($sPaymentId, "wd") === 0;
     }
 
     /**
@@ -59,7 +51,7 @@ class Helper
      *
      * @return array
      */
-    public static function getPayments(): array
+    public static function getPayments()
     {
         $oPaymentList = oxNew(ListModel::class);
         $oPaymentList->init(Payment::class);
@@ -72,10 +64,10 @@ class Helper
      *
      * @return array
      */
-    public static function getModulePayments(): array
+    public static function getModulePayments()
     {
         return array_filter(self::getPayments(), function ($oPayment) {
-            return $oPayment->oxpayments__wdoxidee_isours->value;
+            return $oPayment->isCustomPaymentMethod();
         });
     }
 
@@ -86,8 +78,75 @@ class Helper
      * @param string $sNumber
      * @return float
      */
-    public static function getFloatFromString(string $sNumber): float
+    public static function getFloatFromString($sNumber)
     {
         return (float) preg_replace('/\.(?=.*\.)/', '', str_replace(',', '.', $sNumber));
+    }
+
+    /**
+     * Returns the gender code for a given salutation.
+     *
+     * @param string $sSalutation
+     * @return string
+     */
+    public static function getGenderCodeForSalutation($sSalutation)
+    {
+        $aGenderCodeMap = [
+            'MR'  => 'm',
+            'MRS' => 'f',
+        ];
+
+        return $aGenderCodeMap[$sSalutation] ?? '';
+    }
+
+    /**
+     * Converts a time string to a DateTime object. If the string is not valid (e.g. OXID's default date value
+     * 0000-00-00), null will be returned.
+     *
+     * @param string $sTime
+     * @return DateTime|null
+     */
+    public static function getDateTimeFromString($sTime)
+    {
+        try {
+            $oDateTime = new DateTime($sTime);
+            $aErrorInformation = DateTime::getLastErrors();
+
+            if ($aErrorInformation['warning_count'] !== 0) {
+                return null;
+            }
+
+            return $oDateTime;
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Returns HTML for the [{oxinputhelp}] Smarty function, but allows passing any string, not just translation keys.
+     *
+     * @param string $sText
+     * @return string
+     */
+    public static function getInputHelpHtml($sText)
+    {
+        $oSmarty = Registry::getUtilsView()->getSmarty();
+
+        $oSmarty->assign('sHelpId', md5($sText));
+        $oSmarty->assign('sHelpText', $sText);
+
+        return $oSmarty->fetch('inputhelp.tpl');
+    }
+
+    /**
+     * Checks if a key is present and not empty in the array passed as an argument
+     *
+     * @param array  $aArgs
+     * @param string $sKey
+     * @return bool
+     */
+    public static function isPresentProperty(array $aArgs, string $sKey): bool
+    {
+        return isset($aArgs[$sKey]) && !empty($aArgs[$sKey]);
     }
 }

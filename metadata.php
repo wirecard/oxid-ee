@@ -46,19 +46,16 @@ $aModule = array(
     'author'            => 'Wirecard',
     'url'               => 'https://www.wirecard.com',
     'email'             => 'shop-systems-support@wirecard.com',
-    'extend'            => array (
-        \OxidEsales\Eshop\Core\ViewConfig::class
-            => \Wirecard\Oxid\Extend\View_Config::class,
-        \OxidEsales\Eshop\Application\Controller\Admin\OrderList::class
-            => \Wirecard\Oxid\Extend\Controller\Admin\OrderList::class,
-        \OxidEsales\Eshop\Application\Model\Order::class
-            => \Wirecard\Oxid\Extend\Model\Order::class,
-        \OxidEsales\Eshop\Application\Model\PaymentGateway::class
-            => \Wirecard\Oxid\Extend\Model\Payment_Gateway::class,
-        \OxidEsales\Eshop\Application\Controller\Admin\PaymentMainAjax::class
-            => \Wirecard\Oxid\Extend\Payment_Main_Ajax::class,
-        \OxidEsales\Eshop\Application\Model\Basket::class
-            => \Wirecard\Oxid\Extend\Basket::class
+    'extend'            => array(
+    // @codingStandardsIgnoreStart Generic.Files.LineLength
+        \OxidEsales\Eshop\Core\ViewConfig::class                              => \Wirecard\Oxid\Extend\View_Config::class,
+        \OxidEsales\Eshop\Application\Controller\Admin\OrderList::class       => \Wirecard\Oxid\Extend\Controller\Admin\OrderList::class,
+        \OxidEsales\Eshop\Application\Model\Order::class                      => \Wirecard\Oxid\Extend\Model\Order::class,
+        \OxidEsales\Eshop\Application\Model\PaymentGateway::class             => \Wirecard\Oxid\Extend\Model\Payment_Gateway::class,
+        \OxidEsales\Eshop\Application\Model\Payment::class                    => \Wirecard\Oxid\Extend\Model\Payment::class,
+        \OxidEsales\Eshop\Application\Controller\Admin\PaymentMainAjax::class => \Wirecard\Oxid\Extend\Payment_Main_Ajax::class,
+        \OxidEsales\Eshop\Application\Model\Basket::class                     => \Wirecard\Oxid\Extend\Basket::class
+    // @codingStandardsIgnoreEnd Generic.Files.LineLength
     ),
     'controllers'       => array(
         'wcpg_transaction'
