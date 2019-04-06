@@ -91,6 +91,7 @@ class Order extends Order_parent
     /**
      * Creates an AccountHolder object from an array of arguments.
      *
+     * @param array $aArgs
      * @return AccountHolder
      */
     protected function _createAccountHolder(array $aArgs): AccountHolder
