@@ -5,7 +5,12 @@
 </td>
 <td class="listheader" height="15">
     <a href="Javascript:top.oxid.admin.setSorting(document.search, 'oxorder', 'wdoxidee_transactionid', 'asc');document.search.submit();" class="listheader">
-        [{oxmultilang ident="transactionID"}]
+        [{oxmultilang ident="panel_transcation_id"}]
+    </a>
+</td>
+<td class="listheader" height="15">
+    <a href="Javascript:top.oxid.admin.setSorting(document.search, 'oxorder', 'wdoxidee_providertransactionid', 'asc');document.search.submit();" class="listheader">
+        [{oxmultilang ident="panel_provider_transaction_id"}]
     </a>
 </td>
 

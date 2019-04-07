@@ -125,6 +125,7 @@ class NotifyHandler extends FrontendController
 
         $oOrder->oxorder__wdoxidee_providertransactionid = new Field($aData['statuses.0.provider-transaction-id']);
         $oOrder->oxorder__wdoxidee_transactionid = new Field($oResponse->getTransactionId());
+        $oOrder->oxorder__oxpaid = new Field($aData['completion-time-stamp']);
         $oOrder->save();
 
         if ($oOrder->oxorder__wdoxidee_final->value) {
