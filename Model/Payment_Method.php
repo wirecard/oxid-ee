@@ -12,9 +12,6 @@ namespace Wirecard\Oxid\Model;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
-use Wirecard\PaymentSdk\Config\Config;
-use Wirecard\PaymentSdk\Transaction\Transaction;
-
 use \OxidEsales\Eshop\Core\Registry;
 
 use \Psr\Log\LoggerInterface;
@@ -60,14 +57,14 @@ abstract class Payment_Method
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    abstract public function getTransaction(): Transaction;
+    abstract public function getTransaction();
 
     /**
      * Get the payments method configuration
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    abstract public function getConfig(): Config;
+    abstract public function getConfig();
 
     /**
      * Get the payment methods name
@@ -109,7 +106,7 @@ abstract class Payment_Method
      *
      * @return array
      */
-    public function getConfigFields(): array
+    public function getConfigFields()
     {
         return [
             'apiUrl' => [
