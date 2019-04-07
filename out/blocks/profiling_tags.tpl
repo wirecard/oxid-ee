@@ -2,7 +2,7 @@
 
 [{if $oPayment->isCustomPaymentMethod()}]
 
-  [{assign var="sDeviceId" value=$oViewConf->getWirecardDeviceId($oPayment->oxpayments__wdoxidee_maid)}]
+  [{assign var="sDeviceId" value=$oViewConf->getModuleDeviceId($oPayment->oxpayments__wdoxidee_maid)}]
 
   <script type="text/javascript"
           src="https://h.wirecard.com/fp/tags.js?org_id=6xxznhva&session_id=[{$sDeviceId}]">

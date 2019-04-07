@@ -21,5 +21,10 @@
         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->oxorder__oxid->value}]');">[{$listitem->oxorder__wdoxidee_transactionid->value}]</a>
     </div>
 </td>
+<td valign="top" height="15" class="[{$listclass}]">
+    <div class="listitemfloating">
+        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->oxorder__oxid->value}]');">[{$listitem->oxorder__wdoxidee_providertransactionid->value}]</a>
+    </div>
+</td>
 
 [{$smarty.block.parent}]

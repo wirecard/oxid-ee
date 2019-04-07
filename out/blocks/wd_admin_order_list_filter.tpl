@@ -18,5 +18,12 @@
         </div>
     </div>
 </td>
+<td valign="top" class="listfilter" height="20">
+    <div class="r1">
+        <div class="b1">
+            <input class="listedit" type="text" size="20" name="where[oxorder][wdoxidee_providertransactionid]" value="[{$where.oxorder.wdoxidee_providertransactionid}]">
+        </div>
+    </div>
+</td>
 
 [{$smarty.block.parent}]

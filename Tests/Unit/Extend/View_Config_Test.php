@@ -24,9 +24,9 @@ class View_Config_Test extends OxidEsales\TestingLibrary\UnitTestCase
         $this->oViewConfig = oxNew(View_Config::class);
     }
 
-    public function testGetWirecardDeviceId()
+    public function testModuleDeviceId()
     {
         $sMaid = "test Merchant Id";
-        $this->assertTrue(strpos($this->oViewConfig->getWirecardDeviceId($sMaid), $sMaid) === 0);
+        $this->assertTrue(strpos($this->oViewConfig->getModuleDeviceId($sMaid), $sMaid) === 0);
     }
 }

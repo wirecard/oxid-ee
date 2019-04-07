@@ -27,7 +27,7 @@ class View_Config extends View_Config_parent
      * @param string $sMaid
      * @return string
      */
-    public function getWirecardDeviceId(string $sMaid): string
+    public function getModuleDeviceId(string $sMaid): string
     {
         return Helper::createDeviceFingerprint($sMaid, $this->getSessionId());
     }

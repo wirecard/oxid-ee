@@ -36,10 +36,10 @@ use \Wirecard\PaymentSdk\Response\FailureResponse;
 use \Wirecard\PaymentSdk\Response\InteractionResponse;
 use \Wirecard\PaymentSdk\Entity\Redirect;
 use \Wirecard\PaymentSdk\Entity\Address;
-use \Wirecard\PaymentSdk\Entity\Status;
 
 use \Wirecard\Oxid\Extend\Model\Order;
 use \Psr\Log\LoggerInterface;
+use \Exception;
 
 /**
  * Class BasePaymentGateway
@@ -64,57 +64,6 @@ class Payment_Gateway extends Payment_Gateway_parent
     public function __construct()
     {
         $this->_oLogger = Registry::getLogger();
-    }
-
-    /**
-     * Executes payment, returns true on success.
-     *
-     * @param float $fAmount Goods amount
-     * @param Order $oOrder  User ordering object
-     *
-     * @return Response|FailureResponse|SuccessResponse
-     *
-     * @override
-     *
-     * @SuppressWarnings(PHPMD.Coverage)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    public function executePayment($fAmount, &$oOrder)
-    {
-        $oPayment = $oOrder->getOrderPayment();
-
-        if (!$oPayment->isCustomPaymentMethod()) {
-            return parent::executePayment($fAmount, $oOrder);
-        }
-
-        try {
-            $oResponse = self::_makeTransaction($fAmount, $oOrder);
-        } catch (\Exception $exc) {
-            $this->_oLogger->error("Error processing transaction", [$exc]);
-            return false;
-        }
-
-        if ($oResponse instanceof FailureResponse) {
-            $this->_oLogger->error('Error processing transaction:');
-
-            foreach ($oResponse->getStatusCollection() as $oStatus) {
-                /**
-                 * @var Status $oStatus
-                 */
-                $sSeverity = ucfirst($oStatus->getSeverity());
-                $sCode = $oStatus->getCode();
-                $sDescription = $oStatus->getDescription();
-                $this->_oLogger->error("\t$sSeverity with code $sCode and message '$sDescription' occurred.");
-            }
-            return false;
-        }
-        $sPageUrl = null;
-        if ($oResponse instanceof InteractionResponse) {
-            $sPageUrl = $oResponse->getRedirectUrl();
-        }
-
-        Registry::getUtils()->redirect($sPageUrl);
-        return true;
     }
 
     /**
@@ -153,35 +102,41 @@ class Payment_Gateway extends Payment_Gateway_parent
             $sSid = '&' . $sSid;
         }
 
-        $sErrorText = Helper::translate('order_error');
+        $sRandom = substr(str_shuffle(md5(time())), 0, 15);
+        $oSession->setVariable("wdtoken", $sRandom);
+
+        $sBaseLanguage = Registry::getLang()->getBaseLanguage();
+
         $oRedirect = new Redirect(
-            $sShopUrl . 'index.php?cl=thankyou' . $sSid,
-            $sShopUrl . 'index.php?type=cancel&cl=payment',
-            $sShopUrl . 'index.php?type=error&cl=payment&errortext=' . urlencode($sErrorText)
+            $sShopUrl . 'index.php?lang=' . $sBaseLanguage . '&cl=order&wdpayment=' . $sRandom . $sSid,
+            $sShopUrl . 'index.php?lang=' . $sBaseLanguage . '&cl=payment&payerror=-100' . $sSid,
+            $sShopUrl . 'index.php?lang=' . $sBaseLanguage . '&cl=payment&payerror=-101' . $sSid
         );
+
         return $oRedirect;
     }
 
     /**
      * Executes the transaction through EE
      *
-     * @param float                       $fAmount
-     * @param \Wirecard\Oxid\Extend\Order $oOrder
+     * @param float $fAmount
+     * @param Order $oOrder
      *
      * @return FailureResponse|InteractionResponse|Response|SuccessResponse
      *
-     * @throws \Exception
+     * @throws Exception
      *
      * @SuppressWarnings(PHPMD.Coverage)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ElseExpression)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    private function _makeTransaction(float $fAmount, Order $oOrder): Response
+    public function makeTransaction(float $fAmount, Order $oOrder): Response
     {
-        $sPaymentMethod = $oOrder->oxorder__oxpaymenttype->value;
         $sShopUrl = $this->getConfig()->getCurrentShopUrl();
         $oSession = $this->getSession();
+        $oBasket = $oSession->getBasket();
+        $sPaymentMethod = $oBasket->getPaymentId();
 
         $oRedirect = self::getRedirectUrls($oSession, $sShopUrl);
         $oPaymentMethod = Payment_Method_Factory::create($sPaymentMethod);
@@ -201,17 +156,16 @@ class Payment_Gateway extends Payment_Gateway_parent
             $oTransaction->setOrderDetail($sOrderDetails);
         }
 
-        $sPaymentId = $oBasket->getPaymentId();
         $oPayment = oxNew(Payment::class);
-        $oPayment->load($sPaymentId);
+        $oPayment->load($sPaymentMethod);
 
         if ($oPayment->oxpayments__wdoxidee_additional_info->value) {
             $this->_addAdditionalInfo($oTransaction, $oOrder, $oPayment);
         }
 
         if ($oPayment->oxpayments__wdoxidee_descriptor->value) {
-            $descriptor = self::getDescriptor($oOrder->oxorder__oxid->value);
-            $oTransaction->setDescriptor($descriptor);
+            $sDescriptor = self::getDescriptor($oOrder->oxorder__oxid->value);
+            $oTransaction->setDescriptor($sDescriptor);
         }
 
         if ($oPayment->oxpayments__wdoxidee_basket->value) {
@@ -221,7 +175,11 @@ class Payment_Gateway extends Payment_Gateway_parent
         $oTransaction->setNotificationUrl($sShopUrl
             . 'index.php?cl=wcpg_notifyhandler&fnc=handleRequest&pmt='
             . Payment_Method::getOxidFromSDKName($oPaymentMethod->getTransaction()->getConfigKey()));
-        $oResponse = $oTransactionService->pay($oTransaction);
+
+        $oResponse = $oTransactionService->process(
+            $oTransaction,
+            $oPayment->oxpayments__wdoxidee_transactionaction->value
+        );
 
         $oOrder->oxorder__wdoxidee_orderstate = new Field(Order::STATE_PENDING);
         $oOrder->save();

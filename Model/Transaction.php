@@ -20,8 +20,8 @@ use OxidEsales\Eshop\Application\Model\Order;
  */
 class Transaction extends MultiLanguageModel
 {
-    const ACTION_AUTHORIZE_CAPTURE = 'authorize-capture';
-    const ACTION_PURCHASE = 'purchase';
+    const ACTION_RESERVE = 'reserve';
+    const ACTION_PAY = 'pay';
 
     const STATE_AWAITING = 'awaiting';
     const STATE_SUCCESS = 'success';
@@ -92,8 +92,8 @@ class Transaction extends MultiLanguageModel
     public static function getTranslatedActions(): array
     {
         return [
-            self::ACTION_AUTHORIZE_CAPTURE => Helper::translate('text_payment_action_reserve'),
-            self::ACTION_PURCHASE => Helper::translate('text_payment_action_pay'),
+            self::ACTION_RESERVE => Helper::translate('text_payment_action_reserve'),
+            self::ACTION_PAY => Helper::translate('text_payment_action_pay'),
         ];
     }
 

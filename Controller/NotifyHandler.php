@@ -101,17 +101,12 @@ class NotifyHandler extends FrontendController
             return;
         }
 
-        if ($oOrder->oxorder__wdoxidee_final->value) {
-            $this->_oLogger->warning('Corresponding order is already finished, nothing updated! OrderId: ' . $sOrderId);
-            return;
-        }
-
         $sPaymentMethod = $oOrder->oxorder__oxpaymenttype->value;
         $oPayment = oxNew(Payment::class);
         $oPayment->load($sPaymentMethod);
 
         $oTransaction = oxNew(Transaction::class);
-        $oTransaction->wdoxidee_ordertransactions__ordernumber = new Field($oOrder->oxorder_oxordernr->value);
+        $oTransaction->wdoxidee_ordertransactions__ordernumber = new Field($oOrder->oxorder__oxordernr->value);
         $oTransaction->wdoxidee_ordertransactions__orderid = new Field($oOrder->oxorder__oxid->value);
         $oTransaction->wdoxidee_ordertransactions__transactionid = new Field($oResponse->getTransactionId());
         $oTransaction->wdoxidee_ordertransactions__parenttransactionid
@@ -128,10 +123,18 @@ class NotifyHandler extends FrontendController
         $oTransaction->wdoxidee_ordertransactions__date = new Field($aData['completion-time-stamp']);
         $oTransaction->save();
 
-        $oOrder->oxorder__wdoxidee_orderstate
-            = new Field($oBackendService->getOrderState($oResponse->getTransactionType()));
         $oOrder->oxorder__wdoxidee_providertransactionid = new Field($aData['statuses.0.provider-transaction-id']);
         $oOrder->oxorder__wdoxidee_transactionid = new Field($oResponse->getTransactionId());
+        $oOrder->oxorder__oxpaid = new Field($aData['completion-time-stamp']);
+        $oOrder->save();
+
+        if ($oOrder->oxorder__wdoxidee_final->value) {
+            $this->_oLogger->warning('Corresponding order is already finished, nothing updated! OrderId: ' . $sOrderId);
+            return;
+        }
+
+        $oOrder->oxorder__wdoxidee_orderstate
+            = new Field($oBackendService->getOrderState($oResponse->getTransactionType()));
         $oOrder->oxorder__wdoxidee_final = new Field(1);
         $oOrder->save();
     }
