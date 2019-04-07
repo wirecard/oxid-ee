@@ -69,7 +69,7 @@ class OrderController extends OrderController_parent
             $sParamStr = http_build_query($aParams);
 
             $sNewUrl = $sShopBaseUrl . 'index.php?' . $sParamStr;
-            header('Location: '.$sNewUrl);
+            Registry::getUtils()->redirect($sNewUrl, false);
         }
     }
 
@@ -106,6 +106,7 @@ class OrderController extends OrderController_parent
             return $this->_getNextStep($iSuccess);
         }
 
+        // delete old order if payment was canceled
         if ($bIsOrderLoaded) {
             $oOrder->delete($sOrderId);
         }
