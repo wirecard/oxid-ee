@@ -10,6 +10,7 @@
 $sLangName = 'English';
 
 $aLang = array(
+    'charset' => 'UTF-8',
     'amount' => 'Amount',
     'cancel' => 'Cancel',
     'canceled_payment_process' => 'You have canceled the payment process.',
@@ -76,4 +77,3 @@ $aLang = array(
     'total_amount_not_in_range_text' => 'Total amount not in allowed range.',
     'yes' => 'Yes',
 );
-

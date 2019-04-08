@@ -10,6 +10,7 @@
 $sLangName = 'Deutsch';
 
 $aLang = array(
+    'charset' => 'UTF-8',
     'amount' => 'Betrag',
     'cancel' => 'Abbrechen',
     'canceled_payment_process' => 'Sie haben den Bezahlprozess abgebrochen.',
@@ -76,4 +77,3 @@ $aLang = array(
     'total_amount_not_in_range_text' => 'Gesamtsumme nicht innerhalb der erlaubten Bestellsumme für dieses Zahlungsmittel.',
     'yes' => 'Ja',
 );
-
