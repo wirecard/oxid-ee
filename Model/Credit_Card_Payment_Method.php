@@ -100,7 +100,7 @@ class Credit_Card_Payment_Method extends Payment_Method
                 'title'       => Helper::translate('config_three_d_min_limit'),
                 'description' => Helper::translate('config_three_d_min_limit_desc'),
             ],
-            'basket' => [
+            'limitsCurrency' => [
                 'type'        => 'select',
                 'field'       => 'oxpayments__wdoxidee_limits_currency',
                 'options'     => $this->_getCurrencyOptions(),

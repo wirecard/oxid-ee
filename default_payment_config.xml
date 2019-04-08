@@ -24,7 +24,7 @@
         <oxdesc>Wirecard Kreditkarte</oxdesc>
         <oxdesc_1>Wirecard Credit Card</oxdesc_1>
         <wdoxidee_logo>creditcard.png</wdoxidee_logo>
-        <wdoxidee_transactionaction>purchase</wdoxidee_transactionaction>
+        <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
         <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
         <wdoxidee_maid>53f2895a-e4de-4e82-a813-0d87a10e55e6</wdoxidee_maid>
         <wdoxidee_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</wdoxidee_secret>
