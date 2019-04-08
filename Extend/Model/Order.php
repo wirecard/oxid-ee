@@ -92,6 +92,19 @@ class Order extends Order_parent
     }
 
     /**
+     * Returns the transaction associated with the order.
+     *
+     * @return Transaction
+     */
+    public function getOrderTransaction(): Transaction
+    {
+        $oTransaction = oxNew(Transaction::class);
+        $oTransaction->loadWithTransactionId($this->oxorder__wdoxidee_transactionid->value);
+
+        return $oTransaction;
+    }
+
+    /**
      * Returns true if the payment is one of the module's.
      *
      * @return bool
@@ -108,15 +121,9 @@ class Order extends Order_parent
      */
     public function isPaymentPending()
     {
-        $sTransactionId = $this->oxorder__wdoxidee_transactionid->value;
-        if ($sTransactionId) {
-            $oTransaction = oxNew(Transaction::class);
-            if ($oTransaction->loadWithTransactionId($sTransactionId)) {
-                return strpos($oTransaction->wdoxidee_ordertransactions__type->value, 'pending') !== false;
-            }
-        }
+        $oTransaction = $this->getOrderTransaction();
 
-        return true;
+        return strpos($oTransaction->wdoxidee_ordertransactions__type->value, 'pending') !== false;
     }
 
     /**

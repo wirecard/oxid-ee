@@ -17,7 +17,7 @@ use \Wirecard\Oxid\Model\Transaction;
 /**
  * Controls the view for the order details tab.
  */
-class OrderTabDetails extends ListTab
+class OrderTabTransactionDetails extends ListTab
 {
     /**
      * @var Transaction
