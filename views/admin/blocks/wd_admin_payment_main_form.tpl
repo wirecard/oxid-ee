@@ -12,6 +12,11 @@
     .color-error {
       color: red;
     }
+
+    .pg-validation {
+      display: inline-block;
+      margin-left: 12px;
+    }
   </style>
 
   [{oxscript include="js/libs/jquery.min.js"}]
@@ -25,7 +30,7 @@
         apiUrl: $('#apiUrl'),
         httpUser: $('#httpUser'),
         httpPass: $('#httpPassword'),
-        result: $('#test_credentials_result')
+        result: $('#testCredentials_validation')
       };
 
       elements.labels = $()
@@ -73,11 +78,40 @@
         });
     }
 
+    function wdCheckCountryCode() {
+      var $ = jQuery;
+      var elements = {
+        countryCode: $('#countryCode'),
+        result: $('#countryCode_validation')
+      };
+
+      elements.result
+        .html('')
+        .add(elements.countryCode.parent().prev())
+        .removeClass('color-success color-error');
+
+      if (!/^[a-z]{2}_[a-z]{2}$/.test(elements.countryCode.val())) {
+        elements.result
+          .text('[{oxmultilang ident="enter_country_code_error"}]')
+          .add(elements.countryCode.parent().prev())
+          .addClass('color-error');
+      }
+    }
     //-->
   </script>
   [{/if}]
 
 [{if $paymentMethod}]
+  [{if $bConfigNotValid}]
+    <tr>
+      <td colspan="2">
+        <div class="messagebox">
+          <div class="warning">[{oxmultilang ident="error_save_failed"}]</div>
+        </div>
+      </td>
+    </tr>
+  [{/if}]
+
   [{assign var="logoUrl" value=$edit->getLogoUrl()}]
   [{if $logoUrl}]
   <tr>
@@ -94,44 +128,41 @@
 
 [{if $configFields}]
   [{foreach from=$configFields key=configKey item=configField}]
-  [{assign var="fieldName" value=$configField.field}]
-  <tr>
-    <td class="edittext" width="70">[{$configField.title}]</td>
-    <td class="edittext">
-      [{if $configField.type === 'text'}]
-    <input id="[{$configKey}]" type="text" class="editinput" size="25" name="editval[[{$fieldName}]]"
-           value="[{$edit->$fieldName->value}]">
+    [{assign var="fieldName" value=$configField.field}]
+    <tr>
+      [{if $configField.title}]
+        <td class="edittext" width="70">[{$configField.title}]</td>
       [{/if}]
+      <td class="edittext" [{if $configField.colspan}]colspan="[{$configField.colspan}]"[{/if}]>
+        [{if $configField.type === 'text'}]
+          <input id="[{$configKey}]" type="text" class="editinput" size="38"
+                 name="editval[[{$fieldName}]]" value="[{$edit->$fieldName->value}]"
+                 [{if $configField.onchange}]onchange="[{$configField.onchange}]"[{/if}]
+                 / >
+        [{/if}]
 
-      [{if $configField.type === 'select'}]
-      <select name="editval[[{$fieldName}]]">
-        [{foreach from=$configField.options key=optionKey item=optionValue}]
-        <option value="[{$optionKey}]" [{if $edit->$fieldName->value == $optionKey}]selected[{/if}]>[{$optionValue}]
-        </option>
-        [{/foreach}]
-      </select>
-      [{/if}]
+        [{if $configField.type === 'select'}]
+          <select name="editval[[{$fieldName}]]">
+            [{foreach from=$configField.options key=optionKey item=optionValue}]
+              <option value="[{$optionKey}]" [{if $edit->$fieldName->value == $optionKey}]selected[{/if}]>[{$optionValue}]</option>
+            [{/foreach}]
+          </select>
+        [{/if}]
 
-      [{if $configField.type === 'link'}]
-      <a target="_blank" href="[{$configField.link}]">[{$configField.text}]</a>
-      [{/if}]
+        [{if $configField.type === 'link'}]
+          <a target="_blank" href="[{$configField.link}]">[{$configField.text}]</a>
 
-      [{if $configField.description}]
-      [{$oViewConf->getInputHelpHtml($configField.description)}]
-      [{/if}]
-    </td>
-  </tr>
+        [{if $configField.type === 'button'}]
+          <input type="button" value="[{$configField.text}]" onclick="[{$configField.onclick}]" />
+        [{/if}]
 
-  [{if $configKey === 'httpPassword' && $configFields.apiUrl && $configFields.httpUser}]
-  <tr>
-    <td class="edittext" width="100">
-      <input type="button" value="[{oxmultilang ident="test_credentials"}]" onclick="wdTestPaymentMethodCredentials()">
-    </td>
-    <td>
-      <span id="test_credentials_result"></span>
-    </td>
-  </tr>
-  [{/if}]
+        [{if $configField.description}]
+          [{$oViewConf->getInputHelpHtml($configField.description)}]
+        [{/if}]
+
+        <span id="[{$configKey}]_validation" class="pg-validation"></span>
+      </td>
+    </tr>
   [{/foreach}]
   [{/if}]
 

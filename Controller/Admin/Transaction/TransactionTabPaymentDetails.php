@@ -27,7 +27,12 @@ class TransactionTabPaymentDetails extends TransactionTab
      */
     protected function _getData(): array
     {
-        $aListData = $this->_getListDataFromArray($this->oResponseMapper->getPaymentDetails());
+        $aPaymentDetails = $this->oResponseMapper->getPaymentDetails();
+        unset($aPaymentDetails['orderNumber']);
+        $aPaymentDetails['panel_order_id'] = $this->oOrder->oxorder__oxid->value;
+        $aPaymentDetails['orderNumber'] = $this->oOrder->oxorder__oxordernr->value;
+
+        $aListData = $this->_getListDataFromArray($aPaymentDetails);
         $aListData[] = [
             'title' => Helper::translate('panel_transaction_copy'),
             'value' => $this->oTransaction->getResponseXML(),

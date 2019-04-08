@@ -14,10 +14,9 @@ use \Wirecard\PaymentSdk\Config\Config;
 use \Exception;
 
 use \OxidEsales\Eshop\Application\Model\Payment;
-use \OxidEsales\Eshop\Application\Model\UserPayment;
 use \OxidEsales\Eshop\Core\Registry;
 
-use \Psr\Log\LoggerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class PaymentMethod
