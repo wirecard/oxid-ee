@@ -136,11 +136,11 @@ class OxidEE_Events
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_THREE_D_SECRET', $sQueryThreeDSecret);
 
         $sQueryAddMaxLimit = "ALTER TABLE " . self::PAYMENT_TABLE .
-            " ADD COLUMN `WDOXIDEE_NON_THREE_D_MAX_LIMIT` double NOT NULL";
+            " ADD COLUMN `WDOXIDEE_NON_THREE_D_MAX_LIMIT` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_NON_THREE_D_MAX_LIMIT', $sQueryAddMaxLimit);
 
         $sQueryAddMinLimit = "ALTER TABLE " . self::PAYMENT_TABLE .
-            " ADD COLUMN `WDOXIDEE_THREE_D_MIN_LIMIT` double NOT NULL";
+            " ADD COLUMN `WDOXIDEE_THREE_D_MIN_LIMIT` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_THREE_D_MIN_LIMIT', $sQueryAddMinLimit);
 
         $sQueryLimitsCurrency = "ALTER TABLE " . self::PAYMENT_TABLE . "
