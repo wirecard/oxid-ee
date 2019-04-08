@@ -93,6 +93,8 @@ class NotifyHandler extends FrontendController
     {
         $this->_oLogger->debug('Notification response: ' . $oResponse->getRawData());
         $aData = $oResponse->getData();
+        $oUtilsDate = Registry::getUtilsDate();
+        $sConvertedTimestamp = $oUtilsDate->formatDBTimestamp($oUtilsDate->formTime($aData['completion-time-stamp']));
 
         $sOrderId = $aData['order-number'];
         $oOrder = oxNew(Oxid_Order::class);
@@ -120,12 +122,12 @@ class NotifyHandler extends FrontendController
         $oTransaction->wdoxidee_ordertransactions__currency
             = new Field($oResponse->getRequestedAmount()->getCurrency());
         $oTransaction->wdoxidee_ordertransactions__responsexml = new Field(base64_encode($oResponse->getRawData()));
-        $oTransaction->wdoxidee_ordertransactions__date = new Field($aData['completion-time-stamp']);
+        $oTransaction->wdoxidee_ordertransactions__date = new Field($sConvertedTimestamp);
         $oTransaction->save();
 
         $oOrder->oxorder__wdoxidee_providertransactionid = new Field($aData['statuses.0.provider-transaction-id']);
         $oOrder->oxorder__wdoxidee_transactionid = new Field($oResponse->getTransactionId());
-        $oOrder->oxorder__oxpaid = new Field($aData['completion-time-stamp']);
+        $oOrder->oxorder__oxpaid = new Field($sConvertedTimestamp);
         $oOrder->save();
 
         if ($oOrder->oxorder__wdoxidee_final->value) {
