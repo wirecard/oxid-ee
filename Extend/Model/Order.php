@@ -10,7 +10,6 @@
 namespace Wirecard\Oxid\Extend\Model;
 
 use OxidEsales\Eshop\Application\Model\Country;
-use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\OrderArticle;
 
 use Wirecard\PaymentSdk\Entity\AccountHolder;
@@ -33,6 +32,25 @@ class Order extends Order_parent
     const STATE_PROCESSING = 'processing';
     const STATE_CANCELED = 'canceled';
     const STATE_REFUNDED = 'refunded';
+
+
+    /**
+     * Loads order data from DB.
+     * Returns true on success.
+     *
+     * @param string $sTransactionId
+     *
+     * @return bool
+     */
+    public function loadWithTransactionId(string $sTransactionId)
+    {
+        //getting at least one field before lazy loading the object
+        $this->_addField('wdoxidee_transactionid', 0);
+        $query = $this->buildSelectString([$this->getViewName() . '.wdoxidee_transactionid' => $sTransactionId]);
+        $this->_isLoaded = $this->assignRecord($query);
+
+        return $this->_isLoaded;
+    }
 
     /**
      * Returns the country associated with the order billing address.

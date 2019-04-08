@@ -9,10 +9,6 @@
 
 namespace Wirecard\Oxid\Extend\Controller\Admin;
 
-use Wirecard\Oxid\Model\Transaction;
-
-use OxidEsales\Eshop\Core\DatabaseProvider;
-use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Application\Model\Order;
 
 /**

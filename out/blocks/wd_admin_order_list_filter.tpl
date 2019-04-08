@@ -14,6 +14,13 @@
 <td valign="top" class="listfilter" height="20">
     <div class="r1">
         <div class="b1">
+            <input class="listedit" type="text" size="20" name="where[oxorder][wdoxidee_oxpaymenttype]" value="[{$where.oxorder.wdoxidee_oxpaymenttype}]">
+        </div>
+    </div>
+</td>
+<td valign="top" class="listfilter" height="20">
+    <div class="r1">
+        <div class="b1">
             <input class="listedit" type="text" size="20" name="where[oxorder][wdoxidee_transactionid]" value="[{$where.oxorder.wdoxidee_transactionid}]">
         </div>
     </div>
