@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
 <!--
-function copyToClipboard(text)
+function wdCopyToClipboard(text)
 {
     var textarea = document.createElement('textarea');
     var success = false;
@@ -44,7 +44,7 @@ function copyToClipboard(text)
             <td width="25%">[{$row.title}]</td>
             <td>
                 [{if $row.action === 'copyToClipboard'}]
-                <button type="button" onclick="copyToClipboard('[{$row.value|escape:'url'}]');">[{$row.action_title}]</button>
+                <button type="button" onclick="wdCopyToClipboard('[{$row.value|escape:'url'}]');">[{$row.action_title}]</button>
                 [{else}]
                 <strong>[{$row.value}]</strong>
                 [{/if}]
