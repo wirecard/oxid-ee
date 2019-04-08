@@ -150,7 +150,9 @@ class NotifyHandler extends FrontendController
         $this->_oLogger->error(__METHOD__ . ': Error processing transaction:');
 
         foreach ($oResponse->getStatusCollection()->getIterator() as $oItem) {
-            $this->_oLogger->error("\t Status with code ". $oItem->getCode() ." and message ". $oItem->getDescription());
+            $this->_oLogger->error(
+                "\t Status with code ". $oItem->getCode() ." and message ". $oItem->getDescription()
+            );
         }
     }
 
