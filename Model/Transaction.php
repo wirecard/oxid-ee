@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Model;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Model\TransactionList;
 
 use OxidEsales\Eshop\Core\Model\MultiLanguageModel;
 use OxidEsales\Eshop\Application\Model\Order;
@@ -82,6 +83,18 @@ class Transaction extends MultiLanguageModel
         $this->_isLoaded = $this->assignRecord($query);
 
         return $this->_isLoaded;
+    }
+
+    /**
+     * Returns an array of child transactions for the current transaction.
+     *
+     * @return array
+     */
+    public function getChildTransactions()
+    {
+        $oTransactionList = oxNew(TransactionList::class);
+
+        return $oTransactionList->getChildList($this->wdoxidee_ordertransactions__transactionid->value)->getArray());
     }
 
     /**
