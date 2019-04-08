@@ -7,19 +7,25 @@ function copyToClipboard(text)
     var textarea = document.createElement('textarea');
     var success = false;
 
-    textarea.textContent = decodeURIComponent(text);
-    textarea.style.position = 'fixed';
+    // old versions of IE
+    if (window.clipboardData) {
+        success = window.clipboardData.setData('Text', decodeURIComponent(text));
+    // other browsers
+    } else {
+        textarea.textContent = decodeURIComponent(text);
+        textarea.style.position = 'fixed';
 
-    document.body.appendChild(textarea);
-    textarea.select();
+        document.body.appendChild(textarea);
+        textarea.select();
 
-    try {
-        success = document.execCommand('copy');
-    } catch (e) {
-        success = false;
+        try {
+            success = document.execCommand('copy');
+        } catch (e) {
+            success = false;
+        }
+
+        document.body.removeChild(textarea);
     }
-
-    document.body.removeChild(textarea);
 
     return success;
 }
