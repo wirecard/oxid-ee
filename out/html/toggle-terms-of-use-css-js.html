@@ -15,14 +15,11 @@
   }
 </style>
 <script type="text/javascript">
-  var elemIds = ['wd-terms-show-link', 'wd-terms-hide-link', 'wd-terms-content'];
-  var wdToggleTerms = function() {
-    elemIds.forEach(function(elemId) {
-      var element = document.getElementById(elemId);
+  function wdToggleTerms() {
+    var elements = document.querySelectorAll('#wd-terms-show-link, #wd-terms-hide-link, #wd-terms-content');
 
-      if (element) {
-        element.classList.toggle('mask');
-      }
-    });
+    for (var i = 0; i < elements.length; i++) {
+      elements[i].className = elements[i].className ? '' : 'mask';
+    }
   };
 </script>
