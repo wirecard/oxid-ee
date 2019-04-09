@@ -217,7 +217,7 @@ class OrderController extends OrderController_parent
         try {
             $oResponse = $oPaymentGateway->makeTransaction($oBasket->getPrice()->getBruttoPrice(), $oOrder);
         } catch (\Exception $exc) {
-            $oLogger->error("Error processing transaction", [$exc]);
+            $oLogger->error(__METHOD__ .": Error processing transaction: ". $exc->getMessage(), [$exc]);
             return;
         }
 
