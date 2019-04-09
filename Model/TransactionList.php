@@ -48,4 +48,45 @@ class TransactionList extends ListModel
 
         return $this;
     }
+
+    /**
+     * Returns an array of child transaction IDs of a given transaction.
+     *
+     * @param Transaction $oTransaction
+     * @return array
+     */
+    protected function _getChildTransactionIds(Transaction $oTransaction)
+    {
+        $aChildTransactionIds = [];
+
+        foreach ($oTransaction->getChildTransactions() as $sTransactionId => $oChildTransaction) {
+            $aChildTransactionIds = array_merge(
+                $aChildTransactionIds,
+                [$sTransactionId],
+                $this->_getChildTransactionIds($oChildTransaction)
+            );
+        }
+
+        return $aChildTransactionIds;
+    }
+
+    /**
+     * Returns an array of transactions while omitting all items that are already referenced in a childTransactions
+     * property.
+     *
+     * @return array
+     */
+    public function getNestedArray()
+    {
+        $aNestedArray = $this->_aArray;
+
+        // the reference used deliberately here so that foreach re-calculates the array length
+        foreach ($aNestedArray as $sTransactionId => &$oTransaction) {
+            foreach ($this->_getChildTransactionIds($oTransaction) as $sTransactionId) {
+                unset($aNestedArray[$sTransactionId]);
+            }
+        }
+
+        return $aNestedArray;
+    }
 }
