@@ -2,24 +2,30 @@
 
 <script type="text/javascript">
 <!--
-function copyToClipboard(text)
+function wdCopyToClipboard(text)
 {
     var textarea = document.createElement('textarea');
     var success = false;
 
-    textarea.textContent = decodeURIComponent(text);
-    textarea.style.position = 'fixed';
+    // old versions of IE
+    if (window.clipboardData) {
+        success = window.clipboardData.setData('Text', decodeURIComponent(text));
+    // other browsers
+    } else {
+        textarea.textContent = decodeURIComponent(text);
+        textarea.style.position = 'fixed';
 
-    document.body.appendChild(textarea);
-    textarea.select();
+        document.body.appendChild(textarea);
+        textarea.select();
 
-    try {
-        success = document.execCommand('copy');
-    } catch (e) {
-        success = false;
+        try {
+            success = document.execCommand('copy');
+        } catch (e) {
+            success = false;
+        }
+
+        document.body.removeChild(textarea);
     }
-
-    document.body.removeChild(textarea);
 
     return success;
 }
@@ -38,7 +44,7 @@ function copyToClipboard(text)
             <td width="25%">[{$row.title}]</td>
             <td>
                 [{if $row.action === 'copyToClipboard'}]
-                <button type="button" onclick="copyToClipboard('[{$row.value|escape:'url'}]');">[{$row.action_title}]</button>
+                <button type="button" onclick="wdCopyToClipboard('[{$row.value|escape:'url'}]');">[{$row.action_title}]</button>
                 [{else}]
                 <strong>[{$row.value}]</strong>
                 [{/if}]

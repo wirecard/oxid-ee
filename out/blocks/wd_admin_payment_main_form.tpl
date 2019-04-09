@@ -9,106 +9,68 @@
       color: green;
     }
 
-    .color-failure {
+    .color-error {
       color: red;
     }
   </style>
 
+  [{oxscript include="js/libs/jquery.min.js"}]
+
   <script type="text/javascript">
-    function addClassToElements(elements, className) {
-      elements.forEach(function(element) {
-        element.classList.add(className);
-      });
-    }
-
-    function removeClassFromElements(elements, className) {
-      elements.forEach(function(element) {
-        // if no class name was passed, remove all classes from the element
-        if (!className) {
-          element.className = '';
-        } else {
-          element.classList.remove(className);
-        }
-      });
-    }
-
-    function testPaymentMethodCredentials() {
-      var checkSuccess = false;
-
-      var successText = '[{oxmultilang ident="success_credentials"}]';
-      var failureText = '[{oxmultilang ident="error_credentials"}]';
-
-      var successClassName = 'color-success';
-      var failureClassName = 'color-failure';
-
-      // the DOM element the test result will be rendered to
-      var resultSpan = document.getElementById('test_credentials_result');
-
-      // the DOM elements that contain the actual config values
-      var configApiUrlInput = document.getElementById('apiUrl');
-      var configHttpUserInput = document.getElementById('httpUser');
-      var configHttpPassInput = document.getElementById('httpPassword');
-
-      // the DOM elements that are the labels for the config values
-      var configApiUrlLabel = configApiUrlInput.parentNode.previousElementSibling;
-      var configHttpUserLabel = configHttpUserInput.parentNode.previousElementSibling;
-      var configHttpPassLabel = configHttpPassInput.parentNode.previousElementSibling;
-
-      var showCheckResultText = function(success) {
-        resultSpan.innerHTML = success ? successText : failureText;
-        resultSpan.classList.add(success ? successClassName : failureClassName);
+    <!--
+    function wdTestPaymentMethodCredentials() {
+      var elements = {
+        apiUrl: $('#apiUrl'),
+        httpUser: $('#httpUser'),
+        httpPass: $('#httpPassword'),
+        result: $('#test_credentials_result')
       };
 
-      // clear any previous test results
-      resultSpan.innerHTML = '';
-      removeClassFromElements([resultSpan, configApiUrlLabel, configHttpUserLabel, configHttpPassLabel]);
+      elements.labels = $()
+        .add(elements.apiUrl.parent().prev())
+        .add(elements.httpUser.parent().prev())
+        .add(elements.httpPass.parent().prev());
+
+      elements.result
+        .html('')
+        .add(elements.labels)
+        .removeClass('color-success color-error');
 
       // check if API URL is a root URL, if not there is no need to perform the request
-      var regexCheck = /^https\:\/\/[^\/]+$/;
+      if (!/^https\:\/\/[^\/]+$/.test(elements.apiUrl.val())) {
+        elements.result
+          .text('[{oxmultilang ident="error_credentials"}]')
+          .add(elements.labels.eq(0))
+          .addClass('color-error');
 
-      if (!regexCheck.test(configApiUrlInput.value)) {
-        showCheckResultText(checkSuccess);
-        addClassToElements([configApiUrlLabel], failureClassName);
         return;
       }
 
-      // build check configuration request
-      var requestUrl = '[{ $oViewConf->getAjaxLink() }]cmpid=container&container=payment_main&fnc=checkPaymentMethodCredentials';
-
-      var bodyParams = {
-        apiUrl: configApiUrlInput.value,
-        httpUser: configHttpUserInput.value,
-        httpPass: configHttpPassInput.value
-      };
-
-      var paramString = Object.keys(bodyParams).map(function(key) {
-        return encodeURIComponent(key) + '=' + encodeURIComponent(bodyParams[key]);
-      }).join('&');
-
       // perform AJAX request to check credential validity
-      var xhr = new XMLHttpRequest();
-      xhr.open('POST', requestUrl);
-      xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded; charset=UTF-8");
-      xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-
-      xhr.onreadystatechange = function() {
-        var DONE = 4;     // XMLHttpRequest finished state
-        var OK = 200;     // HTTP OK status code
-        if (xhr.readyState === DONE) {
-          if (xhr.status === OK) {
-            var response = JSON.parse(xhr.responseText);
-            checkSuccess = response && response.success === true;
-          }
-          if (!checkSuccess) {
-            // additionally mark the labels red for easier visual identification
-            addClassToElements([configApiUrlLabel, configHttpUserLabel, configHttpPassLabel], failureClassName);
-          }
-          showCheckResultText(checkSuccess);
+      $.ajax({
+        url: '[{ $oViewConf->getAjaxLink() }]cmpid=container&container=payment_main&fnc=checkPaymentMethodCredentials',
+        method: 'POST',
+        data: {
+          apiUrl: elements.apiUrl.val(),
+          httpUser: elements.httpUser.val(),
+          httpPass: elements.httpPass.val()
+        },
+        dataType: 'json'
+      })
+      .done(function (data) {
+        if (data && data.success) {
+          elements.result
+            .text('[{oxmultilang ident="success_credentials"}]')
+            .addClass('color-success');
+        } else {
+          elements.result
+            .text('[{oxmultilang ident="error_credentials"}]')
+            .add(elements.labels)
+            .addClass('color-error');
         }
-      };
-
-      xhr.send(paramString);
+      });
     }
+    //-->
   </script>
 [{/if}]
 
@@ -154,7 +116,7 @@
     [{if $configKey === 'httpPassword' && $configFields.apiUrl && $configFields.httpUser}]
       <tr>
         <td class="edittext" width="100">
-          <input type="button" value="[{oxmultilang ident="test_credentials"}]" onclick="testPaymentMethodCredentials()">
+          <input type="button" value="[{oxmultilang ident="test_credentials"}]" onclick="wdTestPaymentMethodCredentials()">
         </td>
         <td>
           <span id="test_credentials_result"></span>
