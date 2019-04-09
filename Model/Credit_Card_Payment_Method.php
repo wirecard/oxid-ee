@@ -10,7 +10,7 @@
 namespace Wirecard\Oxid\Model;
 
 use \Wirecard\PaymentSdk\Config\Config;
-use \Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Config\CreditCardConfig;
 use \Wirecard\PaymentSdk\Transaction\Transaction;
 use \Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
@@ -40,17 +40,27 @@ class Credit_Card_Payment_Method extends Payment_Method
     {
         $oPayment = oxNew(Payment::class);
         $oPayment->load(self::getName(true));
+
         $oConfig = new Config(
             $oPayment->oxpayments__wdoxidee_apiurl->value,
             $oPayment->oxpayments__wdoxidee_httpuser->value,
             $oPayment->oxpayments__wdoxidee_httppass->value
         );
-        $oPaymentMethodConfig = new PaymentMethodConfig(
-            self::getName(),
+
+        $oCreditCardConfig = new CreditCardConfig(
             $oPayment->oxpayments__wdoxidee_maid->value,
-            $oPayment->oxpayments__wdoxidee_secret->value
+            $oPayment->oxpayments__wdoxidee_secret->value,
+            self::getName()
         );
-        $oConfig->add($oPaymentMethodConfig);
+
+        if (isset($oPayment->oxpayments__wdoxidee_three_d_maid)) {
+            $oCreditCardConfig->setThreeDCredentials(
+                $oPayment->oxpayments__wdoxidee_three_d_maid,
+                $oPayment->oxpayments__wdoxidee_three_d_secret
+            );
+        }
+
+        $oConfig->add($oCreditCardConfig);
 
         return $oConfig;
     }
