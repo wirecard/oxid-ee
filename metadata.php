@@ -153,9 +153,8 @@ $aModule = array(
     'templates'         => array(
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
         'transaction_list.tpl'              => 'wirecard/paymentgateway/views/admin/tpl/transaction_list.tpl',
-        'transaction_tab_pp.tpl'            => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab_pp.tpl',
-        'list_tab.tpl'                      => 'wirecard/paymentgateway/views/admin/tpl/list_tab.tpl',
-        'transaction_tab.tpl'               => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab.tpl',
+        'tab_simple.tpl'                    => 'wirecard/paymentgateway/views/admin/tpl/tab_simple.tpl',
+        'tab_post_processing.tpl'           => 'wirecard/paymentgateway/views/admin/tpl/tab_post_processing.tpl',
         'payment_other_with_logo.tpl'       => 'wirecard/paymentgateway/views/blocks/payment_other_with_logo.tpl'
     ),
     'events'            => array(

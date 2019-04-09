@@ -12,9 +12,9 @@ namespace Wirecard\Oxid\Controller\Admin;
 use OxidEsales\Eshop\Application\Controller\Admin\AdminDetailsController;
 
 /**
- * Controls the view for a single transaction tab.
+ * Controls the view for a single tab in the admin details.
  */
-class ListTab extends AdminDetailsController
+class Tab extends AdminDetailsController
 {
     const NOTHING_SELECTED = '-1';
 
@@ -26,7 +26,7 @@ class ListTab extends AdminDetailsController
     /**
      * @inheritdoc
      */
-    protected $_sThisTemplate = 'list_tab.tpl';
+    protected $_sThisTemplate = 'tab_simple.tpl';
 
     /**
      * ListTab constructor.
@@ -46,7 +46,7 @@ class ListTab extends AdminDetailsController
     public function render(): string
     {
         $this->_aViewData += [
-            'listData' => $this->_isListObjectIdSet() ? $this->_getListData() : [],
+            'data' => $this->_isListObjectIdSet() ? $this->_getData() : [],
             'controller' => $this->classKey,
         ];
 
@@ -64,11 +64,11 @@ class ListTab extends AdminDetailsController
     }
 
     /**
-     * Returns an array of data used to populate the view.
+     * Returns an array of arbitrary data used to populate the view.
      *
      * @return array
      */
-    protected function _getListData(): array
+    protected function _getData(): array
     {
         return [];
     }

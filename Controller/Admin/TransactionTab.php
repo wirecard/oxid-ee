@@ -19,7 +19,7 @@ use OxidEsales\Eshop\Application\Model\Payment;
 /**
  * Controls the view for a single transaction tab.
  */
-class TransactionTab extends ListTab
+class TransactionTab extends Tab
 {
     /**
      * @var Transaction

@@ -9,72 +9,17 @@
 
 namespace Wirecard\Oxid\Controller\Admin;
 
-use \OxidEsales\Eshop\Application\Model\Order;
-
-use \Wirecard\Oxid\Core\ResponseMapper;
-use \Wirecard\Oxid\Model\Transaction;
-
 /**
- * Controls the view for the order details tab.
+ * Controls the view for the order transaction details tab.
  */
-class OrderTabTransactionDetails extends ListTab
+class OrderTabTransactionDetails extends OrderTab
 {
     /**
-     * @var Transaction
-     */
-    protected $oTransaction;
-
-    /**
-     * @var Order
-     */
-    protected $oOrder;
-
-    /**
-     * @var ResponseMapper
-     */
-    protected $oResponseMapper;
-
-    /**
-     * OrderTabDetails constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->setOrder();
-        $this->setTransaction();
-
-        if ($this->_isListObjectIdSet()) {
-            $this->oOrder->load($this->sListObjectId);
-
-            if ($this->oTransaction->loadWithTransactionId($this->oOrder->oxorder__wdoxidee_transactionid->value)) {
-                $this->oResponseMapper = new ResponseMapper($this->oTransaction->getResponseXML());
-            }
-        }
-    }
-
-    /**
-     * Order setter.
-     */
-    public function setOrder()
-    {
-        $this->oOrder = oxNew(Order::class);
-    }
-
-    /**
-     * Transaction setter.
-     */
-    public function setTransaction()
-    {
-        $this->oTransaction = oxNew(Transaction::class);
-    }
-
-    /**
-     * Returns an array of transaction data, sorted in a specific order, used to populate the view.
+     * @inheritdoc
      *
      * @return array
      */
-    protected function _getListData(): array
+    protected function _getData(): array
     {
         if (!$this->oResponseMapper) {
             return array();

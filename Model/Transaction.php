@@ -94,7 +94,7 @@ class Transaction extends MultiLanguageModel
     {
         $oTransactionList = oxNew(TransactionList::class);
 
-        return $oTransactionList->getChildList($this->wdoxidee_ordertransactions__transactionid->value)->getArray());
+        return $oTransactionList->getChildList($this->wdoxidee_ordertransactions__transactionid->value)->getArray();
     }
 
     /**

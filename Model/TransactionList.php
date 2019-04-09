@@ -32,6 +32,10 @@ class TransactionList extends ListModel
      */
     public function getChildList($sOxid)
     {
+        if (!$sOxid) {
+            return $this;
+        }
+
         $oDb = DatabaseProvider::getDb();
         $oListObject = $this->getBaseObject();
         $sFieldList = $oListObject->getSelectFields();
