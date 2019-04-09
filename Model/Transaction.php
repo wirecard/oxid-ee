@@ -34,14 +34,59 @@ class Transaction extends MultiLanguageModel
      */
     protected $_sClassName = 'transaction';
 
+    protected $_aChildTransactions = [];
+
     /**
-     * Transaction constructor
+     * @inheritdoc
      */
     public function __construct()
     {
         parent::__construct();
         // allow Oxid's magic getters for database table
         $this->init('wdoxidee_ordertransactions');
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @param array $aRecord
+     */
+    public function assign($aRecord)
+    {
+        parent::assign($aRecord);
+
+        // set child transactions
+        $oTransactionList = oxNew(TransactionList::class);
+
+        $this->_aChildTransactions = $oTransactionList->getListByConditions([
+            'parenttransactionid' => $this->wdoxidee_ordertransactions__transactionid->value,
+        ])->getArray();
+    }
+
+    /**
+     * Loads a Transaction by transaction ID.
+     *
+     * @see \OxidEsales\EshopCommunity\Core\Model\BaseModel::load
+     * @param string $sTransactionId
+     * @return bool
+     */
+    public function loadWithTransactionId(string $sTransactionId)
+    {
+        $this->_addField('transactionid', 0);
+        $query = $this->buildSelectString([$this->getViewName() . '.transactionid' => $sTransactionId]);
+        $this->_isLoaded = $this->assignRecord($query);
+
+        return $this->isLoaded();
+    }
+
+    /**
+     * Returns an array of child transactions for this transaction.
+     *
+     * @return array
+     */
+    public function getChildTransactions()
+    {
+        return $this->_aChildTransactions;
     }
 
     /**
@@ -65,36 +110,6 @@ class Transaction extends MultiLanguageModel
     public function getResponseXML(): string
     {
         return base64_decode($this->wdoxidee_ordertransactions__responsexml->rawValue);
-    }
-
-    /**
-     * Loads transaction data from DB.
-     * Returns true on success.
-     *
-     * @param string $sTransactionId
-     *
-     * @return bool
-     */
-    public function loadWithTransactionId(string $sTransactionId)
-    {
-        //getting at least one field before lazy loading the object
-        $this->_addField('transactionid', 0);
-        $query = $this->buildSelectString([$this->getViewName() . '.transactionid' => $sTransactionId]);
-        $this->_isLoaded = $this->assignRecord($query);
-
-        return $this->_isLoaded;
-    }
-
-    /**
-     * Returns an array of child transactions for the current transaction.
-     *
-     * @return array
-     */
-    public function getChildTransactions()
-    {
-        $oTransactionList = oxNew(TransactionList::class);
-
-        return $oTransactionList->getChildList($this->wdoxidee_ordertransactions__transactionid->value)->getArray();
     }
 
     /**

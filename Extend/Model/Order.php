@@ -16,6 +16,7 @@ use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Model\Transaction;
+use Wirecard\Oxid\Model\TransactionList;
 use Wirecard\Oxid\Core\AccountHolderHelper;
 
 /**
@@ -92,11 +93,25 @@ class Order extends Order_parent
     }
 
     /**
-     * Returns the transaction associated with the order.
+     * Returns a TransactionList object containing all transactions associated with the order.
+     *
+     * @return TransactionList
+     */
+    public function getOrderTransactionList(): TransactionList
+    {
+        $oTransactionList = oxNew(TransactionList::class);
+
+        return $oTransactionList->getListByConditions([
+            'orderid' => $this->getId(),
+        ]);
+    }
+
+    /**
+     * Returns the last transaction associated with the order.
      *
      * @return Transaction
      */
-    public function getOrderTransaction(): Transaction
+    public function getOrderLastTransaction(): Transaction
     {
         $oTransaction = oxNew(Transaction::class);
         $oTransaction->loadWithTransactionId($this->oxorder__wdoxidee_transactionid->value);
@@ -121,7 +136,7 @@ class Order extends Order_parent
      */
     public function isPaymentPending()
     {
-        $oTransaction = $this->getOrderTransaction();
+        $oTransaction = $this->getOrderLastTransaction();
 
         return strpos($oTransaction->wdoxidee_ordertransactions__type->value, 'pending') !== false;
     }

@@ -25,22 +25,24 @@ class TransactionList extends ListModel
     protected $_sObjectsInListName = Transaction::class;
 
     /**
-     * Returns a list of child transactions for the transaction with the given ID.
+     * Returns a list of transactions based on an associative array where each key has to match the value.
      *
-     * @param string $sOxid
+     * @param array  $aConditions
+     * @param string $sOrderByField
      * @return TransactionList
      */
-    public function getChildList($sOxid)
+    public function getListByConditions(array $aConditions = [], string $sOrderByField = 'date'): TransactionList
     {
-        if (!$sOxid) {
-            return $this;
-        }
-
         $oDb = DatabaseProvider::getDb();
         $oListObject = $this->getBaseObject();
-        $sFieldList = $oListObject->getSelectFields();
-        $sQuery = "select {$sFieldList} from {$oListObject->getViewName()}
-            where {$oListObject->getViewName()}.parenttransactionid = {$oDb->quote($sOxid)}";
+        $sViewName = $oListObject->getViewName();
+        $sQuery = "select {$oListObject->getSelectFields()} from {$sViewName} where 1";
+
+        foreach ($aConditions as $sConditionKey => $sConditionValue) {
+            $sQuery .= " and {$sViewName}.{$sConditionKey} = {$oDb->quote($sConditionValue)}";
+        }
+
+        $sQuery .= " order by {$sViewName}.{$sOrderByField}";
 
         $this->selectString($sQuery);
 
