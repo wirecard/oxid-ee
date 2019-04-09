@@ -10,6 +10,8 @@
 namespace Wirecard\Oxid\Model;
 
 use \Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Core\Helper;
+
 use \Wirecard\PaymentSdk\Config\Config;
 use \Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use \Wirecard\PaymentSdk\Transaction\Transaction;
@@ -66,5 +68,29 @@ class Paypal_Payment_Method extends Payment_Method
     public function getTransaction(): Transaction
     {
         return new PayPalTransaction();
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     */
+    public function getConfigFields()
+    {
+        $parentConfigFields = parent::getConfigFields();
+        $additionalFields = [
+            'basket' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_basket',
+                'options'     => [
+                    '1'       => Helper::translate('yes'),
+                    '0'       => Helper::translate('no'),
+                ],
+                'title'       => Helper::translate('config_shopping_basket'),
+                'description' => Helper::translate('config_shopping_basket_desc'),
+            ],
+        ];
+
+        return array_merge($parentConfigFields, $additionalFields);
     }
 }

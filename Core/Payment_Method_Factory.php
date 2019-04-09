@@ -9,6 +9,7 @@
 
 namespace Wirecard\Oxid\Core;
 
+use Wirecard\Oxid\Model\Credit_Card_Payment_Method;
 use Wirecard\Oxid\Model\Payment_Method;
 use Wirecard\Oxid\Model\Paypal_Payment_Method;
 
@@ -34,6 +35,8 @@ class Payment_Method_Factory
         switch ($sPaymentMethodType) {
             case Paypal_Payment_Method::getName(true):
                 return new Paypal_Payment_Method();
+            case Credit_Card_Payment_Method::getName(true):
+                return new Credit_Card_Payment_Method();
             default:
                 throw new \Exception("payment type not registered: $sPaymentMethodType");
         }

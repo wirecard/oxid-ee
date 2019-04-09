@@ -141,13 +141,20 @@ $aModule = array(
             'template' => 'page/account/order.tpl',
             'block' => 'account_order_persparams',
             'file' => 'views/blocks/accountorder_azure.tpl'
+        ),
+        array(
+            'template' => 'page/checkout/inc/payment_other.tpl',
+            'block' => 'checkout_payment_longdesc',
+            'file' => 'views/blocks/checkout_payment_longdesc.tpl'
         )
     ),
     'templates'         => array(
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
         'transaction_list.tpl'              => 'wirecard/paymentgateway/views/admin/tpl/transaction_list.tpl',
         'transaction_tab_pp.tpl'            => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab_pp.tpl',
-        'list_tab.tpl'                      => 'wirecard/paymentgateway/views/admin/tpl/list_tab.tpl'
+        'list_tab.tpl'                      => 'wirecard/paymentgateway/views/admin/tpl/list_tab.tpl',
+        'transaction_tab.tpl'               => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab.tpl',
+        'payment_other_with_logo.tpl'       => 'wirecard/paymentgateway/views/blocks/payment_other_with_logo.tpl'
     ),
     'events'            => array(
         'onActivate'        => '\Wirecard\Oxid\Core\OxidEE_Events::onActivate',
