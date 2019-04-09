@@ -172,7 +172,7 @@ abstract class Payment_Method
             ],
             'paymentAction' => [
                 'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_transactiontype',
+                'field'       => 'oxpayments__wdoxidee_transactionaction',
                 'options'     => TransactionModel::getTranslatedActions(),
                 'title'       => Helper::translate('config_payment_action'),
                 'description' => Helper::translate('config_payment_action_desc'),

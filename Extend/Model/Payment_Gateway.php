@@ -182,6 +182,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         );
 
         $oOrder->oxorder__wdoxidee_orderstate = new Field(Order::STATE_PENDING);
+        $oOrder->oxorder__wdoxidee_transactionid = new Field($oResponse->getTransactionId());
         $oOrder->save();
 
         return $oResponse;

@@ -96,10 +96,9 @@ class NotifyHandler extends FrontendController
         $oUtilsDate = Registry::getUtilsDate();
         $sConvertedTimestamp = $oUtilsDate->formatDBTimestamp($oUtilsDate->formTime($aData['completion-time-stamp']));
 
-        $sOrderId = $aData['order-number'];
         $oOrder = oxNew(Oxid_Order::class);
-        if (!$oOrder->load($sOrderId)) {
-            $this->_oLogger->error('OrderId not valid: ' . $sOrderId);
+        if (!$oOrder->loadWithTransactionId($oResponse->getParentTransactionId())) {
+            $this->_oLogger->error('No order found for transactionId: ' . $oResponse->getParentTransactionId());
             return;
         }
 
@@ -131,7 +130,7 @@ class NotifyHandler extends FrontendController
         $oOrder->save();
 
         if ($oOrder->oxorder__wdoxidee_final->value) {
-            $this->_oLogger->warning('Corresponding order is already finished, nothing updated! OrderId: ' . $sOrderId);
+            $this->_oLogger->warning('Corresponding order is already finished, nothing updated!');
             return;
         }
 

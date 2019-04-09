@@ -4,6 +4,11 @@
     </a>
 </td>
 <td class="listheader" height="15">
+    <a href="Javascript:top.oxid.admin.setSorting(document.search, 'oxorder', 'wdoxidee_oxpaymenttype', 'asc');document.search.submit();" class="listheader">
+        [{oxmultilang ident="panel_payment_method"}]
+    </a>
+</td>
+<td class="listheader" height="15">
     <a href="Javascript:top.oxid.admin.setSorting(document.search, 'oxorder', 'wdoxidee_transactionid', 'asc');document.search.submit();" class="listheader">
         [{oxmultilang ident="panel_transcation_id"}]
     </a>
