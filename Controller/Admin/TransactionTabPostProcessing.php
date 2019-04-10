@@ -36,19 +36,11 @@ class TransactionTabPostProcessing extends Tab
     {
         parent::__construct();
 
-        $this->setTransaction();
+        $this->oTransaction = oxNew(Transaction::class);
 
         if ($this->_isListObjectIdSet()) {
             $this->oTransaction->load($this->sListObjectId);
         }
-    }
-
-    /**
-     * Transaction setter.
-     */
-    public function setTransaction()
-    {
-        $this->oTransaction = oxNew(Transaction::class);
     }
 
     /**

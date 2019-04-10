@@ -33,16 +33,6 @@ class ResponseMapper
      */
     public function __construct(string $sXml)
     {
-        $this->setResponse($sXml);
-    }
-
-    /**
-     * Response setter.
-     *
-     * @param string $sXml
-     */
-    public function setResponse(string $sXml)
-    {
         $this->oResponse = new SuccessResponse(simplexml_load_string($sXml));
     }
 
