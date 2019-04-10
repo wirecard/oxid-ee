@@ -9,38 +9,28 @@
 
 use Wirecard\Oxid\Model\TransactionList;
 
-use OxidEsales\Eshop\Core\DatabaseProvider;
-
-class TransactionListTest extends OxidEsales\TestingLibrary\UnitTestCase
+class TransactionListTest extends Wirecard\Test\WdUnitTestCase
 {
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $oDb = DatabaseProvider::getDb();
-
-        foreach ($this->getTestTransactionData() as $row) {
-            $oDb->execute("INSERT INTO `wdoxidee_ordertransactions`(`oxid`, `orderid`, `transactionid`,
-                `parenttransactionid`, `date`) VALUES (?, ?, ?, ?, ?)", $row);
-        }
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-
-        $oDb = DatabaseProvider::getDb();
-        $oDb->execute('TRUNCATE TABLE `wdoxidee_ordertransactions`');
-    }
-
-    private function getTestTransactionData()
+    protected function dbData()
     {
         return [
-            ['1', '1', '1', null, '2000-01-01 00:00:00'],
-            ['2', '1', '1.1', '1', '2000-01-02 00:01:00'],
-            ['3', '1', '1.2', '1', '2000-01-02 00:00:00'],
-            ['4', '1', '1.2.1', '1.2', '2000-01-03 00:00:00'],
-            ['5', '2', '2', null, '1999-01-01 00:00:00'],
+            [
+                'table' => 'wdoxidee_ordertransactions',
+                'columns' => [
+                    'oxid',
+                    'orderid',
+                    'transactionid',
+                    'parenttransactionid',
+                    'date',
+                ],
+                'rows' => [
+                    ['1', '1', '1', null, '2000-01-01 00:00:00'],
+                    ['2', '1', '1.1', '1', '2000-01-02 00:01:00'],
+                    ['3', '1', '1.2', '1', '2000-01-02 00:00:00'],
+                    ['4', '1', '1.2.1', '1.2', '2000-01-03 00:00:00'],
+                    ['5', '2', '2', null, '1999-01-01 00:00:00'],
+                ],
+            ],
         ];
     }
 

@@ -9,39 +9,29 @@
 
 use Wirecard\Oxid\Model\Transaction;
 
-use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Application\Model\Order;
 
-class TransactionTest extends OxidEsales\TestingLibrary\UnitTestCase
+class TransactionTest extends Wirecard\Test\WdUnitTestCase
 {
-    protected function setUp()
-    {
-        parent::setUp();
-
-        $oDb = DatabaseProvider::getDb();
-
-        foreach ($this->getTestTransactionData() as $row) {
-            $oDb->execute("INSERT INTO `wdoxidee_ordertransactions`(`oxid`, `transactionid`,
-                `parenttransactionid`, `responsexml`) VALUES (?, ?, ?, ?)", $row);
-        }
-    }
-
-    protected function tearDown()
-    {
-        parent::tearDown();
-
-        $oDb = DatabaseProvider::getDb();
-        $oDb->execute('TRUNCATE TABLE `wdoxidee_ordertransactions`');
-    }
-
-    private function getTestTransactionData()
+    protected function dbData()
     {
         return [
-            ['1', '1', null, base64_encode('<?xml version="1.0" encoding="UTF-8"?>')],
-            ['2', '1.1', '1', ''],
-            ['3', '1.2', '1', ''],
-            ['4', '2', null, ''],
-            ['5', '3', null, ''],
+            [
+                'table' => 'wdoxidee_ordertransactions',
+                'columns' => [
+                    'oxid',
+                    'transactionid',
+                    'parenttransactionid',
+                    'responsexml',
+                ],
+                'rows' => [
+                    ['1', '1', null, base64_encode('<?xml version="1.0" encoding="UTF-8"?>')],
+                    ['2', '1.1', '1', ''],
+                    ['3', '1.2', '1', ''],
+                    ['4', '2', null, ''],
+                    ['5', '3', null, ''],
+                ],
+            ],
         ];
     }
 
