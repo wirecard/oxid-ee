@@ -15,10 +15,12 @@
   </style>
 
   [{oxscript include="js/libs/jquery.min.js"}]
+  [{oxscript add="$.noConflict();"}]
 
   <script type="text/javascript">
     <!--
     function wdTestPaymentMethodCredentials() {
+      var $ = jQuery;
       var elements = {
         apiUrl: $('#apiUrl'),
         httpUser: $('#httpUser'),
