@@ -217,11 +217,11 @@ class OrderController extends OrderController_parent
         try {
             $oResponse = $oPaymentGateway->makeTransaction($oBasket->getPrice()->getBruttoPrice(), $oOrder);
         } catch (\Exception $exc) {
-            $oLogger->error(__METHOD__ .": Error processing transaction: ". $exc->getMessage(), [$exc]);
+            $oLogger->error(__METHOD__ . ": Error processing transaction: " . $exc->getMessage(), [$exc]);
             return;
         }
 
-        $this->_handleResponse($oResponse, $oLogger);
+        $this->_handleResponse($oResponse, $oLogger, $oOrder);
     }
 
     /**
@@ -229,10 +229,11 @@ class OrderController extends OrderController_parent
      *
      * @param Response        $oResponse
      * @param LoggerInterface $oLogger
+     * @param Order           $oOrder
      *
      * @return void
      */
-    private function _handleResponse($oResponse, $oLogger)
+    private function _handleResponse($oResponse, $oLogger, $oOrder)
     {
         if ($oResponse instanceof FailureResponse) {
             $oLogger->error('Error processing transaction:');
@@ -248,6 +249,11 @@ class OrderController extends OrderController_parent
             }
             return;
         }
+
+        $oOrder->oxorder__wdoxidee_orderstate = new Field(Order::STATE_PENDING);
+        $oOrder->oxorder__wdoxidee_transactionid = new Field($oResponse->getTransactionId());
+        $oOrder->save();
+
         $sPageUrl = null;
         if ($oResponse instanceof InteractionResponse) {
             $sPageUrl = $oResponse->getRedirectUrl();
@@ -273,6 +279,7 @@ class OrderController extends OrderController_parent
      * Checks if the returned order creation state is one of the success states
      *
      * @param int $iSuccess
+     *
      * @return bool
      */
     private function _isFinalizeOrderSuccessful($iSuccess)
