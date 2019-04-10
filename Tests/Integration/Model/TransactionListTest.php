@@ -13,13 +13,9 @@ use OxidEsales\Eshop\Core\DatabaseProvider;
 
 class TransactionListTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
-    private $oTransactionList;
-
     protected function setUp()
     {
         parent::setUp();
-
-        $this->oTransactionList = oxNew(TransactionList::class);
 
         $oDb = DatabaseProvider::getDb();
 
@@ -53,7 +49,9 @@ class TransactionListTest extends OxidEsales\TestingLibrary\UnitTestCase
      */
     public function testGetListByConditions($input, $expected)
     {
-        $this->assertCount($expected, $this->oTransactionList->getListByConditions($input)->getArray());
+        $oTransactionList = oxNew(TransactionList::class);
+
+        $this->assertCount($expected, $oTransactionList->getListByConditions($input)->getArray());
     }
 
     public function testGetListByConditionsProvider()
@@ -82,7 +80,9 @@ class TransactionListTest extends OxidEsales\TestingLibrary\UnitTestCase
      */
     public function testGetListByConditionsOrder($input, $expected)
     {
-        $resultIds = array_keys($this->oTransactionList->getListByConditions([], $input)->getArray());
+        $oTransactionList = oxNew(TransactionList::class);
+        $resultIds = array_keys($oTransactionList->getListByConditions([], $input)->getArray());
+
         $this->assertEquals($resultIds, $expected);
     }
 
@@ -106,6 +106,8 @@ class TransactionListTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetNestedArray()
     {
-        $this->assertCount(2, $this->oTransactionList->getList()->getNestedArray());
+        $oTransactionList = oxNew(TransactionList::class);
+
+        $this->assertCount(2, $oTransactionList->getList()->getNestedArray());
     }
 }
