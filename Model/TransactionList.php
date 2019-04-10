@@ -80,7 +80,7 @@ class TransactionList extends ListModel
     {
         $aNestedArray = $this->_aArray;
 
-        // the reference used deliberately here so that foreach re-calculates the array length
+        // the reference is used deliberately here so that foreach re-calculates the array length
         foreach ($aNestedArray as $sTransactionId => &$oTransaction) {
             foreach ($this->_getChildTransactionIds($oTransaction) as $sTransactionId) {
                 unset($aNestedArray[$sTransactionId]);
