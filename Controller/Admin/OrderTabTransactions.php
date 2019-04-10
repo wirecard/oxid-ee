@@ -81,7 +81,9 @@ class OrderTabTransactions extends OrderTab
     protected function _getData(): array
     {
         $aTransactions = $this->oOrder->getOrderTransactionList()->getNestedArray();
-        return [
+        $aBodyData = $this->_getBodyData($aTransactions);
+
+        return $aBodyData ? [
             'head' => [
                 [
                     'text' => Helper::translate('transactionID'),
@@ -116,7 +118,7 @@ class OrderTabTransactions extends OrderTab
                     'nowrap' => true,
                 ],
             ],
-            'body' => $this->_getBodyData($aTransactions),
-        ];
+            'body' => $aBodyData,
+        ] : [];
     }
 }
