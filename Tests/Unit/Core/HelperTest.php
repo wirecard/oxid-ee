@@ -12,7 +12,7 @@ use Wirecard\Oxid\Core\Helper;
 
 use OxidEsales\Eshop\Application\Model\Payment;
 
-class Helper_Test extends OxidEsales\TestingLibrary\UnitTestCase
+class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
     /**
      * @dataProvider testTranslateProvider

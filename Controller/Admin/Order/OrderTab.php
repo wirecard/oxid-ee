@@ -7,12 +7,12 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Controller\Admin;
-
-use Wirecard\Oxid\Core\ResponseMapper;
-use Wirecard\Oxid\Model\Transaction;
+namespace Wirecard\Oxid\Controller\Admin\Order;
 
 use OxidEsales\Eshop\Application\Model\Order;
+use Wirecard\Oxid\Controller\Admin\Tab;
+use Wirecard\Oxid\Core\ResponseMapper;
+use Wirecard\Oxid\Model\Transaction;
 
 /**
  * Controls the view for a single order tab.

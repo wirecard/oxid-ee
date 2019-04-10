@@ -17,7 +17,7 @@ use \Wirecard\Oxid\Core\Helper;
  *
  * @extends \OxidEsales\Eshop\Core\ViewConfig
  */
-class View_Config extends View_Config_parent
+class ViewConfig extends ViewConfig_parent
 {
 
     /**

@@ -8,20 +8,20 @@
  *
  */
 
-use \Wirecard\Oxid\Extend\View_Config;
+use \Wirecard\Oxid\Extend\ViewConfig;
 
-class View_Config_Test extends OxidEsales\TestingLibrary\UnitTestCase
+class ViewConfigTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
 
     /**
-     * @var \Wirecard\Oxid\Extend\View_Config
+     * @var \Wirecard\Oxid\Extend\ViewConfig
      */
     private $oViewConfig;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->oViewConfig = oxNew(View_Config::class);
+        $this->oViewConfig = oxNew(ViewConfig::class);
     }
 
     public function testModuleDeviceId()

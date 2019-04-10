@@ -9,12 +9,11 @@
 
 namespace Wirecard\Oxid\Controller\Admin;
 
-use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Model\Transaction;
-
+use OxidEsales\Eshop\Application\Controller\Admin\AdminListController;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\TableViewNameGenerator;
-use OxidEsales\Eshop\Application\Controller\Admin\AdminListController;
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Model\Transaction;
 
 /**
  * Controls the transaction list view.
@@ -56,6 +55,7 @@ class TransactionList extends AdminListController
      * @inheritdoc
      *
      * @param object $oListObject
+     *
      * @return string
      */
     protected function _buildSelectString($oListObject = null): string

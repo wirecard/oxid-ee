@@ -9,23 +9,23 @@
 
 namespace Wirecard\Oxid\Controller;
 
-use \Wirecard\Oxid\Core\Payment_Method_Factory;
-use \Wirecard\Oxid\Model\Transaction;
+use Wirecard\Oxid\Core\PaymentMethodFactory;
 
-use \Wirecard\PaymentSdk\BackendService;
-use \Wirecard\PaymentSdk\Response\Response;
-use \Wirecard\PaymentSdk\Exception\MalformedResponseException;
-use \Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\Oxid\Core\ResponseHandler;
+use Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\PaymentSdk\BackendService;
+use Wirecard\PaymentSdk\Entity\Status;
+use Wirecard\PaymentSdk\Response\Response;
+use Wirecard\PaymentSdk\Exception\MalformedResponseException;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 
-use \OxidEsales\Eshop\Application\Model\Order as Oxid_Order;
-use \OxidEsales\Eshop\Application\Controller\FrontendController;
-use \OxidEsales\Eshop\Application\Model\Payment;
-use \OxidEsales\Eshop\Core\Registry;
-use \OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Application\Controller\FrontendController;
+use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Core\Registry;
 
-use \Psr\Log\LoggerInterface;
-use \InvalidArgumentException;
-use \Exception;
+use Psr\Log\LoggerInterface;
+use InvalidArgumentException;
+use Exception;
 
 /**
  * Notify handler class.
@@ -58,18 +58,20 @@ class NotifyHandler extends FrontendController
     public function handleRequest()
     {
         $sPaymentName = Registry::getRequest()->getRequestParameter('pmt');
-        $oPaymentMethod = Payment_Method_Factory::create($sPaymentName);
-        $oConfig = $oPaymentMethod->getConfig();
+        $oPaymentMethod = PaymentMethodFactory::create($sPaymentName);
+        $oPayment = oxNew(Payment::class);
+        $oPayment->load($sPaymentName);
+        $oConfig = $oPaymentMethod->getConfig($oPayment);
         $sPostData = file_get_contents('php://input');
 
         try {
             $oService = new BackendService($oConfig, $this->_oLogger);
             $oNotificationResponse = $oService->handleNotification($sPostData);
         } catch (InvalidArgumentException $exception) {
-            $this->_oLogger->error(__METHOD__ . ': Invalid argument set: '. $exception->getMessage(), [$exception]);
+            $this->_oLogger->error(__METHOD__ . ': Invalid argument set: ' . $exception->getMessage(), [$exception]);
             return;
         } catch (MalformedResponseException $exception) {
-            $this->_oLogger->error(__METHOD__ . ': Response is malformed: '. $exception->getMessage(), [$exception]);
+            $this->_oLogger->error(__METHOD__ . ': Response is malformed: ' . $exception->getMessage(), [$exception]);
             return;
         }
 
@@ -82,62 +84,22 @@ class NotifyHandler extends FrontendController
     }
 
     /**
-     * Handles success notifications
-     *
      * @param SuccessResponse $oResponse
      * @param BackendService  $oBackendService
      *
      * @return void
+     *
+     * @throws Exception
      */
-    private function _onNotificationSuccess(Response $oResponse, BackendService $oBackendService)
+    private function _onNotificationSuccess($oResponse, $oBackendService)
     {
-        $this->_oLogger->debug('Notification response: ' . $oResponse->getRawData());
-        $aData = $oResponse->getData();
-        $oUtilsDate = Registry::getUtilsDate();
-        $sConvertedTimestamp = $oUtilsDate->formatDBTimestamp($oUtilsDate->formTime($aData['completion-time-stamp']));
-
-        $oOrder = oxNew(Oxid_Order::class);
+        $oOrder = oxNew(Order::class);
         if (!$oOrder->loadWithTransactionId($oResponse->getParentTransactionId())) {
             $this->_oLogger->error('No order found for transactionId: ' . $oResponse->getParentTransactionId());
             return;
         }
 
-        $sPaymentMethod = $oOrder->oxorder__oxpaymenttype->value;
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load($sPaymentMethod);
-
-        $oTransaction = oxNew(Transaction::class);
-        $oTransaction->wdoxidee_ordertransactions__ordernumber = new Field($oOrder->oxorder__oxordernr->value);
-        $oTransaction->wdoxidee_ordertransactions__orderid = new Field($oOrder->oxorder__oxid->value);
-        $oTransaction->wdoxidee_ordertransactions__transactionid = new Field($oResponse->getTransactionId());
-        $oTransaction->wdoxidee_ordertransactions__parenttransactionid
-            = new Field($this->_getParentTransactionId($oResponse));
-        $oTransaction->wdoxidee_ordertransactions__requestid = new Field($oResponse->getRequestId());
-        $oTransaction->wdoxidee_ordertransactions__action
-            = new Field($oPayment->oxpayments__wdoxidee_transactionaction->value);
-        $oTransaction->wdoxidee_ordertransactions__type = new Field($oResponse->getTransactionType());
-        $oTransaction->wdoxidee_ordertransactions__state = new Field($aData['transaction-state']);
-        $oTransaction->wdoxidee_ordertransactions__amount = new Field($oResponse->getRequestedAmount()->getValue());
-        $oTransaction->wdoxidee_ordertransactions__currency
-            = new Field($oResponse->getRequestedAmount()->getCurrency());
-        $oTransaction->wdoxidee_ordertransactions__responsexml = new Field(base64_encode($oResponse->getRawData()));
-        $oTransaction->wdoxidee_ordertransactions__date = new Field($sConvertedTimestamp);
-        $oTransaction->save();
-
-        $oOrder->oxorder__wdoxidee_providertransactionid = new Field($aData['statuses.0.provider-transaction-id']);
-        $oOrder->oxorder__wdoxidee_transactionid = new Field($oResponse->getTransactionId());
-        $oOrder->oxorder__oxpaid = new Field($sConvertedTimestamp);
-        $oOrder->save();
-
-        if ($oOrder->oxorder__wdoxidee_final->value) {
-            $this->_oLogger->warning('Corresponding order is already finished, nothing updated!');
-            return;
-        }
-
-        $oOrder->oxorder__wdoxidee_orderstate
-            = new Field($oBackendService->getOrderState($oResponse->getTransactionType()));
-        $oOrder->oxorder__wdoxidee_final = new Field(1);
-        $oOrder->save();
+        ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
     }
 
     /**
@@ -149,27 +111,14 @@ class NotifyHandler extends FrontendController
     {
         $this->_oLogger->error(__METHOD__ . ': Error processing transaction:');
 
-        foreach ($oResponse->getStatusCollection()->getIterator() as $oItem) {
-            $this->_oLogger->error(
-                "\t Status with code ". $oItem->getCode() ." and message ". $oItem->getDescription()
-            );
+        foreach ($oResponse->getStatusCollection() as $oStatus) {
+            /**
+             * @var Status $oStatus
+             */
+            $sSeverity = ucfirst($oStatus->getSeverity());
+            $sCode = $oStatus->getCode();
+            $sDescription = $oStatus->getDescription();
+            $this->_oLogger->error("\t$sSeverity with code $sCode and message '$sDescription' occurred.");
         }
-    }
-
-    /**
-     * Get parent transaction id, returns null if there is no parent transaction in the table
-     *
-     * @param Response $oResponse
-     * @return string
-     */
-    private function _getParentTransactionId(Response $oResponse)
-    {
-        $sParentTransactionId = $oResponse->getParentTransactionId();
-        $oTransaction = oxNew(Transaction::class);
-        if (!$oTransaction->loadWithTransactionId($sParentTransactionId)) {
-            return null;
-        }
-
-        return $sParentTransactionId;
     }
 }

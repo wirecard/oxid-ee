@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
 <OX>
-    <OXMENU id="NAVIGATION_ESHOPADMIN">
-        <MAINMENU id="mxorders">
-            <SUBMENU id="mxdisplayorders" cl="admin_order" list="order_list">
-                <TAB id="text_list" pg_translate="1" cl="wcpg_order_transactions"/>
-                <TAB id="transaction_details_title" pg_translate="1" cl="wcpg_order_transaction_details"/>
-            </SUBMENU>
-        </MAINMENU>
-    </OXMENU>
-    <OXMENU id="heading_title" pg_translate="1">
-        <MAINMENU id="heading_title_transaction_details" pg_translate="1">
-            <SUBMENU id="text_list" pg_translate="1" cl="wcpg_transaction" list="wcpg_transaction_list">
-                <TAB id="panel_details" pg_translate="1" cl="wcpg_transaction_payment_details" />
-                <TAB id="transaction_details_title" pg_translate="1" cl="wcpg_transaction_transaction_details" />
-                <TAB id="account_holder_title" pg_translate="1" cl="wcpg_transaction_account_holder" />
-                <TAB id="shipping_title" pg_translate="1" cl="wcpg_transaction_shipping" />
-                <TAB id="text_backend_operations" pg_translate="1" cl="wcpg_transaction_post_processing" />
-            </SUBMENU>
-        </MAINMENU>
-    </OXMENU>
+  <OXMENU id="NAVIGATION_ESHOPADMIN">
+    <MAINMENU id="mxorders">
+      <SUBMENU id="mxdisplayorders" cl="admin_order" list="order_list">
+        <TAB id="text_list" pg_translate="1" cl="wcpg_order_transactions"/>
+        <TAB id="transaction_details_title" pg_translate="1" cl="wcpg_order_transaction_details"/>
+      </SUBMENU>
+    </MAINMENU>
+  </OXMENU>
+  <OXMENU id="heading_title" pg_translate="1">
+    <MAINMENU id="heading_title_transaction_details" pg_translate="1">
+      <SUBMENU id="text_list" pg_translate="1" cl="wcpg_transaction" list="wcpg_transaction_list">
+        <TAB id="panel_details" pg_translate="1" cl="wcpg_transaction_payment_details"/>
+        <TAB id="transaction_details_title" pg_translate="1" cl="wcpg_transaction_transaction_details"/>
+        <TAB id="account_holder_title" pg_translate="1" cl="wcpg_transaction_account_holder"/>
+        <TAB id="shipping_title" pg_translate="1" cl="wcpg_transaction_shipping"/>
+        <!-- hide the post processing until it is implemented -->
+        <!--<TAB id="text_backend_operations" pg_translate="1" cl="wcpg_transaction_post_processing" />-->
+      </SUBMENU>
+    </MAINMENU>
+  </OXMENU>
 </OX>

@@ -11,7 +11,11 @@ namespace Wirecard\Oxid\Extend\Model;
 
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\OrderArticle;
+use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Application\Model\Basket;
 
+use OxidEsales\EshopCommunity\Core\Field;
+use OxidEsales\EshopCommunity\Core\Registry;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 use Wirecard\Oxid\Core\Helper;
@@ -21,8 +25,6 @@ use Wirecard\Oxid\Core\AccountHolderHelper;
 
 /**
  * Class Order
- *
- * @package Wirecard\Extend
  *
  * @mixin \OxidEsales\Eshop\Application\Model\Order
  */
@@ -155,6 +157,7 @@ class Order extends Order_parent
      * Returns true if it is the last article in the order
      *
      * @param OrderArticle $oOrderItem
+     *
      * @return bool
      */
     public function isLastArticle($oOrderItem)
@@ -266,5 +269,20 @@ class Order extends Order_parent
     public function getTranslatedState()
     {
         return self::getTranslatedStates()[$this->oxorder__wdoxidee_orderstate->value] ?? '';
+    }
+
+    /**
+     *
+     * Create a temporary Order that should not be saved but used for creating a
+     * {@link Wirecard\PaymentSdk\Transaction\Transaction}
+     *
+     * @param Basket $oBasket
+     * @param User   $oUser
+     */
+    public function createTemp($oBasket, $oUser)
+    {
+        $this->_setUser($oUser);
+        $this->_loadFromBasket($oBasket);
+        $this->oxorder__oxid = new Field(Registry::getSession()->getVariable('sess_challenge'));
     }
 }

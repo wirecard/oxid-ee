@@ -9,10 +9,11 @@
 
 namespace Wirecard\Oxid\Core;
 
-use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Application\Model\Voucher;
+use OxidEsales\Eshop\Core\Exception\ArticleInputException;
+use OxidEsales\Eshop\Core\Exception\NoArticleException;
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -31,7 +32,6 @@ class BasketHelper
      * @param Basket   $oBasket            the OXID basket item
      * @param string   $sCurrency          the currency name
      *
-     * @SuppressWarnings(PHPMD.Coverage)
      */
     public static function addPaymentCostsToBasket(&$oTransactionBasket, $oBasket, $sCurrency)
     {
@@ -61,7 +61,6 @@ class BasketHelper
      * @param Basket   $oBasket   the OXID basket item
      * @param string   $sCurrency
      *
-     * @SuppressWarnings(PHPMD.Coverage)
      */
     public static function addGiftCardCostsToBasket(&$oWdBasket, $oBasket, $sCurrency)
     {
@@ -91,7 +90,6 @@ class BasketHelper
      * @param Basket   $oBasket   the OXID basket item
      * @param string   $sCurrency
      *
-     * @SuppressWarnings(PHPMD.Coverage)
      */
     public static function addWrappingCostsToBasket(&$oWdBasket, $oBasket, $sCurrency)
     {
@@ -121,7 +119,6 @@ class BasketHelper
      * @param Basket   $oBasket   the OXID basket item
      * @param string   $sCurrency
      *
-     * @SuppressWarnings(PHPMD.Coverage)
      */
     public static function addVoucherDiscountsToBasket(&$oWdBasket, $oBasket, $sCurrency)
     {
@@ -154,7 +151,6 @@ class BasketHelper
      * @param Basket   $oBasket   the OXID basket item
      * @param string   $sCurrency
      *
-     * @SuppressWarnings(PHPMD.Coverage)
      */
     public static function addShippingCostsToBasket(&$oWdBasket, $oBasket, $sCurrency)
     {
@@ -217,7 +213,8 @@ class BasketHelper
      * @param BasketItem $oBasketItem
      * @param string     $sCurrency
      *
-     * @SuppressWarnings(PHPMD.Coverage)
+     * @throws ArticleInputException
+     * @throws NoArticleException
      */
     public static function addArticleToBasket(&$oBasket, $oBasketItem, $sCurrency)
     {

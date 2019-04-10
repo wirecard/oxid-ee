@@ -7,10 +7,13 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Controller\Admin;
+namespace Wirecard\Oxid\Controller\Admin\Transaction;
+
+use Exception;
 
 use OxidEsales\Eshop\Core\Registry;
-use Exception;
+
+use Wirecard\Oxid\Controller\Admin\Tab;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Core\Helper;
 

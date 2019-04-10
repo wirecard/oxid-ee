@@ -9,24 +9,23 @@
 
 namespace Wirecard\Oxid\Extend\Controller;
 
-use \OxidEsales\Eshop\Core\Field;
-use \OxidEsales\Eshop\Core\Registry;
-use \OxidEsales\Eshop\Application\Model\Basket;
-use \OxidEsales\Eshop\Core\Exception\ArticleInputException;
-use \OxidEsales\Eshop\Core\Exception\NoArticleException;
-use \OxidEsales\Eshop\Core\Exception\OutOfStockException;
-use \OxidEsales\Eshop\Application\Model\User;
+use Exception;
+use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Registry;
 
-use \Wirecard\PaymentSdk\Response\FailureResponse;
-use \Wirecard\PaymentSdk\Response\InteractionResponse;
-use \Wirecard\PaymentSdk\Response\Response;
-use \Wirecard\PaymentSdk\Entity\Status;
+use Wirecard\Oxid\Core\OrderHelper;
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Extend\Model\Payment;
+use Wirecard\Oxid\Extend\Model\PaymentGateway;
+use Wirecard\Oxid\Model\CreditCardPaymentMethod;
 
-use \Wirecard\Oxid\Extend\Model\Payment_Gateway;
-use \Wirecard\Oxid\Extend\Model\Order;
-use \Wirecard\Oxid\Extend\Model\Payment;
-
-use \Psr\Log\LoggerInterface;
+use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\Operation;
+use Wirecard\PaymentSdk\TransactionService;
 
 /**
  * Class Order
@@ -35,6 +34,22 @@ use \Psr\Log\LoggerInterface;
  */
 class OrderController extends OrderController_parent
 {
+    const FORM_POST_VARIABLE = 'formPost';
+    /**
+     * @var TransactionService
+     */
+    private $_oTransactionService;
+
+    /**
+     * @var CreditCardPaymentMethod
+     */
+    private $_oCreditCardPaymentMethod;
+
+    /**
+     * @var Config
+     */
+    private $_oPaymentMethodConfig;
+
     /**
      * Extends the parent init function and finalizes the order in case it was a Wirecard payment method
      */
@@ -47,7 +62,7 @@ class OrderController extends OrderController_parent
         $oSession = Registry::getSession();
         $sWdSessionToken = $oSession->getVariable('wdtoken');
 
-        if ($this->_isPaymentFinished($sWdSessionToken, $sWdPaymentRedirect)) {
+        if (OrderHelper::isPaymentFinished($sWdSessionToken, $sWdPaymentRedirect)) {
             $sShopBaseUrl = $oConfig->getShopUrl();
             $sLanguageCode = Registry::getLang()->getBaseLanguage();
 
@@ -66,6 +81,10 @@ class OrderController extends OrderController_parent
                 'wdtoken' => $sWdSessionToken
             );
 
+            if ($oConfig->getRequestParameter('redirectFromForm')) {
+                $oSession->setVariable(self::FORM_POST_VARIABLE, $_POST);
+            }
+
             $sParamStr = http_build_query($aParams);
 
             $sNewUrl = $sShopBaseUrl . 'index.php?' . $sParamStr;
@@ -80,11 +99,13 @@ class OrderController extends OrderController_parent
      *
      * @return string
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @throws \Exception
      */
     public function execute()
     {
-        $oBasket = $this->getSession()->getBasket();
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+
         $oPayment = oxNew(Payment::class);
         $oPayment->load($oBasket->getPaymentId());
 
@@ -93,32 +114,70 @@ class OrderController extends OrderController_parent
         }
 
         $oOrder = oxNew(Order::class);
-        $sOrderId = Registry::getSession()->getVariable('sess_challenge');
+        $sOrderId = Helper::getSessionChallenge();
         $bIsOrderLoaded = $oOrder->load($sOrderId);
+
+        return $this->_determineNextStep($oOrder, $bIsOrderLoaded, $oPayment);
+    }
+
+    /**
+     * Determines the next step to be shown during the checkout process.
+     *
+     * @param Order   $oOrder
+     * @param boolean $bIsOrderLoaded
+     * @param Payment $oPayment
+     *
+     * @return mixed integer/string
+     * @throws \Exception
+     */
+    private function _determineNextStep($oOrder, $bIsOrderLoaded, $oPayment)
+    {
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+        $oConfig = Registry::getConfig();
+        $iSuccess = 0;
+
+        $sWdPaymentRedirect = $oConfig->getRequestParameter('wdtoken');
+        $sWdSessionToken = $oSession->getVariable('wdtoken');
+
         if ($bIsOrderLoaded) {
             $iSuccess = $oOrder->oxorder__wdoxidee_finalizeorderstate->value;
         }
 
-        $oConfig = Registry::getConfig();
-        $sWdPaymentRedirect = $oConfig->getRequestParameter('wdtoken');
-        $sWdSessionToken = $this->getSession()->getVariable('wdtoken');
-        if ($this->_isPaymentFinished($sWdSessionToken, $sWdPaymentRedirect)) {
+        if (OrderHelper::isPaymentFinished($sWdSessionToken, $sWdPaymentRedirect)) {
+            OrderHelper::handleFormResponse($oSession, $oPayment, $oOrder, self::FORM_POST_VARIABLE);
             return $this->_getNextStep($iSuccess);
         }
 
         // delete old order if payment was canceled
         if ($bIsOrderLoaded) {
+            $sOrderId = Helper::getSessionChallenge();
             $oOrder->delete($sOrderId);
         }
 
         $oUser = $this->getUser();
 
+        return $this->_processOrderTransaction($oOrder, $oBasket, $oUser);
+    }
+
+    /**
+     * Checks if the order is valid, contains basket items and then processes the transaction.
+     *
+     * @param Order  $oOrder
+     * @param Basket $oBasket
+     * @param User   $oUser
+     *
+     * @return mixed integer/string
+     */
+    private function _processOrderTransaction($oOrder, $oBasket, $oUser)
+    {
+        // check if order should be created first
         if (!$this->_shouldCreateOrder($oUser)) {
             return 'payment?payerror=2';
         }
 
         if ($oBasket->getProductsCount()) {
-            $oOrder = $this->_createOrder($oBasket, $oUser);
+            $oOrder = OrderHelper::createOrder($oBasket, $oUser);
 
             if (!$oOrder) {
                 $iSuccess = $oOrder->oxorder__wdoxidee_finalizeorderstate->value;
@@ -128,8 +187,8 @@ class OrderController extends OrderController_parent
             $this->_handleTransaction($oBasket, $oOrder);
         }
 
-        //redirect happens before the return
-        return '';
+        $iSuccess = $oOrder->oxorder__wdoxidee_finalizeorderstate->value;
+        return $this->_getNextStep($iSuccess);
     }
 
     /**
@@ -159,131 +218,144 @@ class OrderController extends OrderController_parent
     }
 
     /**
-     * Create Order
-     *
-     * @param Basket $oBasket
-     * @param User   $oUser
-     *
-     * @return Order
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    private function _createOrder($oBasket, $oUser)
-    {
-        $oOrder = null;
-
-        try {
-            $oOrder = oxNew(Order::class);
-
-            //finalizing ordering process (validating, storing order into DB, executing payment, setting status ...)
-            $iSuccess = $oOrder->finalizeOrder($oBasket, $oUser);
-            $oOrder->oxorder__wdoxidee_finalizeorderstate = new Field($iSuccess);
-            $oOrder->save();
-
-            // performing special actions after user finishes order (assignment to special user groups)
-            $oUser->onOrderExecute($oBasket, $iSuccess);
-
-            if (!$this->_isFinalizeOrderSuccessful($iSuccess)) {
-                return null;
-            }
-        } catch (OutOfStockException $oEx) {
-            $oEx->setDestination('basket');
-            Registry::getUtilsView()->addErrorToDisplay($oEx, false, true, 'basket');
-        } catch (NoArticleException $oEx) {
-            Registry::getUtilsView()->addErrorToDisplay($oEx);
-        } catch (ArticleInputException $oEx) {
-            Registry::getUtilsView()->addErrorToDisplay($oEx);
-        }
-
-        return $oOrder;
-    }
-
-    /**
      * Handles Wirecard payment transaction
      *
      * @param Basket $oBasket
      * @param Order  $oOrder
      *
      * @return void
-     *
-     * @SuppressWarnings(PHPMD.Coverage)
      */
     private function _handleTransaction($oBasket, $oOrder)
     {
         $oLogger = Registry::getLogger();
-        $oPaymentGateway = oxNew(Payment_Gateway::class);
+        /**
+         * @var $oPaymentGateway PaymentGateway
+         */
+        $oPaymentGateway = oxNew(PaymentGateway::class);
         $oResponse = null;
 
         try {
-            $oResponse = $oPaymentGateway->makeTransaction($oBasket->getPrice()->getBruttoPrice(), $oOrder);
+            $oTransaction = $oPaymentGateway->createTransaction($oBasket, $oOrder);
+            $oResponse = $oPaymentGateway->executeTransaction($oTransaction, $oOrder, $oBasket);
         } catch (\Exception $exc) {
             $oLogger->error(__METHOD__ . ": Error processing transaction: " . $exc->getMessage(), [$exc]);
             return;
         }
 
-        $this->_handleResponse($oResponse, $oLogger, $oOrder);
+        OrderHelper::handleResponse($oResponse, $oLogger, $oOrder);
     }
 
     /**
-     * Handle transaction response
      *
-     * @param Response        $oResponse
-     * @param LoggerInterface $oLogger
-     * @param Order           $oOrder
+     * Returns the parameters used to render the credit card form
      *
-     * @return void
+     * @return string
+     * @throws Exception
      */
-    private function _handleResponse($oResponse, $oLogger, $oOrder)
+    public function getInitCreditCardFormJavaScript(): string
     {
-        if ($oResponse instanceof FailureResponse) {
-            $oLogger->error('Error processing transaction:');
 
-            foreach ($oResponse->getStatusCollection() as $oStatus) {
-                /**
-                 * @var Status $oStatus
-                 */
-                $sSeverity = ucfirst($oStatus->getSeverity());
-                $sCode = $oStatus->getCode();
-                $sDescription = $oStatus->getDescription();
-                $oLogger->error("\t$sSeverity with code $sCode and message '$sDescription' occurred.");
-            }
-            return;
+        /**
+         * @var $oPaymentGateway PaymentGateway
+         */
+        $oPaymentGateway = oxNew(PaymentGateway::class);
+
+        /**
+         * @var $oBasket Basket
+         */
+        $oBasket = $this->getBasket();
+
+        /**
+         * @var $oOrder Order
+         */
+        $oOrder = oxNew(Order::class);
+        $oOrder->createTemp($oBasket, $this->getUser());
+
+        $oTransaction = $oPaymentGateway->createTransaction($oBasket, $oOrder);
+
+        $oTransaction->setAmount(new Amount(
+            $oBasket->getPrice()->getBruttoPrice(),
+            $oBasket->getBasketCurrency()->name
+        ));
+        $oTransaction->setConfig($this->_getCreditCardPaymentMethodConfig()->get(CreditCardTransaction::NAME));
+
+        $oSession = $this->getSession();
+        $sSid = Helper::getSidQueryString();
+
+        $sModuleToken = PaymentGateway::getModuleToken($oSession);
+        $oTransaction->setTermUrl(
+            Registry::getConfig()->getCurrentShopUrl() . "index.php?cl=order&" . $sModuleToken . $sSid
+        );
+
+        $oTransactionService = $this->_getTransactionService();
+
+        $oPayment = oxNew(Payment::class);
+        $oPayment->load($oBasket->getPaymentId());
+
+        // This string is used in out/blocks/wirecard_credit_card_fields.tpl to render the form
+        return "ModuleCreditCardForm.init(" .
+            $oTransactionService->getCreditCardUiWithData(
+                $oTransaction,
+                $this->_getPaymentAction($oPayment->oxpayments__wdoxidee_transactionaction->value),
+                Registry::getLang()->getLanguageAbbr()
+            ) . ")";
+    }
+
+    /**
+     * @return TransactionService
+     * @throws Exception
+     */
+    private function _getTransactionService(): TransactionService
+    {
+        if (is_null($this->_oTransactionService)) {
+            $this->_oTransactionService = new TransactionService(
+                $this->_getCreditCardPaymentMethodConfig(),
+                Registry::getLogger()
+            );
         }
 
-        $oOrder->oxorder__wdoxidee_orderstate = new Field(Order::STATE_PENDING);
-        $oOrder->oxorder__wdoxidee_transactionid = new Field($oResponse->getTransactionId());
-        $oOrder->save();
+        return $this->_oTransactionService;
+    }
 
-        $sPageUrl = null;
-        if ($oResponse instanceof InteractionResponse) {
-            $sPageUrl = $oResponse->getRedirectUrl();
+    /**
+     * @return CreditCardPaymentMethod
+     * @throws Exception
+     */
+    private function _getCreditCardPaymentMethod(): CreditCardPaymentMethod
+    {
+        if (is_null($this->_oCreditCardPaymentMethod)) {
+            $this->_oCreditCardPaymentMethod = new CreditCardPaymentMethod();
         }
 
-        Registry::getUtils()->redirect($sPageUrl);
+        return $this->_oCreditCardPaymentMethod;
     }
 
     /**
-     * Compares the token and redirect to evaluate if the payment is already finished
-     *
-     * @param mixed $oSessionToken
-     * @param mixed $oPaymentRedirect
-     *
-     * @return bool
+     * @return Config
+     * @throws Exception
      */
-    private function _isPaymentFinished($oSessionToken, $oPaymentRedirect)
+    private function _getCreditCardPaymentMethodConfig(): Config
     {
-        return !empty($oSessionToken) && $oSessionToken == $oPaymentRedirect;
+        if (is_null($this->_oPaymentMethodConfig)) {
+            $oPayment = $this->getPayment();
+            $this->_oPaymentMethodConfig = $this->_getCreditCardPaymentMethod()->getConfig($oPayment);
+        }
+
+        return $this->_oPaymentMethodConfig;
     }
 
     /**
-     * Checks if the returned order creation state is one of the success states
+     * Converts the admin panel payment method action into a seamless
      *
-     * @param int $iSuccess
+     * @param string $sAction
      *
-     * @return bool
+     * @return string
      */
-    private function _isFinalizeOrderSuccessful($iSuccess)
+    private function _getPaymentAction(string $sAction): string
     {
-        return $iSuccess === Order::ORDER_STATE_MAILINGERROR || $iSuccess === Order::ORDER_STATE_OK;
+        if ($sAction == Operation::PAY) {
+            return 'purchase';
+        }
+        return 'authorization';
     }
 }
