@@ -34,7 +34,6 @@ class Order extends Order_parent
     const STATE_CANCELED = 'canceled';
     const STATE_REFUNDED = 'refunded';
 
-
     /**
      * Loads order data from DB.
      * Returns true on success.
@@ -168,7 +167,7 @@ class Order extends Order_parent
         return $oLastItem->oxorderarticles__oxartid->value === $oOrderItem->oxorderarticles__oxartid->value;
     }
 
-        /**
+    /**
      * Returns an associative array of available states and their translation.
      *
      * @return array
@@ -194,7 +193,7 @@ class Order extends Order_parent
         $oCountry = $this->getOrderBillingCountry();
         $oUser = $this->getOrderUser();
 
-        $oAccHolderHelper = new AccountHolderHelper;
+        $oAccHolderHelper = new AccountHolderHelper();
 
         return $oAccHolderHelper->createAccountHolder([
             'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
@@ -218,7 +217,7 @@ class Order extends Order_parent
      */
     public function getShippingAccountHolder(): AccountHolder
     {
-        $oAccHolderHelper = new AccountHolderHelper;
+        $oAccHolderHelper = new AccountHolderHelper();
 
         // use shipping info if available
         $oCountry = $this->getOrderShippingCountry();
