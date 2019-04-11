@@ -47,15 +47,15 @@ class TransactionListTest extends Wirecard\Test\WdUnitTestCase
     public function testGetListByConditionsProvider()
     {
         return [
-            'orderid' => [
+            'get by orderid' => [
                 ['orderid' => '1'],
                 4,
             ],
-            'parenttransactionid' => [
+            'get by parenttransactionid' => [
                 ['parenttransactionid' => '1'],
                 2,
             ],
-            'multiple' => [
+            'get by multiple columns' => [
                 [
                     'parenttransactionid' => '1',
                     'oxid' => '2',
@@ -79,15 +79,15 @@ class TransactionListTest extends Wirecard\Test\WdUnitTestCase
     public function testGetListByConditionsOrderProvider()
     {
         return [
-            'oxid' => [
+            'order by oxid' => [
                 'oxid',
                 ['1', '2', '3', '4', '5'],
             ],
-            'date' => [
+            'order by date' => [
                 'date',
                 ['5', '1', '3', '2', '4'],
             ],
-            'parenttransactionid' => [
+            'order by parenttransactionid' => [
                 'parenttransactionid',
                 ['1', '5', '2', '3', '4'],
             ],

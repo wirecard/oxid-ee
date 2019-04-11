@@ -56,9 +56,9 @@ class TransactionTest extends Wirecard\Test\WdUnitTestCase
     public function testGetChildTransactionsProvider()
     {
         return [
-            'with children' => ['1', 2],
-            'without children' => ['4', 0],
-            'without children (nested)' => ['2', 0],
+            'transaction with children' => ['1', 2],
+            'transaction without children' => ['4', 0],
+            'child transaction without children' => ['2', 0],
         ];
     }
 
