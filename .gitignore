@@ -16,3 +16,13 @@ Thumbs.db
 
 ### .env ###
 /.env
+
+### Binstubs under .bin ###
+/.bin/*
+!/.bin/*.*
+
+### Translation builder temporary files ###
+/.bin/phraseapp/tmp/*
+!/.bin/phraseapp/tmp/.gitkeep
+/translations/*/*.json
+/views/admin/*/*.json

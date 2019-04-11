@@ -10,6 +10,8 @@
 $sLangName = 'English';
 
 $aLang = array(
+    'charset' => 'UTF-8',
+    'account_holder_title' => 'Account Owner',
     'amount' => 'Amount',
     'cancel' => 'Cancel',
     'canceled_payment_process' => 'You have canceled the payment process.',
@@ -38,6 +40,7 @@ $aLang = array(
     'copy_xml_text' => 'Copy XML',
     'default_currency' => 'Default Currency',
     'error_credentials' => 'Test failed, please check your credentials.',
+    'heading_title' => 'Wirecard',
     'heading_title_transaction_details' => 'Wirecard Transactions',
     'no' => 'No',
     'order_error' => 'An error occurred during the payment process. Please try again.',
@@ -50,6 +53,7 @@ $aLang = array(
     'panel_action' => 'Action',
     'panel_amount' => 'Amount',
     'panel_currency' => 'Currency',
+    'panel_details' => 'Details',
     'panel_order_id' => 'Order Reference',
     'panel_order_number' => 'Order Number',
     'panel_parent_transaction_id' => 'Parent Transaction ID',
@@ -68,12 +72,13 @@ $aLang = array(
     'shipping_title' => 'Shipping',
     'success_credentials' => 'Merchant configuration was successfully tested.',
     'test_credentials' => 'Test Credentials',
+    'text_backend_operations' => 'Possible Post-Processing Operations',
     'text_generic_error' => 'Action could not be performed.',
     'text_generic_success' => 'Action performed successfully.',
     'text_list' => 'Transactions',
     'text_payment_action_pay' => 'Purchase',
     'text_payment_action_reserve' => 'Authorization',
     'total_amount_not_in_range_text' => 'Total amount not in allowed range.',
+    'transaction_details_title' => 'Transaction Details',
     'yes' => 'Yes',
 );
-
