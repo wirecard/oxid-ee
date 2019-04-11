@@ -36,13 +36,13 @@ class TransactionList extends ListModel
         $oDb = DatabaseProvider::getDb();
         $oListObject = $this->getBaseObject();
         $sViewName = $oListObject->getViewName();
-        $sQuery = "select {$oListObject->getSelectFields()} from {$sViewName} where 1";
+        $sQuery = "SELECT {$oListObject->getSelectFields()} FROM {$sViewName} WHERE 1";
 
         foreach ($aConditions as $sConditionKey => $sConditionValue) {
-            $sQuery .= " and {$sViewName}.{$sConditionKey} = {$oDb->quote($sConditionValue)}";
+            $sQuery .= " AND {$sViewName}.{$sConditionKey} = {$oDb->quote($sConditionValue)}";
         }
 
-        $sQuery .= " order by {$sViewName}.{$sOrderByField}";
+        $sQuery .= " ORDER BY {$sViewName}.{$sOrderByField}";
 
         $this->selectString($sQuery);
 
