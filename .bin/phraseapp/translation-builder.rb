@@ -42,6 +42,10 @@ class TranslationBuilder
       keys += extract_keys_from_tpl_file(file_path)
     end
 
+    get_needed_xml_files.each do |file_path|
+      keys += extract_keys_from_xml_file(file_path)
+    end
+
     keys.uniq
   end
 
@@ -60,6 +64,20 @@ class TranslationBuilder
     keys.reject { |k| k =~ /^[A-Z_]+$/ }
   end
 
+  def extract_keys_from_xml_file(file_path)
+    file_content = File.read(file_path, :encoding => 'utf-8')
+    doc = Nokogiri::XML(file_content)
+
+    keys = []
+    doc.xpath("//*[@pg_translate='1']").each do |node|
+      if node.key?('id')
+        keys.push(node.attr('id'))
+      end
+    end
+
+    keys
+  end
+
   def get_needed_php_files
     ignored_dirs = [
       'vendor',
@@ -74,6 +92,10 @@ class TranslationBuilder
 
   def get_needed_tpl_files
     Dir.glob(File.join(Dir.pwd, @plugin_dir, '**', '*.tpl'))
+  end
+
+  def get_needed_xml_files
+    Dir.glob(File.join(Dir.pwd, 'menu.xml'))
   end
 
   def write_translations_to_php(translations, php_file)

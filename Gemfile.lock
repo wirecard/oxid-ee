@@ -9,7 +9,10 @@ GEM
     git (1.5.0)
     highline (2.0.1)
     jaro_winkler (1.5.2)
+    mini_portile2 (2.4.0)
     multipart-post (2.0.0)
+    nokogiri (1.10.2)
+      mini_portile2 (~> 2.4.0)
     octokit (4.14.0)
       sawyer (~> 0.8.0, >= 0.5.3)
     parallel (1.17.0)
@@ -45,6 +48,7 @@ PLATFORMS
 DEPENDENCIES
   git (~> 1.5)
   highline (~> 2.0)
+  nokogiri (~> 1.10)
   octokit (~> 4.14)
   phraseapp-ruby (~> 3.1)
   rainbow (~> 3.0)
