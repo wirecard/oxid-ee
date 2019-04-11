@@ -26,31 +26,9 @@ class OrderTabTransactionDetails extends OrderTab
     protected function _getData(): array
     {
         if (!$this->oResponseMapper) {
-            return array();
+            return [];
         }
 
-        $aTransactionResponse = $this->oResponseMapper->getData();
-
-        $aSortKeys = [
-            'payment-methods.0.name',
-            'order-number',
-            'request-id',
-            'transaction-id',
-            'transaction-state',
-            'statuses.0.provider-transaction-id'
-        ];
-
-        $aRestOfKeys = array_diff(array_keys($aTransactionResponse), $aSortKeys);
-        $aSortedKeys = array_merge($aSortKeys, $aRestOfKeys);
-
-        $aList = array();
-        foreach ($aSortedKeys as $sKey) {
-            $aList[] = [
-                'title' => $sKey,
-                'value' => $aTransactionResponse[$sKey] ?? null
-            ];
-        }
-
-        return $aList;
+        return $this->oResponseMapper->getDataReadable();
     }
 }

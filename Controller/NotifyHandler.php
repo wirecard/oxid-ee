@@ -164,7 +164,7 @@ class NotifyHandler extends FrontendController
 
         $oOrder = oxNew(Order::class);
         $oOrder->loadWithTransactionId($oResponse->getParentTransactionId());
-        $oOrder->handleOrderState(Order::STATE_FAILED);
+        $oOrder->handleOrderState(Order::IS_FAILED);
     }
 
     /**
