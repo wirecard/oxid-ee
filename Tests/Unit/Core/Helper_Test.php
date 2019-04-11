@@ -26,7 +26,7 @@ class Helper_Test extends OxidEsales\TestingLibrary\UnitTestCase
     {
         return [
             'OXID key' => ['WRAPPING', 'Verpackung'],
-            'module key' => ['config_sort_order', 'Reihenfolge'],
+            'module key' => ['config_descriptor', 'Deskriptor'],
             'unknown key' => ['foo', 'foo'],
         ];
     }
