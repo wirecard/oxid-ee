@@ -198,7 +198,7 @@ class TransactionHandler
         Transaction::createDbEntryFromArray($aTransactionProps);
 
         // check if the parent transaction needs to be set to 'closed'
-        $this->updateParentTransactionStateIfNecessary($oResponse, $fAmount);
+        $this->updateParentTransactionStateIfNecessary($oResponse);
     }
 
     /**
@@ -206,9 +206,8 @@ class TransactionHandler
      * If no money is available anymore, the state is set to closed.
      *
      * @param SuccessResponse $oResponse
-     * @param float           $fAmount
      */
-    public function updateParentTransactionStateIfNecessary($oResponse, $fAmount)
+    public function updateParentTransactionStateIfNecessary($oResponse)
     {
         $sParentTransactionId = $oResponse->getParentTransactionId();
 

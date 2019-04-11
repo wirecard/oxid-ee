@@ -86,7 +86,12 @@ class TransactionTabPostProcessing extends Tab
     {
         $sTemplate = parent::render();
 
-        $this->_aPostProcessingActions = $this->_getPostProcessingActions();
+        $this->_aPostProcessingActions = array();
+
+        // if the transaction state is 'closed', there are no post-processing acitons available
+        if ($this->oTransaction->wdoxidee_ordertransactions__state->value !== Transaction::STATE_CLOSED) {
+            $this->_aPostProcessingActions = $this->_getPostProcessingActions();
+        }
 
         $aRequestParameters = $this->_getRequestParameters();
 
@@ -227,34 +232,31 @@ class TransactionTabPostProcessing extends Tab
         // array containing all possible post-processing operations on the currently selected transaction
         $aOperations = array();
 
-        // if the transaction state is 'closed', there are no post-processing acitons available
-        if ($this->oTransaction->wdoxidee_ordertransactions__state->value !== Transaction::STATE_CLOSED) {
-            // it is necessary to create a new empty transaction with the ID of the currently
-            // selected one in order to get the available post-processing operations
-            $oPaymentMethod = Payment_Method_Factory::create($this->oTransaction->getPaymentType());
-            $oTransaction = $oPaymentMethod->getTransaction();
-            $sParentTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
-            $oTransaction->setParentTransactionId($sParentTransactionId);
+        // it is necessary to create a new empty transaction with the ID of the currently
+        // selected one in order to get the available post-processing operations
+        $oPaymentMethod = Payment_Method_Factory::create($this->oTransaction->getPaymentType());
+        $oTransaction = $oPaymentMethod->getTransaction();
+        $sParentTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
+        $oTransaction->setParentTransactionId($sParentTransactionId);
 
-            // load the supported operations array from the backend service
-            $oBackendService = new BackendService($oPaymentMethod->getConfig(), $this->_oLogger);
-            $aSupportedOperations = $oBackendService->retrieveBackendOperations($oTransaction, true);
+        // load the supported operations array from the backend service
+        $oBackendService = new BackendService($oPaymentMethod->getConfig(), $this->_oLogger);
+        $aSupportedOperations = $oBackendService->retrieveBackendOperations($oTransaction, true);
 
-            if ($aSupportedOperations !== false && count($aSupportedOperations > 0)) {
-                // this look-up array is necessary because of the PhraseApp integration
-                $aOperationTitles = array(
-                    BackendService::CANCEL_BUTTON_TEXT => Helper::translate('cancel'),
-                    BackendService::REFUND_BUTTON_TEXT => Helper::translate('refund'),
-                    BackendService::CAPTURE_BUTTON_TEXT => Helper::translate('capture'),
-                    BackendService::CREDIT_BUTTON_TEXT => Helper::translate('credit')
-                );
+        if ($aSupportedOperations !== false && count($aSupportedOperations > 0)) {
+            // this look-up array is necessary because of the PhraseApp integration
+            $aOperationTitles = array(
+                BackendService::CANCEL_BUTTON_TEXT => Helper::translate('cancel'),
+                BackendService::REFUND_BUTTON_TEXT => Helper::translate('refund'),
+                BackendService::CAPTURE_BUTTON_TEXT => Helper::translate('capture'),
+                BackendService::CREDIT_BUTTON_TEXT => Helper::translate('credit')
+            );
 
-                foreach ($aSupportedOperations as $sActionName => $sButtonText) {
-                    $aOperations[] = [
-                        'action' => $sActionName,
-                        'title' => $aOperationTitles[$sButtonText],
-                    ];
-                }
+            foreach ($aSupportedOperations as $sActionName => $sButtonText) {
+                $aOperations[] = [
+                    'action' => $sActionName,
+                    'title' => $aOperationTitles[$sButtonText],
+                ];
             }
         }
 
