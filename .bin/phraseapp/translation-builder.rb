@@ -56,7 +56,7 @@ class TranslationBuilder
   def extract_keys_from_tpl_file(file_path)
     file_content = File.read(file_path, :encoding => 'utf-8')
     keys = file_content.scan(/oxmultilang ident="([^"]+)"/).flatten
-    # reject OXID internal keys
+    # reject OXID internal keys (all uppercase)
     keys.reject { |k| k =~ /^[A-Z_]+$/ }
   end
 
