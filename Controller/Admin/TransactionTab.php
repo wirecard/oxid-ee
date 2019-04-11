@@ -19,7 +19,7 @@ use OxidEsales\Eshop\Application\Model\Payment;
 /**
  * Controls the view for a single transaction tab.
  */
-class TransactionTab extends ListTab
+class TransactionTab extends Tab
 {
     /**
      * @var Transaction
@@ -48,49 +48,17 @@ class TransactionTab extends ListTab
     {
         parent::__construct();
 
-        $this->setTransaction();
-        $this->setOrder();
-        $this->setPayment();
+        $this->oTransaction = oxNew(Transaction::class);
+        $this->oOrder = oxNew(Order::class);
+        $this->oPayment = oxNew(Payment::class);
 
         if ($this->_isListObjectIdSet()) {
             $this->oTransaction->load($this->sListObjectId);
             $this->oOrder->load($this->oTransaction->wdoxidee_ordertransactions__orderid->value);
             $this->oPayment->load($this->oOrder->oxorder__oxpaymenttype->value);
 
-            $this->setResponseMapper();
+            $this->oResponseMapper = new ResponseMapper($this->oTransaction->getResponseXML());
         }
-    }
-
-    /**
-     * Transaction setter.
-     */
-    public function setTransaction()
-    {
-        $this->oTransaction = oxNew(Transaction::class);
-    }
-
-    /**
-     * Order setter.
-     */
-    public function setOrder()
-    {
-        $this->oOrder = oxNew(Order::class);
-    }
-
-    /**
-     * Payment setter.
-     */
-    public function setPayment()
-    {
-        $this->oPayment = oxNew(Payment::class);
-    }
-
-    /**
-     * ResponseMapper setter.
-     */
-    public function setResponseMapper()
-    {
-        $this->oResponseMapper = new ResponseMapper($this->oTransaction->getResponseXML());
     }
 
     /**

@@ -15,9 +15,9 @@ use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Core\Helper;
 
 /**
- * Controls the view for the post-processing tab.
+ * Controls the view for the post-processing transaction tab.
  */
-class TransactionTabPostProcessing extends ListTab
+class TransactionTabPostProcessing extends Tab
 {
     /**
      * @var Transaction
@@ -27,7 +27,7 @@ class TransactionTabPostProcessing extends ListTab
     /**
      * @inheritdoc
      */
-    protected $_sThisTemplate = 'transaction_tab_pp.tpl';
+    protected $_sThisTemplate = 'tab_post_processing.tpl';
 
     /**
      * TransactionTab constructor.
@@ -36,19 +36,11 @@ class TransactionTabPostProcessing extends ListTab
     {
         parent::__construct();
 
-        $this->setTransaction();
+        $this->oTransaction = oxNew(Transaction::class);
 
         if ($this->_isListObjectIdSet()) {
             $this->oTransaction->load($this->sListObjectId);
         }
-    }
-
-    /**
-     * Transaction setter.
-     */
-    public function setTransaction()
-    {
-        $this->oTransaction = oxNew(Transaction::class);
     }
 
     /**

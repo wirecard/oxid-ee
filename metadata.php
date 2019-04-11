@@ -81,8 +81,10 @@ $aModule = array(
             => \Wirecard\Oxid\Controller\Admin\TransactionTabShipping::class,
         'wcpg_transaction_post_processing'
             => \Wirecard\Oxid\Controller\Admin\TransactionTabPostProcessing::class,
-        'wcpg_order_details'
-            => \Wirecard\Oxid\Controller\Admin\OrderTabDetails::class,
+        'wcpg_order_transactions'
+            => \Wirecard\Oxid\Controller\Admin\OrderTabTransactions::class,
+        'wcpg_order_transaction_details'
+            => \Wirecard\Oxid\Controller\Admin\OrderTabTransactionDetails::class,
         'wcpg_notifyhandler'
             => \Wirecard\Oxid\Controller\NotifyHandler::class
     ),
@@ -151,10 +153,9 @@ $aModule = array(
     'templates'         => array(
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
         'transaction_list.tpl'              => 'wirecard/paymentgateway/views/admin/tpl/transaction_list.tpl',
-        'transaction_tab_pp.tpl'            => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab_pp.tpl',
-        'list_tab.tpl'                      => 'wirecard/paymentgateway/views/admin/tpl/list_tab.tpl',
-        'transaction_tab.tpl'               => 'wirecard/paymentgateway/views/admin/tpl/transaction_tab.tpl',
-        'payment_other_with_logo.tpl'       => 'wirecard/paymentgateway/views/blocks/payment_other_with_logo.tpl'
+        'tab_simple.tpl'                    => 'wirecard/paymentgateway/views/admin/tpl/tab_simple.tpl',
+        'tab_table.tpl'                     => 'wirecard/paymentgateway/views/admin/tpl/tab_table.tpl',
+        'tab_post_processing.tpl'           => 'wirecard/paymentgateway/views/admin/tpl/tab_post_processing.tpl'
     ),
     'events'            => array(
         'onActivate'        => '\Wirecard\Oxid\Core\OxidEE_Events::onActivate',

@@ -39,7 +39,7 @@ function wdCopyToClipboard(text)
 </form>
 
 <table cellspacing="0" cellpadding="0" border="0" width="600">
-    [{foreach from=$listData item=row}]
+    [{foreach from=$data item=row}]
         <tr height="20">
             <td width="25%">[{$row.title}]</td>
             <td>

@@ -16,6 +16,7 @@ use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Model\Transaction;
+use Wirecard\Oxid\Model\TransactionList;
 use Wirecard\Oxid\Core\AccountHolderHelper;
 
 /**
@@ -32,7 +33,6 @@ class Order extends Order_parent
     const STATE_PROCESSING = 'processing';
     const STATE_CANCELED = 'canceled';
     const STATE_REFUNDED = 'refunded';
-
 
     /**
      * Loads order data from DB.
@@ -92,6 +92,33 @@ class Order extends Order_parent
     }
 
     /**
+     * Returns a TransactionList object containing all transactions associated with the order.
+     *
+     * @return TransactionList
+     */
+    public function getOrderTransactionList(): TransactionList
+    {
+        $oTransactionList = oxNew(TransactionList::class);
+
+        return $oTransactionList->getListByConditions([
+            'orderid' => $this->getId(),
+        ]);
+    }
+
+    /**
+     * Returns the last transaction associated with the order.
+     *
+     * @return Transaction
+     */
+    public function getOrderLastTransaction(): Transaction
+    {
+        $oTransaction = oxNew(Transaction::class);
+        $oTransaction->loadWithTransactionId($this->oxorder__wdoxidee_transactionid->value);
+
+        return $oTransaction;
+    }
+
+    /**
      * Returns true if the payment is one of the module's.
      *
      * @return bool
@@ -108,15 +135,9 @@ class Order extends Order_parent
      */
     public function isPaymentPending()
     {
-        $sTransactionId = $this->oxorder__wdoxidee_transactionid->value;
-        if ($sTransactionId) {
-            $oTransaction = oxNew(Transaction::class);
-            if ($oTransaction->loadWithTransactionId($sTransactionId)) {
-                return strpos($oTransaction->wdoxidee_ordertransactions__type->value, 'pending') !== false;
-            }
-        }
+        $oTransaction = $this->getOrderLastTransaction();
 
-        return true;
+        return strpos($oTransaction->wdoxidee_ordertransactions__type->value, 'pending') !== false;
     }
 
     /**
@@ -146,7 +167,7 @@ class Order extends Order_parent
         return $oLastItem->oxorderarticles__oxartid->value === $oOrderItem->oxorderarticles__oxartid->value;
     }
 
-        /**
+    /**
      * Returns an associative array of available states and their translation.
      *
      * @return array
@@ -172,7 +193,7 @@ class Order extends Order_parent
         $oCountry = $this->getOrderBillingCountry();
         $oUser = $this->getOrderUser();
 
-        $oAccHolderHelper = new AccountHolderHelper;
+        $oAccHolderHelper = new AccountHolderHelper();
 
         return $oAccHolderHelper->createAccountHolder([
             'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
@@ -196,7 +217,7 @@ class Order extends Order_parent
      */
     public function getShippingAccountHolder(): AccountHolder
     {
-        $oAccHolderHelper = new AccountHolderHelper;
+        $oAccHolderHelper = new AccountHolderHelper();
 
         // use shipping info if available
         $oCountry = $this->getOrderShippingCountry();
