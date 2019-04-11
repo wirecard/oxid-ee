@@ -111,7 +111,7 @@ class TransactionHandler
                 $this->_oLogger->error($oItem->getCode() . ': ' . $oItem->getDescription());
             }
 
-            return $this->_getErrorMessage(Helper::translate('error_transaction') . '<br>' . $sErrors);
+            return $this->_getErrorMessage(Helper::translate('text_generic_error') . '<br>' . $sErrors);
         }
 
         if ($oResponse instanceof SuccessResponse) {
