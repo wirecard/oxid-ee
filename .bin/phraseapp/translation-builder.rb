@@ -6,6 +6,7 @@ class TranslationBuilder
     @locale_file_header = Const::LOCALE_FILE_HEADER
   end
 
+  # Builds PHP language files from all found JSON files
   def build(locale_name, file_basename)
     @plugin_i18n_dirs.each do |dir|
       abs_path = File.join(Dir.pwd, dir)
@@ -31,6 +32,7 @@ class TranslationBuilder
     end
   end
 
+  # Returns an array of all keys used in the codebase
   def get_all_keys
     keys = []
 
@@ -49,6 +51,7 @@ class TranslationBuilder
     keys.uniq
   end
 
+  # Parses a PHP file and returns used keys based on a predefined regex match
   def extract_keys_from_php_file(file_path)
     file_content = File.read(file_path, :encoding => 'utf-8')
     keys = file_content.scan(/translate\(['"]([^'"]+)['"]\)/).flatten
@@ -57,6 +60,7 @@ class TranslationBuilder
     keys.reject { |k| k =~ /^[A-Z_]+$/ }
   end
 
+  # Parses a TPL file and returns used keys based on a predefined regex match
   def extract_keys_from_tpl_file(file_path)
     file_content = File.read(file_path, :encoding => 'utf-8')
     keys = file_content.scan(/oxmultilang ident="([^"]+)"/).flatten
@@ -64,6 +68,7 @@ class TranslationBuilder
     keys.reject { |k| k =~ /^[A-Z_]+$/ }
   end
 
+  # Parses an XML file and returns used keys based on the presence of a specific attribute
   def extract_keys_from_xml_file(file_path)
     file_content = File.read(file_path, :encoding => 'utf-8')
     doc = Nokogiri::XML(file_content)
@@ -78,6 +83,7 @@ class TranslationBuilder
     keys
   end
 
+  # Returns an array of absolute paths to PHP files that should be parsed for keys
   def get_needed_php_files
     ignored_dirs = [
       'vendor',
@@ -90,14 +96,17 @@ class TranslationBuilder
     end
   end
 
+  # Returns an array of absolute paths to TPL files that should be parsed for keys
   def get_needed_tpl_files
     Dir.glob(File.join(Dir.pwd, @plugin_dir, '**', '*.tpl'))
   end
 
+  # Returns an array of absolute paths to XML files that should be parsed for keys
   def get_needed_xml_files
     Dir.glob(File.join(Dir.pwd, 'menu.xml'))
   end
 
+  # Writes translations (key-value pairs) to the given file, using valid PHP array syntax
   def write_translations_to_php(translations, php_file)
     translations.each do |key, value|
       if value.is_a?(Hash)
