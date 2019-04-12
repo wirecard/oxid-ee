@@ -88,7 +88,7 @@ namespace :phraseapp do
 
   desc 'Parse translatable keys and push to a PhraseApp branch'
   task :push do
-    if WdProject.new.worktree_has_key_changes?
+    if WdProject.new.worktree_has_significant_key_changes?
       WdPhraseApp.new.push_to_branch
     end
   end
@@ -100,8 +100,8 @@ namespace :phraseapp do
 
   desc '[CI] Check if PhraseApp is up to date with the project'
   task :ci_check_if_in_sync do
-    if WdProject.new.worktree_has_key_changes?
-      puts 'PhraseApp is not in sync with the current commit. Exiting.'.red.bright
+    if WdProject.new.worktree_has_significant_key_changes?
+      puts 'Project contains keys that are not present in PhraseApp. Exiting.'.red.bright
       exit(1)
     end
   end
