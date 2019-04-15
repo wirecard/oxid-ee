@@ -55,7 +55,7 @@ class ResponseHandler
 
         $oPayment = PaymentMethodHelper::getPaymentById($oOrder->oxorder__oxpaymenttype->value);
 
-        self::_saveTransaction($oResponse, $oOrder, $oPayment);
+        self::_saveTransaction($oResponse, $oOrder, $oPayment, $oBackendService);
         self::_updateOrder($oOrder, $oResponse, $oBackendService);
 
         $oOrder->sendOrderByEmail();
@@ -90,7 +90,7 @@ class ResponseHandler
      *
      * @since 1.0.0
      */
-    private static function _saveTransaction($oResponse, $oOrder, $oPayment)
+    private static function _saveTransaction($oResponse, $oOrder, $oPayment, $oBackendService)
     {
         $aData = $oResponse->getData();
 
@@ -114,6 +114,14 @@ class ResponseHandler
             Helper::getFormattedDbDate($oResponse->getData()['completion-time-stamp'])
         );
         //$oTransaction->wdoxidee_ordertransactions__validsignature = new Field($oResponse->isValidSignature());
+
+        // by default the transaction state is success now
+        $oTransaction->wdoxidee_ordertransactions__state = new Field(Transaction::STATE_SUCCESS);
+
+        // set the transaction state to closed if no further operations are possible anymore
+        if ($oBackendService->isFinal($oResponse->getTransactionType())) {
+            $oTransaction->wdoxidee_ordertransactions__state = new Field(Transaction::STATE_CLOSED);
+        }
 
         $oTransaction->save();
     }

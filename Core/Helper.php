@@ -69,31 +69,6 @@ class Helper
     }
 
     /**
-     * Recursively calls itself until a transaction without a parent transaction ID is found.
-     * This is the root transaction and its transaction ID is returned.
-     *
-     * @param string $sTransactionId
-     *
-     * @return string root transaction ID
-     */
-    public static function getRootTransactionId($sTransactionId)
-    {
-        // get transaction to this transaction ID
-        $oTransaction = oxNew(Transaction::class);
-        $oTransaction->loadWithTransactionId($sTransactionId);
-
-        $sParentTransactionId = $oTransaction->wdoxidee_ordertransactions__parenttransactionid->value;
-
-        // base case - a transaction without a parent transaction ID was found, this is the root transaction
-        if (empty($sParentTransactionId)) {
-            return $oTransaction->wdoxidee_ordertransactions__transactionid->value;
-        }
-
-        // continue with the parent transaction ID
-        return self::getRootTransactionId($sParentTransactionId);
-    }
-
-    /**
      * Returns a list of available payments.
      *
      * @return array

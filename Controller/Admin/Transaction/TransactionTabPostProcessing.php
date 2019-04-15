@@ -50,10 +50,12 @@ class TransactionTabPostProcessing extends Tab
     /*
      * @var TransactionHandler
      */
-    private $_oTransactionHandler = null;
+    private $_oTransactionHandler;
 
-    // array containing all possible post-processing actions for a transaction
-    private $_aPostProcessingActions = null;
+    /**
+     * array containing all possible post-processing actions for a transaction
+     */
+    private $_aPostProcessingActions;
 
     /**
      * TransactionTab constructor.
@@ -77,6 +79,8 @@ class TransactionTabPostProcessing extends Tab
 
     /**
      * @inheritdoc
+     *
+     * @throws Exception
      *
      * @return string
      *
@@ -169,7 +173,7 @@ class TransactionTabPostProcessing extends Tab
      */
     private function _validateAmountIsNumeric($fAmount)
     {
-        return $fAmount && is_numeric($fAmount);
+        return $fAmount && (is_float($fAmount) || is_int($fAmount));
     }
 
     /**
@@ -277,7 +281,7 @@ class TransactionTabPostProcessing extends Tab
     {
         $oTransactionHandler = $this->_getTransactionHandler();
         $aResult = $oTransactionHandler->processAction($this->oTransaction, $sActionTitle, $fAmount);
-        if ($aResult["status"] === TransactionHandler::TRANSACTION_STATUS_SUCCESS) {
+        if ($aResult["status"] === Transaction::STATE_SUCCESS) {
             return Helper::translate('text_generic_success');
         } else {
             return $aResult['message'];

@@ -31,9 +31,6 @@ use \Wirecard\Oxid\Model\Transaction;
  */
 class TransactionHandler
 {
-    const TRANSACTION_STATUS_SUCCESS = 'success';
-    const TRANSACTION_STATUS_ERROR = 'error';
-
     /**
      * @var \Psr\Log\LoggerInterface
      */
@@ -163,7 +160,7 @@ class TransactionHandler
         $sConvertedTimestamp = $oUtilsDate->formatDBTimestamp($oUtilsDate->formTime($aData['completion-time-stamp']));
 
         // find root transaction ID
-        $sRootTransactionId = Helper::getRootTransactionId($oResponse->getParentTransactionId());
+        $sRootTransactionId = $this->_getRootTransactionId($oResponse->getParentTransactionId());
 
         $oOrder = oxNew(Order::class);
         if (!$oOrder->loadWithTransactionId($sRootTransactionId)) {
@@ -257,6 +254,31 @@ class TransactionHandler
     }
 
     /**
+     * Recursively calls itself until a transaction without a parent transaction ID is found.
+     * This is the root transaction and its transaction ID is returned.
+     *
+     * @param string $sTransactionId
+     *
+     * @return string root transaction ID
+     */
+    private function _getRootTransactionId($sTransactionId)
+    {
+        // get transaction to this transaction ID
+        $oTransaction = oxNew(Transaction::class);
+        $oTransaction->loadWithTransactionId($sTransactionId);
+
+        $sParentTransactionId = $oTransaction->wdoxidee_ordertransactions__parenttransactionid->value;
+
+        // base case - a transaction without a parent transaction ID was found, this is the root transaction
+        if (empty($sParentTransactionId)) {
+            return $oTransaction->wdoxidee_ordertransactions__transactionid->value;
+        }
+
+        // continue with the parent transaction ID
+        return $this->_getRootTransactionId($sParentTransactionId);
+    }
+
+    /**
      * Uses the Payment_Method_Factory to create a new Payment_Method object for the desired payment method.
      *
      * @param Transaction $oTransaction
@@ -280,7 +302,7 @@ class TransactionHandler
      */
     private function _getSuccessMessage()
     {
-        return ['status' => self::TRANSACTION_STATUS_SUCCESS];
+        return ['status' => Transaction::STATE_SUCCESS];
     }
 
     /**
@@ -292,6 +314,6 @@ class TransactionHandler
      */
     private function _getErrorMessage(string $sMessage): array
     {
-        return ['status' => self::TRANSACTION_STATUS_ERROR, 'message' => $sMessage];
+        return ['status' => Transaction::STATE_ERROR, 'message' => $sMessage];
     }
 }

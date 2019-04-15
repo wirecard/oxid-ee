@@ -52,6 +52,9 @@ class TransactionTab extends Tab
      */
     protected $oResponseMapper;
 
+    // transaction state key in transaction response
+    const KEY_TRANSACTION_STATE = 'transactionState';
+
     /**
      * TransactionTab constructor.
      *
@@ -108,7 +111,7 @@ class TransactionTab extends Tab
      */
     private function _getTransactionStateText($sKey, $sValue, $sTransactionState = null)
     {
-        if ($sTransactionState && $sKey === 'transactionState') {
+        if ($sTransactionState && $sKey === self::KEY_TRANSACTION_STATE) {
             $sValue = $sTransactionState !== Transaction::STATE_AWAITING
                 ? $sValue
                 : $sValue . ' (confirmation awaiting)';
