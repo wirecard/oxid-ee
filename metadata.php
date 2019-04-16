@@ -25,28 +25,28 @@ $sModuleDescriptionDe = file_get_contents(dirname(__FILE__) . '/out/html/module-
 
 // the array contains the complete description HTML string for each language
 $sTermsContentPlaceholder = '{{ TERMS_CONTENT }}';
-$aModuleDescriptions = array(
+$aModuleDescriptions = [
     'de' => $sToggleTermsJs . str_replace($sTermsContentPlaceholder, $sTermsContentDe, $sModuleDescriptionDe),
     'en' => $sToggleTermsJs . str_replace($sTermsContentPlaceholder, $sTermsContentEn, $sModuleDescriptionEn)
-);
+];
 
 /**
  * Module information
  */
-$aModule = array(
+$aModule = [
     'id'                => 'wdoxidee',
     'title'             => 'Wirecard OXID Module',
-    'description'       => array(
+    'description'       => [
         'de' => $aModuleDescriptions['de'],
         'en' => $aModuleDescriptions['en']
-    ),
+    ],
     'lang'              => 'en',
     'thumbnail'         => 'logo.png',
     'version'           => '0.1.0',
     'author'            => 'Wirecard',
     'url'               => 'https://www.wirecard.com',
     'email'             => 'shop-systems-support@wirecard.com',
-    'extend'            => array (
+    'extend'            =>  [
         \OxidEsales\Eshop\Core\ViewConfig::class
             => \Wirecard\Oxid\Extend\View_Config::class,
         \OxidEsales\Eshop\Application\Controller\Admin\OrderList::class
@@ -65,8 +65,8 @@ $aModule = array(
             => \Wirecard\Oxid\Extend\Model\Basket::class,
         \OxidEsales\Eshop\Application\Controller\ThankYouController::class
             => \Wirecard\Oxid\Extend\Controller\ThankYouController::class
-    ),
-    'controllers'       => array(
+    ],
+    'controllers'       => [
         'wcpg_transaction'
             => \Wirecard\Oxid\Controller\Admin\TransactionController::class,
         'wcpg_transaction_list'
@@ -87,78 +87,78 @@ $aModule = array(
             => \Wirecard\Oxid\Controller\Admin\OrderTabTransactionDetails::class,
         'wcpg_notifyhandler'
             => \Wirecard\Oxid\Controller\NotifyHandler::class
-    ),
-    'blocks' => array(
-        array(
+    ],
+    'blocks' => [
+        [
             'template' => 'payment_main.tpl',
             'block' => 'admin_payment_main_form',
             'file' => 'out/blocks/wd_admin_payment_main_form.tpl'
-        ),
-        array(
+        ],
+        [
             'template' => 'order_list.tpl',
             'block' => 'admin_order_list_colgroup',
             'file' => 'out/blocks/wd_admin_order_list_colgroup.tpl',
             'position' => 10,
-        ),
-        array(
+        ],
+        [
             'template' => 'order_list.tpl',
             'block' => 'admin_order_list_filter',
             'file' => 'out/blocks/wd_admin_order_list_filter.tpl',
             'position' => 10,
-        ),
-        array(
+        ],
+        [
             'template' => 'order_list.tpl',
             'block' => 'admin_order_list_sorting',
             'file' => 'out/blocks/wd_admin_order_list_sorting.tpl',
             'position' => 10,
-        ),
-        array(
+        ],
+        [
             'template' => 'order_list.tpl',
             'block' => 'admin_order_list_item',
             'file' => 'out/blocks/wd_admin_order_list_item.tpl',
             'position' => 10,
-        ),
-        array(
+        ],
+        [
             'template' => 'page/checkout/order.tpl',
             'block' => 'checkout_order_main',
             'file' => 'out/blocks/profiling_tags.tpl'
-        ),
-        array(
+        ],
+        [
             'template' => 'page/checkout/payment.tpl',
             'block' => 'checkout_payment_errors',
             'file' => 'out/blocks/checkout_errors.tpl'
-        ),
-        array(
+        ],
+        [
             'template' => 'page/checkout/thankyou.tpl',
             'block' => 'checkout_thankyou_info',
             'file' => 'views/blocks/thankyou.tpl'
-        ),
-        array(
+        ],
+        [
             'template' => 'page/account/order.tpl',
             'block' => 'account_order_history_cart_items',
             'file' => 'views/blocks/accountorder.tpl'
-        ),
-        array(
+        ],
+        [
             'theme' => 'azure-theme',
             'template' => 'page/account/order.tpl',
             'block' => 'account_order_persparams',
             'file' => 'views/blocks/accountorder_azure.tpl'
-        ),
-        array(
+        ],
+        [
             'template' => 'page/checkout/inc/payment_other.tpl',
             'block' => 'checkout_payment_longdesc',
             'file' => 'views/blocks/checkout_payment_longdesc.tpl'
-        )
-    ),
-    'templates'         => array(
+        ]
+    ],
+    'templates'         => [
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
         'transaction_list.tpl'              => 'wirecard/paymentgateway/views/admin/tpl/transaction_list.tpl',
         'tab_simple.tpl'                    => 'wirecard/paymentgateway/views/admin/tpl/tab_simple.tpl',
         'tab_table.tpl'                     => 'wirecard/paymentgateway/views/admin/tpl/tab_table.tpl',
         'tab_post_processing.tpl'           => 'wirecard/paymentgateway/views/admin/tpl/tab_post_processing.tpl'
-    ),
-    'events'            => array(
+    ],
+    'events'            => [
         'onActivate'        => '\Wirecard\Oxid\Core\OxidEE_Events::onActivate',
         'onDeactivate'      => '\Wirecard\Oxid\Core\OxidEE_Events::onDeactivate'
-    )
-);
+    ]
+];

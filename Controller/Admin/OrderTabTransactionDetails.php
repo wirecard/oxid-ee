@@ -22,7 +22,7 @@ class OrderTabTransactionDetails extends OrderTab
     protected function _getData(): array
     {
         if (!$this->oResponseMapper) {
-            return array();
+            return [];
         }
 
         $aTransactionResponseData = $this->oResponseMapper->getData();
@@ -39,7 +39,7 @@ class OrderTabTransactionDetails extends OrderTab
         $aRestOfKeys = array_diff(array_keys($aTransactionResponseData), $aSortKeys);
         $aSortedKeys = array_merge($aSortKeys, $aRestOfKeys);
 
-        $aList = array();
+        $aList = [];
         foreach ($aSortedKeys as $sKey) {
             $aList[] = [
                 'title' => $sKey,

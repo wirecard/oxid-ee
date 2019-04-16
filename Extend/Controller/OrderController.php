@@ -51,7 +51,7 @@ class OrderController extends OrderController_parent
             $sShopBaseUrl = $oConfig->getShopUrl();
             $sLanguageCode = Registry::getLang()->getBaseLanguage();
 
-            $aParams = array(
+            $aParams = [
                 'lang' => $sLanguageCode,
                 'force_sid' => $oSession->getId(),
                 'stoken' => $oSession->getSessionChallengeToken(),
@@ -64,7 +64,7 @@ class OrderController extends OrderController_parent
                 'oxdownloadableproductsagreement' => '0',
                 'oxserviceproductsagreement' => '0',
                 'wdtoken' => $sWdSessionToken
-            );
+            ];
 
             $sParamStr = http_build_query($aParams);
 

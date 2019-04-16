@@ -274,9 +274,9 @@ class OxidEE_Events
      */
     private static function _addPaymentMethod($oPayment)
     {
-        $aKeyValue = array(
+        $aKeyValue = [
             "OXID" => $oPayment->oxid
-        );
+        ];
 
         $sQuery = "INSERT INTO " . self::PAYMENT_TABLE . "(`OXID`, `OXACTIVE`, `OXTOAMOUNT`, `OXDESC`, `OXDESC_1`,
          `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONACTION`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`, `WDOXIDEE_SECRET`,
@@ -315,7 +315,7 @@ class OxidEE_Events
         // insert payment method configuration (necessary for making the payment visible in the checkout page)
         self::_insertRowIfNotExists(
             self::OBJECTPAYMENT_TABLE,
-            array('OXPAYMENTID' => $oPayment->oxid),
+            ['OXPAYMENTID' => $oPayment->oxid],
             "INSERT INTO " . self::OBJECTPAYMENT_TABLE . " (`OXID`, `OXPAYMENTID`, `OXOBJECTID`, `OXTYPE`) VALUES (
                 '{$sRandomOxidId}',
                 '{$oPayment->oxid}',

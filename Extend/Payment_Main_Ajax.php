@@ -66,6 +66,6 @@ class Payment_Main_Ajax extends Payment_Main_Ajax_parent
             $bSuccess = $oTransactionService->checkCredentials();
         }
 
-        $this->oUtils->showMessageAndExit(json_encode(array("success" => $bSuccess)));
+        $this->oUtils->showMessageAndExit(json_encode(["success" => $bSuccess]));
     }
 }
