@@ -45,19 +45,19 @@ class AccountHolderHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oAccountHolder = $this->_oAccountHolderHelper->createAccountHolder($aArgs);
         $aResult = $oAccountHolder->mappedProperties();
 
-        $this->assertEquals(count($aResult), 7);
-        $this->assertEquals(count($aResult['address']), 5);
-        $this->assertEquals($aResult['last-name'], 'LastName');
-        $this->assertEquals($aResult['first-name'], 'FirstName');
-        $this->assertEquals($aResult['email'], 'test@test.com');
-        $this->assertEquals($aResult['date-of-birth'], '02-09-1979');
-        $this->assertEquals($aResult['phone'], '+123456789');
-        $this->assertEquals($aResult['address']['street1'], 'Street 1');
-        $this->assertEquals($aResult['address']['city'], 'City');
-        $this->assertEquals($aResult['address']['country'], 'CC');
-        $this->assertEquals($aResult['address']['state'], 'State');
-        $this->assertEquals($aResult['address']['postal-code'], '1234');
-        $this->assertEquals($aResult['gender'], 'f');
+        $this->assertCount(7, $aResult);
+        $this->assertCount(5, $aResult['address']);
+        $this->assertEquals('LastName', $aResult['last-name']);
+        $this->assertEquals('FirstName', $aResult['first-name']);
+        $this->assertEquals('test@test.com', $aResult['email']);
+        $this->assertEquals('02-09-1979', $aResult['date-of-birth']);
+        $this->assertEquals('+123456789', $aResult['phone']);
+        $this->assertEquals('Street 1', $aResult['address']['street1']);
+        $this->assertEquals('City', $aResult['address']['city']);
+        $this->assertEquals('CC', $aResult['address']['country']);
+        $this->assertEquals('State', $aResult['address']['state']);
+        $this->assertEquals('1234', $aResult['address']['postal-code']);
+        $this->assertEquals('f', $aResult['gender']);
     }
 
     public function testCreateAccountHolderWithMandatoryDataSet()
@@ -71,11 +71,11 @@ class AccountHolderHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oAccountHolder = $this->_oAccountHolderHelper->createAccountHolder($aArgs);
         $aResult = $oAccountHolder->mappedProperties();
 
-        $this->assertEquals(count($aResult), 4);
-        $this->assertEquals(count($aResult['address']), 3);
-        $this->assertEquals($aResult['last-name'], 'LastName');
-        $this->assertEquals($aResult['first-name'], 'FirstName');
-        $this->assertEquals($aResult['email'], 'test@test.com');
+        $this->assertCount(4, $aResult);
+        $this->assertCount(3, $aResult['address']);
+        $this->assertEquals('LastName', $aResult['last-name']);
+        $this->assertEquals('FirstName', $aResult['first-name']);
+        $this->assertEquals('test@test.com', $aResult['email']);
         $this->assertEmpty($aResult['address']['street1']);
         $this->assertEmpty($aResult['address']['city']);
         $this->assertEmpty($aResult['address']['country']);

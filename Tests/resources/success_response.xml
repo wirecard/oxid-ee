@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<payment xmlns="http://www.elastic-payments.com/schema/payment"
+         xmlns:ns2="http://www.elastic-payments.com/schema/epa/transaction">
+  <merchant-account-id>Merchand Account ID</merchant-account-id>
+  <transaction-id>Transaction ID</transaction-id>
+  <request-id>Request ID</request-id>
+  <transaction-type>debit</transaction-type>
+  <transaction-state>success</transaction-state>
+  <completion-time-stamp>2019-04-16T11:38:38.000Z</completion-time-stamp>
+  <statuses>
+    <status code="Status Code" description="Status description"
+            provider-transaction-id="Provider Transaction Id" severity="information"/>
+  </statuses>
+  <requested-amount currency="EUR">100.000000</requested-amount>
+  <parent-transaction-id>Parent Transaction ID</parent-transaction-id>
+  <account-holder>
+    <first-name>FirstName</first-name>
+    <last-name>LastName</last-name>
+    <email>me@home.at</email>
+    <phone>+123456789</phone>
+    <address>
+      <street1>Street 1</street1>
+      <city>City</city>
+      <country>CC</country>
+      <postal-code>90210</postal-code>
+    </address>
+  </account-holder>
+  <shipping>
+    <first-name>Shipping Name</first-name>
+    <last-name>Shipping Lastname</last-name>
+    <phone>+123456789</phone>
+    <address>
+      <street1>Street 1</street1>
+      <city>City</city>
+      <country>CC</country>
+      <postal-code>90210</postal-code>
+    </address>
+  </shipping>
+  <ip-address>127.0.0.1</ip-address>
+  <order-number>1</order-number>
+  <order-items>
+    <order-item>
+      <name>Item 1</name>
+      <description>Desc 1</description>
+      <article-number>Article Number</article-number>
+      <amount currency="EUR">100.000000</amount>
+      <tax-amount currency="EUR">10.000000</tax-amount>
+      <quantity>1</quantity>
+    </order-item>
+  </order-items>
+  <descriptor>Descriptor</descriptor>
+  <notifications>
+    <notification
+      url="http://notify.me"/>
+  </notifications>
+  <custom-fields>
+    <custom-field field-name="paysdk_shopName" field-value="OXID eShop 6"/>
+    <custom-field field-name="paysdk_shopVersion" field-value="6.1.2"/>
+    <custom-field field-name="paysdk_pluginName" field-value="Wirecard OXID Module"/>
+    <custom-field field-name="paysdk_pluginVersion" field-value="0.1.0"/>
+  </custom-fields>
+  <payment-methods>
+    <payment-method name="payment method"/>
+  </payment-methods>
+  <api-id>---</api-id>
+  <cancel-redirect-url>https://cancel.me</cancel-redirect-url>
+  <fail-redirect-url>https://fail.me</fail-redirect-url>
+  <success-redirect-url>
+    https://success.me
+  </success-redirect-url>
+  <locale>en</locale>
+  <entry-mode>ecommerce</entry-mode>
+  <wallet>
+    <account-id>Wallet account ID</account-id>
+  </wallet>
+  <device>
+    <fingerprint>Finger Print</fingerprint>
+    <policy-score>0</policy-score>
+    <type>pc</type>
+    <operating-system>other</operating-system>
+  </device>
+  <provider-account-id>Provider Account ID</provider-account-id>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315"/>
+      <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256"/>
+      <Reference URI="">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256"/>
+        <DigestValue>kcL2WPUeO40rqFJitIf4yPw2BtBxM9XmbksNZORuhJw=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>
+      ILnxbsmfzvRsvmXe4mO3+Ek3dwmJj3gPUAUYTKBKh/8jiJJf6Rr2grgq4wkrSb6qP9A26V1hSV1+XPyMfQpw2Rim13HSAjiiUi5S3gpXJDaNtBL7RkJY7KNmm8CKZT2RDUJQkr8DTTq8dNosukiwnXuWuBVgteTKaixeX7nFJzDVX6eLo2llUUECxxlRfelv0Q/RLUSmpEn+MEAG000pQuKbVyl5YZuz5jtj2wOLpcKH2HExddge2ZNIuttzAaHVqP1jlKIqvT4kHnU1gBefXcdEfE8bOft5QNBbP1aKH+Qz4c+MvPeT2J9eVk1HT7Uz1PJIB8ziI487rH0fzHQvgX6ClO7M5RJZPCMD4D72QqKrBhrzfb9IzpgLVKqywejuqkGkKaVvm5QrlII+aVZKocKVUZiL3I1Wcw9Rmda7OQaPKbGMftmHPIz0IRvKKHeUH+iBZ/QA4zwnHoVr9cwL0sP3vlz5auO+xQX++ZCvxSICUyU9GJzt+fxTwXuphXvLxLeBGv4ZStYALtLf8VY17DPrNr3oUlkwnQj7K2tlVnVZZLY+xEBlb1ch/5Cc6AW0V31K665+wRJ4tbGHndjcFY5AxoJktAtEmK+TMmt3K/DY9876RsOCMLEaF88RIQqyvTeIDPizNaiveoquN8BZf8lUvhdw1UnnJMqARnNaQ3A=
+    </SignatureValue>
+    <KeyInfo>
+      <X509Data>
+        <X509SubjectName>2.5.4.4=#130642617965726e,L=Ascheim,CN=api-test.wirecard.com,OU=Operations,O=Wirecard
+          Technologies GmbH,C=DE
+        </X509SubjectName>
+        <X509Certificate>
+          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
+        </X509Certificate>
+      </X509Data>
+    </KeyInfo>
+  </Signature>
+</payment>

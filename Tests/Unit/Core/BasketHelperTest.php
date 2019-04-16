@@ -196,7 +196,7 @@ class BasketHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
             ->willReturn($this->priceStub);
 
         $wdBasket = new TransactionBasket();
-        BasketHelper::addShippingCostsToBasket($wdBasket, $this->basketStub,"USD");
+        BasketHelper::addShippingCostsToBasket($wdBasket, $this->basketStub, "USD");
 
         $wdBasketIterator = $wdBasket->getIterator();
         $this->assertEquals(1, $wdBasketIterator->count());
@@ -235,5 +235,34 @@ class BasketHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals(Helper::translate('wd_shipping_title'), $currentItem['description']);
         $this->assertEquals(Helper::translate('wd_shipping_title'), $currentItem['article-number']);
         $this->assertEquals(0, $currentItem['tax-rate']);
+    }
+
+    public function testDiscountsAddedToTheBasket()
+    {
+        $discount = new stdClass();
+        $discount->sDiscount = 'Title';
+        $discount->dDiscount = 10;
+        $discount->sOXID = 'Discount ID';
+
+        $this->basketStub->expects($this->once())
+            ->method('getDiscounts')
+            ->willReturn(array($discount));
+
+        $wdBasket = new TransactionBasket();
+        BasketHelper::addDiscountsToBasket($wdBasket, $this->basketStub, "EUR");
+
+        $wdBasketIterator = $wdBasket->getIterator();
+        $this->assertEquals(1, $wdBasketIterator->count());
+
+        $wdBasketIterator->seek(0);
+        $currentItem = $wdBasketIterator->current()->mappedProperties();
+
+        $this->assertEquals('Title', $currentItem['name']);
+        $this->assertEquals(1, $currentItem['quantity']);
+        $this->assertEquals('EUR', $currentItem['amount']['currency']);
+        $this->assertEquals(-10.0, $currentItem['amount']['value']);
+        $this->assertEquals('Title', $currentItem['description']);
+        $this->assertEquals('Discount ID', $currentItem['article-number']);
+        $this->assertNull($currentItem['tax-rate']);
     }
 }
