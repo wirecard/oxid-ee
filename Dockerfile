@@ -58,6 +58,9 @@ RUN set -ex; \
     sudo -u www-data touch ${WEBROOT_DIR}/log/oxideshop.log
     # chown -R www-data:www-data ${WEBROOT_DIR}
 
+# copy OXID configuration
+COPY --chown=www-data:www-data ./ops/oxid-config/config.inc.php ${WEBROOT_DIR}/config.inc.php
+
 
 ########################################################################
 # CI image
@@ -71,6 +74,8 @@ RUN set -ex; \
     composer config minimum-stability dev; \
     composer config repositories.${MODULE_NAME} path ${WEBROOT_DIR}/modules/${MODULE_PATH}
 
+# copy module into container
+COPY --chown=www-data:www-data ./ ${WEBROOT_DIR}/modules/${MODULE_PATH}
 RUN set -ex; \
     # install module into shop
     sudo -u www-data composer require "${MODULE_NAME}:*"; \
