@@ -8,6 +8,9 @@ class WdProject
     @head = Env::TRAVIS_BRANCH
     @translation_builder = TranslationBuilder.new
 
+    @worktree_keys = []
+    @phraseapp_keys = []
+
     @phraseapp = WdPhraseApp.new
     @phraseapp_fallback_locale = Const::PHRASEAPP_FALLBACK_LOCALE
     @locale_map = Const::LOCALE_MAP
@@ -15,40 +18,70 @@ class WdProject
   end
 
   # Returns true if source code has modified keys compared to the downloaded locale file of the fallback locale id
-  def worktree_has_key_changes?
-    json_generate_from_worktree && json_pull_from_phraseapp && has_key_changes?
+  def worktree_has_significant_key_changes?
+    json_generate_from_worktree && json_pull_from_phraseapp && has_significant_key_changes?
   end
 
-  # Compares the keys from source and PhraseApp and returns true if they have any difference in keys, false otherwise.
-  def has_key_changes?
+  # Compares the keys from source and PhraseApp.
+  # Returns true on significant key diffs (keys missing from PhraseApp), false otherwise.
+  # Simply warns on insignificant key diffs (keys present on PhraseApp but missing from project).
+  def has_significant_key_changes?
     worktree_json = File.read(File.join(@tmp_path, 'worktree_keys.json'), :encoding => 'utf-8')
-    worktree_keys = JSON.parse(worktree_json).keys
+    @worktree_keys = JSON.parse(worktree_json).keys
 
     phraseapp_json = File.read(File.join(@tmp_path, 'phraseapp_keys.json'), :encoding => 'utf-8')
-    phraseapp_keys = JSON.parse(phraseapp_json).keys
+    @phraseapp_keys = JSON.parse(phraseapp_json).keys
 
-    @log.info("Number of keys in worktree: #{worktree_keys.length}")
-    @log.info("Number of keys on PhraseApp: #{phraseapp_keys.length}")
+    @log.info("Number of keys in worktree: #{@worktree_keys.length}")
+    @log.info("Number of keys in PhraseApp: #{@phraseapp_keys.length}")
 
     # keys are unique; we use the intersection to detect differences
-    has_key_changes = (worktree_keys.length != phraseapp_keys.length) || (worktree_keys & phraseapp_keys != worktree_keys)
+    has_key_changes = (@worktree_keys.length != @phraseapp_keys.length) || (@worktree_keys & @phraseapp_keys != @worktree_keys)
 
-    if has_key_changes
-      @log.warn('Changes to translatable keys have been detected in the working tree.'.yellow.bright)
-      @log.warn('Keys present on PhraseApp, but missing in the project:'.yellow.bright)
-      (phraseapp_keys - worktree_keys).sort.each do |key|
-        @log.warn("#{key}".bright)
-      end
+    unless has_key_changes
+      @log.info('PhraseApp is fully synced with the current worktree.'.green.bright)
+      return false
+    end
 
-      @log.warn('Keys present in the project, but missing on PhraseApp:'.yellow.bright)
-      (worktree_keys - phraseapp_keys).sort.each do |key|
-        @log.warn("#{key}".bright)
-      end
+    @log.warn('PhraseApp is not in sync with the current worktree.'.yellow.bright)
+
+    @log.info('Checking for keys missing in the worktree (insignificant)...')
+    has_keys_missing_in_worktree?
+
+    @log.info('Checking for keys missing in PhraseApp (significant)...')
+    if has_keys_missing_in_phraseapp?
       return true
     end
 
-    @log.info('No changes to translatable keys have been detected in the working tree.'.green.bright)
     false
+  end
+
+  def has_keys_missing_in_worktree?
+    keys_missing_in_worktree = @phraseapp_keys - @worktree_keys
+    if keys_missing_in_worktree.empty?
+      @log.info('All keys present in PhraseApp are also present in the current worktree.'.green.bright)
+      return false
+    end
+
+    @log.warn('Keys present in PhraseApp, but missing in the current worktree:'.yellow.bright)
+    keys_missing_in_worktree.sort.each do |key|
+      @log.warn("#{key}".bright)
+    end
+    true
+  end
+
+  def has_keys_missing_in_phraseapp?
+    keys_missing_in_phraseapp = @worktree_keys - @phraseapp_keys
+    if keys_missing_in_phraseapp.empty?
+      @log.info('All keys present in the working tree are also present in PhraseApp.'.green.bright)
+      return false
+    end
+
+    @log.warn('Keys present in the current worktree, but missing in PhraseApp:'.yellow.bright)
+    keys_missing_in_phraseapp.sort.each do |key|
+      @log.warn("#{key}".bright)
+    end
+    true
   end
 
   # Generates a json file with all keys present in the current working tree
