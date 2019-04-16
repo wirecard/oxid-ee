@@ -16,3 +16,7 @@
 [{if $iPayError == -101}]
     <div class="alert alert-danger">[{oxmultilang ident="order_error"}]</div>
 [{/if}]
+
+[{if $iPayError == -102}]
+    <div class="alert alert-danger">[{$oView->getPaymentErrorText()}]</div>
+[{/if}]
