@@ -4,7 +4,7 @@
  * Ensures that all private and protected methods start with an underscore and public methods do not.
  * The '__construct' method is excluded from this check,
  */
-class WirecardOxidRuleset_Sniffs_Functions_FunctionNameUnderscoreSniff implements PHP_CodeSniffer_Sniff
+class PHPCS_Sniffs_Functions_FunctionNameUnderscoreSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * Returns the token types that this sniff is interested in.
