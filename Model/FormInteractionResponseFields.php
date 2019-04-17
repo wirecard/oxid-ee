@@ -13,22 +13,30 @@ use Wirecard\PaymentSdk\Entity\FormFieldMap;
 
 /**
  * Wrapper class to allow serialization
+ *
+ * @since 1.0.0
  */
 class FormInteractionResponseFields
 {
 
     /**
      * @var string
+     *
+     * @since 1.0.0
      */
     public $sUrl;
 
     /**
      * @var string
+     *
+     * @since 1.0.0
      */
     public $sMethod;
 
     /**
      * @var FormFieldMap
+     *
+     * @since 1.0.0
      */
     public $aFormFields;
 
@@ -38,6 +46,8 @@ class FormInteractionResponseFields
      * @param string       $sUrl
      * @param string       $sMethod
      * @param FormFieldMap $aFormFields
+     *
+     * @since 1.0.0
      */
     public function __construct(string $sUrl, string $sMethod, FormFieldMap $aFormFields)
     {

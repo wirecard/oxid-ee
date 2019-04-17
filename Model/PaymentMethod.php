@@ -22,6 +22,7 @@ use \Psr\Log\LoggerInterface;
 /**
  * Class PaymentMethod
  *
+ * @since 1.0.0
  */
 abstract class PaymentMethod
 {
@@ -29,11 +30,15 @@ abstract class PaymentMethod
 
     /**
      * @var string
+     *
+     * @since 1.0.0
      */
     protected static $_sName = 'undefined';
 
     /**
      * @var LoggerInterface
+     *
+     * @since 1.0.0
      */
     protected $_oLogger;
 
@@ -42,6 +47,7 @@ abstract class PaymentMethod
      *
      * @throws Exception if payment method name is not overwritten in child class
      *
+     * @since 1.0.0
      */
     public function __construct()
     {
@@ -59,6 +65,7 @@ abstract class PaymentMethod
      *
      * @return Config
      *
+     * @since 1.0.0
      */
     public function getConfig($oPayment)
     {
@@ -76,6 +83,7 @@ abstract class PaymentMethod
      *
      * @return \Wirecard\PaymentSdk\Transaction\Transaction
      *
+     * @since 1.0.0
      */
     abstract public function getTransaction();
 
@@ -87,6 +95,8 @@ abstract class PaymentMethod
      * @return string
      *
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
+     *
+     * @since 1.0.0
      */
     public static function getName(bool $bForOxid = false): string
     {
@@ -106,6 +116,7 @@ abstract class PaymentMethod
      *
      * @return string
      *
+     * @since 1.0.0
      */
     public static function getOxidFromSDKName(string $sSDKName): string
     {
@@ -116,6 +127,8 @@ abstract class PaymentMethod
      * Returns an array of fields to be displayed in the payment method config.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public function getConfigFields()
     {

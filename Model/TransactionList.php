@@ -14,11 +14,15 @@ use OxidEsales\Eshop\Core\Model\ListModel;
 
 /**
  * List Model for Transaction Lists.
+ *
+ * @since 1.0.0
  */
 class TransactionList extends ListModel
 {
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     protected $_sObjectsInListName = Transaction::class;
 
@@ -30,6 +34,8 @@ class TransactionList extends ListModel
      *
      * @return TransactionList
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     *
+     * @since 1.0.0
      */
     public function getListByConditions(array $aConditions = [], string $sOrderByField = 'date'): TransactionList
     {
@@ -55,6 +61,8 @@ class TransactionList extends ListModel
      * @param Transaction $oTransaction
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     protected function _getChildTransactionIds(Transaction $oTransaction)
     {
@@ -76,6 +84,8 @@ class TransactionList extends ListModel
      * property.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public function getNestedArray()
     {
