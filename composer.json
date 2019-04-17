@@ -23,7 +23,8 @@
   "require-dev": {
     "phpmd/phpmd": "^2.6.0",
     "oxid-esales/coding-standards": "^3.0.0",
-    "codacy/coverage": "dev-master"
+    "codacy/coverage": "dev-master",
+    "escapestudios/symfony2-coding-standard": "2.x-dev"
   },
   "extra": {
     "oxideshop": {

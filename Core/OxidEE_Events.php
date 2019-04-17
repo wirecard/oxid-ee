@@ -275,7 +275,7 @@ class OxidEE_Events
     private static function _addPaymentMethod($oPayment)
     {
         $aKeyValue = [
-            "OXID" => $oPayment->oxid
+            "OXID" => $oPayment->oxid,
         ];
 
         $sQuery = "INSERT INTO " . self::PAYMENT_TABLE . "(`OXID`, `OXACTIVE`, `OXTOAMOUNT`, `OXDESC`, `OXDESC_1`,

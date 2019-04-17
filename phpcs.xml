@@ -2,6 +2,9 @@
 <ruleset name="WirecardOxidRuleset">
   <description>Wirecard OXID extension</description>
 
+  <!-- Load external standards -->
+  <config name="installed_paths" value="vendor/oxid-esales/coding-standards,vendor/escapestudios/symfony2-coding-standard"/>
+
   <!-- Exclude patterns -->
   <exclude-pattern>.bin</exclude-pattern>
   <exclude-pattern>.bundle</exclude-pattern>
@@ -14,8 +17,8 @@
   <exclude-pattern>vendor</exclude-pattern>
   <exclude-pattern>views</exclude-pattern>
 
-  <!-- Inherit OXID's custom ruleset -->
-  <rule ref="vendor/oxid-esales/coding-standards/Oxid/ruleset.xml"/>
+  <!-- Inherit OXID's coding standard -->
+  <rule ref="Oxid"/>
 
   <!-- Add sniffs related to OXID's "Software quality" guidelines -->
   <rule ref="Generic.Metrics.CyclomaticComplexity">
@@ -33,6 +36,7 @@
     </properties>
   </rule>
   <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+  <rule ref="Symfony2.Arrays.MultiLineArrayComma"/>
 
   <!-- Add custom sniffs -->
   <rule ref="phpcs/Sniffs/Functions/FunctionNameUnderscoreSniff.php"/>

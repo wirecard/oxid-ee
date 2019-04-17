@@ -146,7 +146,7 @@ class Transaction extends MultiLanguageModel
             self::STATE_SUCCESS,
             self::STATE_ERROR,
             self::STATE_AWAITING,
-            self::STATE_CLOSED
+            self::STATE_CLOSED,
         ];
     }
 }

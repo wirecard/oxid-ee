@@ -63,7 +63,7 @@ class OrderController extends OrderController_parent
                 'ord_agb' => '1',
                 'oxdownloadableproductsagreement' => '0',
                 'oxserviceproductsagreement' => '0',
-                'wdtoken' => $sWdSessionToken
+                'wdtoken' => $sWdSessionToken,
             ];
 
             $sParamStr = http_build_query($aParams);

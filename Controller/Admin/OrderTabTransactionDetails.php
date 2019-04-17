@@ -33,7 +33,7 @@ class OrderTabTransactionDetails extends OrderTab
             'request-id',
             'transaction-id',
             'transaction-state',
-            'statuses.0.provider-transaction-id'
+            'statuses.0.provider-transaction-id',
         ];
 
         $aRestOfKeys = array_diff(array_keys($aTransactionResponseData), $aSortKeys);
@@ -43,7 +43,7 @@ class OrderTabTransactionDetails extends OrderTab
         foreach ($aSortedKeys as $sKey) {
             $aList[] = [
                 'title' => $sKey,
-                'value' => $aTransactionResponseData[$sKey] ?? null
+                'value' => $aTransactionResponseData[$sKey] ?? null,
             ];
         }
 

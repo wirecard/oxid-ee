@@ -27,7 +27,7 @@ $sModuleDescriptionDe = file_get_contents(dirname(__FILE__) . '/out/html/module-
 $sTermsContentPlaceholder = '{{ TERMS_CONTENT }}';
 $aModuleDescriptions = [
     'de' => $sToggleTermsJs . str_replace($sTermsContentPlaceholder, $sTermsContentDe, $sModuleDescriptionDe),
-    'en' => $sToggleTermsJs . str_replace($sTermsContentPlaceholder, $sTermsContentEn, $sModuleDescriptionEn)
+    'en' => $sToggleTermsJs . str_replace($sTermsContentPlaceholder, $sTermsContentEn, $sModuleDescriptionEn),
 ];
 
 /**
@@ -38,7 +38,7 @@ $aModule = [
     'title'             => 'Wirecard OXID Module',
     'description'       => [
         'de' => $aModuleDescriptions['de'],
-        'en' => $aModuleDescriptions['en']
+        'en' => $aModuleDescriptions['en'],
     ],
     'lang'              => 'en',
     'thumbnail'         => 'logo.png',
@@ -64,7 +64,7 @@ $aModule = [
         \OxidEsales\Eshop\Application\Model\Basket::class
             => \Wirecard\Oxid\Extend\Model\Basket::class,
         \OxidEsales\Eshop\Application\Controller\ThankYouController::class
-            => \Wirecard\Oxid\Extend\Controller\ThankYouController::class
+            => \Wirecard\Oxid\Extend\Controller\ThankYouController::class,
     ],
     'controllers'       => [
         'wcpg_transaction'
@@ -86,13 +86,13 @@ $aModule = [
         'wcpg_order_transaction_details'
             => \Wirecard\Oxid\Controller\Admin\OrderTabTransactionDetails::class,
         'wcpg_notifyhandler'
-            => \Wirecard\Oxid\Controller\NotifyHandler::class
+            => \Wirecard\Oxid\Controller\NotifyHandler::class,
     ],
     'blocks' => [
         [
             'template' => 'payment_main.tpl',
             'block' => 'admin_payment_main_form',
-            'file' => 'out/blocks/wd_admin_payment_main_form.tpl'
+            'file' => 'out/blocks/wd_admin_payment_main_form.tpl',
         ],
         [
             'template' => 'order_list.tpl',
@@ -121,44 +121,44 @@ $aModule = [
         [
             'template' => 'page/checkout/order.tpl',
             'block' => 'checkout_order_main',
-            'file' => 'out/blocks/profiling_tags.tpl'
+            'file' => 'out/blocks/profiling_tags.tpl',
         ],
         [
             'template' => 'page/checkout/payment.tpl',
             'block' => 'checkout_payment_errors',
-            'file' => 'out/blocks/checkout_errors.tpl'
+            'file' => 'out/blocks/checkout_errors.tpl',
         ],
         [
             'template' => 'page/checkout/thankyou.tpl',
             'block' => 'checkout_thankyou_info',
-            'file' => 'views/blocks/thankyou.tpl'
+            'file' => 'views/blocks/thankyou.tpl',
         ],
         [
             'template' => 'page/account/order.tpl',
             'block' => 'account_order_history_cart_items',
-            'file' => 'views/blocks/accountorder.tpl'
+            'file' => 'views/blocks/accountorder.tpl',
         ],
         [
             'theme' => 'azure-theme',
             'template' => 'page/account/order.tpl',
             'block' => 'account_order_persparams',
-            'file' => 'views/blocks/accountorder_azure.tpl'
+            'file' => 'views/blocks/accountorder_azure.tpl',
         ],
         [
             'template' => 'page/checkout/inc/payment_other.tpl',
             'block' => 'checkout_payment_longdesc',
-            'file' => 'views/blocks/checkout_payment_longdesc.tpl'
-        ]
+            'file' => 'views/blocks/checkout_payment_longdesc.tpl',
+        ],
     ],
     'templates'         => [
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
         'transaction_list.tpl'              => 'wirecard/paymentgateway/views/admin/tpl/transaction_list.tpl',
         'tab_simple.tpl'                    => 'wirecard/paymentgateway/views/admin/tpl/tab_simple.tpl',
         'tab_table.tpl'                     => 'wirecard/paymentgateway/views/admin/tpl/tab_table.tpl',
-        'tab_post_processing.tpl'           => 'wirecard/paymentgateway/views/admin/tpl/tab_post_processing.tpl'
+        'tab_post_processing.tpl'           => 'wirecard/paymentgateway/views/admin/tpl/tab_post_processing.tpl',
     ],
     'events'            => [
         'onActivate'        => '\Wirecard\Oxid\Core\OxidEE_Events::onActivate',
-        'onDeactivate'      => '\Wirecard\Oxid\Core\OxidEE_Events::onDeactivate'
-    ]
+        'on,Deactivate'      => '\Wirecard\Oxid\Core\OxidEE_Events::onDeactivate',
+    ],
 ];
