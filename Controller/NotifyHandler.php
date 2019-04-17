@@ -31,16 +31,22 @@ use Exception;
  * Notify handler class.
  *
  * Handle Payment SDK notifications.
+ *
+ * @since 1.0.0
  */
 class NotifyHandler extends FrontendController
 {
     /**
      * @var LoggerInterface
+     *
+     * @since 1.0.0
      */
     private $_oLogger;
 
     /**
      * NotifyHandler constructor.
+     *
+     * @since 1.0.0
      */
     public function __construct()
     {
@@ -54,6 +60,8 @@ class NotifyHandler extends FrontendController
      *
      * @return void
      * @throws Exception if $sPaymentName does not exist
+     *
+     * @since 1.0.0
      */
     public function handleRequest()
     {
@@ -90,6 +98,8 @@ class NotifyHandler extends FrontendController
      * @return void
      *
      * @throws Exception
+     *
+     * @since 1.0.0
      */
     private function _onNotificationSuccess($oResponse, $oBackendService)
     {
@@ -106,6 +116,8 @@ class NotifyHandler extends FrontendController
      * Handles error notifications
      *
      * @param Response $oResponse
+     *
+     * @since 1.0.0
      */
     private function _onNotificationError(Response $oResponse)
     {

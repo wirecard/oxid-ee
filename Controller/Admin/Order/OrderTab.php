@@ -16,26 +16,36 @@ use Wirecard\Oxid\Model\Transaction;
 
 /**
  * Controls the view for a single order tab.
+ *
+ * @since 1.0.0
  */
 class OrderTab extends Tab
 {
     /**
      * @var Transaction
+     *
+     * @since 1.0.0
      */
     protected $oTransaction;
 
     /**
      * @var Order
+     *
+     * @since 1.0.0
      */
     protected $oOrder;
 
     /**
      * @var ResponseMapper
+     *
+     * @since 1.0.0
      */
     protected $oResponseMapper;
 
     /**
      * TransactionTab constructor.
+     *
+     * @since 1.0.0
      */
     public function __construct()
     {

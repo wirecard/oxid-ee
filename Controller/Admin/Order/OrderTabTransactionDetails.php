@@ -11,6 +11,8 @@ namespace Wirecard\Oxid\Controller\Admin\Order;
 
 /**
  * Controls the view for the order transaction details tab.
+ *
+ * @since 1.0.0
  */
 class OrderTabTransactionDetails extends OrderTab
 {
@@ -18,6 +20,8 @@ class OrderTabTransactionDetails extends OrderTab
      * @inheritdoc
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     protected function _getData(): array
     {

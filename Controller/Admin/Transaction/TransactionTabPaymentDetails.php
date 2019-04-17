@@ -13,6 +13,8 @@ use Wirecard\Oxid\Core\Helper;
 
 /**
  * Controls the view for the payment details transaction tab.
+ *
+ * @since 1.0.0
  */
 class TransactionTabPaymentDetails extends TransactionTab
 {
@@ -20,6 +22,8 @@ class TransactionTabPaymentDetails extends TransactionTab
      * @inheritdoc
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     protected function _getData(): array
     {

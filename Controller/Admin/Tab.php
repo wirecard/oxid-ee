@@ -13,6 +13,8 @@ use OxidEsales\Eshop\Application\Controller\Admin\AdminDetailsController;
 
 /**
  * Controls the view for a single tab in the admin details.
+ *
+ * @since 1.0.0
  */
 class Tab extends AdminDetailsController
 {
@@ -20,16 +22,22 @@ class Tab extends AdminDetailsController
 
     /**
      * @var string
+     *
+     * @since 1.0.0
      */
     protected $sListObjectId;
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     protected $_sThisTemplate = 'tab_simple.tpl';
 
     /**
      * ListTab constructor.
+     *
+     * @since 1.0.0
      */
     public function __construct()
     {
@@ -42,6 +50,8 @@ class Tab extends AdminDetailsController
      * @inheritdoc
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public function render(): string
     {
@@ -57,6 +67,8 @@ class Tab extends AdminDetailsController
      * Check if $sListObjectId is set
      *
      * @return bool
+     *
+     * @since 1.0.0
      */
     protected function _isListObjectIdSet(): bool
     {
@@ -67,6 +79,8 @@ class Tab extends AdminDetailsController
      * Returns an array of arbitrary data used to populate the view.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     protected function _getData(): array
     {
