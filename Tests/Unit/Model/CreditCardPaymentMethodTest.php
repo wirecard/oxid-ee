@@ -111,5 +111,18 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertArrayHasKey("nonThreeDMaxLimit", $aConfigFields);
         $this->assertArrayHasKey("threeDMinLimit", $aConfigFields);
         $this->assertArrayHasKey("limitsCurrency", $aConfigFields);
+        $oTransaction = $this->_oPaymentMethod->getTransaction();
+        $this->assertInstanceOf(CreditCardTransaction::class, $oTransaction);
+    }
+
+    public function testGetAdditionalConfigFieldsPaypal()
+    {
+        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
+        $this->assertCount(13, $aConfigFields);
+        $this->assertArrayHasKey('threeDMaid', $aConfigFields);
+        $this->assertArrayHasKey('threeDSecret', $aConfigFields);
+        $this->assertArrayHasKey('nonThreeDMaxLimit', $aConfigFields);
+        $this->assertArrayHasKey('threeDMinLimit', $aConfigFields);
+        $this->assertArrayHasKey('limitsCurrency', $aConfigFields);
     }
 }

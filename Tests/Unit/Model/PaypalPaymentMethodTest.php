@@ -38,4 +38,11 @@ class PaypalPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oTransaction = $this->_oPaymentMethod->getTransaction();
         $this->assertInstanceOf(PayPalTransaction::class, $oTransaction);
     }
+
+    public function testGetAdditionalConfigFieldsPaypal()
+    {
+        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
+        $this->assertCount(9, $aConfigFields);
+        $this->assertArrayHasKey('basket', $aConfigFields);
+    }
 }

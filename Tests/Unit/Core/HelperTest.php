@@ -8,12 +8,12 @@
  *
  */
 
-use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Core\PaymentMethodHelper;
-
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Module\Module;
 use OxidEsales\EshopCommunity\Core\Controller\BaseController;
+
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 
 class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
@@ -246,5 +246,12 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
             'non existing currency' => ['XXXXX', Helper::ROUND_PRECISION_FALLBACK],
             'null' => [null, Helper::ROUND_PRECISION_FALLBACK],
         ];
+    }
+
+    public function testGetInputHelpHtml()
+    {
+        $this->markTestSkipped("Smarty cannot load 'inputhelp.tpl'");
+
+        $this->assertNotNull(Helper::getInputHelpHtml("Test String"));
     }
 }
