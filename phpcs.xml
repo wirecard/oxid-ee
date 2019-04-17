@@ -39,6 +39,7 @@
     </properties>
   </rule>
   <rule ref="Generic.NamingConventions.CamelCapsFunctionName"/>
+  <rule ref="Squiz.Classes.ClassFileName"/>
   <rule ref="Symfony2.Arrays.MultiLineArrayComma"/>
 
   <!-- Add custom sniffs -->
