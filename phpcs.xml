@@ -35,6 +35,7 @@
       <property name="absoluteLineLimit" value="120"/>
     </properties>
   </rule>
+  <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
   <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
   <rule ref="Symfony2.Arrays.MultiLineArrayComma"/>
 

@@ -162,10 +162,9 @@ class TransactionTabPostProcessing extends Tab
     /**
      * Callback function for the 'cancel' action.
      *
-     * @param float $fAmount
      * @return string
      */
-    private function _onCancel(float $fAmount): string
+    private function _onCancel(): string
     {
         // TODO
         return Helper::translate('text_generic_success');
@@ -174,10 +173,9 @@ class TransactionTabPostProcessing extends Tab
     /**
      * Callback function for the 'capture' action.
      *
-     * @param float $fAmount
      * @return string
      */
-    private function _onCapture(float $fAmount): string
+    private function _onCapture(): string
     {
         // TODO
         return Helper::translate('text_generic_success');
@@ -186,10 +184,9 @@ class TransactionTabPostProcessing extends Tab
     /**
      * Callback function for the 'refund' action.
      *
-     * @param float $fAmount
      * @return string
      */
-    private function _onRefund(float $fAmount): string
+    private function _onRefund(): string
     {
         // TODO
         return Helper::translate('text_generic_success');
