@@ -119,7 +119,7 @@ class OxidEEEventsTest extends OxidEsales\TestingLibrary\UnitTestCase
         OxidEE_Events::onDeactivate();
 
         $dbMetaDataHandler = oxNew(DbMetaDataHandler::class);
-        $this->assertFalse($dbMetaDataHandler->tableExists('wdoxidee_ordertransactions'));
+        $this->assertTrue($dbMetaDataHandler->tableExists('wdoxidee_ordertransactions'));
 
         foreach ($this->_oXmlPaymentMethods->payment as $paymentMethod) {
             $payment = oxNew(Payment::class);
