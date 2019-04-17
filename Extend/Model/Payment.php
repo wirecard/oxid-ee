@@ -18,6 +18,8 @@ use Exception;
 
 /**
  * Extends the Payment model.
+ *
+ * @since 1.0.0
  */
 class Payment extends Payment_parent
 {
@@ -25,6 +27,8 @@ class Payment extends Payment_parent
      * Checks if this is a current payment method.
      *
      * @return bool
+     *
+     * @since 1.0.0
      */
     public function isCustomPaymentMethod(): bool
     {
@@ -35,6 +39,8 @@ class Payment extends Payment_parent
      * Returns the PaymentMethod object associated with the payment method.
      *
      * @return PaymentMethod|null
+     *
+     * @since 1.0.0
      */
     public function getPaymentMethod()
     {
@@ -49,6 +55,8 @@ class Payment extends Payment_parent
      * Returns the logo URL of the payment method or null, if none is specified.
      *
      * @return string|null
+     *
+     * @since 1.0.0
      */
     public function getLogoUrl(): ?string
     {

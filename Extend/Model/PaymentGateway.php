@@ -44,17 +44,22 @@ use \Exception;
 
 /**
  * Custom Payment Gateway to handle Module payment methods
+ *
+ * @since 1.0.0
  */
 class PaymentGateway extends BaseModel
 {
     /**
      * @var LoggerInterface
+     *
+     * @since 1.0.0
      */
     private $_oLogger;
 
     /**
      * PaymentGateway constructor.
      *
+     * @since 1.0.0
      */
     public function __construct()
     {
@@ -70,6 +75,7 @@ class PaymentGateway extends BaseModel
      * @param Transaction $oTransaction the transaction to fill
      * @param string      $sOrderId     the order ID to get the descriptor from
      *
+     * @since 1.0.0
      */
     private static function _addDescriptor(&$oTransaction, $sOrderId)
     {
@@ -87,6 +93,7 @@ class PaymentGateway extends BaseModel
      * @param string      $sShopUrl     the public url for the shop
      * @param string      $sSid         the query formated session id eg. "&sid=123456789"
      *
+     * @since 1.0.0
      */
     private static function _addRedirectUrls(&$oTransaction, $oSession, $sShopUrl, $sSid)
     {
@@ -112,6 +119,7 @@ class PaymentGateway extends BaseModel
      *
      * @throws Exception
      *
+     * @since 1.0.0
      */
     public function createTransaction($oBasket, $oOrder)
     {
@@ -150,6 +158,8 @@ class PaymentGateway extends BaseModel
      * @param Basket        $oBasket
      * @param PaymentMethod $oPaymentMethod
      * @param Order         $oOrder
+     *
+     * @since 1.0.0
      */
     private function _addMandatoryTransactionData(&$oTransaction, $oSession, $oBasket, $oPaymentMethod, $oOrder)
     {
@@ -180,6 +190,8 @@ class PaymentGateway extends BaseModel
 
     /**
      * @param Transaction $oTransaction
+     *
+     * @since 1.0.0
      */
     private function _addCustomFields(&$oTransaction)
     {
@@ -210,6 +222,8 @@ class PaymentGateway extends BaseModel
      *
      * @return FailureResponse|FormInteractionResponse|InteractionResponse|Response|SuccessResponse
      * @throws Exception
+     *
+     * @since 1.0.0
      */
     public function executeTransaction($oTransaction, $oOrder, $oBasket)
     {
@@ -256,6 +270,8 @@ class PaymentGateway extends BaseModel
      *
      * @return Response
      * @throws Exception
+     *
+     * @since 1.0.0
      */
     private function _handleJsResponse($oTransactionService, $oSession, $sShopUrl, $sSid, $oTransactionConfig, $oOrder)
     {
@@ -280,6 +296,7 @@ class PaymentGateway extends BaseModel
      * @param Payment     $oPayment
      * @param string      $sSessionId
      *
+     * @since 1.0.0
      */
     private static function _addAdditionalInfo(
         &$oTransaction,
@@ -308,6 +325,7 @@ class PaymentGateway extends BaseModel
      * @param Transaction $oTransaction
      * @param Basket      $oBasket
      *
+     * @since 1.0.0
      */
     private static function _addBasketInfo(&$oTransaction, $oBasket)
     {
@@ -320,6 +338,8 @@ class PaymentGateway extends BaseModel
      * @param Session $oSession
      *
      * @return bool|string
+     *
+     * @since 1.0.0
      */
     public static function getModuleToken($oSession)
     {

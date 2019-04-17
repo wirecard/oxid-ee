@@ -27,6 +27,8 @@ use Wirecard\Oxid\Core\AccountHolderHelper;
  * Class Order
  *
  * @mixin \OxidEsales\Eshop\Application\Model\Order
+ *
+ * @since 1.0.0
  */
 class Order extends Order_parent
 {
@@ -43,6 +45,8 @@ class Order extends Order_parent
      * @param string $sTransactionId
      *
      * @return bool
+     *
+     * @since 1.0.0
      */
     public function loadWithTransactionId(string $sTransactionId)
     {
@@ -58,6 +62,8 @@ class Order extends Order_parent
      * Returns the country associated with the order billing address.
      *
      * @return Country
+     *
+     * @since 1.0.0
      */
     public function getOrderBillingCountry(): Country
     {
@@ -71,6 +77,8 @@ class Order extends Order_parent
      * Returns the country associated with the order shipping address.
      *
      * @return Country
+     *
+     * @since 1.0.0
      */
     public function getOrderShippingCountry(): Country
     {
@@ -84,6 +92,8 @@ class Order extends Order_parent
      * Returns the payment associated with the order.
      *
      * @return Payment
+     *
+     * @since 1.0.0
      */
     public function getOrderPayment(): Payment
     {
@@ -97,6 +107,8 @@ class Order extends Order_parent
      * Returns a TransactionList object containing all transactions associated with the order.
      *
      * @return TransactionList
+     *
+     * @since 1.0.0
      */
     public function getOrderTransactionList(): TransactionList
     {
@@ -111,6 +123,8 @@ class Order extends Order_parent
      * Returns the last transaction associated with the order.
      *
      * @return Transaction
+     *
+     * @since 1.0.0
      */
     public function getOrderLastTransaction(): Transaction
     {
@@ -124,6 +138,8 @@ class Order extends Order_parent
      * Returns true if the payment is one of the module's.
      *
      * @return bool
+     *
+     * @since 1.0.0
      */
     public function isCustomPaymentMethod()
     {
@@ -134,6 +150,8 @@ class Order extends Order_parent
      * Checks if the payment is pending
      *
      * @return bool
+     *
+     * @since 1.0.0
      */
     public function isPaymentPending()
     {
@@ -146,6 +164,8 @@ class Order extends Order_parent
      * Checks if the payment was successful
      *
      * @return bool
+     *
+     * @since 1.0.0
      */
     public function isPaymentSuccess()
     {
@@ -159,6 +179,8 @@ class Order extends Order_parent
      * @param OrderArticle $oOrderItem
      *
      * @return bool
+     *
+     * @since 1.0.0
      */
     public function isLastArticle($oOrderItem)
     {
@@ -174,6 +196,8 @@ class Order extends Order_parent
      * Returns an associative array of available states and their translation.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public static function getTranslatedStates()
     {
@@ -190,6 +214,8 @@ class Order extends Order_parent
      * Creates an AccountHolder object for the order.
      *
      * @return AccountHolder
+     *
+     * @since 1.0.0
      */
     public function getAccountHolder(): AccountHolder
     {
@@ -217,6 +243,8 @@ class Order extends Order_parent
      * Creates a shipping AccountHolder object for the order.
      *
      * @return AccountHolder
+     *
+     * @since 1.0.0
      */
     public function getShippingAccountHolder(): AccountHolder
     {
@@ -255,6 +283,8 @@ class Order extends Order_parent
      * Returns an array of available states.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public static function getStates()
     {
@@ -265,6 +295,8 @@ class Order extends Order_parent
      * Returns the translation for the order's state.
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getTranslatedState()
     {
@@ -278,6 +310,8 @@ class Order extends Order_parent
      *
      * @param Basket $oBasket
      * @param User   $oUser
+     *
+     * @since 1.0.0
      */
     public function createTemp($oBasket, $oUser)
     {

@@ -16,27 +16,36 @@ use \OxidEsales\Eshop\Core\Registry;
 
 /**
  * Extends the AJAX handler of OXID's payment method configuration page
+ *
+ * @since 1.0.0
  */
 class PaymentMainAjax extends PaymentMainAjax_parent
 {
     /**
      * @var \Psr\Log\LoggerInterface
+     *
+     * @since 1.0.0
      */
     private $oLogger;
 
     /**
      * @var \OxidEsales\Eshop\Core\Util
+     *
+     * @since 1.0.0
      */
     private $oUtils;
 
     /**
      * @var \OxidEsales\Eshop\Core\Config
+     *
+     * @since 1.0.0
      */
     private $oConfig;
 
     /**
      * BasePaymentMain controller constructor.
      *
+     * @since 1.0.0
      */
     public function __construct()
     {
@@ -47,6 +56,8 @@ class PaymentMainAjax extends PaymentMainAjax_parent
 
     /**
      * Checks the validity of the payment method credentials the merchant set on the frontend.
+     *
+     * @since 1.0.0
      */
     public function checkPaymentMethodCredentials()
     {
