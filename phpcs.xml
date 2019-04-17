@@ -29,14 +29,15 @@
   </rule>
 
   <!-- Add custom sniffs -->
+  <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+  <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
+  <rule ref="Generic.Formatting.SpaceAfterCast"/>
   <rule ref="Generic.Files.LineLength">
     <properties>
       <property name="lineLimit" value="120"/>
       <property name="absoluteLineLimit" value="120"/>
     </properties>
   </rule>
-  <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
-  <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
   <rule ref="Symfony2.Arrays.MultiLineArrayComma"/>
 
   <!-- Add custom sniffs -->
