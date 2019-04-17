@@ -26,7 +26,7 @@ class TransactionTabPaymentDetails extends TransactionTab
         $aListData = $this->_getListDataFromArray($this->oResponseMapper->getPaymentDetails());
         $aListData[] = [
             'title' => Helper::translate('panel_transaction_copy'),
-            'value' => $this->oTransaction->getResponseXML(),
+            'value' => $this->oTransaction->getResponseXml(),
             'action' => 'copyToClipboard',
             'action_title' => Helper::translate('copy_xml_text'),
         ];

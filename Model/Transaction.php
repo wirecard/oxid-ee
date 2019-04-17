@@ -107,7 +107,7 @@ class Transaction extends MultiLanguageModel
      *
      * @return string
      */
-    public function getResponseXML(): string
+    public function getResponseXml(): string
     {
         return base64_decode($this->wdoxidee_ordertransactions__responsexml->rawValue);
     }

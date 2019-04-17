@@ -38,6 +38,7 @@
       <property name="absoluteLineLimit" value="120"/>
     </properties>
   </rule>
+  <rule ref="Generic.NamingConventions.CamelCapsFunctionName"/>
   <rule ref="Symfony2.Arrays.MultiLineArrayComma"/>
 
   <!-- Add custom sniffs -->

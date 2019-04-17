@@ -174,7 +174,7 @@ class Payment_Gateway extends Payment_Gateway_parent
 
         $oTransaction->setNotificationUrl($sShopUrl
             . 'index.php?cl=wcpg_notifyhandler&fnc=handleRequest&pmt='
-            . Payment_Method::getOxidFromSDKName($oPaymentMethod->getTransaction()->getConfigKey()));
+            . Payment_Method::getOxidFromSdkName($oPaymentMethod->getTransaction()->getConfigKey()));
 
         $oResponse = $oTransactionService->process(
             $oTransaction,

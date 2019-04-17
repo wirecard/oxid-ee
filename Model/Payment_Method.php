@@ -96,7 +96,7 @@ abstract class Payment_Method
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    public static function getOxidFromSDKName(string $sSDKName): string
+    public static function getOxidFromSdkName(string $sSDKName): string
     {
         return self::OXID_NAME_PREFIX . $sSDKName;
     }

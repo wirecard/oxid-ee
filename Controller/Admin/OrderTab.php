@@ -49,7 +49,7 @@ class OrderTab extends Tab
             $this->oTransaction->loadWithTransactionId($this->oOrder->oxorder__wdoxidee_transactionid->value);
 
             if ($this->oTransaction->isLoaded()) {
-                $this->oResponseMapper = new ResponseMapper($this->oTransaction->getResponseXML());
+                $this->oResponseMapper = new ResponseMapper($this->oTransaction->getResponseXml());
             }
         }
     }

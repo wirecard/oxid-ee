@@ -57,7 +57,7 @@ class TransactionTab extends Tab
             $this->oOrder->load($this->oTransaction->wdoxidee_ordertransactions__orderid->value);
             $this->oPayment->load($this->oOrder->oxorder__oxpaymenttype->value);
 
-            $this->oResponseMapper = new ResponseMapper($this->oTransaction->getResponseXML());
+            $this->oResponseMapper = new ResponseMapper($this->oTransaction->getResponseXml());
         }
     }
 
