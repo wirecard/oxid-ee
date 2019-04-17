@@ -22,6 +22,8 @@ use Wirecard\PaymentSdk\Entity\Item;
 
 /**
  * Helper class to handle Basket Items
+ *
+ * @since 1.0.0
  */
 class BasketHelper
 {
@@ -32,6 +34,7 @@ class BasketHelper
      * @param Basket   $oBasket            the OXID basket item
      * @param string   $sCurrency          the currency name
      *
+     * @since 1.0.0
      */
     public static function addPaymentCostsToBasket(&$oTransactionBasket, $oBasket, $sCurrency)
     {
@@ -61,6 +64,7 @@ class BasketHelper
      * @param Basket   $oBasket   the OXID basket item
      * @param string   $sCurrency
      *
+     * @since 1.0.0
      */
     public static function addGiftCardCostsToBasket(&$oWdBasket, $oBasket, $sCurrency)
     {
@@ -90,6 +94,7 @@ class BasketHelper
      * @param Basket   $oBasket   the OXID basket item
      * @param string   $sCurrency
      *
+     * @since 1.0.0
      */
     public static function addWrappingCostsToBasket(&$oWdBasket, $oBasket, $sCurrency)
     {
@@ -119,6 +124,7 @@ class BasketHelper
      * @param Basket   $oBasket   the OXID basket item
      * @param string   $sCurrency
      *
+     * @since 1.0.0
      */
     public static function addVoucherDiscountsToBasket(&$oWdBasket, $oBasket, $sCurrency)
     {
@@ -151,6 +157,7 @@ class BasketHelper
      * @param Basket   $oBasket   the OXID basket item
      * @param string   $sCurrency
      *
+     * @since 1.0.0
      */
     public static function addShippingCostsToBasket(&$oWdBasket, $oBasket, $sCurrency)
     {
@@ -185,6 +192,8 @@ class BasketHelper
      * @param WdBasket $oWdBasket
      * @param Basket   $oBasket
      * @param string   $sCurrencyName
+     *
+     * @since 1.0.0
      */
     public static function addDiscountsToBasket(&$oWdBasket, $oBasket, $sCurrencyName)
     {
@@ -215,6 +224,8 @@ class BasketHelper
      *
      * @throws ArticleInputException
      * @throws NoArticleException
+     *
+     * @since 1.0.0
      */
     public static function addArticleToBasket(&$oBasket, $oBasketItem, $sCurrency)
     {
@@ -245,6 +256,8 @@ class BasketHelper
      * @param float|null $fTaxValue
      *
      * @return Item
+     *
+     * @since 1.0.0
      */
     private static function _createItem(
         $sName,

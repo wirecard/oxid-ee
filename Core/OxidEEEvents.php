@@ -17,6 +17,8 @@ use \Wirecard\Oxid\Model\Transaction;
 /**
  * Class handles module behaviour on shop installation events
  *
+ *
+ * @since 1.0.0
  */
 class OxidEEEvents
 {
@@ -36,6 +38,8 @@ class OxidEEEvents
      * @param string $sQuery      SQL query to execute if column does not exist in the table
      *
      * @return boolean true or false if query was executed
+     *
+     * @since 1.0.0
      */
     private static function _addColumnIfNotExists($sTableName, $sColumnName, $sQuery)
     {
@@ -55,6 +59,8 @@ class OxidEEEvents
 
     /**
      * Regenerates database view-tables
+     *
+     * @since 1.0.0
      */
     private static function _regenerateViews()
     {
@@ -71,6 +77,8 @@ class OxidEEEvents
      * @param string $sQuery     SQL query to execute if no row with the search criteria exists in the table
      *
      * @return boolean true or false if query was executed
+     *
+     * @since 1.0.0
      */
     private static function _insertRowIfNotExists($sTableName, $aKeyValue, $sQuery)
     {
@@ -94,6 +102,8 @@ class OxidEEEvents
 
     /**
      * Extends OXID's internal payment methods table with the fields required by the module
+     *
+     * @since 1.0.0
      */
     private static function _extendPaymentMethodTable()
     {
@@ -169,6 +179,8 @@ class OxidEEEvents
 
     /**
      * Extends OXID's internal order table with the fields required by the module
+     *
+     * @since 1.0.0
      */
     private static function _extendOrderTable()
     {
@@ -206,6 +218,8 @@ class OxidEEEvents
 
     /**
      * Creates the module's order transaction table
+     *
+     * @since 1.0.0
      */
     private static function _createOrderTransactionTable()
     {
@@ -235,6 +249,8 @@ class OxidEEEvents
     /**
      * Delete the module's order transaction table
      * ONLY FOR DEVELOPMENT PURPOSES, NOT TO BE USED IN PRODUCTION!
+     *
+     * @since 1.0.0
      */
     private static function _deleteOrderTransactionTable()
     {
@@ -247,6 +263,8 @@ class OxidEEEvents
      * Add Wirecard's payment methods defined in payments.xml
      *
      * @return undefined
+     *
+     * @since 1.0.0
      */
     private static function _addPaymentMethods()
     {
@@ -270,6 +288,8 @@ class OxidEEEvents
      *
      * @param object $oPayment
      *
+     *
+     * @since 1.0.0
      */
     private static function _addPaymentMethod($oPayment)
     {
@@ -326,6 +346,8 @@ class OxidEEEvents
 
     /**
      * Handle OXID's onActivate event
+     *
+     * @since 1.0.0
      */
     public static function onActivate()
     {
@@ -358,6 +380,8 @@ class OxidEEEvents
 
     /**
      * Handle OXID's onDeactivate event
+     *
+     * @since 1.0.0
      */
     public static function onDeactivate()
     {
@@ -375,6 +399,8 @@ class OxidEEEvents
 
     /**
      * Deactivate wirecard payment methods
+     *
+     * @since 1.0.0
      */
     private static function _disablePaymentTypes()
     {

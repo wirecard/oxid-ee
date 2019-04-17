@@ -19,6 +19,7 @@ use Wirecard\Oxid\Model\PaypalPaymentMethod;
  *
  * @package Wirecard\Core
  *
+ * @since 1.0.0
  */
 class PaymentMethodFactory
 {
@@ -30,6 +31,7 @@ class PaymentMethodFactory
      * @return PaymentMethod
      * @throws Exception if $sPaymentMethodType is not registered
      *
+     * @since 1.0.0
      */
     public static function create($sPaymentMethodType)
     {

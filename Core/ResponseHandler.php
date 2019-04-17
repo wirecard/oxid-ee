@@ -23,6 +23,8 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
  * Class ResponseHandler
+ *
+ * @since 1.0.0
  */
 class ResponseHandler
 {
@@ -34,6 +36,8 @@ class ResponseHandler
      * @param Order           $oOrder
      *
      * @throws \Exception
+     *
+     * @since 1.0.0
      */
     public static function onSuccessResponse($oResponse, $oBackendService, $oOrder)
     {
@@ -58,6 +62,8 @@ class ResponseHandler
      * @param Response $oResponse
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     private static function _getParentTransactionId(Response $oResponse)
     {
@@ -76,6 +82,8 @@ class ResponseHandler
      * @param Payment         $oPayment
      *
      * @throws \Exception
+     *
+     * @since 1.0.0
      */
     private static function _saveTransaction($oResponse, $oOrder, $oPayment)
     {
@@ -109,6 +117,8 @@ class ResponseHandler
      * @param BackendService  $oBackendService
      *
      * @return void
+     *
+     * @since 1.0.0
      */
     private static function _updateOrder($oOrder, $oResponse, $oBackendService)
     {

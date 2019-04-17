@@ -18,11 +18,15 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
  * Converts an XML response to a Response object and provides various getters.
+ *
+ * @since 1.0.0
  */
 class ResponseMapper
 {
     /**
      * @var SuccessResponse
+     *
+     * @since 1.0.0
      */
     private $oResponse;
 
@@ -30,6 +34,8 @@ class ResponseMapper
      * ResponseMapper constructor.
      *
      * @param string $sXml
+     *
+     * @since 1.0.0
      */
     public function __construct(string $sXml)
     {
@@ -40,6 +46,8 @@ class ResponseMapper
      * Returns the response's payment details.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public function getPaymentDetails(): array
     {
@@ -50,6 +58,8 @@ class ResponseMapper
      * Returns the response's transaction details.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public function getTransactionDetails(): array
     {
@@ -60,6 +70,8 @@ class ResponseMapper
      * Returns the response's account holder.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public function getAccountHolder(): array
     {
@@ -70,6 +82,8 @@ class ResponseMapper
      * Returns the response's shipping data.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public function getShipping(): array
     {
@@ -80,6 +94,8 @@ class ResponseMapper
      * Returns the response's basket.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public function getBasket(): array
     {
@@ -90,6 +106,8 @@ class ResponseMapper
      * Returns the response's card.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public function getCard(): array
     {
@@ -100,6 +118,8 @@ class ResponseMapper
      * Returns the whole data from the response xml.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public function getData(): array
     {
@@ -111,6 +131,8 @@ class ResponseMapper
      *
      * @param PaymentDetails|TransactionDetails|AccountHolder|Basket|Card $oResponseObject
      * @return array
+     *
+     * @since 1.0.0
      */
     private function _getObjectDataArray($oResponseObject)
     {
@@ -122,6 +144,8 @@ class ResponseMapper
      *
      * @param string $sHtml
      * @return array
+     *
+     * @since 1.0.0
      */
     private function _parseHtml(string $sHtml): array
     {
