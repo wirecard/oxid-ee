@@ -68,15 +68,4 @@ the configured threshold.
         </properties>
         <example />
     </rule>
-
-    <rule ref="rulesets/codesize.xml" />
-    <rule ref="rulesets/naming.xml" />
-    <rule ref="rulesets/unusedcode.xml" />
-
-    <rule ref="rulesets/cleancode.xml">
-        <!-- exclude static access rule because OXID requires static access for a number of internal classes -->
-        <exclude name="StaticAccess" />
-        <exclude name="ElseExpression" />
-    </rule>
-
 </ruleset>
