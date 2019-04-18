@@ -38,6 +38,11 @@ use Wirecard\PaymentSdk\TransactionService;
  */
 class OrderHelper
 {
+
+    const PAY_ERROR_VARIABLE = 'payerror';
+    const PAY_ERROR_ID = '-102';
+    const PAY_ERROR_TEXT_VARIABLE = 'payerrortext';
+
     /**
      * Create Order
      *
@@ -184,8 +189,8 @@ class OrderHelper
         }
 
         // set the custom payment error code and text and redirect back to the payment step of the checkout process
-        Registry::getSession()->setVariable('payerror', '-102');
-        Registry::getSession()->setVariable('payerrortext', join('<br/>', $aErrorDescriptions));
+        Registry::getSession()->setVariable(self::PAY_ERROR_VARIABLE, self::PAY_ERROR_IDs);
+        Registry::getSession()->setVariable(self::PAY_ERROR_TEXT_VARIABLE, join('<br/>', $aErrorDescriptions));
         $sRedirectUrl = Registry::getConfig()->getShopHomeUrl() . 'cl=payment';
 
         $oOrder->delete();
