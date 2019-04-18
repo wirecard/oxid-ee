@@ -1,33 +1,30 @@
 <?php
 
 /**
- * Ensures that classes do not exceed a certain amount of lines of code.
+ * Ensures that functions do not exceed a certain amount of lines of code.
  */
-class WdStandard_Sniffs_Classes_ClassLinesOfCodeSniff implements PHP_CodeSniffer_Sniff
+class WdStandard_Sniffs_Functions_FunctionLinesOfCodeSniff implements PHP_CodeSniffer_Sniff
 {
     /**
-     * The limit of lines of code a class should not exceed.
+     * The limit of lines of code a function should not exceed.
      *
      * @var int
      */
-    public $linesLimit = 400;
+    public $linesLimit = 80;
 
     /**
-     * The limit of lines of code a class must not exceed.
+     * The limit of lines of code a function must not exceed.
      *
      * @var int
      */
-    public $absoluteLinesLimit = 500;
+    public $absoluteLinesLimit = 120;
 
     /**
      * @inheritdoc
      */
     public function register()
     {
-        return [
-            T_CLASS,
-            T_INTERFACE,
-        ];
+        return [T_FUNCTION];
     }
 
     /**
@@ -36,14 +33,20 @@ class WdStandard_Sniffs_Classes_ClassLinesOfCodeSniff implements PHP_CodeSniffer
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
         $tokens = $phpcsFile->getTokens();
-        $tokenClass = $tokens[$stackPtr];
-        $tokenScopeOpener = $tokens[$tokenClass['scope_opener']];
-        $tokenScopeCloser = $tokens[$tokenClass['scope_closer']];
+        $tokenFunction = $tokens[$stackPtr];
+
+        // ignore abstract functions
+        if (!isset($tokenFunction['scope_opener']) || !isset($tokenFunction['scope_closer'])) {
+            return;
+        }
+
+        $tokenScopeOpener = $tokens[$tokenFunction['scope_opener']];
+        $tokenScopeCloser = $tokens[$tokenFunction['scope_closer']];
         $linesOfCode = $tokenScopeCloser['line'] - $tokenScopeOpener['line'] - 1;
 
         if ($linesOfCode > $this->absoluteLinesLimit) {
             $phpcsFile->addError(
-                'Class exceeds maximum limit of %s lines of code; contains %s lines',
+                'Function exceeds maximum limit of %s lines of code; contains %s lines',
                 $stackPtr,
                 'MaxExceeded',
                 [
@@ -53,7 +56,7 @@ class WdStandard_Sniffs_Classes_ClassLinesOfCodeSniff implements PHP_CodeSniffer
             );
         } else if ($linesOfCode > $this->linesLimit) {
             $phpcsFile->addWarning(
-                'Class exceeds %s lines of code; contains %s lines',
+                'Function exceeds %s lines of code; contains %s lines',
                 $stackPtr,
                 'TooLong',
                 [

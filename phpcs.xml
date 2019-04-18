@@ -27,6 +27,7 @@
       <property name="absoluteComplexity" value="5"/>
     </properties>
   </rule>
+  <rule ref="phpcs/WdStandard/Sniffs/Functions/FunctionLinesOfCodeSniff.php"/>
 
   <!-- Add custom sniffs -->
   <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
