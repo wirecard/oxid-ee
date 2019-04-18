@@ -45,10 +45,10 @@ class Tab extends AdminDetailsController
      */
     public function render(): string
     {
-        $this->_aViewData += [
+        $this->setViewData($this->getViewData() + [
             'data' => $this->_isListObjectIdSet() ? $this->_getData() : [],
             'controller' => $this->classKey,
-        ];
+        ]);
 
         return parent::render();
     }

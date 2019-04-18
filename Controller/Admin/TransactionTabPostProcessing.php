@@ -53,12 +53,12 @@ class TransactionTabPostProcessing extends Tab
         $sTemplate = parent::render();
         $aRequestParameters = $this->_getRequestParameters();
 
-        $this->_aViewData += [
+        $this->setViewData($this->getViewData() + [
             'actions' => $this->_getPostProcessingActions(),
             'requestParameters' => $aRequestParameters,
             'alert' => $this->_processRequest($aRequestParameters),
             'currency' => $this->oTransaction->wdoxidee_ordertransactions__currency->value,
-        ];
+        ]);
 
         return $sTemplate;
     }

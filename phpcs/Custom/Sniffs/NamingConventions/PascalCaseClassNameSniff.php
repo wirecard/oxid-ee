@@ -25,7 +25,12 @@ class Custom_Sniffs_NamingConventions_PascalCaseClassNameSniff implements PHP_Co
         $tokenClassName = $tokens[$phpcsFile->findNext(T_STRING, $stackPtr)];
 
         if (!preg_match('/^[A-Z][a-z]+(?:[A-Z][a-z]+)*$/', $tokenClassName['content'])) {
-            $phpcsFile->addError("Class name {$tokenClassName['content']} is not PascalCase", $stackPtr, 'NotPascalCase');
+            $phpcsFile->addError(
+                'Class name %s is not PascalCase',
+                $stackPtr,
+                'NotPascalCase',
+                [$tokenClassName['content']]
+            );
         }
     }
 }

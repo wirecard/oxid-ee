@@ -2,6 +2,8 @@
 
 /**
  * Ensures that functions do not exceed a certain amount of lines of code.
+ *
+ * @see https://docs.oxid-esales.com/developer/en/6.0/modules/certification/software_quality.html#maximum-length-of-methods-80-lines
  */
 class Custom_Sniffs_Functions_FunctionLinesOfCodeSniff implements PHP_CodeSniffer_Sniff
 {

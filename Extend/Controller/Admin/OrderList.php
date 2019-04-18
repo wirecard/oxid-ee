@@ -26,9 +26,9 @@ class OrderList extends OrderList_parent
     public function render()
     {
         $oOrder = oxNew(Order::class);
-        $this->_aViewData += [
+        $this->setViewData($this->getViewData() + [
             'orderStates' => $oOrder::getTranslatedStates(),
-        ];
+        ]);
 
         return parent::render();
     }
