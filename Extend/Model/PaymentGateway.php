@@ -19,10 +19,11 @@ use OxidEsales\Eshop\Core\Session;
 use OxidEsales\EshopCommunity\Core\Config;
 use OxidEsales\EshopCommunity\Core\Model\BaseModel;
 use OxidEsales\EshopCommunity\Core\ShopVersion;
+
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 
-use Wirecard\Oxid\Core\ResponseHandler;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -281,10 +282,10 @@ class PaymentGateway extends BaseModel
             $_POST,
             $sShopUrl . 'index.php?lang=' . $sBaseLanguage . '&cl=order&redirectFromForm=1&' . $sModuleToken . $sSid
         );
-        if ($oResponse instanceof SuccessResponse) {
-            $oBackendService = new BackendService($oTransactionConfig, $this->_oLogger);
-            ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
-        }
+
+        $oBackendService = new BackendService($oTransactionConfig, $this->_oLogger);
+        OrderHelper::handleResponse($oResponse, $this->_oLogger, $oOrder, $oBackendService);
+
         return $oResponse;
     }
 

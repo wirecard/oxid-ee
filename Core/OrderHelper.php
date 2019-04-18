@@ -10,28 +10,26 @@
 namespace Wirecard\Oxid\Core;
 
 use Exception;
-use OxidEsales\Eshop\Core\Field;
-use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\ArticleInputException;
 use OxidEsales\Eshop\Core\Exception\NoArticleException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
-use OxidEsales\Eshop\Application\Model\User;
-
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Session;
+use Psr\Log\LoggerInterface;
+use Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\FormInteractionResponseFields;
 use Wirecard\PaymentSdk\BackendService;
+use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\FormInteractionResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\Response;
-use Wirecard\PaymentSdk\Entity\Status;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\TransactionService;
-
-use Wirecard\Oxid\Extend\Model\Order;
-use Wirecard\Oxid\Extend\Model\Payment;
-
-use Psr\Log\LoggerInterface;
 
 /**
  * Helper class to handle orders
@@ -81,18 +79,19 @@ class OrderHelper
     /**
      * Handle transaction response
      *
-     * @param Response        $oResponse
-     * @param LoggerInterface $oLogger
-     * @param Order           $oOrder
-     *
-     * @return bool
+     * @param Response            $oResponse
+     * @param LoggerInterface     $oLogger
+     * @param Order               $oOrder
+     * @param BackendService|null $oBackendService
      *
      * @since 1.0.0
+     *
+     * @throws Exception
      */
-    public static function handleResponse($oResponse, $oLogger, $oOrder)
+    public static function handleResponse($oResponse, $oLogger, $oOrder, $oBackendService = null)
     {
         if ($oResponse instanceof FailureResponse) {
-            return self::_handleFailureResponse($oResponse, $oLogger, $oOrder);
+            self::_handleFailureResponse($oResponse, $oLogger, $oOrder);
         }
 
         // set the transaction ID on the order
@@ -107,7 +106,23 @@ class OrderHelper
             self::_handleInteractionResponse($oResponse);
         }
 
-        return true;
+        self::_onSuccessResponse($oResponse, $oBackendService, $oOrder);
+    }
+
+    /**
+     * @param Response       $oResponse
+     * @param BackendService $oBackendService
+     * @param Order          $oOrder
+     *
+     * @throws Exception
+     *
+     * @since 1.0.0
+     */
+    private static function _onSuccessResponse($oResponse, $oBackendService, $oOrder)
+    {
+        if (!is_null($oBackendService) && $oResponse instanceof SuccessResponse) {
+            ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
+        }
     }
 
     /**
@@ -146,13 +161,13 @@ class OrderHelper
      * @param LoggerInterface $oLogger
      * @param Order           $oOrder
      *
-     * @return bool
-     *
      * @since 1.0.0
      */
     private static function _handleFailureResponse($oResponse, $oLogger, $oOrder)
     {
         $oLogger->error('Error processing transaction:');
+
+        $aErrorDescriptions = [];
 
         foreach ($oResponse->getStatusCollection() as $oStatus) {
             /**
@@ -161,11 +176,21 @@ class OrderHelper
             $sSeverity = ucfirst($oStatus->getSeverity());
             $sCode = $oStatus->getCode();
             $sDescription = $oStatus->getDescription();
+
+            // add error message and code to array for display on frontend
+            $aErrorDescriptions[] = $sDescription . ' (Error code: ' . $sCode . ')';
+
             $oLogger->error("\t$sSeverity with code $sCode and message '$sDescription' occurred.");
         }
+
+        // set the custom payment error code and text and redirect back to the payment step of the checkout process
+        Registry::getSession()->setVariable('payerror', '-102');
+        Registry::getSession()->setVariable('payerrortext', join('<br/>', $aErrorDescriptions));
+        $sRedirectUrl = Registry::getConfig()->getShopHomeUrl() . 'cl=payment';
+
         $oOrder->delete();
 
-        return false;
+        Registry::getUtils()->redirect($sRedirectUrl);
     }
 
     /**
@@ -195,9 +220,7 @@ class OrderHelper
 
             $oResponse = $oTransactionService->handleResponse($oResponse);
 
-            if (self::handleResponse($oResponse, $oLogger, $oOrder)) {
-                ResponseHandler::onSuccessResponse($oResponse, new BackendService($oConfig, $oLogger), $oOrder);
-            }
+            self::handleResponse($oResponse, $oLogger, $oOrder, $oConfig);
         }
     }
 
