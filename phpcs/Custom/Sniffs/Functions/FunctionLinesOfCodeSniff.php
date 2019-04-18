@@ -3,7 +3,7 @@
 /**
  * Ensures that functions do not exceed a certain amount of lines of code.
  */
-class WdStandard_Sniffs_Functions_FunctionLinesOfCodeSniff implements PHP_CodeSniffer_Sniff
+class Custom_Sniffs_Functions_FunctionLinesOfCodeSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * The limit of lines of code a function should not exceed.

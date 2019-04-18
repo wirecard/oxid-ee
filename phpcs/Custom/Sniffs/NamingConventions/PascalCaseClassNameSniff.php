@@ -3,7 +3,7 @@
 /**
  * Ensures that classes are named in PascalCase.
  */
-class WdStandard_Sniffs_NamingConventions_PascalCaseClassNameSniff implements PHP_CodeSniffer_Sniff
+class Custom_Sniffs_NamingConventions_PascalCaseClassNameSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * @inheritdoc

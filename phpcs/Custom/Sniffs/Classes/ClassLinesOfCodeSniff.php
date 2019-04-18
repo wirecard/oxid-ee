@@ -3,7 +3,7 @@
 /**
  * Ensures that classes do not exceed a certain amount of lines of code.
  */
-class WdStandard_Sniffs_Classes_ClassLinesOfCodeSniff implements PHP_CodeSniffer_Sniff
+class Custom_Sniffs_Classes_ClassLinesOfCodeSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * The limit of lines of code a class should not exceed.

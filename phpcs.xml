@@ -3,7 +3,7 @@
   <description>Wirecard OXID extension</description>
 
   <!-- Load external standards -->
-  <config name="installed_paths" value="vendor/oxid-esales/coding-standards,vendor/escapestudios/symfony2-coding-standard"/>
+  <config name="installed_paths" value="phpcs,vendor/oxid-esales/coding-standards,vendor/escapestudios/symfony2-coding-standard"/>
 
   <!-- Exclude patterns -->
   <exclude-pattern>.bin</exclude-pattern>
@@ -17,19 +17,13 @@
   <exclude-pattern>vendor</exclude-pattern>
   <exclude-pattern>views</exclude-pattern>
 
-  <!-- Inherit OXID's coding standard -->
+  <!-- Inherit OXID's standard -->
   <rule ref="Oxid"/>
 
-  <!-- Add sniffs related to OXID's "Software quality" guidelines -->
-  <rule ref="Generic.Metrics.CyclomaticComplexity">
-    <properties>
-      <property name="complexity" value="5"/>
-      <property name="absoluteComplexity" value="5"/>
-    </properties>
-  </rule>
-  <rule ref="phpcs/WdStandard/Sniffs/Functions/FunctionLinesOfCodeSniff.php"/>
+  <!-- Add custom standard -->
+  <rule ref="Custom"/>
 
-  <!-- Add custom sniffs -->
+  <!-- Add sniffs from other standards -->
   <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
   <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
   <rule ref="Generic.Formatting.SpaceAfterCast"/>
@@ -39,12 +33,13 @@
       <property name="absoluteLineLimit" value="120"/>
     </properties>
   </rule>
+  <rule ref="Generic.Metrics.CyclomaticComplexity">
+    <properties>
+      <property name="complexity" value="5"/>
+      <property name="absoluteComplexity" value="5"/>
+    </properties>
+  </rule>
   <rule ref="Generic.NamingConventions.CamelCapsFunctionName"/>
   <rule ref="Squiz.Classes.ClassFileName"/>
   <rule ref="Symfony2.Arrays.MultiLineArrayComma"/>
-
-  <!-- Add custom sniffs -->
-  <rule ref="phpcs/WdStandard/Sniffs/Classes/ClassLinesOfCodeSniff.php"/>
-  <rule ref="phpcs/WdStandard/Sniffs/NamingConventions/FunctionNameUnderscoreSniff.php"/>
-  <rule ref="phpcs/WdStandard/Sniffs/NamingConventions/PascalCaseClassNameSniff.php"/>
 </ruleset>
