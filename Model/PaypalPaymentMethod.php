@@ -9,7 +9,6 @@
 
 namespace Wirecard\Oxid\Model;
 
-use \Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Core\Helper;
 
 use \Wirecard\PaymentSdk\Config\Config;
@@ -22,7 +21,7 @@ use \OxidEsales\Eshop\Application\Model\Payment;
 /**
  * Payment method implementation for Paypal
  */
-class Paypal_Payment_Method extends Payment_Method
+class PaypalPaymentMethod extends PaymentMethod
 {
     /**
      * @inheritdoc
@@ -30,42 +29,34 @@ class Paypal_Payment_Method extends Payment_Method
     protected static $_sName = "paypal";
 
     /**
-     * Get the payment method's configuration
+     * @inheritdoc
+     *
+     * @param Payment $oPayment
      *
      * @return Config
      *
-     * @SuppressWarnings(PHPMD.Coverage)
      */
-    public function getConfig(): Config
+    public function getConfig($oPayment): Config
     {
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load(self::getName(true));
-        $oConfig = new Config(
-            $oPayment->oxpayments__wdoxidee_apiurl->value,
-            $oPayment->oxpayments__wdoxidee_httpuser->value,
-            $oPayment->oxpayments__wdoxidee_httppass->value
-        );
+        $oConfig = parent::getConfig($oPayment);
+
         $oPaymentMethodConfig = new PaymentMethodConfig(
-            self::getName(),
+            PayPalTransaction::NAME,
             $oPayment->oxpayments__wdoxidee_maid->value,
             $oPayment->oxpayments__wdoxidee_secret->value
         );
-        $oConfig->add($oPaymentMethodConfig);
 
+        $oConfig->add($oPaymentMethodConfig);
         return $oConfig;
     }
 
     /**
-     * Get the current transaction to be processed
-     *
-     * @var double $dAmount
-     * @var Order $oOrder
+     * @inheritdoc
      *
      * @return Transaction
      *
-     * @SuppressWarnings(PHPMD.Coverage)
      */
-    public function getTransaction(): Transaction
+    public function getTransaction()
     {
         return new PayPalTransaction();
     }
@@ -80,13 +71,13 @@ class Paypal_Payment_Method extends Payment_Method
         $parentConfigFields = parent::getConfigFields();
         $additionalFields = [
             'basket' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_basket',
-                'options'     => [
-                    '1'       => Helper::translate('yes'),
-                    '0'       => Helper::translate('no'),
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_basket',
+                'options' => [
+                    '1' => Helper::translate('yes'),
+                    '0' => Helper::translate('no'),
                 ],
-                'title'       => Helper::translate('config_shopping_basket'),
+                'title' => Helper::translate('config_shopping_basket'),
                 'description' => Helper::translate('config_shopping_basket_desc'),
             ],
         ];

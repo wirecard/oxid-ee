@@ -25,6 +25,7 @@ class Helper
      * Gets the translation for a given key.
      *
      * @param string $sKey
+     *
      * @return string
      */
     public static function translate($sKey)
@@ -39,6 +40,7 @@ class Helper
      *
      * @param string $sMaid
      * @param string $sSessionId
+     *
      * @return string
      */
     public static function createDeviceFingerprint($sMaid, $sSessionId = null)
@@ -76,23 +78,25 @@ class Helper
      * thousand separators.
      *
      * @param string $sNumber
+     *
      * @return float
      */
     public static function getFloatFromString($sNumber)
     {
-        return (float) preg_replace('/\.(?=.*\.)/', '', str_replace(',', '.', $sNumber));
+        return (float)preg_replace('/\.(?=.*\.)/', '', str_replace(',', '.', $sNumber));
     }
 
     /**
      * Returns the gender code for a given salutation.
      *
      * @param string $sSalutation
+     *
      * @return string
      */
     public static function getGenderCodeForSalutation($sSalutation)
     {
         $aGenderCodeMap = [
-            'MR'  => 'm',
+            'MR' => 'm',
             'MRS' => 'f',
         ];
 
@@ -104,6 +108,7 @@ class Helper
      * 0000-00-00), null will be returned.
      *
      * @param string $sTime
+     *
      * @return DateTime|null
      */
     public static function getDateTimeFromString($sTime)
@@ -126,6 +131,7 @@ class Helper
      * Returns HTML for the [{oxinputhelp}] Smarty function, but allows passing any string, not just translation keys.
      *
      * @param string $sText
+     *
      * @return string
      */
     public static function getInputHelpHtml($sText)
@@ -139,14 +145,51 @@ class Helper
     }
 
     /**
+     * Returns the session challenge variable from the session object
+     *
+     * @return string
+     */
+    public static function getSessionChallenge()
+    {
+        return Registry::getSession()->getVariable('sess_challenge');
+    }
+
+    /**
      * Checks if a key is present and not empty in the array passed as an argument
      *
      * @param array  $aArgs
      * @param string $sKey
+     *
      * @return bool
      */
     public static function isPresentProperty(array $aArgs, string $sKey): bool
     {
         return isset($aArgs[$sKey]) && !empty($aArgs[$sKey]);
+    }
+
+    /**
+     * Gets the session id as a query string
+     *
+     * @return string
+     */
+    public static function getSidQueryString()
+    {
+        $sSid = Registry::getSession()->sid(true);
+        if ($sSid != '') {
+            $sSid = '&' . $sSid;
+        }
+
+        return $sSid;
+    }
+
+    /**
+     * @param string $sTimeStamp
+     *
+     * @return bool|string
+     */
+    public static function getFormattedDbDate($sTimeStamp)
+    {
+        $oUtilsDate = Registry::getUtilsDate();
+        return $oUtilsDate->formatDBTimestamp($oUtilsDate->formTime($sTimeStamp));
     }
 }

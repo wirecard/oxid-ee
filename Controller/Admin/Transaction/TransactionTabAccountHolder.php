@@ -7,7 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Controller\Admin;
+namespace Wirecard\Oxid\Controller\Admin\Transaction;
 
 /**
  * Controls the view for the account holder transaction tab.

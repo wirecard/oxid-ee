@@ -8,9 +8,9 @@
  */
 
 use Wirecard\Oxid\Extend\Model\Payment;
-use Wirecard\Oxid\Model\Paypal_Payment_Method;
+use Wirecard\Oxid\Model\PaypalPaymentMethod;
 
-class Payment_Test extends OxidEsales\TestingLibrary\UnitTestCase
+class PaymentTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
     /**
      * @dataProvider testIsCustomPaymentMethodProvider
@@ -51,7 +51,7 @@ class Payment_Test extends OxidEsales\TestingLibrary\UnitTestCase
     public function testGetPaymentMethodProvider()
     {
         return [
-            'valid payment method' => ['wdpaypal', Paypal_Payment_Method::class],
+            'valid payment method' => ['wdpaypal', PaypalPaymentMethod::class],
             'invalid payment method' => ['foo', null],
         ];
     }

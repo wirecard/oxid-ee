@@ -9,20 +9,21 @@
 
 namespace Wirecard\Oxid\Model;
 
-use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Model\Transaction as TransactionModel;
+use \Wirecard\Oxid\Core\Helper;
+use \Wirecard\PaymentSdk\Config\Config;
+use \Exception;
 
+use \OxidEsales\Eshop\Application\Model\Payment;
+use \OxidEsales\Eshop\Application\Model\UserPayment;
 use \OxidEsales\Eshop\Core\Registry;
 
 use \Psr\Log\LoggerInterface;
-use \Exception;
 
 /**
- * Class Payment_Method
+ * Class PaymentMethod
  *
- * @package Wirecard\Model
  */
-abstract class Payment_Method
+abstract class PaymentMethod
 {
     const OXID_NAME_PREFIX = 'wd';
 
@@ -37,11 +38,10 @@ abstract class Payment_Method
     protected $_oLogger;
 
     /**
-     * Paypal_Payment_Method constructor.
+     * PaymentMethod constructor.
      *
      * @throws Exception if payment method name is not overwritten in child class
      *
-     * @SuppressWarnings(PHPMD.Coverage)
      */
     public function __construct()
     {
@@ -53,18 +53,31 @@ abstract class Payment_Method
     }
 
     /**
-     * Get the payments method transaction configuration
-     *
-     * @SuppressWarnings(PHPMD.Coverage)
-     */
-    abstract public function getTransaction();
-
-    /**
      * Get the payments method configuration
      *
-     * @SuppressWarnings(PHPMD.Coverage)
+     * @param Payment $oPayment
+     *
+     * @return Config
+     *
      */
-    abstract public function getConfig();
+    public function getConfig($oPayment)
+    {
+        $oConfig = new Config(
+            $oPayment->oxpayments__wdoxidee_apiurl->value,
+            $oPayment->oxpayments__wdoxidee_httpuser->value,
+            $oPayment->oxpayments__wdoxidee_httppass->value
+        );
+
+        return $oConfig;
+    }
+
+    /**
+     * Get the payments method transaction configuration
+     *
+     * @return \Wirecard\PaymentSdk\Transaction\Transaction
+     *
+     */
+    abstract public function getTransaction();
 
     /**
      * Get the payment methods name
@@ -73,7 +86,6 @@ abstract class Payment_Method
      *
      * @return string
      *
-     * @SuppressWarnings(PHPMD.Coverage)
      * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
      */
     public static function getName(bool $bForOxid = false): string
@@ -94,7 +106,6 @@ abstract class Payment_Method
      *
      * @return string
      *
-     * @SuppressWarnings(PHPMD.Coverage)
      */
     public static function getOxidFromSDKName(string $sSDKName): string
     {
@@ -110,58 +121,58 @@ abstract class Payment_Method
     {
         return [
             'apiUrl' => [
-                'type'        => 'text',
-                'field'       => 'oxpayments__wdoxidee_apiurl',
-                'title'       => Helper::translate('config_base_url'),
+                'type' => 'text',
+                'field' => 'oxpayments__wdoxidee_apiurl',
+                'title' => Helper::translate('config_base_url'),
                 'description' => Helper::translate('config_base_url_desc'),
             ],
             'httpUser' => [
-                'type'        => 'text',
-                'field'       => 'oxpayments__wdoxidee_httpuser',
-                'title'       => Helper::translate('config_http_user'),
+                'type' => 'text',
+                'field' => 'oxpayments__wdoxidee_httpuser',
+                'title' => Helper::translate('config_http_user'),
             ],
             'httpPassword' => [
-                'type'        => 'text',
-                'field'       => 'oxpayments__wdoxidee_httppass',
-                'title'       => Helper::translate('config_http_password'),
+                'type' => 'text',
+                'field' => 'oxpayments__wdoxidee_httppass',
+                'title' => Helper::translate('config_http_password'),
             ],
             'maid' => [
-                'type'        => 'text',
-                'field'       => 'oxpayments__wdoxidee_maid',
-                'title'       => Helper::translate('config_merchant_account_id'),
+                'type' => 'text',
+                'field' => 'oxpayments__wdoxidee_maid',
+                'title' => Helper::translate('config_merchant_account_id'),
                 'description' => Helper::translate('config_three_d_merchant_account_id_desc'),
             ],
             'secret' => [
-                'type'        => 'text',
-                'field'       => 'oxpayments__wdoxidee_secret',
-                'title'       => Helper::translate('config_merchant_secret'),
+                'type' => 'text',
+                'field' => 'oxpayments__wdoxidee_secret',
+                'title' => Helper::translate('config_merchant_secret'),
                 'description' => Helper::translate('config_three_d_merchant_secret_desc'),
             ],
             'descriptor' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_descriptor',
-                'options'     => [
-                    '1'       => Helper::translate('yes'),
-                    '0'       => Helper::translate('no'),
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_descriptor',
+                'options' => [
+                    '1' => Helper::translate('yes'),
+                    '0' => Helper::translate('no'),
                 ],
-                'title'       => Helper::translate('config_descriptor'),
+                'title' => Helper::translate('config_descriptor'),
                 'description' => Helper::translate('config_descriptor_desc'),
             ],
             'additionalInfo' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_additional_info',
-                'options'     => [
-                    '1'       => Helper::translate('yes'),
-                    '0'       => Helper::translate('no'),
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_additional_info',
+                'options' => [
+                    '1' => Helper::translate('yes'),
+                    '0' => Helper::translate('no'),
                 ],
-                'title'       => Helper::translate('config_additional_info'),
+                'title' => Helper::translate('config_additional_info'),
                 'description' => Helper::translate('config_additional_info_desc'),
             ],
             'paymentAction' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_transactionaction',
-                'options'     => TransactionModel::getTranslatedActions(),
-                'title'       => Helper::translate('config_payment_action'),
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_transactionaction',
+                'options' => Transaction::getTranslatedActions(),
+                'title' => Helper::translate('config_payment_action'),
                 'description' => Helper::translate('config_payment_action_desc'),
             ],
         ];

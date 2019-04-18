@@ -7,12 +7,12 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Controller\Admin;
+namespace Wirecard\Oxid\Controller\Admin\Transaction;
 
 /**
- * Controls the view for the data transaction tab.
+ * Controls the view for the shipping transaction tab.
  */
-class TransactionTabTransactionDetails extends TransactionTab
+class TransactionTabShipping extends TransactionTab
 {
     /**
      * @inheritdoc
@@ -21,9 +21,6 @@ class TransactionTabTransactionDetails extends TransactionTab
      */
     protected function _getData(): array
     {
-        return $this->_getListDataFromArray(
-            $this->oResponseMapper->getTransactionDetails(),
-            $this->oTransaction->wdoxidee_ordertransactions__state->value
-        );
+        return $this->_getListDataFromArray($this->oResponseMapper->getShipping());
     }
 }

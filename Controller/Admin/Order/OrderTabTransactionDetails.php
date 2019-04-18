@@ -7,7 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Controller\Admin;
+namespace Wirecard\Oxid\Controller\Admin\Order;
 
 /**
  * Controls the view for the order transaction details tab.
@@ -25,7 +25,7 @@ class OrderTabTransactionDetails extends OrderTab
             return array();
         }
 
-        $aTransactionResponseData = $this->oResponseMapper->getData();
+        $aTransactionResponse = $this->oResponseMapper->getData();
 
         $aSortKeys = [
             'payment-methods.0.name',
@@ -36,14 +36,14 @@ class OrderTabTransactionDetails extends OrderTab
             'statuses.0.provider-transaction-id'
         ];
 
-        $aRestOfKeys = array_diff(array_keys($aTransactionResponseData), $aSortKeys);
+        $aRestOfKeys = array_diff(array_keys($aTransactionResponse), $aSortKeys);
         $aSortedKeys = array_merge($aSortKeys, $aRestOfKeys);
 
         $aList = array();
         foreach ($aSortedKeys as $sKey) {
             $aList[] = [
                 'title' => $sKey,
-                'value' => $aTransactionResponseData[$sKey] ?? null
+                'value' => $aTransactionResponse[$sKey] ?? null
             ];
         }
 

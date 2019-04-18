@@ -17,15 +17,14 @@ use \Wirecard\Oxid\Model\Transaction;
 /**
  * Class handles module behaviour on shop installation events
  *
- * @SuppressWarnings(PHPMD.StaticAccess)
- * @SuppressWarnings(PHPMD.Coverage)
  */
-class OxidEE_Events
+class OxidEEEvents
 {
     const OBJECTPAYMENT_TABLE = "oxobject2payment";
     const ORDER_TABLE = "oxorder";
     const PAYMENT_TABLE = "oxpayments";
     const TRANSACTION_TABLE = "wdoxidee_ordertransactions";
+
     private static $oDb;
 
     /**

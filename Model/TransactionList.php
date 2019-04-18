@@ -9,8 +9,6 @@
 
 namespace Wirecard\Oxid\Model;
 
-use Wirecard\Oxid\Model\Transaction;
-
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Model\ListModel;
 
@@ -29,7 +27,9 @@ class TransactionList extends ListModel
      *
      * @param array  $aConditions
      * @param string $sOrderByField
+     *
      * @return TransactionList
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      */
     public function getListByConditions(array $aConditions = [], string $sOrderByField = 'date'): TransactionList
     {
@@ -53,6 +53,7 @@ class TransactionList extends ListModel
      * Returns an array of child transaction IDs of a given transaction.
      *
      * @param Transaction $oTransaction
+     *
      * @return array
      */
     protected function _getChildTransactionIds(Transaction $oTransaction)

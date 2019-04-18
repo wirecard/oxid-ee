@@ -17,7 +17,7 @@ use \OxidEsales\Eshop\Core\Registry;
 /**
  * Extends the AJAX handler of OXID's payment method configuration page
  */
-class Payment_Main_Ajax extends Payment_Main_Ajax_parent
+class PaymentMainAjax extends PaymentMainAjax_parent
 {
     /**
      * @var \Psr\Log\LoggerInterface
@@ -37,7 +37,6 @@ class Payment_Main_Ajax extends Payment_Main_Ajax_parent
     /**
      * BasePaymentMain controller constructor.
      *
-     * @SuppressWarnings(PHPMD.StaticAccess)
      */
     public function __construct()
     {
