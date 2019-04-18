@@ -20,7 +20,7 @@ use \Wirecard\Oxid\Model\Transaction;
  * @SuppressWarnings(PHPMD.StaticAccess)
  * @SuppressWarnings(PHPMD.Coverage)
  */
-class OxidEE_Events
+class OxidEeEvents
 {
     const OBJECTPAYMENT_TABLE = "oxobject2payment";
     const ORDER_TABLE = "oxorder";

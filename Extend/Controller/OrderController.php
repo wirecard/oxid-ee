@@ -22,7 +22,7 @@ use \Wirecard\PaymentSdk\Response\InteractionResponse;
 use \Wirecard\PaymentSdk\Response\Response;
 use \Wirecard\PaymentSdk\Entity\Status;
 
-use \Wirecard\Oxid\Extend\Model\Payment_Gateway;
+use \Wirecard\Oxid\Extend\Model\PaymentGateway;
 use \Wirecard\Oxid\Extend\Model\Order;
 use \Wirecard\Oxid\Extend\Model\Payment;
 
@@ -211,7 +211,7 @@ class OrderController extends OrderController_parent
     private function _handleTransaction($oBasket, $oOrder)
     {
         $oLogger = Registry::getLogger();
-        $oPaymentGateway = oxNew(Payment_Gateway::class);
+        $oPaymentGateway = oxNew(PaymentGateway::class);
         $oResponse = null;
 
         try {

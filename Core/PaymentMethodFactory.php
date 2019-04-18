@@ -9,34 +9,34 @@
 
 namespace Wirecard\Oxid\Core;
 
-use Wirecard\Oxid\Model\Credit_Card_Payment_Method;
-use Wirecard\Oxid\Model\Payment_Method;
-use Wirecard\Oxid\Model\Paypal_Payment_Method;
+use Wirecard\Oxid\Model\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod;
+use Wirecard\Oxid\Model\PaypalPaymentMethod;
 
 /**
- * Class Payment_Method_Factory
+ * Class PaymentMethodFactory
  *
  * @package Wirecard\Core
  *
  */
-class Payment_Method_Factory
+class PaymentMethodFactory
 {
     /**
      * Create a Wirecard payment method
      *
      * @param string $sPaymentMethodType
-     * @return Payment_Method
+     * @return PaymentMethod
      * @throws \Exception if $sPaymentMethodType is not registered
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
-    public static function create(string $sPaymentMethodType): Payment_Method
+    public static function create(string $sPaymentMethodType): PaymentMethod
     {
         switch ($sPaymentMethodType) {
-            case Paypal_Payment_Method::getName(true):
-                return new Paypal_Payment_Method();
-            case Credit_Card_Payment_Method::getName(true):
-                return new Credit_Card_Payment_Method();
+            case PaypalPaymentMethod::getName(true):
+                return new PaypalPaymentMethod();
+            case CreditCardPaymentMethod::getName(true):
+                return new CreditCardPaymentMethod();
             default:
                 throw new \Exception("payment type not registered: $sPaymentMethodType");
         }

@@ -9,8 +9,8 @@
 
 namespace Wirecard\Oxid\Extend\Model;
 
-use Wirecard\Oxid\Core\Payment_Method_Factory;
-use Wirecard\Oxid\Model\Payment_Method;
+use Wirecard\Oxid\Core\PaymentMethodFactory;
+use Wirecard\Oxid\Model\PaymentMethod;
 
 use OxidEsales\Eshop\Core\Registry;
 
@@ -32,14 +32,14 @@ class Payment extends Payment_parent
     }
 
     /**
-     * Returns the Payment_Method object associated with the payment method.
+     * Returns the PaymentMethod object associated with the payment method.
      *
-     * @return Payment_Method|null
+     * @return PaymentMethod|null
      */
     public function getPaymentMethod()
     {
         try {
-            return Payment_Method_Factory::create($this->getId());
+            return PaymentMethodFactory::create($this->getId());
         } catch (Exception $e) {
             return null;
         }

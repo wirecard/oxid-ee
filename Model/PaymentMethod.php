@@ -18,11 +18,11 @@ use \Psr\Log\LoggerInterface;
 use \Exception;
 
 /**
- * Class Payment_Method
+ * Class PaymentMethod
  *
  * @package Wirecard\Model
  */
-abstract class Payment_Method
+abstract class PaymentMethod
 {
     const OXID_NAME_PREFIX = 'wd';
 
@@ -37,7 +37,7 @@ abstract class Payment_Method
     protected $_oLogger;
 
     /**
-     * Paypal_Payment_Method constructor.
+     * PaypalPaymentMethod constructor.
      *
      * @throws Exception if payment method name is not overwritten in child class
      *

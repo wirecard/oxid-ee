@@ -43,5 +43,6 @@
   <rule ref="Symfony2.Arrays.MultiLineArrayComma"/>
 
   <!-- Add custom sniffs -->
-  <rule ref="phpcs/Sniffs/Functions/FunctionNameUnderscoreSniff.php"/>
+  <rule ref="phpcs/WdStandard/Sniffs/NamingConventions/FunctionNameUnderscoreSniff.php"/>
+  <rule ref="phpcs/WdStandard/Sniffs/NamingConventions/PascalCaseClassNameSniff.php"/>
 </ruleset>

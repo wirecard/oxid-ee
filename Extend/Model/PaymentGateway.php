@@ -23,8 +23,8 @@ use \OxidEsales\Eshop\Core\Session;
 
 use \Wirecard\Oxid\Core\BasketHelper;
 use \Wirecard\Oxid\Core\Helper;
-use \Wirecard\Oxid\Core\Payment_Method_Factory;
-use \Wirecard\Oxid\Model\Payment_Method;
+use \Wirecard\Oxid\Core\PaymentMethodFactory;
+use \Wirecard\Oxid\Model\PaymentMethod;
 
 use \Wirecard\PaymentSdk\Entity\Amount;
 use \Wirecard\PaymentSdk\Entity\Device;
@@ -49,7 +49,7 @@ use \Exception;
  * @mixin \OxidEsales\Eshop\Application\Model\PaymentGateway
  *
  */
-class Payment_Gateway extends Payment_Gateway_parent
+class PaymentGateway extends PaymentGateway_parent
 {
     /**
      * @var LoggerInterface
@@ -139,7 +139,7 @@ class Payment_Gateway extends Payment_Gateway_parent
         $sPaymentMethod = $oBasket->getPaymentId();
 
         $oRedirect = self::getRedirectUrls($oSession, $sShopUrl);
-        $oPaymentMethod = Payment_Method_Factory::create($sPaymentMethod);
+        $oPaymentMethod = PaymentMethodFactory::create($sPaymentMethod);
         $oTransactionService = new TransactionService($oPaymentMethod->getConfig(), $this->_oLogger);
 
         $oTransaction = $oPaymentMethod->getTransaction();
@@ -174,7 +174,7 @@ class Payment_Gateway extends Payment_Gateway_parent
 
         $oTransaction->setNotificationUrl($sShopUrl
             . 'index.php?cl=wcpg_notifyhandler&fnc=handleRequest&pmt='
-            . Payment_Method::getOxidFromSdkName($oPaymentMethod->getTransaction()->getConfigKey()));
+            . PaymentMethod::getOxidFromSdkName($oPaymentMethod->getTransaction()->getConfigKey()));
 
         $oResponse = $oTransactionService->process(
             $oTransaction,

@@ -48,7 +48,7 @@ $aModule = [
     'email'             => 'shop-systems-support@wirecard.com',
     'extend'            =>  [
         \OxidEsales\Eshop\Core\ViewConfig::class
-            => \Wirecard\Oxid\Extend\View_Config::class,
+            => \Wirecard\Oxid\Extend\ViewConfig::class,
         \OxidEsales\Eshop\Application\Controller\Admin\OrderList::class
             => \Wirecard\Oxid\Extend\Controller\Admin\OrderList::class,
         \OxidEsales\Eshop\Application\Model\Order::class
@@ -58,9 +58,9 @@ $aModule = [
         \OxidEsales\Eshop\Application\Model\Payment::class
             => \Wirecard\Oxid\Extend\Model\Payment::class,
         \OxidEsales\Eshop\Application\Model\PaymentGateway::class
-            => \Wirecard\Oxid\Extend\Model\Payment_Gateway::class,
+            => \Wirecard\Oxid\Extend\Model\PaymentGateway::class,
         \OxidEsales\Eshop\Application\Controller\Admin\PaymentMainAjax::class
-            => \Wirecard\Oxid\Extend\Payment_Main_Ajax::class,
+            => \Wirecard\Oxid\Extend\PaymentMainAjax::class,
         \OxidEsales\Eshop\Application\Model\Basket::class
             => \Wirecard\Oxid\Extend\Model\Basket::class,
         \OxidEsales\Eshop\Application\Controller\ThankYouController::class
@@ -158,7 +158,7 @@ $aModule = [
         'tab_post_processing.tpl'           => 'wirecard/paymentgateway/views/admin/tpl/tab_post_processing.tpl',
     ],
     'events'            => [
-        'onActivate'        => '\Wirecard\Oxid\Core\OxidEE_Events::onActivate',
-        'on,Deactivate'      => '\Wirecard\Oxid\Core\OxidEE_Events::onDeactivate',
+        'onActivate'        => '\Wirecard\Oxid\Core\OxidEeEvents::onActivate',
+        'on,Deactivate'      => '\Wirecard\Oxid\Core\OxidEeEvents::onDeactivate',
     ],
 ];

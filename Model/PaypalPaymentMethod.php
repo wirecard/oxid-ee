@@ -22,7 +22,7 @@ use \OxidEsales\Eshop\Application\Model\Payment;
 /**
  * Payment method implementation for Paypal
  */
-class Paypal_Payment_Method extends Payment_Method
+class PaypalPaymentMethod extends PaymentMethod
 {
     /**
      * @inheritdoc

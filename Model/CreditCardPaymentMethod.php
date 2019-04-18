@@ -22,7 +22,7 @@ use Wirecard\Oxid\Core\Helper;
 /**
  * Payment method implementation for Credit Card
  */
-class Credit_Card_Payment_Method extends Payment_Method
+class CreditCardPaymentMethod extends PaymentMethod
 {
     /**
      * @inheritdoc

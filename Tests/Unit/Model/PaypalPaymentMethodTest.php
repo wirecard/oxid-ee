@@ -7,21 +7,21 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use Wirecard\Oxid\Model\Paypal_Payment_Method;
+use Wirecard\Oxid\Model\PaypalPaymentMethod;
 
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
-class Paypal_Payment_Method_Test extends OxidEsales\TestingLibrary\UnitTestCase
+class PaypalPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
     /**
-     * @var Paypal_Payment_Method
+     * @var PaypalPaymentMethod
      */
     private $oPaymentMethod;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->oPaymentMethod = new Paypal_Payment_Method;
+        $this->oPaymentMethod = new PaypalPaymentMethod;
     }
 
     public function testGetConfig()
