@@ -13,9 +13,9 @@ use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
 use \OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 
 use \Psr\Log\LoggerInterface;
-use \Exception;
 
 /**
  * Class PaymentMethod
@@ -39,7 +39,7 @@ abstract class PaymentMethod
     /**
      * PaypalPaymentMethod constructor.
      *
-     * @throws Exception if payment method name is not overwritten in child class
+     * @throws StandardException if payment method name is not overwritten in child class
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
@@ -48,7 +48,7 @@ abstract class PaymentMethod
         $this->_oLogger = Registry::getLogger();
 
         if ($this::$_sName == 'undefined') {
-            throw new Exception("payment method name not defined: " . get_class());
+            throw new StandardException("payment method name not defined: " . get_class());
         }
     }
 

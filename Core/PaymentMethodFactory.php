@@ -13,6 +13,8 @@ use Wirecard\Oxid\Model\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
 
+use OxidEsales\Eshop\Core\Exception\StandardException;
+
 /**
  * Class PaymentMethodFactory
  *
@@ -26,7 +28,7 @@ class PaymentMethodFactory
      *
      * @param string $sPaymentMethodType
      * @return PaymentMethod
-     * @throws \Exception if $sPaymentMethodType is not registered
+     * @throws StandardException if $sPaymentMethodType is not registered
      *
      * @SuppressWarnings(PHPMD.Coverage)
      */
@@ -38,7 +40,7 @@ class PaymentMethodFactory
             case CreditCardPaymentMethod::getName(true):
                 return new CreditCardPaymentMethod();
             default:
-                throw new \Exception("payment type not registered: $sPaymentMethodType");
+                throw new StandardException("payment type not registered: $sPaymentMethodType");
         }
     }
 }

@@ -13,8 +13,7 @@ use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Model\PaymentMethod;
 
 use OxidEsales\Eshop\Core\Registry;
-
-use Exception;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 
 /**
  * Extends the Payment model.
@@ -40,7 +39,7 @@ class Payment extends Payment_parent
     {
         try {
             return PaymentMethodFactory::create($this->getId());
-        } catch (Exception $e) {
+        } catch (StandardException $e) {
             return null;
         }
     }

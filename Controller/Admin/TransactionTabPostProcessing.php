@@ -10,7 +10,7 @@
 namespace Wirecard\Oxid\Controller\Admin;
 
 use OxidEsales\Eshop\Core\Registry;
-use Exception;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Core\Helper;
 
@@ -92,18 +92,18 @@ class TransactionTabPostProcessing extends Tab
      * Validates a request.
      *
      * @param array $aRequestParameters
-     * @throws Exception
+     * @throws StandardException
      */
     private function _validateRequest(array $aRequestParameters)
     {
         $fAmount = $aRequestParameters['amount'];
 
         if (!$fAmount || !is_numeric($fAmount)) {
-            throw new Exception(Helper::translate('text_generic_error'));
+            throw new StandardException(Helper::translate('text_generic_error'));
         }
 
         if ($fAmount < 0 || $fAmount > $this->oTransaction->wdoxidee_ordertransactions__amount->value) {
-            throw new Exception(Helper::translate('total_amount_not_in_range_text'));
+            throw new StandardException(Helper::translate('total_amount_not_in_range_text'));
         }
     }
 
@@ -127,7 +127,7 @@ class TransactionTabPostProcessing extends Tab
             // execute the callback method defined in the "action" request parameter
             $aState['message'] = $this->{$aRequestParameters['action']['callback']}($aRequestParameters['amount']);
             $aState['type'] = 'success';
-        } catch (Exception $e) {
+        } catch (StandardException $e) {
             $aState['message'] = $e->getMessage();
             $aState['type'] = 'error';
         }
