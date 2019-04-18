@@ -13,11 +13,15 @@ use OxidEsales\Eshop\Application\Controller\Admin\AdminController;
 
 /**
  * Controls the main transaction view (combines list and tab views).
+ *
+ * @since 1.0.0
  */
 class TransactionController extends AdminController
 {
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     protected $_sThisTemplate = 'transaction.tpl';
 }

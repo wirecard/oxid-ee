@@ -18,6 +18,7 @@ use OxidEsales\Eshop\Application\Model\Order;
 /**
  * Transaction
  *
+ * @since 1.0.0
  */
 class Transaction extends MultiLanguageModel
 {
@@ -31,6 +32,8 @@ class Transaction extends MultiLanguageModel
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     protected $_sClassName = 'transaction';
 
@@ -38,6 +41,8 @@ class Transaction extends MultiLanguageModel
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     public function __construct()
     {
@@ -50,6 +55,8 @@ class Transaction extends MultiLanguageModel
      * @inheritdoc
      *
      * @param array $aRecord
+     *
+     * @since 1.0.0
      */
     public function assign($aRecord)
     {
@@ -69,6 +76,8 @@ class Transaction extends MultiLanguageModel
      * @see \OxidEsales\EshopCommunity\Core\Model\BaseModel::load
      * @param string $sTransactionId
      * @return bool
+     *
+     * @since 1.0.0
      */
     public function loadWithTransactionId(string $sTransactionId)
     {
@@ -83,6 +92,8 @@ class Transaction extends MultiLanguageModel
      * Returns an array of child transactions for this transaction.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public function getChildTransactions()
     {
@@ -93,6 +104,8 @@ class Transaction extends MultiLanguageModel
      * Returns the order associated with the transaction.
      *
      * @return Order
+     *
+     * @since 1.0.0
      */
     public function getTransactionOrder(): Order
     {
@@ -106,6 +119,8 @@ class Transaction extends MultiLanguageModel
      * Returns the decoded response XML.
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getResponseXML(): string
     {
@@ -116,6 +131,8 @@ class Transaction extends MultiLanguageModel
      * Returns an associative array of available actions and their translation.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public static function getTranslatedActions(): array
     {
@@ -129,6 +146,8 @@ class Transaction extends MultiLanguageModel
      * Returns an array of available actions.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public static function getActions(): array
     {
@@ -139,6 +158,8 @@ class Transaction extends MultiLanguageModel
      * Returns an array of available states.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public static function getStates(): array
     {

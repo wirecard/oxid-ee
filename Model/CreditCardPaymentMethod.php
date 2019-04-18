@@ -22,11 +22,14 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 /**
  * Class CreditCardPaymentMethod
  *
+ * @since 1.0.0
  */
 class CreditCardPaymentMethod extends PaymentMethod
 {
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     protected static $_sName = 'creditcard';
 
@@ -34,6 +37,8 @@ class CreditCardPaymentMethod extends PaymentMethod
      * @inheritdoc
      *
      * @return CreditCardTransaction
+     *
+     * @since 1.0.0
      */
     public function getTransaction()
     {
@@ -46,6 +51,8 @@ class CreditCardPaymentMethod extends PaymentMethod
      * @param Payment $oPayment
      *
      * @return PaymentSdkConfig
+     *
+     * @since 1.0.0
      */
     public function getConfig($oPayment)
     {
@@ -77,6 +84,8 @@ class CreditCardPaymentMethod extends PaymentMethod
     /**
      * @param Payment          $oPayment
      * @param CreditCardConfig $oCreditCardConfig
+     *
+     * @since 1.0.0
      */
     private function _addThreeDLimits($oPayment, &$oCreditCardConfig)
     {
@@ -117,6 +126,8 @@ class CreditCardPaymentMethod extends PaymentMethod
      * @param object $oToCurrency
      *
      * @return float
+     *
+     * @since 1.0.0
      */
     private function _convertAmountCurrency($fAmount, $fFromFactor, $oToCurrency)
     {
@@ -127,6 +138,8 @@ class CreditCardPaymentMethod extends PaymentMethod
      * @inheritdoc
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public function getConfigFields()
     {
@@ -177,6 +190,8 @@ class CreditCardPaymentMethod extends PaymentMethod
      * Return array for currency select options
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     private function _getCurrencyOptions()
     {

@@ -35,6 +35,8 @@ use \Psr\Log\LoggerInterface;
 
 /**
  * Helper class to handle orders
+ *
+ * @since 1.0.0
  */
 class OrderHelper
 {
@@ -45,6 +47,8 @@ class OrderHelper
      * @param User   $oUser
      *
      * @return Order
+     *
+     * @since 1.0.0
      */
     public static function createOrder($oBasket, $oUser)
     {
@@ -82,6 +86,8 @@ class OrderHelper
      * @param Order           $oOrder
      *
      * @return bool
+     *
+     * @since 1.0.0
      */
     public static function handleResponse($oResponse, $oLogger, $oOrder)
     {
@@ -111,6 +117,8 @@ class OrderHelper
      * @param mixed $oPaymentRedirect
      *
      * @return bool
+     *
+     * @since 1.0.0
      */
     public static function isPaymentFinished($oSessionToken, $oPaymentRedirect)
     {
@@ -123,6 +131,8 @@ class OrderHelper
      * @param int $iSuccess
      *
      * @return bool
+     *
+     * @since 1.0.0
      */
     public static function isFinalizeOrderSuccessful($iSuccess)
     {
@@ -137,6 +147,8 @@ class OrderHelper
      * @param Order           $oOrder
      *
      * @return bool
+     *
+     * @since 1.0.0
      */
     private static function _handleFailureResponse($oResponse, $oLogger, $oOrder)
     {
@@ -165,6 +177,8 @@ class OrderHelper
      * @param string  $sFormPostVariable
      *
      * @throws \Exception
+     *
+     * @since 1.0.0
      */
     public static function handleFormResponse($oSession, $oPayment, $oOrder, $sFormPostVariable)
     {
@@ -191,6 +205,8 @@ class OrderHelper
      * Handle transaction form interaction response
      *
      * @param Response $oResponse
+     *
+     * @since 1.0.0
      */
     private static function _handleFormInteractionResponse($oResponse)
     {
@@ -218,6 +234,8 @@ class OrderHelper
      * Handle transaction interaction response
      *
      * @param Response $oResponse
+     *
+     * @since 1.0.0
      */
     private static function _handleInteractionResponse($oResponse)
     {

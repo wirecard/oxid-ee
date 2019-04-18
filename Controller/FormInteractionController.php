@@ -17,21 +17,29 @@ use \Wirecard\PaymentSdk\Entity\FormFieldMap;
 
 /**
  * Class Form_Interaction_Controller
+ *
+ * @since 1.0.0
  */
 class FormInteractionController extends FrontendController
 {
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     protected $_sThisTemplate = 'form_interaction.tpl';
 
     /**
      * @var FormInteractionResponseFields
+     *
+     * @since 1.0.0
      */
     private $_oResponse = null;
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     public function init()
     {
@@ -46,6 +54,8 @@ class FormInteractionController extends FrontendController
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getUrl(): string
     {
@@ -54,6 +64,8 @@ class FormInteractionController extends FrontendController
 
     /**
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getMethod(): string
     {
@@ -62,6 +74,8 @@ class FormInteractionController extends FrontendController
 
     /**
      * @return FormFieldMap
+     *
+     * @since 1.0.0
      */
     public function getFormFields(): FormFieldMap
     {

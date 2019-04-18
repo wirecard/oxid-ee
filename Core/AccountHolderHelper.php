@@ -16,6 +16,8 @@ use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 /**
  * Helper class to handle account holders for transactions
+ *
+ * @since 1.0.0
  */
 class AccountHolderHelper
 {
@@ -24,6 +26,8 @@ class AccountHolderHelper
      *
      * @param array $aArgs
      * @return AccountHolder
+     *
+     * @since 1.0.0
      */
     public function createAccountHolder(array $aArgs): AccountHolder
     {
@@ -54,6 +58,8 @@ class AccountHolderHelper
      *
      * @param array $aArgs
      * @return Address
+     *
+     * @since 1.0.0
      */
     private function _createAddress(array $aArgs): Address
     {

@@ -20,11 +20,15 @@ use \OxidEsales\Eshop\Application\Model\Payment;
 
 /**
  * Payment method implementation for Paypal
+ *
+ * @since 1.0.0
  */
 class PaypalPaymentMethod extends PaymentMethod
 {
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     protected static $_sName = "paypal";
 
@@ -35,6 +39,7 @@ class PaypalPaymentMethod extends PaymentMethod
      *
      * @return Config
      *
+     * @since 1.0.0
      */
     public function getConfig($oPayment): Config
     {
@@ -55,6 +60,7 @@ class PaypalPaymentMethod extends PaymentMethod
      *
      * @return Transaction
      *
+     * @since 1.0.0
      */
     public function getTransaction()
     {
@@ -65,6 +71,8 @@ class PaypalPaymentMethod extends PaymentMethod
      * @inheritdoc
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public function getConfigFields()
     {

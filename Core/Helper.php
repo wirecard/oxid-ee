@@ -18,6 +18,8 @@ use DateTime;
 
 /**
  * Util functions
+ *
+ * @since 1.0.0
  */
 class Helper
 {
@@ -27,6 +29,8 @@ class Helper
      * @param string $sKey
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public static function translate($sKey)
     {
@@ -42,6 +46,8 @@ class Helper
      * @param string $sSessionId
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public static function createDeviceFingerprint($sMaid, $sSessionId = null)
     {
@@ -52,6 +58,8 @@ class Helper
      * Returns a list of available payments.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public static function getPayments()
     {
@@ -65,6 +73,8 @@ class Helper
      * Returns a list of available payments added by the module.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     public static function getModulePayments()
     {
@@ -80,6 +90,8 @@ class Helper
      * @param string $sNumber
      *
      * @return float
+     *
+     * @since 1.0.0
      */
     public static function getFloatFromString($sNumber)
     {
@@ -92,6 +104,8 @@ class Helper
      * @param string $sSalutation
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public static function getGenderCodeForSalutation($sSalutation)
     {
@@ -110,6 +124,8 @@ class Helper
      * @param string $sTime
      *
      * @return DateTime|null
+     *
+     * @since 1.0.0
      */
     public static function getDateTimeFromString($sTime)
     {
@@ -133,6 +149,8 @@ class Helper
      * @param string $sText
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public static function getInputHelpHtml($sText)
     {
@@ -148,6 +166,8 @@ class Helper
      * Returns the session challenge variable from the session object
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public static function getSessionChallenge()
     {
@@ -161,6 +181,8 @@ class Helper
      * @param string $sKey
      *
      * @return bool
+     *
+     * @since 1.0.0
      */
     public static function isPresentProperty(array $aArgs, string $sKey): bool
     {
@@ -171,6 +193,8 @@ class Helper
      * Gets the session id as a query string
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public static function getSidQueryString()
     {
@@ -186,6 +210,8 @@ class Helper
      * @param string $sTimeStamp
      *
      * @return bool|string
+     *
+     * @since 1.0.0
      */
     public static function getFormattedDbDate($sTimeStamp)
     {

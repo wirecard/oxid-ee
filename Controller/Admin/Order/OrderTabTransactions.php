@@ -14,11 +14,15 @@ use Wirecard\Oxid\Model\Transaction;
 
 /**
  * Controls the view for the order transaction tab.
+ *
+ * @since 1.0.0
  */
 class OrderTabTransactions extends OrderTab
 {
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     protected $_sThisTemplate = 'tab_table.tpl';
 
@@ -28,6 +32,8 @@ class OrderTabTransactions extends OrderTab
      * @param array $aTransactions
      * @param int   $level
      * @return array
+     *
+     * @since 1.0.0
      */
     protected function _getBodyData(array $aTransactions, int $level = 0)
     {
@@ -77,6 +83,8 @@ class OrderTabTransactions extends OrderTab
      * @inheritdoc
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     protected function _getData(): array
     {

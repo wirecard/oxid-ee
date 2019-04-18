@@ -10,7 +10,6 @@
 namespace Wirecard\Oxid\Extend\Model;
 
 use OxidEsales\Eshop\Application\Model\BasketItem;
-use OxidEsales\EshopCommunity\Core\Registry;
 use Wirecard\Oxid\Core\BasketHelper;
 use Wirecard\PaymentSdk\Entity\Basket as TransactionBasket;
 
@@ -18,6 +17,8 @@ use Wirecard\PaymentSdk\Entity\Basket as TransactionBasket;
  * Basket extension
  *
  * @mixin \OxidEsales\Eshop\Application\Model\Basket
+ *
+ * @since 1.0.0
  */
 class Basket extends Basket_parent
 {
@@ -26,6 +27,8 @@ class Basket extends Basket_parent
      * Creates a Basket to use in the Transaction
      *
      * @return TransactionBasket
+     *
+     * @since 1.0.0
      */
     public function createTransactionBasket()
     {

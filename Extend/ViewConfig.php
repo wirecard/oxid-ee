@@ -15,7 +15,9 @@ use \Wirecard\Oxid\Core\Helper;
 /**
  * Extends the OXID ViewConfig
  *
- * @extends \OxidEsales\Eshop\Core\ViewConfig
+ * @mixin \OxidEsales\Eshop\Core\ViewConfig
+ *
+ * @since 1.0.0
  */
 class ViewConfig extends ViewConfig_parent
 {
@@ -26,6 +28,8 @@ class ViewConfig extends ViewConfig_parent
      *
      * @param string $sMaid
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getModuleDeviceId(string $sMaid): string
     {
@@ -38,6 +42,8 @@ class ViewConfig extends ViewConfig_parent
      * @see Helper::getInputHelpHtml()
      * @param string $sText
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getInputHelpHtml(string $sText): string
     {

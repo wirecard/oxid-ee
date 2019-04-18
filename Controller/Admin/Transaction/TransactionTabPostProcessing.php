@@ -19,21 +19,29 @@ use Wirecard\Oxid\Core\Helper;
 
 /**
  * Controls the view for the post-processing transaction tab.
+ *
+ * @since 1.0.0
  */
 class TransactionTabPostProcessing extends Tab
 {
     /**
      * @var Transaction
+     *
+     * @since 1.0.0
      */
     protected $oTransaction;
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     protected $_sThisTemplate = 'tab_post_processing.tpl';
 
     /**
      * TransactionTab constructor.
+     *
+     * @since 1.0.0
      */
     public function __construct()
     {
@@ -50,6 +58,8 @@ class TransactionTabPostProcessing extends Tab
      * @inheritdoc
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public function render(): string
     {
@@ -70,6 +80,8 @@ class TransactionTabPostProcessing extends Tab
      * Returns an array of current request parameters.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     private function _getRequestParameters(): array
     {
@@ -96,6 +108,8 @@ class TransactionTabPostProcessing extends Tab
      *
      * @param array $aRequestParameters
      * @throws Exception
+     *
+     * @since 1.0.0
      */
     private function _validateRequest(array $aRequestParameters)
     {
@@ -115,6 +129,8 @@ class TransactionTabPostProcessing extends Tab
      *
      * @param array $aRequestParameters
      * @return array|null
+     *
+     * @since 1.0.0
      */
     private function _processRequest(array $aRequestParameters)
     {
@@ -142,6 +158,8 @@ class TransactionTabPostProcessing extends Tab
      * Returns an array of processing actions to be displayed below the amount input field.
      *
      * @return array
+     *
+     * @since 1.0.0
      */
     protected function _getPostProcessingActions(): array
     {
@@ -167,6 +185,8 @@ class TransactionTabPostProcessing extends Tab
      *
      * @param float $fAmount
      * @return string
+     *
+     * @since 1.0.0
      */
     private function _onCancel(float $fAmount): string
     {
@@ -179,6 +199,8 @@ class TransactionTabPostProcessing extends Tab
      *
      * @param float $fAmount
      * @return string
+     *
+     * @since 1.0.0
      */
     private function _onCapture(float $fAmount): string
     {
@@ -191,6 +213,8 @@ class TransactionTabPostProcessing extends Tab
      *
      * @param float $fAmount
      * @return string
+     *
+     * @since 1.0.0
      */
     private function _onRefund(float $fAmount): string
     {

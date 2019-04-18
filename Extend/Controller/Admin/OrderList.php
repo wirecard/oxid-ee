@@ -15,6 +15,8 @@ use OxidEsales\Eshop\Application\Model\Order;
  * Controls the order list view.
  *
  * @mixin \OxidEsales\Eshop\Application\Controller\Admin\OrderList
+ *
+ * @since 1.0.0
  */
 class OrderList extends OrderList_parent
 {
@@ -22,6 +24,8 @@ class OrderList extends OrderList_parent
      * @inheritdoc
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public function render()
     {

@@ -17,21 +17,29 @@ use Wirecard\Oxid\Model\Transaction;
 
 /**
  * Controls the transaction list view.
+ *
+ * @since 1.0.0
  */
 class TransactionList extends AdminListController
 {
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     protected $_sListClass = Transaction::class;
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     protected $_sThisTemplate = 'transaction_list.tpl';
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     protected $_sDefSortField = 'oxid';
 
@@ -39,6 +47,8 @@ class TransactionList extends AdminListController
      * @inheritdoc
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public function render(): string
     {
@@ -57,6 +67,8 @@ class TransactionList extends AdminListController
      * @param object $oListObject
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     protected function _buildSelectString($oListObject = null): string
     {

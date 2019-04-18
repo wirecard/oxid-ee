@@ -31,27 +31,37 @@ use Wirecard\PaymentSdk\TransactionService;
  * Class Order
  *
  * @mixin \OxidEsales\Eshop\Application\Controller\OrderController
+ *
+ * @since 1.0.0
  */
 class OrderController extends OrderController_parent
 {
     const FORM_POST_VARIABLE = 'formPost';
     /**
      * @var TransactionService
+     *
+     * @since 1.0.0
      */
     private $_oTransactionService;
 
     /**
      * @var CreditCardPaymentMethod
+     *
+     * @since 1.0.0
      */
     private $_oCreditCardPaymentMethod;
 
     /**
      * @var Config
+     *
+     * @since 1.0.0
      */
     private $_oPaymentMethodConfig;
 
     /**
      * Extends the parent init function and finalizes the order in case it was a Wirecard payment method
+     *
+     * @since 1.0.0
      */
     public function init()
     {
@@ -100,6 +110,8 @@ class OrderController extends OrderController_parent
      * @return string
      *
      * @throws \Exception
+     *
+     * @since 1.0.0
      */
     public function execute()
     {
@@ -129,6 +141,8 @@ class OrderController extends OrderController_parent
      *
      * @return mixed integer/string
      * @throws \Exception
+     *
+     * @since 1.0.0
      */
     private function _determineNextStep($oOrder, $bIsOrderLoaded, $oPayment)
     {
@@ -168,6 +182,8 @@ class OrderController extends OrderController_parent
      * @param User   $oUser
      *
      * @return mixed integer/string
+     *
+     * @since 1.0.0
      */
     private function _processOrderTransaction($oOrder, $oBasket, $oUser)
     {
@@ -197,6 +213,8 @@ class OrderController extends OrderController_parent
      * @param User $oUser
      *
      * @return bool
+     *
+     * @since 1.0.0
      */
     private function _shouldCreateOrder($oUser)
     {
@@ -224,6 +242,8 @@ class OrderController extends OrderController_parent
      * @param Order  $oOrder
      *
      * @return void
+     *
+     * @since 1.0.0
      */
     private function _handleTransaction($oBasket, $oOrder)
     {
@@ -251,6 +271,8 @@ class OrderController extends OrderController_parent
      *
      * @return string
      * @throws Exception
+     *
+     * @since 1.0.0
      */
     public function getInitCreditCardFormJavaScript(): string
     {
@@ -304,6 +326,8 @@ class OrderController extends OrderController_parent
     /**
      * @return TransactionService
      * @throws Exception
+     *
+     * @since 1.0.0
      */
     private function _getTransactionService(): TransactionService
     {
@@ -320,6 +344,8 @@ class OrderController extends OrderController_parent
     /**
      * @return CreditCardPaymentMethod
      * @throws Exception
+     *
+     * @since 1.0.0
      */
     private function _getCreditCardPaymentMethod(): CreditCardPaymentMethod
     {
@@ -333,6 +359,8 @@ class OrderController extends OrderController_parent
     /**
      * @return Config
      * @throws Exception
+     *
+     * @since 1.0.0
      */
     private function _getCreditCardPaymentMethodConfig(): Config
     {
@@ -350,6 +378,8 @@ class OrderController extends OrderController_parent
      * @param string $sAction
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     private function _getPaymentAction(string $sAction): string
     {

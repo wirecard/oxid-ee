@@ -19,31 +19,43 @@ use OxidEsales\Eshop\Application\Model\Payment;
 
 /**
  * Controls the view for a single transaction tab.
+ *
+ * @since 1.0.0
  */
 class TransactionTab extends Tab
 {
     /**
      * @var Transaction
+     *
+     * @since 1.0.0
      */
     protected $oTransaction;
 
     /**
      * @var Order
+     *
+     * @since 1.0.0
      */
     protected $oOrder;
 
     /**
      * @var Payment
+     *
+     * @since 1.0.0
      */
     protected $oPayment;
 
     /**
      * @var ResponseMapper
+     *
+     * @since 1.0.0
      */
     protected $oResponseMapper;
 
     /**
      * TransactionTab constructor.
+     *
+     * @since 1.0.0
      */
     public function __construct()
     {
@@ -68,6 +80,8 @@ class TransactionTab extends Tab
      * @param array  $aArray
      * @param string $sTransactionState
      * @return array
+     *
+     * @since 1.0.0
      */
     protected function _getListDataFromArray(array $aArray, string $sTransactionState = null): array
     {
