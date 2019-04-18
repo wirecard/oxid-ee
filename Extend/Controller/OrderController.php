@@ -77,7 +77,7 @@ class OrderController extends OrderController_parent
             $sShopBaseUrl = $oConfig->getShopUrl();
             $sLanguageCode = Registry::getLang()->getBaseLanguage();
 
-            $aParams = array(
+            $aParams = [
                 'lang' => $sLanguageCode,
                 'force_sid' => $oSession->getId(),
                 'stoken' => $oSession->getSessionChallengeToken(),
@@ -89,8 +89,8 @@ class OrderController extends OrderController_parent
                 'ord_agb' => '1',
                 'oxdownloadableproductsagreement' => '0',
                 'oxserviceproductsagreement' => '0',
-                'wdtoken' => $sWdSessionToken
-            );
+                'wdtoken' => $sWdSessionToken,
+            ];
 
             if ($oConfig->getRequestParameter('redirectFromForm')) {
                 $oSession->setVariable(self::FORM_POST_VARIABLE, $_POST);

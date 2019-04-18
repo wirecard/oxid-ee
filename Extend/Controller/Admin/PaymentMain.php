@@ -43,8 +43,8 @@ class PaymentMain extends PaymentMain_parent
             // performed to check if only valid data was entered
             // if it is not valid, the 'save' or 'addfield' operation is aborted
             // and an error message shown in the frontend
-            $this->_aViewData["bConfigNotValid"] = ($sFnc === 'save' || $sFnc === 'addfield')
-                && !$this->_isSavePossible();
+            $this->setViewData('bConfigNotValid', ($sFnc === 'save' || $sFnc === 'addfield')
+                && !$this->_isSavePossible());
         }
 
         return $sParentReturn;

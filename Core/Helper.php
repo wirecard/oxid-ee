@@ -136,7 +136,7 @@ class Helper
      */
     public static function getFloatFromString($sNumber)
     {
-        return (float)preg_replace('/\.(?=.*\.)/', '', str_replace(',', '.', $sNumber));
+        return (float) preg_replace('/\.(?=.*\.)/', '', str_replace(',', '.', $sNumber));
     }
 
     /**

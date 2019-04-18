@@ -21,7 +21,7 @@ use Wirecard\Oxid\Model\Transaction;
  *
  * @since 1.0.0
  */
-class OxidEEEvents
+class OxidEeEvents
 {
     const OBJECTPAYMENT_TABLE = "oxobject2payment";
     const ORDER_TABLE = "oxorder";
@@ -296,9 +296,9 @@ class OxidEEEvents
      */
     private static function _addPaymentMethod($oPayment)
     {
-        $aKeyValue = array(
-            "OXID" => $oPayment->oxid
-        );
+        $aKeyValue = [
+            "OXID" => $oPayment->oxid,
+        ];
 
         $sQuery = "INSERT INTO " . self::PAYMENT_TABLE . "(`OXID`, `OXACTIVE`, `OXTOAMOUNT`, `OXDESC`, `OXDESC_1`,
          `OXSORT`, `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONACTION`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`,
@@ -340,7 +340,7 @@ class OxidEEEvents
         // insert payment method configuration (necessary for making the payment visible in the checkout page)
         self::_insertRowIfNotExists(
             self::OBJECTPAYMENT_TABLE,
-            array('OXPAYMENTID' => $oPayment->oxid),
+            ['OXPAYMENTID' => $oPayment->oxid],
             "INSERT INTO " . self::OBJECTPAYMENT_TABLE . " (`OXID`, `OXPAYMENTID`, `OXOBJECTID`, `OXTYPE`) VALUES (
                 '{$sRandomOxidId}',
                 '{$oPayment->oxid}',

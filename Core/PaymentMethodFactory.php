@@ -9,12 +9,12 @@
 
 namespace Wirecard\Oxid\Core;
 
-use Exception;
-
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
+
+use OxidEsales\Eshop\Core\Exception\StandardException;
 
 /**
  * Class PaymentMethodFactory
@@ -31,7 +31,7 @@ class PaymentMethodFactory
      * @param string $sPaymentMethodType
      *
      * @return PaymentMethod
-     * @throws Exception if $sPaymentMethodType is not registered
+     * @throws StandardException if $sPaymentMethodType is not registered
      *
      * @since 1.0.0
      */
@@ -45,7 +45,7 @@ class PaymentMethodFactory
             case SofortPaymentMethod::getName(true):
                 return new SofortPaymentMethod();
             default:
-                throw new Exception("payment type not registered: $sPaymentMethodType");
+                throw new StandardException("payment type not registered: $sPaymentMethodType");
         }
     }
 }
