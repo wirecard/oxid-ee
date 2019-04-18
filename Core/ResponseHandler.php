@@ -48,6 +48,10 @@ class ResponseHandler
 
         $oLogger->debug('Success response: ' . $oResponse->getRawData());
 
+        if (!$oResponse->isValidSignature()) {
+            $oLogger->warning('Transaction was possibly manipulated');
+        }
+
         $sPaymentMethod = $oOrder->oxorder__oxpaymenttype->value;
         $oPayment = oxNew(Payment::class);
         $oPayment->load($sPaymentMethod);
@@ -108,6 +112,8 @@ class ResponseHandler
         $oTransaction->wdoxidee_ordertransactions__date = new Field(
             Helper::getFormattedDbDate($oResponse->getData()['completion-time-stamp'])
         );
+        $oTransaction->wdoxidee_ordertransactions__validsignature = new Field($oResponse->isValidSignature());
+
         $oTransaction->save();
     }
 

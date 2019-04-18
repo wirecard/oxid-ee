@@ -28,7 +28,21 @@
   "extra": {
     "oxideshop": {
       "blacklist-filter": [
+        ".bin/**/*",
+        ".bundle/**/*",
         "documentation/**/*.*",
+        ".codacy.yml",
+        ".dockerignore",
+        ".env.template",
+        ".rubocop.yml",
+        ".ruby-version",
+        ".travis.yml",
+        "docker-compose.*",
+        "Dockerfile",
+        "Gemfile*",
+        "phpcs.xml",
+        "phpmd.xml",
+        "Rakefile",
         "CHANGELOG.md",
         "CONTRIBUTING.md",
         "README.md"
