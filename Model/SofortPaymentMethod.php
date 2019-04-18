@@ -33,26 +33,24 @@ class SofortPaymentMethod extends PaymentMethod
     protected static $_sName = "sofortbanking";
 
     /**
-     * Get the payment method's configuration
+     * @inheritdoc
+     *
+     * @param Payment $oPayment
      *
      * @return Config
      *
      * @since 1.0.0
      */
-    public function getConfig(): Config
+    public function getConfig($oPayment): Config
     {
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load(self::getName(true));
-        $oConfig = new Config(
-            $oPayment->oxpayments__wdoxidee_apiurl->value,
-            $oPayment->oxpayments__wdoxidee_httpuser->value,
-            $oPayment->oxpayments__wdoxidee_httppass->value
-        );
+        $oConfig = parent::getConfig($oPayment);
+
         $oPaymentMethodConfig = new PaymentMethodConfig(
-            self::getName(),
+            SofortTransaction::NAME,
             $oPayment->oxpayments__wdoxidee_maid->value,
             $oPayment->oxpayments__wdoxidee_secret->value
         );
+
         $oConfig->add($oPaymentMethodConfig);
 
         return $oConfig;
