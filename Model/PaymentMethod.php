@@ -166,33 +166,6 @@ abstract class PaymentMethod
                 'title' => Helper::translate('config_merchant_secret'),
                 'description' => Helper::translate('config_three_d_merchant_secret_desc'),
             ],
-            'descriptor' => [
-                'type' => 'select',
-                'field' => 'oxpayments__wdoxidee_descriptor',
-                'options' => [
-                    '1' => Helper::translate('yes'),
-                    '0' => Helper::translate('no'),
-                ],
-                'title' => Helper::translate('config_descriptor'),
-                'description' => Helper::translate('config_descriptor_desc'),
-            ],
-            'additionalInfo' => [
-                'type' => 'select',
-                'field' => 'oxpayments__wdoxidee_additional_info',
-                'options' => [
-                    '1' => Helper::translate('yes'),
-                    '0' => Helper::translate('no'),
-                ],
-                'title' => Helper::translate('config_additional_info'),
-                'description' => Helper::translate('config_additional_info_desc'),
-            ],
-            'paymentAction' => [
-                'type' => 'select',
-                'field' => 'oxpayments__wdoxidee_transactionaction',
-                'options' => Transaction::getTranslatedActions(),
-                'title' => Helper::translate('config_payment_action'),
-                'description' => Helper::translate('config_payment_action_desc'),
-            ],
         ];
     }
 }
