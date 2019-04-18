@@ -9,23 +9,23 @@
 
 namespace Wirecard\Oxid\Controller;
 
-use \Wirecard\Oxid\Core\PaymentMethodFactory;
-use \Wirecard\Oxid\Model\Transaction;
+use Wirecard\Oxid\Core\PaymentMethodFactory;
+use Wirecard\Oxid\Model\Transaction;
 
-use \Wirecard\PaymentSdk\BackendService;
-use \Wirecard\PaymentSdk\Response\Response;
-use \Wirecard\PaymentSdk\Exception\MalformedResponseException;
-use \Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\BackendService;
+use Wirecard\PaymentSdk\Response\Response;
+use Wirecard\PaymentSdk\Exception\MalformedResponseException;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 
-use \OxidEsales\Eshop\Application\Model\Order as Oxid_Order;
-use \OxidEsales\Eshop\Application\Controller\FrontendController;
-use \OxidEsales\Eshop\Application\Model\Payment;
-use \OxidEsales\Eshop\Core\Registry;
-use \OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Application\Model\Order as Oxid_Order;
+use OxidEsales\Eshop\Application\Controller\FrontendController;
+use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Field;
 
-use \Psr\Log\LoggerInterface;
-use \InvalidArgumentException;
-use \Exception;
+use Psr\Log\LoggerInterface;
+use InvalidArgumentException;
+use Exception;
 
 /**
  * Notify handler class.

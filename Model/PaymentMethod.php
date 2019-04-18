@@ -12,10 +12,10 @@ namespace Wirecard\Oxid\Model;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
-use \OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 
-use \Psr\Log\LoggerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class PaymentMethod

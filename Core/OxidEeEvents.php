@@ -9,10 +9,10 @@
 
 namespace Wirecard\Oxid\Core;
 
-use \OxidEsales\Eshop\Core\DatabaseProvider;
-use \OxidEsales\Eshop\Core\Registry;
-use \Wirecard\Oxid\Extend\Model\Order;
-use \Wirecard\Oxid\Model\Transaction;
+use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\Registry;
+use Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Model\Transaction;
 
 /**
  * Class handles module behaviour on shop installation events

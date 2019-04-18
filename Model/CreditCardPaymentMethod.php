@@ -9,13 +9,13 @@
 
 namespace Wirecard\Oxid\Model;
 
-use \Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
-use \Wirecard\PaymentSdk\Transaction\Transaction;
-use \Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\Transaction;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
-use \OxidEsales\Eshop\Application\Model\Payment;
-use \OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
 

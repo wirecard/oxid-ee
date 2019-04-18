@@ -10,7 +10,7 @@
 
 namespace Wirecard\Oxid\Extend;
 
-use \Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\Helper;
 
 /**
  * Extends the OXID ViewConfig

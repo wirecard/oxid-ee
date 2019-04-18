@@ -9,37 +9,37 @@
 
 namespace Wirecard\Oxid\Extend\Model;
 
-use \OxidEsales\Eshop\Application\Model\Shop;
-use \OxidEsales\Eshop\Application\Model\Article;
-use \OxidEsales\Eshop\Application\Model\Country;
-use \OxidEsales\Eshop\Application\Model\Basket;
-use \OxidEsales\Eshop\Application\Model\BasketItem;
-use \OxidEsales\Eshop\Application\Model\State;
-use \OxidEsales\Eshop\Application\Model\Payment;
-use \OxidEsales\Eshop\Application\Model\User;
-use \OxidEsales\Eshop\Core\Field;
-use \OxidEsales\Eshop\Core\Registry;
-use \OxidEsales\Eshop\Core\Session;
+use OxidEsales\Eshop\Application\Model\Shop;
+use OxidEsales\Eshop\Application\Model\Article;
+use OxidEsales\Eshop\Application\Model\Country;
+use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\BasketItem;
+use OxidEsales\Eshop\Application\Model\State;
+use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Session;
 
-use \Wirecard\Oxid\Core\BasketHelper;
-use \Wirecard\Oxid\Core\Helper;
-use \Wirecard\Oxid\Core\PaymentMethodFactory;
-use \Wirecard\Oxid\Model\PaymentMethod;
+use Wirecard\Oxid\Core\BasketHelper;
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\PaymentMethodFactory;
+use Wirecard\Oxid\Model\PaymentMethod;
 
-use \Wirecard\PaymentSdk\Entity\Amount;
-use \Wirecard\PaymentSdk\Entity\Device;
-use \Wirecard\PaymentSdk\Response\Response;
-use \Wirecard\PaymentSdk\Response\SuccessResponse;
-use \Wirecard\PaymentSdk\Transaction\Transaction;
-use \Wirecard\PaymentSdk\TransactionService;
-use \Wirecard\PaymentSdk\Response\FailureResponse;
-use \Wirecard\PaymentSdk\Response\InteractionResponse;
-use \Wirecard\PaymentSdk\Entity\Redirect;
-use \Wirecard\PaymentSdk\Entity\Address;
+use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Entity\Device;
+use Wirecard\PaymentSdk\Response\Response;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\Transaction;
+use Wirecard\PaymentSdk\TransactionService;
+use Wirecard\PaymentSdk\Response\FailureResponse;
+use Wirecard\PaymentSdk\Response\InteractionResponse;
+use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Entity\Address;
 
-use \Wirecard\Oxid\Extend\Model\Order;
-use \Psr\Log\LoggerInterface;
-use \Exception;
+use Wirecard\Oxid\Extend\Model\Order;
+use Psr\Log\LoggerInterface;
+use Exception;
 
 /**
  * Class BasePaymentGateway

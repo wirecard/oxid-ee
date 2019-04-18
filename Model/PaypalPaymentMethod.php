@@ -9,15 +9,15 @@
 
 namespace Wirecard\Oxid\Model;
 
-use \Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Core\Helper;
 
-use \Wirecard\PaymentSdk\Config\Config;
-use \Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use \Wirecard\PaymentSdk\Transaction\Transaction;
-use \Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Transaction\Transaction;
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
-use \OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Application\Model\Payment;
 
 /**
  * Payment method implementation for Paypal

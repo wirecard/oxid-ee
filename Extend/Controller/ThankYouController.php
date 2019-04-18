@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Extend\Controller;
 
-use \OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Class ThankYouController

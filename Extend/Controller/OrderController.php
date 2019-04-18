@@ -9,24 +9,24 @@
 
 namespace Wirecard\Oxid\Extend\Controller;
 
-use \OxidEsales\Eshop\Core\Field;
-use \OxidEsales\Eshop\Core\Registry;
-use \OxidEsales\Eshop\Application\Model\Basket;
-use \OxidEsales\Eshop\Core\Exception\ArticleInputException;
-use \OxidEsales\Eshop\Core\Exception\NoArticleException;
-use \OxidEsales\Eshop\Core\Exception\OutOfStockException;
-use \OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Core\Exception\ArticleInputException;
+use OxidEsales\Eshop\Core\Exception\NoArticleException;
+use OxidEsales\Eshop\Core\Exception\OutOfStockException;
+use OxidEsales\Eshop\Application\Model\User;
 
-use \Wirecard\PaymentSdk\Response\FailureResponse;
-use \Wirecard\PaymentSdk\Response\InteractionResponse;
-use \Wirecard\PaymentSdk\Response\Response;
-use \Wirecard\PaymentSdk\Entity\Status;
+use Wirecard\PaymentSdk\Response\FailureResponse;
+use Wirecard\PaymentSdk\Response\InteractionResponse;
+use Wirecard\PaymentSdk\Response\Response;
+use Wirecard\PaymentSdk\Entity\Status;
 
-use \Wirecard\Oxid\Extend\Model\PaymentGateway;
-use \Wirecard\Oxid\Extend\Model\Order;
-use \Wirecard\Oxid\Extend\Model\Payment;
+use Wirecard\Oxid\Extend\Model\PaymentGateway;
+use Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Extend\Model\Payment;
 
-use \Psr\Log\LoggerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class Order
