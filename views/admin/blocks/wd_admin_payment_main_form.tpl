@@ -1,7 +1,7 @@
 [{if $edit && $edit->isCustomPaymentMethod()}]
   [{assign var="paymentMethod" value=$edit->getPaymentMethod()}]
   [{assign var="configFields" value=$paymentMethod->getConfigFields()}]
-  [{/if}]
+[{/if}]
 
 [{if $configFields.apiUrl && $configFields.httpUser && $configFields.httpPassword}]
   <style>
@@ -151,6 +151,7 @@
 
         [{if $configField.type === 'link'}]
           <a target="_blank" href="[{$configField.link}]">[{$configField.text}]</a>
+        [{/if}]
 
         [{if $configField.type === 'button'}]
           <input type="button" value="[{$configField.text}]" onclick="[{$configField.onclick}]" />
@@ -164,5 +165,4 @@
       </td>
     </tr>
   [{/foreach}]
-  [{/if}]
-
+[{/if}]

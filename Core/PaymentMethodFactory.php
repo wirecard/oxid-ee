@@ -13,6 +13,7 @@ use Exception;
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
+use Wirecard\Oxid\Model\SofortPaymentMethod;
 
 /**
  * Class PaymentMethodFactory
@@ -40,6 +41,8 @@ class PaymentMethodFactory
                 return new PaypalPaymentMethod();
             case CreditCardPaymentMethod::getName(true):
                 return new CreditCardPaymentMethod();
+            case SofortPaymentMethod::getName(true):
+                return new SofortPaymentMethod();
             default:
                 throw new Exception("payment type not registered: $sPaymentMethodType");
         }

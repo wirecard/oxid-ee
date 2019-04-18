@@ -148,6 +148,12 @@ abstract class PaymentMethod
                 'field' => 'oxpayments__wdoxidee_httppass',
                 'title' => Helper::translate('config_http_password'),
             ],
+            'testCredentials' => [
+                'type'        => 'button',
+                'onclick'     => 'wdTestPaymentMethodCredentials()',
+                'text'        => Helper::translate('test_credentials'),
+                'colspan'     => '2',
+            ],
             'maid' => [
                 'type' => 'text',
                 'field' => 'oxpayments__wdoxidee_maid',

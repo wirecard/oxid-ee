@@ -358,7 +358,8 @@ class OrderController extends OrderController_parent
     }
 
     /**
-     * @return CreditCardPaymentMethod
+     * @return Config
+     *
      * @throws Exception
      *
      * @since 1.0.0

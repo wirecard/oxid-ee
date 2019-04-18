@@ -82,7 +82,7 @@ class PaymentGateway extends BaseModel
         $shopId = Registry::getConfig()->getShopId();
         $shop = oxNew(Shop::class);
         $shop->load($shopId);
-        $oTransaction->setDescriptor(substr($shop->oxshops__oxname->value, 0, 9) . " " . $sOrderId);
+        $oTransaction->setDescriptor(substr(substr($shop->oxshops__oxname->value, 0, 9) . " " . $sOrderId, 0, 27));
     }
 
     /**

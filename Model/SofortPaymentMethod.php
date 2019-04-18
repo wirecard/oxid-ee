@@ -23,7 +23,7 @@ use Wirecard\Oxid\Core\Helper;
  *
  * @since 1.0.0
  */
-class SofortPaymentMethod extends Payment_Method
+class SofortPaymentMethod extends PaymentMethod
 {
     /**
      * @inheritdoc

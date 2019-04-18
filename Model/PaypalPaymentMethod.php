@@ -10,7 +10,6 @@
 namespace Wirecard\Oxid\Model;
 
 use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
