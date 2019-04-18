@@ -37,6 +37,12 @@ class Custom_Sniffs_Classes_ClassLinesOfCodeSniff implements PHP_CodeSniffer_Sni
     {
         $tokens = $phpcsFile->getTokens();
         $tokenClass = $tokens[$stackPtr];
+
+        // ignore abstract classes
+        if (!isset($tokenClass['scope_opener']) || !isset($tokenClass['scope_closer'])) {
+            return;
+        }
+
         $tokenScopeOpener = $tokens[$tokenClass['scope_opener']];
         $tokenScopeCloser = $tokens[$tokenClass['scope_closer']];
         $linesOfCode = $tokenScopeCloser['line'] - $tokenScopeOpener['line'] - 1;
