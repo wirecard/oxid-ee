@@ -8,9 +8,10 @@
  */
 
 use OxidEsales\Eshop\Core\Field;
-use \Wirecard\Oxid\Model\CreditCardPaymentMethod;
-use \Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
-use \OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Application\Model\Payment;
+use Wirecard\Oxid\Model\CreditCardPaymentMethod;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 
 class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
@@ -30,8 +31,7 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         /**
          * @var Payment $oPayment
          */
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load(CreditCardPaymentMethod::getName(true));
+        $oPayment = PaymentMethodHelper::getPaymentById(CreditCardPaymentMethod::getName(true));
 
         $oConfig = $this->oPaymentMethod->getConfig($oPayment);
         $this->assertNotNull($oConfig);

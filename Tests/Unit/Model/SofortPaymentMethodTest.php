@@ -7,8 +7,8 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
-
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 
 use OxidEsales\Eshop\Application\Model\Payment;
@@ -28,8 +28,11 @@ class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetConfig()
     {
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load(SofortPaymentMethod::getName(true));
+        /**
+         * @var Payment $oPayment
+         */
+        $oPayment = PaymentMethodHelper::getPaymentById(SofortPaymentMethod::getName(true));
+
         $oConfig = $this->oPaymentMethod->getConfig($oPayment);
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('sofortbanking'));

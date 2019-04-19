@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Core;
 
 use Exception;
+
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;

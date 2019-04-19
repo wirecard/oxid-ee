@@ -10,7 +10,6 @@
 namespace Wirecard\Oxid\Core;
 
 use Wirecard\Oxid\Core\Helper;
-
 use Wirecard\PaymentSdk\Entity\Address;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 

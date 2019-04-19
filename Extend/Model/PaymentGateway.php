@@ -19,11 +19,13 @@ use OxidEsales\Eshop\Core\Session;
 use OxidEsales\EshopCommunity\Core\Config;
 use OxidEsales\EshopCommunity\Core\Model\BaseModel;
 use OxidEsales\EshopCommunity\Core\ShopVersion;
-use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Core\PaymentMethodFactory;
 
-use Wirecard\Oxid\Core\ResponseHandler;
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\OrderHelper;
+use Wirecard\Oxid\Core\PaymentMethodFactory;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\PaymentMethod;
+
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
@@ -125,13 +127,14 @@ class PaymentGateway extends BaseModel
     {
         $oSession = $this->getSession();
 
+        $sPaymentId = $oBasket->getPaymentId();
+
         /**
          * @var $oPayment Payment
          */
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load($oBasket->getPaymentId());
+        $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
 
-        $oPaymentMethod = PaymentMethodFactory::create($oPayment->oxpayments__oxid->value);
+        $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
 
         $oTransaction = $oPaymentMethod->getTransaction();
 
@@ -231,8 +234,7 @@ class PaymentGateway extends BaseModel
         /**
          * @var $oPayment Payment
          */
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load($oBasket->getPaymentId());
+        $oPayment = PaymentMethodHelper::getPaymentById($oBasket->getPaymentId());
 
         $oPaymentMethod = PaymentMethodFactory::create($oPayment->oxpayments__oxid->value);
 
@@ -281,10 +283,10 @@ class PaymentGateway extends BaseModel
             $_POST,
             $sShopUrl . 'index.php?lang=' . $sBaseLanguage . '&cl=order&redirectFromForm=1&' . $sModuleToken . $sSid
         );
-        if ($oResponse instanceof SuccessResponse) {
-            $oBackendService = new BackendService($oTransactionConfig, $this->_oLogger);
-            ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
-        }
+
+        $oBackendService = new BackendService($oTransactionConfig, $this->_oLogger);
+        OrderHelper::handleResponse($oResponse, $this->_oLogger, $oOrder, $oBackendService);
+
         return $oResponse;
     }
 

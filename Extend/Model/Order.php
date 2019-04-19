@@ -13,15 +13,15 @@ use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\OrderArticle;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Application\Model\Basket;
-
 use OxidEsales\EshopCommunity\Core\Field;
 use OxidEsales\EshopCommunity\Core\Registry;
-use Wirecard\PaymentSdk\Entity\AccountHolder;
 
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Model\TransactionList;
 use Wirecard\Oxid\Core\AccountHolderHelper;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 
 /**
  * Class Order
@@ -97,10 +97,8 @@ class Order extends Order_parent
      */
     public function getOrderPayment(): Payment
     {
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load($this->oxorder__oxpaymenttype->value);
-
-        return $oPayment;
+        $sPaymentId = $this->oxorder__oxpaymenttype->value;
+        return PaymentMethodHelper::getPaymentById($sPaymentId);
     }
 
     /**
