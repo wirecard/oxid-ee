@@ -1,4 +1,11 @@
 <?php
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/oxid-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
+ */
 
 /**
  * Ensures that all private and protected methods start with an underscore and public methods do not.

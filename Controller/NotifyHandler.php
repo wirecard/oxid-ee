@@ -13,6 +13,7 @@ use Wirecard\Oxid\Core\PaymentMethodFactory;
 
 use Wirecard\Oxid\Core\ResponseHandler;
 use Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Model\Transaction;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Response\Response;
@@ -80,6 +81,13 @@ class NotifyHandler extends FrontendController
             return;
         } catch (MalformedResponseException $exception) {
             $this->_oLogger->error(__METHOD__ . ': Response is malformed: ' . $exception->getMessage(), [$exception]);
+            return;
+        }
+
+        $oTransaction = oxNew(Transaction::class);
+
+        if ($oTransaction->loadWithTransactionId($oNotificationResponse->getTransactionId())) {
+            // if a transaction with this ID already exists, we do not need to handle it again
             return;
         }
 

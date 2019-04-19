@@ -1,3 +1,12 @@
+[{*
+* Shop System Plugins:
+* - Terms of Use can be found under:
+* https://github.com/wirecard/oxid-ee/blob/master/_TERMS_OF_USE
+* - License can be found under:
+* https://github.com/wirecard/oxid-ee/blob/master/LICENSE
+*
+*}]
+
 <td valign="top" class="listfilter" height="20">
     <div class="r1">
         <div class="b1">

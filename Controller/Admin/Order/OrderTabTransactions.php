@@ -25,6 +25,9 @@ class OrderTabTransactions extends OrderTab
      */
     protected $_sThisTemplate = 'tab_table.tpl';
 
+    const SECURED = 'secured';
+    const MANIPULATED = 'manipulated';
+
     /**
      * Returns an array to populate the table body.
      *
@@ -39,6 +42,11 @@ class OrderTabTransactions extends OrderTab
         $aRowData = [];
 
         foreach ($aTransactions as $oTransaction) {
+            $sTransSecurity = Helper::translate(self::SECURED);
+            if (!$oTransaction->wdoxidee_ordertransactions__validsignature->value) {
+                $sTransSecurity = Helper::translate(self::MANIPULATED);
+            }
+
             $aRowData = array_merge(
                 $aRowData,
                 [
@@ -68,6 +76,9 @@ class OrderTabTransactions extends OrderTab
                         [
                             'text' => $oTransaction->wdoxidee_ordertransactions__date->value,
                             'nowrap' => true,
+                        ],
+                        [
+                            'text' => $sTransSecurity,
                         ],
                     ],
                 ],
@@ -122,6 +133,10 @@ class OrderTabTransactions extends OrderTab
                 ],
                 [
                     'text' => Helper::translate('panel_transaction_date'),
+                    'nowrap' => true,
+                ],
+                [
+                    'text' => Helper::translate('secured'),
                     'nowrap' => true,
                 ],
             ],
