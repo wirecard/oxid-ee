@@ -9,12 +9,12 @@
 
 namespace Wirecard\Oxid\Model;
 
-use \Wirecard\Oxid\Core\Helper;
-use \Wirecard\PaymentSdk\Config\Config;
-use \Exception;
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\PaymentSdk\Config\Config;
+use Exception;
 
-use \OxidEsales\Eshop\Application\Model\Payment;
-use \OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Core\Registry;
 
 use Psr\Log\LoggerInterface;
 

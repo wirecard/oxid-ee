@@ -37,6 +37,11 @@ class PaymentMain extends PaymentMain_parent
 
         if ($this->_isCustomPaymentMethod()) {
             $sFnc = Registry::getRequest()->getRequestParameter('fnc');
+
+            // for custom payment methods, additional validation logic needs to be
+            // performed to check if only valid data was entered
+            // if it is not valid, the 'save' or 'addfield' operation is aborted
+            // and an error message shown in the frontend
             $this->_aViewData["bConfigNotValid"] = ($sFnc === 'save' || $sFnc === 'addfield')
                 && !$this->_isSavePossible();
         }

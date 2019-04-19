@@ -19,7 +19,7 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 /**
- * Payment method implementation for Paypal
+ * Payment method implementation for PayPal
  *
  * @since 1.0.0
  */
