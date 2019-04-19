@@ -7,8 +7,8 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
-
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 use OxidEsales\Eshop\Application\Model\Payment;
@@ -28,8 +28,11 @@ class PaypalPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetConfig()
     {
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load(PaypalPaymentMethod::getName(true));
+        /**
+         * @var Payment $oPayment
+         */
+        $oPayment = PaymentMethodHelper::getPaymentById(PaypalPaymentMethod::getName(true));
+
         $oConfig = $this->oPaymentMethod->getConfig($oPayment);
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('paypal'));
