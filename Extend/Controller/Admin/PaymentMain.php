@@ -79,6 +79,9 @@ class PaymentMain extends PaymentMain_parent
 
         $bCredentialsValid = $this->_validateRequestParameters($aParams);
 
+        // for Sofort it is required that a country code is settable
+        // the country code must be of the format two characters, underscore, two characters: "en_gb"
+        // this format is checked by the regular expression below
         $sCountryCode = $aParams['oxpayments__wdoxidee_countrycode'];
         $bCountryCodeValid = $aParams['oxpayments__oxid'] !== SofortPaymentMethod::getName(true)
             || (preg_match('/^[a-z]{2}_[a-z]{2}$/', $sCountryCode) === 1);
