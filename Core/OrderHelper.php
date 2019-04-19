@@ -10,6 +10,8 @@
 namespace Wirecard\Oxid\Core;
 
 use Exception;
+use Psr\Log\LoggerInterface;
+
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\ArticleInputException;
@@ -18,7 +20,7 @@ use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Session;
-use Psr\Log\LoggerInterface;
+
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\FormInteractionResponseFields;

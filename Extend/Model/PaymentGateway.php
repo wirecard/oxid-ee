@@ -23,8 +23,8 @@ use OxidEsales\EshopCommunity\Core\ShopVersion;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
-
 use Wirecard\Oxid\Model\PaymentMethod;
+
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;

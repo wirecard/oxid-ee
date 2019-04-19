@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Controller\Admin\Order;
 
 use OxidEsales\Eshop\Application\Model\Order;
+
 use Wirecard\Oxid\Controller\Admin\Tab;
 use Wirecard\Oxid\Core\ResponseMapper;
 use Wirecard\Oxid\Model\Transaction;

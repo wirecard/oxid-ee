@@ -10,8 +10,6 @@
 namespace Wirecard\Oxid\Core;
 
 use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Core\Model\ListModel;
-use OxidEsales\Eshop\Application\Model\Payment;
 
 use Exception;
 use DateTime;
@@ -52,35 +50,6 @@ class Helper
     public static function createDeviceFingerprint($sMaid, $sSessionId = null)
     {
         return $sMaid . '_' . $sSessionId;
-    }
-
-    /**
-     * Returns a list of available payments.
-     *
-     * @return array
-     *
-     * @since 1.0.0
-     */
-    public static function getPayments()
-    {
-        $oPaymentList = oxNew(ListModel::class);
-        $oPaymentList->init(Payment::class);
-
-        return $oPaymentList->getList()->getArray();
-    }
-
-    /**
-     * Returns a list of available payments added by the module.
-     *
-     * @return array
-     *
-     * @since 1.0.0
-     */
-    public static function getModulePayments()
-    {
-        return array_filter(self::getPayments(), function ($oPayment) {
-            return $oPayment->isCustomPaymentMethod();
-        });
     }
 
     /**

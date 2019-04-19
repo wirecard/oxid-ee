@@ -20,6 +20,7 @@ use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 
 /**
  * Class ResponseHandler
@@ -52,9 +53,7 @@ class ResponseHandler
             $oLogger->warning('Transaction was possibly manipulated');
         }
 
-        $sPaymentMethod = $oOrder->oxorder__oxpaymenttype->value;
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load($sPaymentMethod);
+        $oPayment = PaymentMethodHelper::getPaymentById($oOrder->oxorder__oxpaymenttype->value);
 
         self::_saveTransaction($oResponse, $oOrder, $oPayment);
         self::_updateOrder($oOrder, $oResponse, $oBackendService);

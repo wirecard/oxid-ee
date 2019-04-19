@@ -9,6 +9,7 @@
  */
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 
 use OxidEsales\Eshop\Application\Model\Payment;
 
@@ -40,17 +41,17 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetPaymentsReturnsAssociativeArray()
     {
-        $this->assertContainsOnly('string', array_keys(Helper::getPayments()));
+        $this->assertContainsOnly('string', array_keys(PaymentMethodHelper::getPayments()));
     }
 
     public function testGetPaymentsReturnsPayments()
     {
-        $this->assertContainsOnlyInstancesOf(Payment::class, Helper::getPayments());
+        $this->assertContainsOnlyInstancesOf(Payment::class, PaymentMethodHelper::getPayments());
     }
 
     public function testGetModulePayments()
     {
-        foreach (Helper::getModulePayments() as $key => $payment) {
+        foreach (PaymentMethodHelper::getModulePayments() as $key => $payment) {
             $this->assertTrue($payment->isCustomPaymentMethod());
         }
     }

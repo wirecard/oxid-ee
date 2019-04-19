@@ -10,7 +10,6 @@
 namespace Wirecard\Oxid\Controller;
 
 use Wirecard\Oxid\Core\PaymentMethodFactory;
-
 use Wirecard\Oxid\Core\ResponseHandler;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Transaction;
