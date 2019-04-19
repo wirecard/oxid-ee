@@ -55,27 +55,4 @@ class PaymentTest extends OxidEsales\TestingLibrary\UnitTestCase
             'invalid payment method' => ['foo', null],
         ];
     }
-
-    /**
-     * @dataProvider testGetLogoUrlProvider
-     */
-    public function testGetLogoUrl($fieldValue, $expected)
-    {
-        $oPayment = oxNew(Payment::class);
-        $oPayment->oxpayments__wdoxidee_logo = new oxField($fieldValue);
-
-        if ($expected) {
-            $this->assertStringEndsWith($expected, $oPayment->getLogoUrl());
-        } else {
-            $this->assertNull($expected, $oPayment->getLogoUrl());
-        }
-    }
-
-    public function testGetLogoUrlProvider()
-    {
-        return [
-            'filled field' => ['paypal.png', 'wirecard/paymentgateway/out/img/paypal.png'],
-            'empty field' => ['', null],
-        ];
-    }
 }
