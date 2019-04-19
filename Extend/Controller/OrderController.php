@@ -189,7 +189,7 @@ class OrderController extends OrderController_parent
     {
         // check if order should be created first
         if (!$this->_shouldCreateOrder($oUser)) {
-            return 'payment?payerror=2';
+            return $this->_getNextStep(Order::ORDER_STATE_PAYMENTERROR);
         }
 
         if ($oBasket->getProductsCount()) {
@@ -200,7 +200,7 @@ class OrderController extends OrderController_parent
                 return $this->_getNextStep($iSuccess);
             }
 
-            $this->_handleTransaction($oBasket, $oOrder);
+            return $this->_handleTransaction($oBasket, $oOrder);
         }
 
         $iSuccess = $oOrder->oxorder__wdoxidee_finalizeorderstate->value;
@@ -259,7 +259,7 @@ class OrderController extends OrderController_parent
             $oResponse = $oPaymentGateway->executeTransaction($oTransaction, $oOrder, $oBasket);
         } catch (\Exception $exc) {
             $oLogger->error(__METHOD__ . ": Error processing transaction: " . $exc->getMessage(), [$exc]);
-            return;
+            return $this->_getNextStep(Order::ORDER_STATE_PAYMENTERROR);
         }
 
         OrderHelper::handleResponse($oResponse, $oLogger, $oOrder);
@@ -270,6 +270,7 @@ class OrderController extends OrderController_parent
      * Returns the parameters used to render the credit card form
      *
      * @return string
+     *
      * @throws Exception
      *
      * @since 1.0.0
@@ -358,6 +359,7 @@ class OrderController extends OrderController_parent
 
     /**
      * @return Config
+     *
      * @throws Exception
      *
      * @since 1.0.0

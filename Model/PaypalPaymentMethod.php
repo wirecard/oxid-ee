@@ -10,16 +10,16 @@
 namespace Wirecard\Oxid\Model;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Extend\Model\Payment;
+use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
-use \Wirecard\PaymentSdk\Config\Config;
-use \Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use \Wirecard\PaymentSdk\Transaction\Transaction;
-use \Wirecard\PaymentSdk\Transaction\PayPalTransaction;
-
-use \OxidEsales\Eshop\Application\Model\Payment;
+use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Transaction\Transaction;
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 /**
- * Payment method implementation for Paypal
+ * Payment method implementation for PayPal
  *
  * @since 1.0.0
  */
@@ -76,8 +76,7 @@ class PaypalPaymentMethod extends PaymentMethod
      */
     public function getConfigFields()
     {
-        $parentConfigFields = parent::getConfigFields();
-        $additionalFields = [
+        $aAdditionalFields = [
             'basket' => [
                 'type' => 'select',
                 'field' => 'oxpayments__wdoxidee_basket',
@@ -88,8 +87,35 @@ class PaypalPaymentMethod extends PaymentMethod
                 'title' => Helper::translate('config_shopping_basket'),
                 'description' => Helper::translate('config_shopping_basket_desc'),
             ],
+            'descriptor' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_descriptor',
+                'options'     => [
+                    '1'       => Helper::translate('yes'),
+                    '0'       => Helper::translate('no'),
+                ],
+                'title'       => Helper::translate('config_descriptor'),
+                'description' => Helper::translate('config_descriptor_desc'),
+            ],
+            'additionalInfo' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_additional_info',
+                'options'     => [
+                    '1'       => Helper::translate('yes'),
+                    '0'       => Helper::translate('no'),
+                ],
+                'title'       => Helper::translate('config_additional_info'),
+                'description' => Helper::translate('config_additional_info_desc'),
+            ],
+            'paymentAction' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_transactionaction',
+                'options'     => TransactionModel::getTranslatedActions(),
+                'title'       => Helper::translate('config_payment_action'),
+                'description' => Helper::translate('config_payment_action_desc'),
+            ],
         ];
 
-        return array_merge($parentConfigFields, $additionalFields);
+        return array_merge(parent::getConfigFields(), $aAdditionalFields);
     }
 }

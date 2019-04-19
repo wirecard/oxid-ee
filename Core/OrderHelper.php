@@ -28,10 +28,10 @@ use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\TransactionService;
 
-use \Wirecard\Oxid\Extend\Model\Order;
-use \Wirecard\Oxid\Extend\Model\Payment;
+use Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Extend\Model\Payment;
 
-use \Psr\Log\LoggerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Helper class to handle orders

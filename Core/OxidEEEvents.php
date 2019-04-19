@@ -9,10 +9,10 @@
 
 namespace Wirecard\Oxid\Core;
 
-use \OxidEsales\Eshop\Core\DatabaseProvider;
-use \OxidEsales\Eshop\Core\Registry;
-use \Wirecard\Oxid\Extend\Model\Order;
-use \Wirecard\Oxid\Model\Transaction;
+use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\Registry;
+use Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Model\Transaction;
 
 /**
  * Class handles module behaviour on shop installation events
@@ -172,9 +172,17 @@ class OxidEEEvents
             " ADD COLUMN `WDOXIDEE_DESCRIPTOR` tinyint(1) default 0 NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_DESCRIPTOR', $sQueryAddDescriptor);
 
-        $sQueryAddInfo = "ALTER TABLE " . self::PAYMENT_TABLE . " ADD COLUMN `WDOXIDEE_ADDITIONAL_INFO`
-         tinyint(1) default 0 NOT NULL";
+        $sQueryAddInfo = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_ADDITIONAL_INFO` tinyint(1) default 0 NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_ADDITIONAL_INFO', $sQueryAddInfo);
+
+        $sQueryAddCountryCode = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_COUNTRYCODE` varchar(5) default '' NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_COUNTRYCODE', $sQueryAddCountryCode);
+
+        $sQueryAddLogoVariant = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_LOGOVARIANT` enum('standard', 'descriptive')";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_LOGOVARIANT', $sQueryAddLogoVariant);
     }
 
     /**
@@ -302,7 +310,7 @@ class OxidEEEvents
          `WDOXIDEE_THREE_D_MAID`, `WDOXIDEE_THREE_D_SECRET`, `WDOXIDEE_NON_THREE_D_MAX_LIMIT`,
          `WDOXIDEE_THREE_D_MIN_LIMIT`, `WDOXIDEE_LIMITS_CURRENCY`,
          `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`, `WDOXIDEE_ISOURS`, `WDOXIDEE_BASKET`,
-         `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`) VALUES (
+         `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`, `WDOXIDEE_COUNTRYCODE`, `WDOXIDEE_LOGOVARIANT`) VALUES (
              '{$oPayment->oxid}',
              '{$oPayment->oxactive}',
              '{$oPayment->oxtoamount}',
@@ -323,7 +331,9 @@ class OxidEEEvents
              '1',
              '{$oPayment->wdoxidee_basket}',
              '{$oPayment->wdoxidee_descriptor}',
-             '{$oPayment->wdoxidee_additional_info}'
+             '{$oPayment->wdoxidee_additional_info}',
+             '{$oPayment->wdoxidee_countrycode}',
+             '{$oPayment->wdoxidee_logovariant}'
         );";
 
         // insert payment method

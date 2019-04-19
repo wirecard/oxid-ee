@@ -9,10 +9,10 @@
 
 namespace Wirecard\Oxid\Extend;
 
-use \Wirecard\PaymentSdk\TransactionService;
-use \Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\TransactionService;
+use Wirecard\PaymentSdk\Config\Config;
 
-use \OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Extends the AJAX handler of OXID's payment method configuration page

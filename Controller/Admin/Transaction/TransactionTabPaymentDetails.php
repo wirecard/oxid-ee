@@ -27,7 +27,12 @@ class TransactionTabPaymentDetails extends TransactionTab
      */
     protected function _getData(): array
     {
-        $aListData = $this->_getListDataFromArray($this->oResponseMapper->getPaymentDetails());
+        $aPaymentDetails = $this->oResponseMapper->getPaymentDetails();
+        $this->_unsetOrderNumber($aPaymentDetails);
+        $this->_setPanelOrderId($aPaymentDetails, $this->oOrder->oxorder__oxid->value);
+        $this->_setOrderNumber($aPaymentDetails, $this->oOrder->oxorder__oxordernr->value);
+
+        $aListData = $this->_getListDataFromArray($aPaymentDetails);
         $aListData[] = [
             'title' => Helper::translate('panel_transaction_copy'),
             'value' => $this->oTransaction->getResponseXML(),
@@ -36,5 +41,43 @@ class TransactionTabPaymentDetails extends TransactionTab
         ];
 
         return $aListData;
+    }
+
+    /**
+     * Unsets the order number originally set from the response mapper.
+     *
+     * @param array $aPaymentDetails
+     *
+     * @since 1.0.0
+     */
+    private function _unsetOrderNumber($aPaymentDetails)
+    {
+        unset($aPaymentDetails['orderNumber']);
+    }
+
+    /**
+     * Sets the panel order ID property on the payment details array.
+     *
+     * @param array  $aPaymentDetails
+     * @param string $sPanelOrderId
+     *
+     * @since 1.0.0
+     */
+    private function _setPanelOrderId($aPaymentDetails, $sPanelOrderId)
+    {
+        $aPaymentDetails['panel_order_id'] = $sPanelOrderId;
+    }
+
+    /**
+     * Sets the order number on the payment details array.
+     *
+     * @param array  $aPaymentDetails
+     * @param string $sOrderNumber
+     *
+     * @since 1.0.0
+     */
+    private function _setOrderNumber($aPaymentDetails, $sOrderNumber)
+    {
+        $aPaymentDetails['orderNumber'] = $sOrderNumber;
     }
 }

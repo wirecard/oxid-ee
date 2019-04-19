@@ -9,38 +9,38 @@
 
 namespace Wirecard\Oxid\Extend\Model;
 
-use \OxidEsales\Eshop\Application\Model\Shop;
-use \OxidEsales\Eshop\Application\Model\Basket;
-use \OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Application\Model\Shop;
+use OxidEsales\Eshop\Application\Model\Basket;
+use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Module\Module;
-use \OxidEsales\Eshop\Core\Registry;
-use \OxidEsales\Eshop\Core\Session;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Session;
 
 use OxidEsales\EshopCommunity\Core\Config;
 use OxidEsales\EshopCommunity\Core\Model\BaseModel;
 use OxidEsales\EshopCommunity\Core\ShopVersion;
-use \Wirecard\Oxid\Core\Helper;
-use \Wirecard\Oxid\Core\PaymentMethodFactory;
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\PaymentMethodFactory;
 
 use Wirecard\Oxid\Core\ResponseHandler;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\PaymentSdk\BackendService;
-use \Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
-use \Wirecard\PaymentSdk\Entity\Device;
-use \Wirecard\PaymentSdk\Response\FormInteractionResponse;
-use \Wirecard\PaymentSdk\Response\Response;
-use \Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Entity\Device;
+use Wirecard\PaymentSdk\Response\FormInteractionResponse;
+use Wirecard\PaymentSdk\Response\Response;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
-use \Wirecard\PaymentSdk\Transaction\Transaction;
-use \Wirecard\PaymentSdk\TransactionService;
-use \Wirecard\PaymentSdk\Response\FailureResponse;
-use \Wirecard\PaymentSdk\Response\InteractionResponse;
-use \Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Transaction\Transaction;
+use Wirecard\PaymentSdk\TransactionService;
+use Wirecard\PaymentSdk\Response\FailureResponse;
+use Wirecard\PaymentSdk\Response\InteractionResponse;
+use Wirecard\PaymentSdk\Entity\Redirect;
 
-use \Psr\Log\LoggerInterface;
-use \Exception;
+use Psr\Log\LoggerInterface;
+use Exception;
 
 /**
  * Custom Payment Gateway to handle Module payment methods
@@ -82,7 +82,7 @@ class PaymentGateway extends BaseModel
         $shopId = Registry::getConfig()->getShopId();
         $shop = oxNew(Shop::class);
         $shop->load($shopId);
-        $oTransaction->setDescriptor(substr($shop->oxshops__oxname->value, 0, 9) . " " . $sOrderId);
+        $oTransaction->setDescriptor(substr(substr($shop->oxshops__oxname->value, 0, 9) . " " . $sOrderId, 0, 27));
     }
 
     /**

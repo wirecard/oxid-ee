@@ -51,6 +51,8 @@ $aModule = array(
             => \Wirecard\Oxid\Extend\ViewConfig::class,
         \OxidEsales\Eshop\Application\Controller\Admin\OrderList::class
             => \Wirecard\Oxid\Extend\Controller\Admin\OrderList::class,
+        \OxidEsales\Eshop\Application\Controller\Admin\PaymentMain::class
+            => \Wirecard\Oxid\Extend\Controller\Admin\PaymentMain::class,
         \OxidEsales\Eshop\Application\Model\Order::class
             => \Wirecard\Oxid\Extend\Model\Order::class,
         \OxidEsales\Eshop\Application\Controller\OrderController::class
@@ -133,21 +135,26 @@ $aModule = array(
             'file' => 'views/blocks/thankyou.tpl'
         ),
         array(
-            'template' => 'page/account/order.tpl',
-            'block' => 'account_order_history_cart_items',
-            'file' => 'views/blocks/accountorder.tpl'
-        ),
-        array(
-            'theme' => 'azure-theme',
-            'template' => 'page/account/order.tpl',
-            'block' => 'account_order_persparams',
-            'file' => 'views/blocks/accountorder_azure.tpl'
+            'template' => 'page/checkout/inc/payment_other.tpl',
+            'block' => 'checkout_payment_longdesc',
+            'file' => 'views/blocks/checkout_payment_longdesc.tpl'
         ),
         array (
             'template' => 'page/checkout/order.tpl',
             'block' => 'shippingAndPayment',
             'file' => 'views/blocks/wirecard_credit_card_fields.tpl'
         ),
+        array(
+            'theme' => 'azure',
+            'template' => 'page/account/order.tpl',
+            'block' => 'account_order_persparams',
+            'file' => 'views/blocks/accountorder_azure.tpl'
+        ),
+        array(
+            'template' => 'page/account/order.tpl',
+            'block' => 'account_order_history_cart_items',
+            'file' => 'views/blocks/accountorder.tpl'
+        )
     ),
     'templates'         => array(
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',

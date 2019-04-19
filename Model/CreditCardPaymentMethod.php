@@ -13,6 +13,7 @@ use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Registry;
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
 use Wirecard\PaymentSdk\Config\Config as PaymentSdkConfig;
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
@@ -180,6 +181,33 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'title' => Helper::translate('more_info'),
                 'link' => 'https://github.com/wirecard/oxid-ee/wiki/Credit-Card#non-3-d-secure-and-3-d-secure-limits',
                 'text' => Helper::translate('three_d_link_text')
+            ],
+            'descriptor' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_descriptor',
+                'options'     => [
+                    '1'       => Helper::translate('yes'),
+                    '0'       => Helper::translate('no'),
+                ],
+                'title'       => Helper::translate('config_descriptor'),
+                'description' => Helper::translate('config_descriptor_desc'),
+            ],
+            'additionalInfo' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_additional_info',
+                'options'     => [
+                    '1'       => Helper::translate('yes'),
+                    '0'       => Helper::translate('no'),
+                ],
+                'title'       => Helper::translate('config_additional_info'),
+                'description' => Helper::translate('config_additional_info_desc'),
+            ],
+            'paymentAction' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_transactionaction',
+                'options'     => TransactionModel::getTranslatedActions(),
+                'title'       => Helper::translate('config_payment_action'),
+                'description' => Helper::translate('config_payment_action_desc'),
             ],
         ];
 

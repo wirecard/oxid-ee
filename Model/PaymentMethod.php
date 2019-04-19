@@ -9,15 +9,14 @@
 
 namespace Wirecard\Oxid\Model;
 
-use \Wirecard\Oxid\Core\Helper;
-use \Wirecard\PaymentSdk\Config\Config;
-use \Exception;
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\PaymentSdk\Config\Config;
+use Exception;
 
-use \OxidEsales\Eshop\Application\Model\Payment;
-use \OxidEsales\Eshop\Application\Model\UserPayment;
-use \OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Core\Registry;
 
-use \Psr\Log\LoggerInterface;
+use Psr\Log\LoggerInterface;
 
 /**
  * Class PaymentMethod
@@ -124,6 +123,25 @@ abstract class PaymentMethod
     }
 
     /**
+     * Returns the logo path for a payment method.
+     *
+     * @param Payment $oPayment
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getLogoPath($oPayment)
+    {
+        $sLogoFile = $oPayment->oxpayments__wdoxidee_logo->value;
+
+        $oConfig = Registry::getConfig();
+
+        return $oConfig->getShopUrl() . $oConfig->getModulesDir(false) .
+            "wirecard/paymentgateway/out/img/{$sLogoFile}";
+    }
+
+    /**
      * Returns an array of fields to be displayed in the payment method config.
      *
      * @return array
@@ -149,6 +167,12 @@ abstract class PaymentMethod
                 'field' => 'oxpayments__wdoxidee_httppass',
                 'title' => Helper::translate('config_http_password'),
             ],
+            'testCredentials' => [
+                'type'        => 'button',
+                'onclick'     => 'wdTestPaymentMethodCredentials()',
+                'text'        => Helper::translate('test_credentials'),
+                'colspan'     => '2',
+            ],
             'maid' => [
                 'type' => 'text',
                 'field' => 'oxpayments__wdoxidee_maid',
@@ -160,33 +184,6 @@ abstract class PaymentMethod
                 'field' => 'oxpayments__wdoxidee_secret',
                 'title' => Helper::translate('config_merchant_secret'),
                 'description' => Helper::translate('config_three_d_merchant_secret_desc'),
-            ],
-            'descriptor' => [
-                'type' => 'select',
-                'field' => 'oxpayments__wdoxidee_descriptor',
-                'options' => [
-                    '1' => Helper::translate('yes'),
-                    '0' => Helper::translate('no'),
-                ],
-                'title' => Helper::translate('config_descriptor'),
-                'description' => Helper::translate('config_descriptor_desc'),
-            ],
-            'additionalInfo' => [
-                'type' => 'select',
-                'field' => 'oxpayments__wdoxidee_additional_info',
-                'options' => [
-                    '1' => Helper::translate('yes'),
-                    '0' => Helper::translate('no'),
-                ],
-                'title' => Helper::translate('config_additional_info'),
-                'description' => Helper::translate('config_additional_info_desc'),
-            ],
-            'paymentAction' => [
-                'type' => 'select',
-                'field' => 'oxpayments__wdoxidee_transactionaction',
-                'options' => Transaction::getTranslatedActions(),
-                'title' => Helper::translate('config_payment_action'),
-                'description' => Helper::translate('config_payment_action_desc'),
             ],
         ];
     }
