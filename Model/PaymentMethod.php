@@ -123,6 +123,25 @@ abstract class PaymentMethod
     }
 
     /**
+     * Returns the logo path for a payment method.
+     *
+     * @param Payment $oPayment
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getLogoPath($oPayment)
+    {
+        $sLogoFile = $oPayment->oxpayments__wdoxidee_logo->value;
+
+        $oConfig = Registry::getConfig();
+
+        return $oConfig->getShopUrl() . $oConfig->getModulesDir(false) .
+            "wirecard/paymentgateway/out/img/{$sLogoFile}";
+    }
+
+    /**
      * Returns an array of fields to be displayed in the payment method config.
      *
      * @return array

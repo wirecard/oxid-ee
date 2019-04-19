@@ -11,9 +11,6 @@ namespace Wirecard\Oxid\Extend\Model;
 
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Model\PaymentMethod;
-use Wirecard\Oxid\Model\SofortPaymentMethod;
-
-use OxidEsales\Eshop\Core\Registry;
 
 use Exception;
 
@@ -61,21 +58,12 @@ class Payment extends Payment_parent
      */
     public function getLogoUrl(): ?string
     {
-        if (!$this->oxpayments__wdoxidee_logo->value) {
+        $oPaymentMethod = $this->getPaymentMethod();
+
+        if (!$oPaymentMethod) {
             return null;
         }
 
-        if ($this->oxpayments__oxid->value === SofortPaymentMethod::getName(true)) {
-            return sprintf(
-                $this->oxpayments__wdoxidee_logo->value,
-                $this->oxpayments__wdoxidee_countrycode->value,
-                $this->oxpayments__wdoxidee_logovariant->value
-            );
-        }
-
-        $oConfig = Registry::getConfig();
-
-        return $oConfig->getShopUrl() . $oConfig->getModulesDir(false) .
-            "wirecard/paymentgateway/out/img/{$this->oxpayments__wdoxidee_logo->value}";
+        return $oPaymentMethod->getLogoPath($this);
     }
 }

@@ -69,6 +69,26 @@ class SofortPaymentMethod extends PaymentMethod
     }
 
     /**
+     * Sofort has a variable logo depending on the shop language
+     *
+     * @param Payment $oPayment
+     *
+     * @return string
+     */
+    public function getLogoPath($oPayment): string
+    {
+        $sLogoPath = $oPayment->oxpayments__wdoxidee_logo->value;
+        $sCountryCode = $oPayment->oxpayments__wdoxidee_countrycode->value;
+        $sLogoVariant = $oPayment->oxpayments__wdoxidee_logovariant->value;
+
+        return sprintf(
+            $sLogoPath,
+            $sCountryCode,
+            $sLogoVariant
+        );
+    }
+
+    /**
      * @inheritdoc
      *
      * @return array

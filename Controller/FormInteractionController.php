@@ -9,11 +9,11 @@
 
 namespace Wirecard\Oxid\Controller;
 
-use \OxidEsales\Eshop\Application\Controller\FrontendController;
-use \OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Application\Controller\FrontendController;
+use OxidEsales\Eshop\Core\Registry;
 
-use \Wirecard\Oxid\Model\FormInteractionResponseFields;
-use \Wirecard\PaymentSdk\Entity\FormFieldMap;
+use Wirecard\Oxid\Model\FormInteractionResponseFields;
+use Wirecard\PaymentSdk\Entity\FormFieldMap;
 
 /**
  * Class Form_Interaction_Controller
