@@ -191,7 +191,7 @@ class OrderHelper
         }
 
         // set the custom payment error code and text and redirect back to the payment step of the checkout process
-        Registry::getSession()->setVariable(self::PAY_ERROR_VARIABLE, self::PAY_ERROR_IDs);
+        Registry::getSession()->setVariable(self::PAY_ERROR_VARIABLE, self::PAY_ERROR_ID);
         Registry::getSession()->setVariable(self::PAY_ERROR_TEXT_VARIABLE, join('<br/>', $aErrorDescriptions));
         $sRedirectUrl = Registry::getConfig()->getShopHomeUrl() . 'cl=payment';
 
