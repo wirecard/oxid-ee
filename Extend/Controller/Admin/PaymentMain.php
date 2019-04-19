@@ -10,7 +10,8 @@
 namespace Wirecard\Oxid\Extend\Controller\Admin;
 
 use OxidEsales\Eshop\Core\Registry;
-use Wirecard\Oxid\Extend\Model\Payment;
+
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
@@ -123,9 +124,7 @@ class PaymentMain extends PaymentMain_parent
     private function _isCustomPaymentMethod()
     {
         $sOxId = $this->getEditObjectId();
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load($sOxId);
-
+        $oPayment = PaymentMethodHelper::getPaymentById($sOxId);
         return $oPayment->isCustomPaymentMethod();
     }
 }

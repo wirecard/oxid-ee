@@ -15,6 +15,7 @@ use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\OrderHelper;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
@@ -118,8 +119,7 @@ class OrderController extends OrderController_parent
         $oSession = Registry::getSession();
         $oBasket = $oSession->getBasket();
 
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load($oBasket->getPaymentId());
+        $oPayment = PaymentMethodHelper::getPaymentById($oBasket->getPaymentId());
 
         if (!$oPayment->isCustomPaymentMethod()) {
             return parent::execute();
@@ -312,8 +312,7 @@ class OrderController extends OrderController_parent
 
         $oTransactionService = $this->_getTransactionService();
 
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load($oBasket->getPaymentId());
+        $oPayment = PaymentMethodHelper::getPaymentById($oBasket->getPaymentId());
 
         // This string is used in out/blocks/wirecard_credit_card_fields.tpl to render the form
         return "ModuleCreditCardForm.init(" .

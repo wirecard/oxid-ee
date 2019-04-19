@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Controller;
 
 use Wirecard\Oxid\Core\PaymentMethodFactory;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\ResponseHandler;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Transaction;
@@ -65,10 +66,11 @@ class NotifyHandler extends FrontendController
      */
     public function handleRequest()
     {
-        $sPaymentName = Registry::getRequest()->getRequestParameter('pmt');
-        $oPaymentMethod = PaymentMethodFactory::create($sPaymentName);
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load($sPaymentName);
+        $sPaymentId = Registry::getRequest()->getRequestParameter('pmt');
+        $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
+
+        $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
+
         $oConfig = $oPaymentMethod->getConfig($oPayment);
         $sPostData = file_get_contents('php://input');
 

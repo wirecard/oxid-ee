@@ -23,6 +23,7 @@ use OxidEsales\EshopCommunity\Core\ShopVersion;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\PaymentMethod;
 
 use Wirecard\PaymentSdk\BackendService;
@@ -126,13 +127,14 @@ class PaymentGateway extends BaseModel
     {
         $oSession = $this->getSession();
 
+        $sPaymentId = $oBasket->getPaymentId();
+
         /**
          * @var $oPayment Payment
          */
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load($oBasket->getPaymentId());
+        $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
 
-        $oPaymentMethod = PaymentMethodFactory::create($oPayment->oxpayments__oxid->value);
+        $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
 
         $oTransaction = $oPaymentMethod->getTransaction();
 
@@ -232,8 +234,7 @@ class PaymentGateway extends BaseModel
         /**
          * @var $oPayment Payment
          */
-        $oPayment = oxNew(Payment::class);
-        $oPayment->load($oBasket->getPaymentId());
+        $oPayment = PaymentMethodHelper::getPaymentById($oBasket->getPaymentId());
 
         $oPaymentMethod = PaymentMethodFactory::create($oPayment->oxpayments__oxid->value);
 
