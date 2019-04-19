@@ -74,6 +74,7 @@ end
 
 desc 'Run Selenium tests'
 task :runtests_selenium do
+  Rake::Task['reset_shop'].invoke
   sh "docker exec #{OXID_CONTAINER} runtests-selenium.sh"
 end
 
