@@ -31,7 +31,6 @@ use Wirecard\PaymentSdk\Response\FormInteractionResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
-use Wirecard\PaymentSdk\TransactionService;
 
 /**
  * Helper class to handle orders
@@ -209,26 +208,29 @@ class OrderHelper
      * @param string  $sFormPostVariable
      *
      * @throws \Exception
+     * @return void
      *
      * @since 1.0.0
      */
     public static function handleFormResponse($oSession, $oPayment, $oOrder, $sFormPostVariable)
     {
         $oResponse = $oSession->getVariable($sFormPostVariable);
-        if (!empty($oResponse)) {
-            $oSession->deleteVariable($sFormPostVariable);
-            $oPaymentMethod = PaymentMethodFactory::create($oPayment->oxpayments__oxid->value);
-
-            $oConfig = $oPaymentMethod->getConfig($oPayment);
-
-            $oLogger = Registry::getLogger();
-
-            $oTransactionService = new TransactionService($oConfig, $oLogger);
-
-            $oResponse = $oTransactionService->handleResponse($oResponse);
-
-            self::handleResponse($oResponse, $oLogger, $oOrder, $oConfig);
+        if (empty($oResponse)) {
+            return;
         }
+
+        $oSession->deleteVariable($sFormPostVariable);
+        $oPaymentMethod = PaymentMethodFactory::create($oPayment->oxpayments__oxid->value);
+
+        $oConfig = $oPaymentMethod->getConfig($oPayment);
+
+        $oLogger = Registry::getLogger();
+
+        $oBackendService = new BackendService($oConfig, $oLogger);
+
+        $oResponse = $oBackendService->handleResponse($oResponse);
+
+        self::handleResponse($oResponse, $oLogger, $oOrder, $oBackendService);
     }
 
     /**
