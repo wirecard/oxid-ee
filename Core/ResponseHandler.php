@@ -57,6 +57,8 @@ class ResponseHandler
 
         self::_saveTransaction($oResponse, $oOrder, $oPayment);
         self::_updateOrder($oOrder, $oResponse, $oBackendService);
+
+        $oOrder->sendOrderByEmail();
     }
 
     /**

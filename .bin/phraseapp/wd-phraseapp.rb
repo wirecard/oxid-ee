@@ -120,7 +120,7 @@ class WdPhraseApp
 
     # Verify that branch was created.
     @log.info('Waiting for PhraseApp to be ready for us to push to the branch...')
-    sleep(5)
+    sleep(10)
   end
 
   # Uploads a JSON file with keys to the PhraseApp branch

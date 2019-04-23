@@ -22,6 +22,7 @@ use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Model\TransactionList;
 use Wirecard\Oxid\Core\AccountHolderHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Extend\Core\Email;
 
 /**
  * Class Order
@@ -65,7 +66,7 @@ class Order extends Order_parent
      *
      * @since 1.0.0
      */
-    public function getOrderBillingCountry(): Country
+    public function getOrderBillingCountry()
     {
         $oCountry = oxNew(Country::class);
         $oCountry->load($this->oxorder__oxbillcountryid->value);
@@ -80,7 +81,7 @@ class Order extends Order_parent
      *
      * @since 1.0.0
      */
-    public function getOrderShippingCountry(): Country
+    public function getOrderShippingCountry()
     {
         $oCountry = oxNew(Country::class);
         $oCountry->load($this->oxorder__oxdelcountryid->value);
@@ -316,5 +317,105 @@ class Order extends Order_parent
         $this->_setUser($oUser);
         $this->_loadFromBasket($oBasket);
         $this->oxorder__oxid = new Field(Registry::getSession()->getVariable('sess_challenge'));
+    }
+
+    /**
+     * {@inheritdoc }
+     * The emails will not be sent if module payment type is used
+     *
+     * @param object $oUser
+     * @param object $oBasket
+     * @param object $oPayment
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    protected function _sendOrderByEmail($oUser = null, $oBasket = null, $oPayment = null)
+    {
+        if ($this->isCustomPaymentMethod()) {
+            return self::ORDER_STATE_OK;
+        }
+
+        return parent::_sendOrderByEmail($oUser, $oBasket, $oPayment);
+    }
+
+    /**
+     * Sends order by email
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    public function sendOrderByEmail()
+    {
+        $this->getOrderBasket();
+        $this->getOrderUserPayment();
+        $this->getOrderUser();
+
+        return $this->_tryToSendOrderByEmail();
+    }
+
+    /**
+     * Returns the basket of the order and also sets it into private attribute
+     *
+     * @return \OxidEsales\Eshop\Application\Model\Basket
+     *
+     * @since 1.0.0
+     */
+    public function getOrderBasket()
+    {
+        if (empty($this->_oBasket)) {
+            $this->_oBasket = $this->_getOrderBasket(false);
+            $this->_addOrderArticlesToBasket($this->_oBasket, $this->getOrderArticles(true));
+            $this->_oBasket->calculateBasket(true);
+        }
+
+        return $this->_oBasket;
+    }
+
+    /**
+     * Returns the user payment of the order and also sets it into private attribute
+     *
+     * @return \OxidEsales\Eshop\Application\Model\UserPayment
+     *
+     * @since 1.0.0
+     */
+    public function getOrderUserPayment()
+    {
+        if (empty($this->_oPayment)) {
+            $this->_oPayment = $this->_setPayment($this->_oBasket->getPaymentId());
+        }
+
+        return $this->_oPayment;
+    }
+
+    /**
+     * Send order by emails. Respect settings for sending pending emails
+     *
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    protected function _tryToSendOrderByEmail()
+    {
+        $bRet = false;
+
+        $oEmail = oxNew(Email::class);
+        $bSendPendingEmails = $this->getConfig()->getConfigParam('blEmailOnPending');
+
+        // Dont send pending emails if not enabled in module settings
+        if ($this->isPaymentPending() && !$bSendPendingEmails) {
+            Registry::getLogger()->debug('Prevent sending pending order by email with id: '. $this->getId());
+            return true;
+        }
+
+        if ($oEmail->sendOrderEmailToUser($this)) {
+            $bRet = true;
+        }
+
+        $oEmail->sendOrderEmailToOwner($this);
+
+        return $bRet;
     }
 }

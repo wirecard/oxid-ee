@@ -65,6 +65,8 @@ $aModule = array(
             => \Wirecard\Oxid\Extend\Model\Basket::class,
         \OxidEsales\Eshop\Application\Controller\ThankYouController::class
             => \Wirecard\Oxid\Extend\Controller\ThankYouController::class,
+        \OxidEsales\Eshop\Core\Email::class
+            => \Wirecard\Oxid\Extend\Core\Email::class
     ),
     'controllers'       => array(
         'wcpg_transaction'
@@ -154,7 +156,27 @@ $aModule = array(
             'template' => 'page/account/order.tpl',
             'block' => 'account_order_history_cart_items',
             'file' => 'views/blocks/accountorder.tpl'
-        )
+        ),
+        array(
+            'template' => 'email/html/order_cust.tpl',
+            'block' => 'email_html_order_cust_orderemail',
+            'file' => 'views/blocks/email_html_order_cust_orderemail.tpl'
+        ),
+        array(
+            'template' => 'email/plain/order_cust.tpl',
+            'block' => 'email_plain_order_cust_orderemail',
+            'file' => 'views/blocks/email_plain_order_cust_orderemail.tpl'
+        ),
+        array(
+            'template' => 'email/html/order_owner.tpl',
+            'block' => 'email_html_order_owner_orderemail',
+            'file' => 'views/blocks/email_html_order_owner_orderemail.tpl'
+        ),
+        array(
+            'template' => 'email/plain/order_owner.tpl',
+            'block' => 'email_plain_order_owner_orderemail',
+            'file' => 'views/blocks/email_plain_order_owner_orderemail.tpl'
+        ),
     ),
     'templates'         => array(
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
@@ -167,5 +189,15 @@ $aModule = array(
     'events'            => array(
         'onActivate'        => '\Wirecard\Oxid\Core\OxidEEEvents::onActivate',
         'onDeactivate'      => '\Wirecard\Oxid\Core\OxidEEEvents::onDeactivate'
+    ),
+    /**
+     * The settings below result in a set of auto-generated translatable keys. For the PhraseApp parsing script to pick
+     * them up, we construct the list of keys below as a comment:
+     *
+     * translate('SHOP_MODULE_blEmailOnPending')
+     * translate('SHOP_MODULE_GROUP_emails')
+     */
+    'settings' => array(
+        array('group' => 'emails', 'name' => 'blEmailOnPending', 'type' => 'bool', 'value' => 'false')
     )
 );
