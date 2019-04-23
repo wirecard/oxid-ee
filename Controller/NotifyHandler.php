@@ -141,5 +141,9 @@ class NotifyHandler extends FrontendController
             $sDescription = $oStatus->getDescription();
             $this->_oLogger->error("\t$sSeverity with code $sCode and message '$sDescription' occurred.");
         }
+
+        $oOrder = oxNew(Order::class);
+        $oOrder->loadWithTransactionId($oResponse->getParentTransactionId());
+        $oOrder->handleOrderState(Order::STATE_FAILED);
     }
 }

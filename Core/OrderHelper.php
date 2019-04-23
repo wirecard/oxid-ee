@@ -194,7 +194,7 @@ class OrderHelper
         Registry::getSession()->setVariable(self::PAY_ERROR_TEXT_VARIABLE, join('<br/>', $aErrorDescriptions));
         $sRedirectUrl = Registry::getConfig()->getShopHomeUrl() . 'cl=payment';
 
-        $oOrder->delete();
+        $oOrder->handleOrderState(Order::STATE_FAILED);
 
         Registry::getUtils()->redirect($sRedirectUrl);
     }

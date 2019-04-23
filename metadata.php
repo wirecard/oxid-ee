@@ -57,6 +57,8 @@ $aModule = array(
             => \Wirecard\Oxid\Extend\Model\Order::class,
         \OxidEsales\Eshop\Application\Controller\OrderController::class
             => \Wirecard\Oxid\Extend\Controller\OrderController::class,
+        \OxidEsales\Eshop\Application\Controller\PaymentController::class
+            => \Wirecard\Oxid\Extend\Controller\PaymentController::class,
         \OxidEsales\Eshop\Application\Model\Payment::class
             => \Wirecard\Oxid\Extend\Model\Payment::class,
         \OxidEsales\Eshop\Application\Controller\Admin\PaymentMainAjax::class
