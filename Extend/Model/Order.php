@@ -24,6 +24,8 @@ use Wirecard\Oxid\Core\AccountHolderHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Extend\Core\Email;
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Class Order
  *
@@ -38,6 +40,26 @@ class Order extends Order_parent
     const STATE_PROCESSING = 'processing';
     const STATE_CANCELED = 'canceled';
     const STATE_REFUNDED = 'refunded';
+    const STATE_FAILED = 'failed';
+
+    /**
+     * @var LoggerInterface
+     *
+     * @since 1.0.0
+     */
+    protected $_oLogger;
+
+    /**
+     * @inheritdoc
+     *
+     * @since 1.0.0
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->_oLogger = Registry::getLogger();
+    }
 
     /**
      * Loads order data from DB.
@@ -206,6 +228,7 @@ class Order extends Order_parent
             self::STATE_PROCESSING => Helper::translate('order_status_purchased'),
             self::STATE_CANCELED => Helper::translate('order_status_cancelled'),
             self::STATE_REFUNDED => Helper::translate('order_status_refunded'),
+            self::STATE_FAILED => Helper::translate('order_status_failed'),
         ];
     }
 
@@ -406,7 +429,7 @@ class Order extends Order_parent
 
         // Dont send pending emails if not enabled in module settings
         if ($this->isPaymentPending() && !$bSendPendingEmails) {
-            Registry::getLogger()->debug('Prevent sending pending order by email with id: '. $this->getId());
+            $this->logger->debug('Prevent sending pending order by email with id: '. $this->getId());
             return true;
         }
 
@@ -417,5 +440,46 @@ class Order extends Order_parent
         $oEmail->sendOrderEmailToOwner($this);
 
         return $bRet;
+    }
+
+    /**
+     * Handles the order after a certain order state is set.
+     *
+     * @param string $sState
+     * @return void
+     *
+     * @since 1.0.0
+     */
+    public function handleOrderState($sState)
+    {
+        if ($this->_shouldBeDeletedOnState($sState)) {
+            if ($this->delete()) {
+                $this->_oLogger->info(
+                    "Order `{$this->getId()}` was deleted as requested by the payment method config."
+                );
+
+                return;
+            }
+
+            $this->_oLogger->error(
+                "Order `{$this->getId()}` could not be deleted as requested by the payment method config."
+            );
+        }
+    }
+
+    /**
+     * Checks if the order should be deleted if a certain order state is set.
+     *
+     * @param string $sState
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    private function _shouldBeDeletedOnState($sState)
+    {
+        $oPayment = $this->getOrderPayment();
+
+        return ($sState === self::STATE_CANCELED && $oPayment->oxpayments__wdoxidee_delete_canceled_order->value) ||
+            ($sState === self::STATE_FAILED && $oPayment->oxpayments__wdoxidee_delete_failed_order->value);
     }
 }

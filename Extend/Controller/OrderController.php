@@ -260,6 +260,8 @@ class OrderController extends OrderController_parent
             $oResponse = $oPaymentGateway->executeTransaction($oTransaction, $oOrder, $oBasket);
         } catch (\Exception $exc) {
             $oLogger->error(__METHOD__ . ": Error processing transaction: " . $exc->getMessage(), [$exc]);
+            $oOrder->handleOrderState(Order::STATE_FAILED);
+
             return $this->_getNextStep(Order::ORDER_STATE_PAYMENTERROR);
         }
 

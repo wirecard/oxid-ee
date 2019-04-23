@@ -68,6 +68,7 @@ $aLang = array(
     'order_status' => 'Bestellstatus',
     'order_status_authorized' => 'Genehmigt',
     'order_status_cancelled' => 'Abgebrochen',
+    'order_status_failed' => 'Fehlgeschlagen',
     'order_status_pending' => 'Ausstehend',
     'order_status_purchased' => 'Bezahlt',
     'order_status_refunded' => 'Rückerstattet',

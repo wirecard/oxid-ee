@@ -13,11 +13,20 @@ use OxidEsales\TestingLibrary\UnitTestCase;
 
 use OxidEsales\Eshop\Core\DatabaseProvider;
 
+use Psr\Log\LogLevel;
+
 /**
  * UnitTextCase extension that allows setting database values from within the test.
  */
 abstract class WdUnitTestCase extends UnitTestCase
 {
+    const FAIL_TEST_ON_LOG_LEVELS = [
+        LogLevel::EMERGENCY,
+        LogLevel::ALERT,
+        LogLevel::CRITICAL,
+        LogLevel::ERROR,
+    ];
+
     /**
      * @inheritdoc
      */
@@ -25,6 +34,7 @@ abstract class WdUnitTestCase extends UnitTestCase
     {
         parent::setUp();
 
+        $this->removeDbData();
         $this->addDbData();
     }
 
@@ -36,6 +46,40 @@ abstract class WdUnitTestCase extends UnitTestCase
         parent::tearDown();
 
         $this->removeDbData();
+    }
+
+    /**
+     * Only fails a test if the log level matches one of FAIL_TEST_ON_LOG_LEVELS.
+     *
+     * @inheritdoc
+     */
+    protected function failOnLoggedExceptions()
+    {
+        $logFileContent = $this->exceptionLogHelper->getExceptionLogFileContent();
+
+        if ($logFileContent) {
+            if (in_array($this->getLogLevelFromLogFileContent($logFileContent), self::FAIL_TEST_ON_LOG_LEVELS)) {
+                parent::failOnLoggedExceptions();
+            } else {
+                $this->exceptionLogHelper->clearExceptionLogFile();
+            }
+        }
+    }
+    /**
+     * Returns the log level of the first log entry in a given log file content.
+     *
+     * @param string $logFileContent
+     * @return string|null
+     */
+    protected function getLogLevelFromLogFileContent($logFileContent)
+    {
+        preg_match('/Logger\.\K[A-Z]+/', $logFileContent, $matches);
+
+        if ($logFileContent) {
+            return constant(LogLevel::class . "::{$matches[0]}");
+        }
+        
+        return null;
     }
 
     /**

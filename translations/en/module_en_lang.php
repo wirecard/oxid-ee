@@ -68,6 +68,7 @@ $aLang = array(
     'order_status' => 'Order status',
     'order_status_authorized' => 'Authorized',
     'order_status_cancelled' => 'Cancelled',
+    'order_status_failed' => 'Failed',
     'order_status_pending' => 'Pending',
     'order_status_purchased' => 'Paid',
     'order_status_refunded' => 'Refunded',
