@@ -207,7 +207,7 @@ class PaymentGateway extends BaseModel
         $oCustomFields->add(new CustomField('shopVersion', ShopVersion::getVersion()));
 
         $oModule = oxNew(Module::class);
-        $oModule->load('wdoxidee');
+        $oModule->load(Helper::MODULE_ID);
 
         $oCustomFields->add(new CustomField('pluginName', $oModule->getTitle()));
         $oCustomFields->add(new CustomField('pluginVersion', $oModule->getInfo('version')));

@@ -245,7 +245,8 @@ class CreditCardPaymentMethod extends PaymentMethod
     {
         return array_merge(
             parent::getPublicFieldNames(),
-            ['threeDMaid', 'nonThreeDMaxLimit', 'threeDMinLimit', 'limitsCurrency']
+            ['threeDMaid', 'nonThreeDMaxLimit', 'threeDMinLimit', 'limitsCurrency',
+            'descriptor', 'additionalInfo', 'paymentAction']
         );
     }
 }

@@ -7,6 +7,8 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use Wirecard\Oxid\Core\Helper;
+
 /**
  * Metadata version
  */
@@ -34,7 +36,7 @@ $aModuleDescriptions = array(
  * Module information
  */
 $aModule = array(
-    'id'                => 'wdoxidee',
+    'id'                => Helper::MODULE_ID,
     'title'             => 'Wirecard OXID Module',
     'description'       => array(
         'de' => $aModuleDescriptions['de'],

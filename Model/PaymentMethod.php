@@ -216,7 +216,7 @@ abstract class PaymentMethod
      */
     public function getPublicFieldNames()
     {
-        return ['apiUrl', 'maid', 'descriptor', 'additionalInfo', 'paymentAction'];
+        return ['apiUrl', 'maid'];
     }
 
     /**

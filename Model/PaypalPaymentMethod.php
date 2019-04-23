@@ -128,6 +128,6 @@ class PaypalPaymentMethod extends PaymentMethod
      */
     public function getPublicFieldNames()
     {
-        return array_merge(parent::getPublicFieldNames(), ['basket']);
+        return array_merge(parent::getPublicFieldNames(), ['basket', 'descriptor', 'additionalInfo', 'paymentAction']);
     }
 }

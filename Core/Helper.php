@@ -255,6 +255,8 @@ class Helper
      *
      * @param string $sEmail
      * @return bool
+     *
+     * @since 1.0.0
      */
     public static function isEmailValid($sEmail)
     {
