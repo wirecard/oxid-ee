@@ -98,8 +98,6 @@ abstract class PaymentMethod
      *
      * @return string
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     *
      * @since 1.0.0
      */
     public static function getName(bool $bForOxid = false): string
