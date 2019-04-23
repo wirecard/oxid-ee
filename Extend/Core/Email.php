@@ -10,7 +10,6 @@
 namespace Wirecard\Oxid\Extend\Core;
 
 use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Core\Language;
 
 /**
  * Email extension
