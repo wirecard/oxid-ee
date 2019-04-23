@@ -21,7 +21,8 @@ use OxidEsales\Eshop\Core\Registry;
 class Email extends Email_parent
 {
     /**
-     * {@inheritdoc }
+     * @inheritdoc
+     *
      * For custom payment method send the email in order language
      *
      * @param \OxidEsales\Eshop\Application\Model\Order $order   Order object
@@ -37,7 +38,8 @@ class Email extends Email_parent
     }
 
     /**
-     * {@inheritdoc }
+     * @inheritdoc
+     *
      * For custom payment method send the email in order language
      *
      * @param \OxidEsales\Eshop\Application\Model\Order $order   Order object
