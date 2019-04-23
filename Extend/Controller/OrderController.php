@@ -14,9 +14,9 @@ use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Registry;
 
+use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
-use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Extend\Model\PaymentGateway;
@@ -241,7 +241,8 @@ class OrderController extends OrderController_parent
      * @param Basket $oBasket
      * @param Order  $oOrder
      *
-     * @return void
+     * @return string
+     * @throws Exception
      *
      * @since 1.0.0
      */
@@ -263,6 +264,8 @@ class OrderController extends OrderController_parent
         }
 
         OrderHelper::handleResponse($oResponse, $oLogger, $oOrder);
+        $iSuccess = $oOrder->oxorder__wdoxidee_finalizeorderstate->value;
+        return $this->_getNextStep($iSuccess);
     }
 
     /**

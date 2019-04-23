@@ -20,7 +20,9 @@ var ModuleCreditCardForm = (function ($) {
   }
 
   function logError(where, error) {
-    $("#wirecard-cc-error").addClass("alert alert-danger").html(error.status_code_1 + " " + error.status_description_1);
+    if (error.status_code_1) {
+      $("#wirecard-cc-error").addClass("alert alert-danger").html(error.status_code_1 + " " + error.status_description_1);
+    }
 
     if (debug) {
       // eslint-disable-next-line no-console
