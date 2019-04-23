@@ -446,6 +446,7 @@ class Order extends Order_parent
      * Handles the order after a certain order state is set.
      *
      * @param string $sState
+     * @return void
      *
      * @since 1.0.0
      */
@@ -456,11 +457,13 @@ class Order extends Order_parent
                 $this->_oLogger->info(
                     "Order `{$this->getId()}` was deleted as requested by the payment method config."
                 );
-            } else {
-                $this->_oLogger->error(
-                    "Order `{$this->getId()}` could not be deleted as requested by the payment method config."
-                );
+
+                return;
             }
+
+            $this->_oLogger->error(
+                "Order `{$this->getId()}` could not be deleted as requested by the payment method config."
+            );
         }
     }
 
