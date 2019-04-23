@@ -177,6 +177,14 @@ class OxidEEEvents
             " ADD COLUMN `WDOXIDEE_ADDITIONAL_INFO` tinyint(1) default 0 NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_ADDITIONAL_INFO', $sQueryAddInfo);
 
+        $sQueryAddDelCanceled = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_DELETE_CANCELED_ORDER` tinyint(1) default 0 NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_DELETE_CANCELED_ORDER', $sQueryAddDelCanceled);
+
+        $sQueryAddDelFailed = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_DELETE_FAILED_ORDER` tinyint(1) default 0 NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_DELETE_FAILED_ORDER', $sQueryAddDelFailed);
+
         $sQueryAddCountryCode = "ALTER TABLE " . self::PAYMENT_TABLE .
             " ADD COLUMN `WDOXIDEE_COUNTRYCODE` varchar(5) default '' NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_COUNTRYCODE', $sQueryAddCountryCode);
