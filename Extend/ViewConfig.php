@@ -62,4 +62,17 @@ class ViewConfig extends ViewConfig_parent
     {
         return $this->getModuleUrl(Helper::MODULE_ID, $sPath);
     }
+
+    /**
+     * Check if passed module is Payment Gateway Module id
+     *
+     * @param string $sModuleId
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    public function isOurModule($sModuleId)
+    {
+        return Helper::MODULE_ID === $sModuleId;
+    }
 }

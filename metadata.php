@@ -192,8 +192,8 @@ $aModule = array(
         ),
         array(
             'template' => 'module_config.tpl',
-            'block'    => 'admin_module_config_form',
-            'file'     => 'views/admin/blocks/admin_module_config_form.tpl'
+            'block' => 'admin_module_config_form',
+            'file' => 'views/admin/blocks/admin_module_config_form.tpl'
         ),
     ),
     'templates'         => array(

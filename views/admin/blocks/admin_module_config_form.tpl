@@ -1,5 +1,5 @@
 [{$smarty.block.parent}]
 
-[{if $oModule->getId() == 'wdoxidee'}]
+[{if $oViewConf->isOurModule($oModule->getId())}]
   [{include file="live_chat.tpl"}]
 [{/if}]
