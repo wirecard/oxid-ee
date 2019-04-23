@@ -44,11 +44,15 @@ class Order extends Order_parent
 
     /**
      * @var LoggerInterface
+     *
+     * @since 1.0.0
      */
     protected $oLogger;
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     public function __construct()
     {
@@ -442,6 +446,8 @@ class Order extends Order_parent
      * Handles the order after a certain order state is set.
      *
      * @param string $sState
+     *
+     * @since 1.0.0
      */
     public function handleOrderState($sState)
     {
@@ -463,6 +469,8 @@ class Order extends Order_parent
      *
      * @param string $sState
      * @return bool
+     *
+     * @since 1.0.0
      */
     private function _shouldBeDeletedOnState($sState)
     {

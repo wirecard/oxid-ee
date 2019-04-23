@@ -12,9 +12,11 @@ use OxidEsales\Eshop\Core\Registry;
 use Wirecard\Oxid\Extend\Model\Order;
 
 /**
- * Class Order
+ * Class PaymentController
  *
  * @mixin \OxidEsales\Eshop\Application\Controller\PaymentController
+ *
+ * @since 1.0.0
  */
 class PaymentController extends PaymentController_parent
 {
@@ -23,6 +25,8 @@ class PaymentController extends PaymentController_parent
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.0
      */
     protected function _unsetPaymentErrors()
     {
