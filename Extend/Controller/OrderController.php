@@ -236,7 +236,7 @@ class OrderController extends OrderController_parent
     }
 
     /**
-     * Handles Wirecard payment transaction
+     * Handles payment transaction
      *
      * @param Basket $oBasket
      * @param Order  $oOrder
