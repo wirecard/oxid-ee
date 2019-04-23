@@ -11,7 +11,7 @@
 
   [{oxscript include="js/libs/jquery.min.js" priority=8}]
   [{oxscript include="https://api-test.wirecard.com/engine/hpp/paymentPageLoader.js" priority=8}]
-  [{oxscript include=$oViewConf->getModuleUrl('wdoxidee','out/js/credit_card_form.js') priority=9}]
+  [{oxscript include=$oViewConf->getPaymentGatewayUrl('out/js/credit_card_form.js') priority=9}]
   [{oxscript add=$oView->getInitCreditCardFormJavaScript() priority=10}]
 
   <div id="wirecard-cc-error"></div>

@@ -61,7 +61,7 @@ class TransactionTabPostProcessing extends Tab
      *
      * @since 1.0.0
      */
-    public function render(): string
+    public function render()
     {
         $sTemplate = parent::render();
         $aRequestParameters = $this->_getRequestParameters();

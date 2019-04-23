@@ -7,6 +7,8 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use Wirecard\Oxid\Core\Helper;
+
 /**
  * Metadata version
  */
@@ -34,7 +36,7 @@ $aModuleDescriptions = array(
  * Module information
  */
 $aModule = array(
-    'id'                => 'wdoxidee',
+    'id'                => Helper::MODULE_ID,
     'title'             => 'Wirecard OXID Module',
     'description'       => array(
         'de' => $aModuleDescriptions['de'],
@@ -68,7 +70,9 @@ $aModule = array(
         \OxidEsales\Eshop\Application\Controller\ThankYouController::class
             => \Wirecard\Oxid\Extend\Controller\ThankYouController::class,
         \OxidEsales\Eshop\Core\Email::class
-            => \Wirecard\Oxid\Extend\Core\Email::class
+            => \Wirecard\Oxid\Extend\Core\Email::class,
+        \OxidEsales\Eshop\Core\Model\ListModel::class
+            => \Wirecard\Oxid\Extend\ListModel::class,
     ),
     'controllers'       => array(
         'wcpg_transaction'
@@ -92,6 +96,8 @@ $aModule = array(
         'wcpg_notifyhandler'
             => \Wirecard\Oxid\Controller\NotifyHandler::class,
         'wcpg_form_interaction' => \Wirecard\Oxid\Controller\FormInteractionController::class,
+        'wcpg_module_support'
+            => \Wirecard\Oxid\Controller\Admin\ModuleSupport::class,
     ),
     'blocks'            => array(
         array(
@@ -174,6 +180,11 @@ $aModule = array(
             'block' => 'email_plain_order_owner_orderemail',
             'file' => 'views/blocks/email_plain_order_owner_orderemail.tpl'
         ),
+        array(
+            'template' => 'module_config.tpl',
+            'block' => 'admin_module_config_form',
+            'file' => 'views/admin/blocks/admin_module_config_form.tpl'
+        ),
     ),
     'templates'         => array(
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
@@ -182,6 +193,8 @@ $aModule = array(
         'tab_table.tpl'                     => 'wirecard/paymentgateway/views/admin/tpl/tab_table.tpl',
         'tab_post_processing.tpl'           => 'wirecard/paymentgateway/views/admin/tpl/tab_post_processing.tpl',
         'form_interaction.tpl'              => 'wirecard/paymentgateway/views/form_interaction.tpl',
+        'module_support.tpl'                => 'wirecard/paymentgateway/views/admin/tpl/module_support.tpl',
+        'module_support_email.tpl'          => 'wirecard/paymentgateway/views/admin/tpl/email/module_support_email.tpl',
     ),
     'events'            => array(
         'onActivate'        => '\Wirecard\Oxid\Core\OxidEEEvents::onActivate',

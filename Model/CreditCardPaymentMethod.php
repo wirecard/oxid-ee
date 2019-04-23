@@ -233,4 +233,20 @@ class CreditCardPaymentMethod extends PaymentMethod
 
         return $aOptions;
     }
+
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @since 1.0.0
+     */
+    public function getPublicFieldNames()
+    {
+        return array_merge(
+            parent::getPublicFieldNames(),
+            ['threeDMaid', 'nonThreeDMaxLimit', 'threeDMinLimit', 'limitsCurrency',
+            'descriptor', 'additionalInfo', 'paymentAction']
+        );
+    }
 }

@@ -53,7 +53,7 @@ class Tab extends AdminDetailsController
      *
      * @since 1.0.0
      */
-    public function render(): string
+    public function render()
     {
         $this->_aViewData += [
             'data' => $this->_isListObjectIdSet() ? $this->_getData() : [],

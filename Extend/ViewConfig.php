@@ -49,4 +49,17 @@ class ViewConfig extends ViewConfig_parent
     {
         return Helper::getInputHelpHtml($sText);
     }
+
+    /**
+     * Returns path to the module asset file
+     *
+     * @param string $sPath
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getPaymentGatewayUrl($sPath)
+    {
+        return $this->getModuleUrl(Helper::MODULE_ID, $sPath);
+    }
 }

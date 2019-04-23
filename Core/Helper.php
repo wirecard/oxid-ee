@@ -10,6 +10,8 @@
 namespace Wirecard\Oxid\Core;
 
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Model\ListModel;
+use OxidEsales\Eshop\Application\Model\Payment;
 
 use Exception;
 use DateTime;
@@ -21,6 +23,8 @@ use DateTime;
  */
 class Helper
 {
+    const MODULE_ID = 'wdoxidee';
+
     /**
      * Gets the translation for a given key.
      *
@@ -50,6 +54,64 @@ class Helper
     public static function createDeviceFingerprint($sMaid, $sSessionId = null)
     {
         return $sMaid . '_' . $sSessionId;
+    }
+
+    /**
+     * Returns a list of available payments.
+     *
+     * @return array
+     *
+     * @since 1.0.0
+     */
+    public static function getPayments()
+    {
+        $oPaymentList = oxNew(ListModel::class);
+        $oPaymentList->init(Payment::class);
+
+        return $oPaymentList->getList()->getArray();
+    }
+
+    /**
+     * Returns a list of available payments added by the module.
+     *
+     * @return array
+     *
+     * @since 1.0.0
+     */
+    public static function getModulePayments()
+    {
+        return array_filter(self::getPayments(), function ($oPayment) {
+            return $oPayment->isCustomPaymentMethod();
+        });
+    }
+
+    /**
+     * Returns a list of available payments including inactive ones.
+     *
+     * @return array
+     *
+     * @since 1.0.0
+     */
+    public static function getPaymentsIncludingInactive()
+    {
+        $oPaymentList = oxNew(ListModel::class);
+        $oPaymentList->init(Payment::class);
+
+        return $oPaymentList->getListIncludingInactive()->getArray();
+    }
+
+    /**
+     * Returns a list of all payments added by the module including inactive ones.
+     *
+     * @return array
+     *
+     * @since 1.0.0
+     */
+    public static function getModulePaymentsIncludingInactive()
+    {
+        return array_filter(self::getPaymentsIncludingInactive(), function ($oPayment) {
+            return $oPayment->oxpayments__wdoxidee_isours->value;
+        });
     }
 
     /**
@@ -186,5 +248,46 @@ class Helper
     {
         $oUtilsDate = Registry::getUtilsDate();
         return $oUtilsDate->formatDBTimestamp($oUtilsDate->formTime($sTimeStamp));
+    }
+
+    /**
+     * Validates the string for e-mail address format
+     *
+     * @param string $sEmail
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    public static function isEmailValid($sEmail)
+    {
+        return !!filter_var($sEmail, FILTER_VALIDATE_EMAIL);
+    }
+
+    /**
+     * Returns list of modules
+     *
+     * @return array;
+     *
+     * @since 1.0.0
+     */
+    public static function getModulesList()
+    {
+        $sModulesDir = Registry::getConfig()->getModulesDir();
+        $oModuleList = oxNew(\OxidEsales\Eshop\Core\Module\ModuleList::class);
+        $aModules = $oModuleList->getModulesFromDir($sModulesDir);
+        return $aModules;
+    }
+
+    /**
+     * Check if $sModuleId is this plugin id
+     *
+     * @param string $sModuleId
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    public static function isThisModule($sModuleId)
+    {
+        return $sModuleId === self::MODULE_ID;
     }
 }

@@ -51,7 +51,7 @@ class TransactionList extends AdminListController
      *
      * @since 1.0.0
      */
-    public function render(): string
+    public function render()
     {
         $this->_aViewData += [
             'payments' => PaymentMethodHelper::getModulePayments(),

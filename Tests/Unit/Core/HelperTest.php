@@ -12,6 +12,7 @@ use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 
 use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Core\Module\Module;
 
 class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
@@ -112,5 +113,38 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
             'zero date' => ['0000-00-00', null],
             'no date' => ['foo', null],
         ];
+    }
+
+    public function testIsEmailValid()
+    {
+        $this->assertTrue(Helper::isEmailValid('test@test.com'));
+        $this->assertFalse(Helper::isEmailValid('test'));
+        $this->assertFalse(Helper::isEmailValid(''));
+    }
+
+    public function testGetPaymentsIncludingInactive()
+    {
+        $aPaymentsList = Helper::getPaymentsIncludingInactive();
+        $this->assertNotEmpty($aPaymentsList);
+        $this->assertContainsOnly(Payment::class, $aPaymentsList);
+    }
+
+    public function testGetModulePaymentsIncludingInactive()
+    {
+        $aPaymentsList = Helper::getModulePaymentsIncludingInactive();
+        $this->assertNotEmpty($aPaymentsList);
+        $this->assertContainsOnly(Payment::class, $aPaymentsList);
+    }
+
+    public function testGetModulesList()
+    {
+        $aModuleList = Helper::getModulesList();
+        $this->assertContainsOnly(Module::class, $aModuleList);
+    }
+
+    public function testIsThisModule()
+    {
+        $this->assertTrue(Helper::isThisModule('wdoxidee'));
+        $this->assertFalse(Helper::isThisModule('test'));
     }
 }
