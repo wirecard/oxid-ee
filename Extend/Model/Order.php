@@ -458,7 +458,7 @@ class Order extends Order_parent
                 );
             } else {
                 $this->oLogger->error(
-                    "Order {$this->getId()} could not be deleted as requested by the payment method config."
+                    "Order `{$this->getId()}` could not be deleted as requested by the payment method config."
                 );
             }
         }

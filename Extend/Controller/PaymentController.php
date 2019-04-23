@@ -6,9 +6,11 @@
  * - License can be found under:
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
+
 namespace Wirecard\Oxid\Extend\Controller;
 
 use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Extend\Model\Order;
 
 /**

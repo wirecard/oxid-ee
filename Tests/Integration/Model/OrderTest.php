@@ -181,6 +181,7 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
         $oOrder->handleOrderState($state);
         $this->assertEquals(!$oOrder->load($orderId), $shouldBeDeleted);
     }
+    
     public function testHandleOrderStateProvider()
     {
         return [
