@@ -34,7 +34,7 @@ class OrderTabTransactions extends OrderTab
      *
      * @since 1.0.0
      */
-    protected function _getBodyData(array $aTransactions, int $level = 0)
+    protected function _getBodyData($aTransactions, $level = 0)
     {
         $aRowData = [];
 
@@ -93,7 +93,7 @@ class OrderTabTransactions extends OrderTab
      *
      * @since 1.0.0
      */
-    protected function _getData(): array
+    protected function _getData()
     {
         $aTransactions = $this->oOrder->getOrderTransactionList()->getNestedArray();
         $aBodyData = $this->_getBodyData($aTransactions);

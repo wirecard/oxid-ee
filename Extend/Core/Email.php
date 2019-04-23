@@ -27,7 +27,7 @@ class Email extends Email_parent
      *
      * @since 1.0.0
      */
-    private $_sSupportEmailTemplate = 'module_support_email.tpl';
+    private $_sSupportTemplate = 'module_support_email.tpl';
 
     /**
      * @inheritdoc
@@ -43,7 +43,7 @@ class Email extends Email_parent
      */
     public function sendOrderEmailToUser($order, $subject = null)
     {
-        return $this->_sendEmailWithOrderLanguage($order, $subject, array(parent, 'sendOrderEmailToUser'));
+        return $this->_sendEmailWithOrderLanguage($order, $subject, [parent, 'sendOrderEmailToUser']);
     }
 
     /**
@@ -60,7 +60,7 @@ class Email extends Email_parent
      */
     public function sendOrderEmailToOwner($order, $subject = null)
     {
-        return $this->_sendEmailWithOrderLanguage($order, $subject, array(parent, 'sendOrderEmailToOwner'));
+        return $this->_sendEmailWithOrderLanguage($order, $subject, [parent, 'sendOrderEmailToOwner']);
     }
 
     /**
@@ -139,7 +139,7 @@ class Email extends Email_parent
         //set mail params (from, fromName, smtp)
         $this->_setMailParams($oShop);
 
-        $this->setBody($oSmarty->fetch($this->_sSupportEmailTemplate));
+        $this->setBody($oSmarty->fetch($this->_sSupportTemplate));
         $this->setSubject($aEmailData['subject']);
 
         $this->setRecipient($aEmailData['recipient'], "");

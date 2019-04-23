@@ -68,7 +68,7 @@ class Order extends Order_parent
      *
      * @since 1.0.0
      */
-    public function loadWithTransactionId(string $sTransactionId)
+    public function loadWithTransactionId($sTransactionId)
     {
         //getting at least one field before lazy loading the object
         $this->_addField('wdoxidee_transactionid', 0);
@@ -115,7 +115,7 @@ class Order extends Order_parent
      *
      * @since 1.0.0
      */
-    public function getOrderPayment(): Payment
+    public function getOrderPayment()
     {
         $sPaymentId = $this->oxorder__oxpaymenttype->value;
         return PaymentMethodHelper::getPaymentById($sPaymentId);
@@ -128,7 +128,7 @@ class Order extends Order_parent
      *
      * @since 1.0.0
      */
-    public function getOrderTransactionList(): TransactionList
+    public function getOrderTransactionList()
     {
         $oTransactionList = oxNew(TransactionList::class);
 
@@ -144,7 +144,7 @@ class Order extends Order_parent
      *
      * @since 1.0.0
      */
-    public function getOrderLastTransaction(): Transaction
+    public function getOrderLastTransaction()
     {
         $oTransaction = oxNew(Transaction::class);
         $oTransaction->loadWithTransactionId($this->oxorder__wdoxidee_transactionid->value);
@@ -235,7 +235,7 @@ class Order extends Order_parent
      *
      * @since 1.0.0
      */
-    public function getAccountHolder(): AccountHolder
+    public function getAccountHolder()
     {
         $oCountry = $this->getOrderBillingCountry();
         $oUser = $this->getOrderUser();
@@ -264,7 +264,7 @@ class Order extends Order_parent
      *
      * @since 1.0.0
      */
-    public function getShippingAccountHolder(): AccountHolder
+    public function getShippingAccountHolder()
     {
         $oAccHolderHelper = new AccountHolderHelper();
 

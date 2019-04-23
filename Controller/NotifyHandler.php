@@ -152,7 +152,7 @@ class NotifyHandler extends FrontendController
      *
      * @since 1.0.0
      */
-    private function _onNotificationError(Response $oResponse)
+    private function _onNotificationError($oResponse)
     {
         $this->_oLogger->error(__METHOD__ . ': Error processing transaction:');
 

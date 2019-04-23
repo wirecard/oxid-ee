@@ -436,7 +436,7 @@ class OrderController extends OrderController_parent
      *
      * @since 1.0.0
      */
-    private function _getPaymentAction(string $sAction)
+    private function _getPaymentAction($sAction)
     {
         if ($sAction == Operation::PAY) {
             return 'purchase';

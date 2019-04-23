@@ -26,10 +26,10 @@ $sModuleDescriptionEn = file_get_contents(dirname(__FILE__) . '/out/html/module-
 $sModuleDescriptionDe = file_get_contents(dirname(__FILE__) . '/out/html/module-description.de.html');
 
 // the array contains the complete description HTML string for each language
-$sTermsContentPlaceholder = '{{ TERMS_CONTENT }}';
+$sTermsContentSnippet = '{{ TERMS_CONTENT }}';
 $aModuleDescriptions = [
-    'de' => $sToggleTermsJs . str_replace($sTermsContentPlaceholder, $sTermsContentDe, $sModuleDescriptionDe),
-    'en' => $sToggleTermsJs . str_replace($sTermsContentPlaceholder, $sTermsContentEn, $sModuleDescriptionEn),
+    'de' => $sToggleTermsJs . str_replace($sTermsContentSnippet, $sTermsContentDe, $sModuleDescriptionDe),
+    'en' => $sToggleTermsJs . str_replace($sTermsContentSnippet, $sTermsContentEn, $sModuleDescriptionEn),
 ];
 
 /**

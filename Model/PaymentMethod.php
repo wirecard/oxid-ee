@@ -100,7 +100,7 @@ abstract class PaymentMethod
      *
      * @since 1.0.0
      */
-    public static function getName(bool $bForOxid = false): string
+    public static function getName($bForOxid = false)
     {
         $childClass = get_called_class();
 
@@ -120,7 +120,7 @@ abstract class PaymentMethod
      *
      * @since 1.0.0
      */
-    public static function getOxidFromSDKName(string $sSDKName): string
+    public static function getOxidFromSDKName($sSDKName)
     {
         return self::OXID_NAME_PREFIX . $sSDKName;
     }
@@ -207,8 +207,6 @@ abstract class PaymentMethod
      * Returns an array of fields to be displayed in support email
      *
      * @return array
-     *
-     * @SuppressWarnings(PHPMD)
      *
      * @since 1.0.0
      */

@@ -186,7 +186,7 @@ class TransactionTabPostProcessing extends Tab
      *
      * @since 1.0.1
      */
-    private function _getRequestParameters(): array
+    private function _getRequestParameters()
     {
         /**
          * @var OxidEsales\Eshop\Core\Config
@@ -214,7 +214,7 @@ class TransactionTabPostProcessing extends Tab
      *
      * @since 1.0.1
      */
-    private function _validateRequest(array $aRequestParameters)
+    private function _validateRequest($aRequestParameters)
     {
         $fAmount = $aRequestParameters[self::KEY_AMOUNT];
 
@@ -267,7 +267,7 @@ class TransactionTabPostProcessing extends Tab
      *
      * @since 1.0.1
      */
-    private function _processRequest(array $aRequestParameters)
+    private function _processRequest($aRequestParameters)
     {
         if (empty($aRequestParameters[self::KEY_ACTION])) {
             return null;

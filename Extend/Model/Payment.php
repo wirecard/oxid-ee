@@ -28,7 +28,7 @@ class Payment extends Payment_parent
      *
      * @since 1.0.0
      */
-    public function isCustomPaymentMethod(): bool
+    public function isCustomPaymentMethod()
     {
         return !!$this->oxpayments__wdoxidee_isours->value;
     }
@@ -56,7 +56,7 @@ class Payment extends Payment_parent
      *
      * @since 1.0.0
      */
-    public function getLogoUrl(): ?string
+    public function getLogoUrl()
     {
         $oPaymentMethod = $this->getPaymentMethod();
 

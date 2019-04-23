@@ -78,7 +78,7 @@ class Transaction extends MultiLanguageModel
      *
      * @since 1.0.0
      */
-    public function loadWithTransactionId(string $sTransactionId)
+    public function loadWithTransactionId($sTransactionId)
     {
         $this->_addField('transactionid', 0);
         $query = $this->buildSelectString([$this->getViewName() . '.transactionid' => $sTransactionId]);
@@ -106,7 +106,7 @@ class Transaction extends MultiLanguageModel
      *
      * @since 1.0.0
      */
-    public function getTransactionOrder(): Order
+    public function getTransactionOrder()
     {
         $oOrder = oxNew(Order::class);
         $oOrder->load($this->wdoxidee_ordertransactions__orderid->value);
@@ -121,7 +121,7 @@ class Transaction extends MultiLanguageModel
      *
      * @since 1.0.0
      */
-    public function getResponseXML(): string
+    public function getResponseXML()
     {
         return base64_decode($this->wdoxidee_ordertransactions__responsexml->rawValue);
     }
@@ -149,7 +149,7 @@ class Transaction extends MultiLanguageModel
      *
      * @since 1.0.0
      */
-    public static function getTranslatedActions(): array
+    public static function getTranslatedActions()
     {
         return [
             self::ACTION_RESERVE => Helper::translate('wd_text_payment_action_reserve'),
@@ -164,7 +164,7 @@ class Transaction extends MultiLanguageModel
      *
      * @since 1.0.0
      */
-    public static function getActions(): array
+    public static function getActions()
     {
         return array_keys(self::getTranslatedActions());
     }
@@ -176,7 +176,7 @@ class Transaction extends MultiLanguageModel
      *
      * @since 1.0.0
      */
-    public static function getStates(): array
+    public static function getStates()
     {
         return [
             self::STATE_SUCCESS,

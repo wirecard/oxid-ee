@@ -225,7 +225,7 @@ class Helper
      *
      * @since 1.0.0
      */
-    public static function isPresentProperty(array $aArgs, string $sKey): bool
+    public static function isPresentProperty($aArgs, $sKey)
     {
         return isset($aArgs[$sKey]) && !empty($aArgs[$sKey]);
     }

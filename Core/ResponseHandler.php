@@ -68,7 +68,7 @@ class ResponseHandler
      *
      * @since 1.0.0
      */
-    private static function _getParentTransactionId(Response $oResponse)
+    private static function _getParentTransactionId($oResponse)
     {
         $sParentTransactionId = $oResponse->getParentTransactionId();
         $oTransaction = oxNew(Transaction::class);

@@ -41,7 +41,7 @@ class SofortPaymentMethod extends PaymentMethod
      *
      * @since 1.0.0
      */
-    public function getConfig($oPayment): Config
+    public function getConfig($oPayment)
     {
         $oConfig = parent::getConfig($oPayment);
 
@@ -63,7 +63,7 @@ class SofortPaymentMethod extends PaymentMethod
      *
      * @since 1.0.0
      */
-    public function getTransaction(): Transaction
+    public function getTransaction()
     {
         return new SofortTransaction();
     }
@@ -74,8 +74,10 @@ class SofortPaymentMethod extends PaymentMethod
      * @param Payment $oPayment
      *
      * @return string
+     *
+     * @since 1.0.0
      */
-    public function getLogoPath($oPayment): string
+    public function getLogoPath($oPayment)
     {
         $sLogoPath = $oPayment->oxpayments__wdoxidee_logo->value;
         $sCountryCode = $oPayment->oxpayments__wdoxidee_countrycode->value;
@@ -95,7 +97,7 @@ class SofortPaymentMethod extends PaymentMethod
      *
      * @since 1.0.0
      */
-    public function getConfigFields(): array
+    public function getConfigFields()
     {
         $aAdditionalFields = [
             'additionalInfo' => [

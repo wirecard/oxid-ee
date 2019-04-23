@@ -41,7 +41,7 @@ class PaypalPaymentMethod extends PaymentMethod
      *
      * @since 1.0.0
      */
-    public function getConfig($oPayment): Config
+    public function getConfig($oPayment)
     {
         $oConfig = parent::getConfig($oPayment);
 

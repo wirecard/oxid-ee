@@ -30,8 +30,9 @@ class ThankYouController extends ThankYouController_parent
     {
         Registry::getSession()->deleteVariable("wdtoken");
 
-        $this->_aViewData['sendPendingEmailsSettings'] = $this->getConfig()
-            ->getConfigParam('wd_email_on_pending_orders');
+        $this->setViewData([
+            'sendPendingEmailsSettings' => $this->getConfig()->getConfigParam('wd_email_on_pending_orders'),
+        ] + $this->getViewData());
 
         parent::init();
     }

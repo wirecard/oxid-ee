@@ -70,7 +70,7 @@ class TransactionList extends AdminListController
      *
      * @since 1.0.0
      */
-    protected function _buildSelectString($oListObject = null): string
+    protected function _buildSelectString($oListObject = null)
     {
         $sQuery = parent::_buildSelectString($oListObject);
 

@@ -86,7 +86,7 @@ class TransactionTab extends Tab
      *
      * @since 1.0.0
      */
-    protected function _getListDataFromArray(array $aArray, string $sTransactionState = null): array
+    protected function _getListDataFromArray($aArray, $sTransactionState = null)
     {
         $aListData = [];
 
