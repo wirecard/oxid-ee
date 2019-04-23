@@ -136,11 +136,6 @@ $aModule = array(
             'block' => 'checkout_thankyou_info',
             'file' => 'views/blocks/thankyou.tpl'
         ),
-        array(
-            'template' => 'page/checkout/inc/payment_other.tpl',
-            'block' => 'checkout_payment_longdesc',
-            'file' => 'views/blocks/checkout_payment_longdesc.tpl'
-        ),
         array (
             'template' => 'page/checkout/order.tpl',
             'block' => 'shippingAndPayment',
