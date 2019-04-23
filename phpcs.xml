@@ -25,7 +25,6 @@
 
   <!-- Add sniffs from other standards -->
   <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-  <rule ref="Generic.CodeAnalysis.UnusedFunctionParameter"/>
   <rule ref="Generic.Formatting.SpaceAfterCast"/>
   <rule ref="Generic.Files.LineLength">
     <properties>
