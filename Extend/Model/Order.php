@@ -47,7 +47,7 @@ class Order extends Order_parent
      *
      * @since 1.0.0
      */
-    protected $oLogger;
+    protected $_oLogger;
 
     /**
      * @inheritdoc
@@ -58,7 +58,7 @@ class Order extends Order_parent
     {
         parent::__construct();
 
-        $this->oLogger = Registry::getLogger();
+        $this->_oLogger = Registry::getLogger();
     }
 
     /**
@@ -453,11 +453,11 @@ class Order extends Order_parent
     {
         if ($this->_shouldBeDeletedOnState($sState)) {
             if ($this->delete()) {
-                $this->oLogger->info(
+                $this->_oLogger->info(
                     "Order `{$this->getId()}` was deleted as requested by the payment method config."
                 );
             } else {
-                $this->oLogger->error(
+                $this->_oLogger->error(
                     "Order `{$this->getId()}` could not be deleted as requested by the payment method config."
                 );
             }
