@@ -71,8 +71,8 @@ class ViewConfig extends ViewConfig_parent
      *
      * @since 1.0.0
      */
-    public function isOurModule($sModuleId)
+    public function isThisModule($sModuleId)
     {
-        return Helper::MODULE_ID === $sModuleId;
+        return Helper::isThisModule($sModuleId);
     }
 }
