@@ -366,8 +366,8 @@ class PaymentGateway extends BaseModel
     {
         if ($oPaymentMethod instanceof PaypalPaymentMethod) {
             return !!$oPayment->oxpayments__wdoxidee_basket->value;
-        } else {
-            return !!$oPayment->oxpayments__wdoxidee_additional_info->value;
         }
+        
+        return !!$oPayment->oxpayments__wdoxidee_additional_info->value;
     }
 }
