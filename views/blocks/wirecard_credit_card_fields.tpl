@@ -15,11 +15,12 @@
   [{oxscript add=$oView->getInitCreditCardFormJavaScript() priority=10}]
   [{oxstyle include=$oViewConf->getPaymentGatewayUrl("out/css/spinner.css")}]
 
-  <div id="cc-spinner"></div>
-
   <input type="hidden" id="ccRequestDataAjaxUrl" value="[{$oView->getCCRequestDataAjaxLink()}]" />
 
   <div id="wirecard-cc-error"></div>
+
+  <div id="cc-spinner"></div>
+
   <div>
     <form id="wirecard-cc-form" method="post" action="[{$oViewConf->getSslSelfLink()}]">
       [{* Fields from the actual submit form for execute function *}]

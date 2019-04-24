@@ -55,7 +55,7 @@ var ModuleCreditCardForm = (function($) {
 
           // if it was not just a local form validation error, reload the seamless credit card form to create a new transaction
           if (!error['form_validation_result']) {
-            createNewTransaction();
+            reloadCCForm();
           }
         },
       });
@@ -80,7 +80,7 @@ var ModuleCreditCardForm = (function($) {
     return parsedObj;
   }
 
-  function createNewTransaction() {
+  function createNewTransaction(cb) {
     var ccRequestDataAjaxUrl = $('#ccRequestDataAjaxUrl').val();
 
     $.get(ccRequestDataAjaxUrl, function(data) {
@@ -88,6 +88,17 @@ var ModuleCreditCardForm = (function($) {
 
       setRequestData(_requestData);
 
+      // execute callback function if one was passed
+      if (typeof cb === 'function') {
+        cb();
+      }
+    });
+  }
+
+  function reloadCCForm() {
+    createNewTransaction(function() {
+      $('#creditcard-form-div').fadeOut();
+      $('#cc-spinner').fadeIn();
       initSeamlessRenderForm();
     });
   }
