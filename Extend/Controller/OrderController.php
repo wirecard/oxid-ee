@@ -273,42 +273,42 @@ class OrderController extends OrderController_parent
     /**
      * Gets the request data for rendering the seamless credit card form.
      *
-     * @param Transaction $oTransaction
-     * @param string      $sPaymentAction
-     * @param string      $sLanguageCode
-     *
      * @return string
      *
      * @since 1.0.0
      */
-    public function getCreditCardFormRequestData($oTransaction, $sPaymentAction, $sLanguageCode)
+    public function getCreditCardFormRequestData()
     {
+        /**
+         * @var $oBasket Basket
+         */
+        $oBasket = $this->getBasket();
+        $oTransaction = $this->createCreditCardTransactionFromBasket($oBasket);
+
+        $oPayment = PaymentMethodHelper::getPaymentById($oBasket->getPaymentId());
+        $sPaymentAction = $this->_getPaymentAction($oPayment->oxpayments__wdoxidee_transactionaction->value);
+        $sLanguageCode = Registry::getLang()->getLanguageAbbr();
+
         $oTransactionService = $this->_getTransactionService();
 
         return $oTransactionService->getCreditCardUiWithData($oTransaction, $sPaymentAction, $sLanguageCode);
     }
 
     /**
+     * Creates a new transaction object from the current session's basket
      *
-     * Returns the parameters used to render the credit card form
+     * @param Basket $oBasket
      *
-     * @return string
-     *
-     * @throws Exception
+     * @return Transaction
      *
      * @since 1.0.0
      */
-    public function getInitCreditCardFormJavaScript(): string
+    public function createCreditCardTransactionFromBasket($oBasket)
     {
         /**
          * @var $oPaymentGateway PaymentGateway
          */
         $oPaymentGateway = oxNew(PaymentGateway::class);
-
-        /**
-         * @var $oBasket Basket
-         */
-        $oBasket = $this->getBasket();
 
         /**
          * @var $oOrder Order
@@ -332,14 +332,22 @@ class OrderController extends OrderController_parent
             Registry::getConfig()->getCurrentShopUrl() . "index.php?cl=order&" . $sModuleToken . $sSid
         );
 
-        $oPayment = PaymentMethodHelper::getPaymentById($oBasket->getPaymentId());
-        $sPaymentAction = $this->_getPaymentAction($oPayment->oxpayments__wdoxidee_transactionaction->value);
-        $sLanguageCode = Registry::getLang()->getLanguageAbbr();
+        return $oTransaction;
+    }
 
-        $sCCFormRequestData = $this->getCreditCardFormRequestData($oTransaction, $sPaymentAction, $sLanguageCode);
-
+    /**
+     * Returns the parameters used to render the credit card form
+     *
+     * @return string
+     *
+     * @throws Exception
+     *
+     * @since 1.0.0
+     */
+    public function getInitCreditCardFormJavaScript(): string
+    {
         // This string is used in out/blocks/wirecard_credit_card_fields.tpl to render the form
-        return "ModuleCreditCardForm.init(" . $sCCFormRequestData . ")";
+        return "ModuleCreditCardForm.init(" . $this->getCreditCardFormRequestData() . ")";
     }
 
     /**
