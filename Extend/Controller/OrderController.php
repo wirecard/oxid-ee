@@ -50,14 +50,14 @@ class OrderController extends OrderController_parent
      *
      * @since 1.0.0
      */
-    private $_oCreditCardPaymentMethod;
+    private $_oCcPaymentMethod;
 
     /**
      * @var Config
      *
      * @since 1.0.0
      */
-    private $_oPaymentMethodConfig;
+    private $_oConfig;
 
     /**
      * Extends the parent init function and finalizes the order in case it was a Wirecard payment method
@@ -403,11 +403,11 @@ class OrderController extends OrderController_parent
      */
     private function _getCreditCardPaymentMethod()
     {
-        if (is_null($this->_oCreditCardPaymentMethod)) {
-            $this->_oCreditCardPaymentMethod = new CreditCardPaymentMethod();
+        if (is_null($this->_oCcPaymentMethod)) {
+            $this->_oCcPaymentMethod = new CreditCardPaymentMethod();
         }
 
-        return $this->_oCreditCardPaymentMethod;
+        return $this->_oCcPaymentMethod;
     }
 
     /**
@@ -419,12 +419,12 @@ class OrderController extends OrderController_parent
      */
     private function _getCreditCardPaymentMethodConfig()
     {
-        if (is_null($this->_oPaymentMethodConfig)) {
+        if (is_null($this->_oConfig)) {
             $oPayment = $this->getPayment();
-            $this->_oPaymentMethodConfig = $this->_getCreditCardPaymentMethod()->getConfig($oPayment);
+            $this->_oConfig = $this->_getCreditCardPaymentMethod()->getConfig($oPayment);
         }
 
-        return $this->_oPaymentMethodConfig;
+        return $this->_oConfig;
     }
 
     /**
