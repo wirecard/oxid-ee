@@ -52,7 +52,7 @@ install:
   - timeout 300 bash -c 'while [[ "$(docker exec ${OXID_CONTAINER} curl -Ifs -o /dev/null -w ''%{http_code}'' http://localhost)" != "200" ]]; do sleep 2; done' || false
 
 script:
-  - docker exec ${OXID_CONTAINER} phpcs.sh
+  - docker exec ${OXID_CONTAINER} phpcs-check.sh
   - docker exec ${OXID_CONTAINER} phpmd.sh
   - docker exec ${OXID_CONTAINER} runtests-unit-coverage.sh
   - docker exec ${OXID_CONTAINER} bash -c 'reset-shop.sh && runtests-selenium.sh'
