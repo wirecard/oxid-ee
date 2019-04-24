@@ -27,7 +27,7 @@ class Custom_Sniffs_OXID_GetterSetterSniff implements PHP_CodeSniffer_Sniff
 
         if ($tokenPrev['content'] === '$this' && $tokenNext['content'] === '_aViewData') {
             $phpcsFile->addError(
-                'Direct access to _aViewData not allowed (use getter/setter)',
+                'Direct access to _aViewData not allowed; use getter/setter',
                 $stackPtr,
                 '_aViewData'
             );
