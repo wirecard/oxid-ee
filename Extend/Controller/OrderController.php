@@ -271,6 +271,24 @@ class OrderController extends OrderController_parent
     }
 
     /**
+     * Gets the request data for rendering the seamless credit card form.
+     *
+     * @param Transaction $oTransaction
+     * @param string      $sPaymentAction
+     * @param string      $sLanguageCode
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getCreditCardFormRequestData($oTransaction, $sPaymentAction, $sLanguageCode)
+    {
+        $oTransactionService = $this->_getTransactionService();
+
+        return $oTransactionService->getCreditCardUiWithData($oTransaction, $sPaymentAction, $sLanguageCode);
+    }
+
+    /**
      *
      * Returns the parameters used to render the credit card form
      *
@@ -282,7 +300,6 @@ class OrderController extends OrderController_parent
      */
     public function getInitCreditCardFormJavaScript(): string
     {
-
         /**
          * @var $oPaymentGateway PaymentGateway
          */
@@ -315,17 +332,14 @@ class OrderController extends OrderController_parent
             Registry::getConfig()->getCurrentShopUrl() . "index.php?cl=order&" . $sModuleToken . $sSid
         );
 
-        $oTransactionService = $this->_getTransactionService();
-
         $oPayment = PaymentMethodHelper::getPaymentById($oBasket->getPaymentId());
+        $sPaymentAction = $this->_getPaymentAction($oPayment->oxpayments__wdoxidee_transactionaction->value);
+        $sLanguageCode = Registry::getLang()->getLanguageAbbr();
+
+        $sCCFormRequestData = $this->getCreditCardFormRequestData($oTransaction, $sPaymentAction, $sLanguageCode);
 
         // This string is used in out/blocks/wirecard_credit_card_fields.tpl to render the form
-        return "ModuleCreditCardForm.init(" .
-            $oTransactionService->getCreditCardUiWithData(
-                $oTransaction,
-                $this->_getPaymentAction($oPayment->oxpayments__wdoxidee_transactionaction->value),
-                Registry::getLang()->getLanguageAbbr()
-            ) . ")";
+        return "ModuleCreditCardForm.init(" . $sCCFormRequestData . ")";
     }
 
     /**
