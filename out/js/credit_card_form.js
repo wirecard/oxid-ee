@@ -16,6 +16,7 @@ var ModuleCreditCardForm = (function($) {
   }
 
   function callback(response) {
+    $('#cc-spinner').fadeOut();
     $('#creditcard-form-div')
       .height(350)
       .fadeIn();
