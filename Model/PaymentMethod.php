@@ -9,15 +9,15 @@
 
 namespace Wirecard\Oxid\Model;
 
-use Wirecard\Oxid\Core\Helper;
-
-use Wirecard\PaymentSdk\Config\Config;
+use Exception;
 
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Registry;
 
 use Psr\Log\LoggerInterface;
-use Exception;
+
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\PaymentSdk\Config\Config;
 
 /**
  * Class PaymentMethod
@@ -73,6 +73,13 @@ abstract class PaymentMethod
             $oPayment->oxpayments__wdoxidee_apiurl->value,
             $oPayment->oxpayments__wdoxidee_httpuser->value,
             $oPayment->oxpayments__wdoxidee_httppass->value
+        );
+
+        $aShopInfoFields = Helper::getShopInfoFields();
+        $oConfig->setShopInfo($aShopInfoFields[Helper::SHOP_SYSTEM_KEY], $aShopInfoFields[Helper::SHOP_VERSION_KEY]);
+        $oConfig->setPluginInfo(
+            $aShopInfoFields[Helper::PLUGIN_NAME_KEY],
+            $aShopInfoFields[Helper::PLUGIN_VERSION_KEY]
         );
 
         return $oConfig;

@@ -9,12 +9,14 @@
 
 namespace Wirecard\Oxid\Core;
 
-use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Core\Model\ListModel;
-use OxidEsales\Eshop\Application\Model\Payment;
-
-use Exception;
 use DateTime;
+use Exception;
+use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Application\Model\Shop;
+use OxidEsales\Eshop\Core\Model\ListModel;
+use OxidEsales\Eshop\Core\Module\Module;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\ShopVersion;
 
 /**
  * Util functions
@@ -23,7 +25,14 @@ use DateTime;
  */
 class Helper
 {
+
     const MODULE_ID = 'wdoxidee';
+    const SHOP_SYSTEM_KEY = 'shopSystem';
+    const SHOP_NAME_KEY = 'shopName';
+    const SHOP_VERSION_KEY = 'shopVersion';
+    const PLUGIN_NAME_KEY = 'pluginName';
+    const PLUGIN_VERSION_KEY = 'pluginVersion';
+    const SHOP_SYSTEM_VALUE = 'OXID';
 
     /**
      * Gets the translation for a given key.
@@ -254,6 +263,7 @@ class Helper
      * Validates the string for e-mail address format
      *
      * @param string $sEmail
+     *
      * @return bool
      *
      * @since 1.0.0
@@ -282,6 +292,7 @@ class Helper
      * Check if $sModuleId is this plugin id
      *
      * @param string $sModuleId
+     *
      * @return bool
      *
      * @since 1.0.0
@@ -289,5 +300,28 @@ class Helper
     public static function isThisModule($sModuleId)
     {
         return $sModuleId === self::MODULE_ID;
+    }
+
+    /**
+     * @return array
+     *
+     * @since 1.0.0
+     */
+    public static function getShopInfoFields()
+    {
+        $sShopId = Registry::getConfig()->getShopId();
+        $oShop = oxNew(Shop::class);
+        $oShop->load($sShopId);
+
+        $oModule = oxNew(Module::class);
+        $oModule->load(Helper::MODULE_ID);
+
+        return [
+            self::SHOP_SYSTEM_KEY => self::SHOP_SYSTEM_VALUE,
+            self::SHOP_NAME_KEY => $oShop->oxshops__oxname->value,
+            self::SHOP_VERSION_KEY => ShopVersion::getVersion(),
+            self::PLUGIN_NAME_KEY => $oModule->getTitle(),
+            self::PLUGIN_VERSION_KEY => $oModule->getInfo('version'),
+        ];
     }
 }
