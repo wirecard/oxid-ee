@@ -9,6 +9,8 @@
 
 namespace Wirecard\Oxid\Controller\Admin;
 
+use Wirecard\Oxid\Core\Helper;
+
 use OxidEsales\Eshop\Application\Controller\Admin\AdminDetailsController;
 
 /**
@@ -57,6 +59,7 @@ class Tab extends AdminDetailsController
     {
         $this->_aViewData += [
             'data' => $this->_isListObjectIdSet() ? $this->_getData() : [],
+            'noDataText' => Helper::translate('text_no_data_available'),
             'controller' => $this->classKey,
         ];
 

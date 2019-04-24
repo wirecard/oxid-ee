@@ -47,20 +47,24 @@ function wdCopyToClipboard(text)
     <input type="hidden" name="cl" value="[{$controller}]">
 </form>
 
-<table cellspacing="0" cellpadding="0" border="0" width="600">
-    [{foreach from=$data item=row}]
-        <tr height="20">
-            <td width="25%">[{$row.title}]</td>
-            <td>
-                [{if $row.action === 'copyToClipboard'}]
-                <button type="button" onclick="wdCopyToClipboard('[{$row.value|escape:'url'}]');">[{$row.action_title}]</button>
-                [{else}]
-                <strong>[{$row.value}]</strong>
-                [{/if}]
-            </td>
-        </tr>
-    [{/foreach}]
-</table>
+[{if $data}]
+    <table cellspacing="0" cellpadding="0" border="0" width="600">
+        [{foreach from=$data item=row}]
+            <tr height="20">
+                <td width="25%">[{$row.title}]</td>
+                <td>
+                    [{if $row.action === 'copyToClipboard'}]
+                    <button type="button" onclick="wdCopyToClipboard('[{$row.value|escape:'url'}]');">[{$row.action_title}]</button>
+                    [{else}]
+                    <strong>[{$row.value}]</strong>
+                    [{/if}]
+                </td>
+            </tr>
+        [{/foreach}]
+    </table>
+[{elseif $emptyText}]
+    <em>[{$emptyText}]</em>
+[{/if}]
 
 [{include file="bottomnaviitem.tpl"}]
 

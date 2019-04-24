@@ -12,6 +12,7 @@ namespace Wirecard\Oxid\Controller\Admin\Order;
 use OxidEsales\Eshop\Application\Model\Order;
 
 use Wirecard\Oxid\Controller\Admin\Tab;
+use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\ResponseMapper;
 use Wirecard\Oxid\Model\Transaction;
 
@@ -63,5 +64,19 @@ class OrderTab extends Tab
                 $this->oResponseMapper = new ResponseMapper($this->oTransaction->getResponseXML());
             }
         }
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function render()
+    {
+        $this->_aViewData['emptyText'] = Helper::translate('text_order_no_transactions');
+
+        return parent::render();
     }
 }
