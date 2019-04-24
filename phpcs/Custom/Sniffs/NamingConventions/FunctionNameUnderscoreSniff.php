@@ -55,7 +55,7 @@ class Custom_Sniffs_NamingConventions_FunctionNameUnderscoreSniff implements PHP
                 break;
             case T_PUBLIC:
                 // this check excludes magic methods (e.g. __construct)
-                if ($tokenFunctionName['content'][0] === '_' && $tokenFunctionName['content'][1] !== '_') {
+                if ($tokenFunctionName['content'][0] === '_' && substr($tokenFunctionName['content'], 0, 2) !== '__') {
                     $fix = $phpcsFile->addFixableError(
                         'Public functions must not start with an underscore',
                         $tokenFunctionNamePosition,
