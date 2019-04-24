@@ -38,6 +38,8 @@
     </table>
 </form>
 
+[{include file="live_chat.tpl"}]
+
 [{include file="bottomnaviitem.tpl"}]
 
 [{include file="bottomitem.tpl"}]
