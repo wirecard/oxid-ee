@@ -59,7 +59,7 @@ class Tab extends AdminDetailsController
     {
         $this->_aViewData += [
             'data' => $this->_isListObjectIdSet() ? $this->_getData() : [],
-            'noDataText' => Helper::translate('text_no_data_available'),
+            'emptyText' => Helper::translate('text_no_data_available'),
             'controller' => $this->classKey,
         ];
 
