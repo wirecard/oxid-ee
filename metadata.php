@@ -213,8 +213,8 @@ $aModule = [
         'live_chat.tpl'                     => 'wirecard/paymentgateway/views/admin/inc/live_chat.tpl',
     ],
     'events' => [
-        'onActivate'        => '\Wirecard\Oxid\Core\OxidEEEvents::onActivate',
-        'onDeactivate'      => '\Wirecard\Oxid\Core\OxidEEEvents::onDeactivate',
+        'onActivate'        => '\Wirecard\Oxid\Core\OxidEeEvents::onActivate',
+        'onDeactivate'      => '\Wirecard\Oxid\Core\OxidEeEvents::onDeactivate',
     ],
     /**
      * The settings below result in a set of auto-generated translatable keys. For the PhraseApp parsing script to pick
