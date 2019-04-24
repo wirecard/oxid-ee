@@ -115,16 +115,16 @@ window.onload = function ()
 
             <tr>
                 [{block name="admin_transaction_list_sorting"}]
-                    <td class="listheader first" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'oxid', 'asc');document.search.submit();">[{oxmultilang ident="panel_transaction"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'orderid', 'asc');document.search.submit();">[{oxmultilang ident="panel_order_id"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'ordernumber', 'asc');document.search.submit();">[{oxmultilang ident="panel_order_number"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'transactionid', 'asc');document.search.submit();">[{oxmultilang ident="panel_transcation_id"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'parenttransactionid', 'asc');document.search.submit();">[{oxmultilang ident="panel_parent_transaction_id"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'type', 'asc');document.search.submit();">[{oxmultilang ident="panel_action"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'oxpayments', 'oxdesc', 'asc');document.search.submit();">[{oxmultilang ident="panel_payment_method"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'state', 'asc');document.search.submit();">[{oxmultilang ident="panel_transaction_state"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'amount', 'asc');document.search.submit();">[{oxmultilang ident="panel_amount"}]</a></td>
-                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'currency', 'asc');document.search.submit();">[{oxmultilang ident="panel_currency"}]</a></td>
+                    <td class="listheader first" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'oxid', 'asc');document.search.submit();">[{oxmultilang ident="wdpg_panel_transaction"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'orderid', 'asc');document.search.submit();">[{oxmultilang ident="wdpg_panel_order_id"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'ordernumber', 'asc');document.search.submit();">[{oxmultilang ident="wdpg_panel_order_number"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'transactionid', 'asc');document.search.submit();">[{oxmultilang ident="wdpg_panel_transcation_id"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'parenttransactionid', 'asc');document.search.submit();">[{oxmultilang ident="wdpg_panel_parent_transaction_id"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'type', 'asc');document.search.submit();">[{oxmultilang ident="wdpg_panel_action"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'oxpayments', 'oxdesc', 'asc');document.search.submit();">[{oxmultilang ident="wdpg_panel_payment_method"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'state', 'asc');document.search.submit();">[{oxmultilang ident="wdpg_panel_transaction_state"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'amount', 'asc');document.search.submit();">[{oxmultilang ident="wdpg_panel_amount"}]</a></td>
+                    <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'currency', 'asc');document.search.submit();">[{oxmultilang ident="wdpg_panel_currency"}]</a></td>
                 [{/block}]
             </tr>
 
@@ -182,8 +182,8 @@ window.onload = function ()
 <script type="text/javascript">
 if (parent.parent) {
     parent.parent.sShopTitle   = "[{$actshopobj->oxshops__oxname->getRawValue()|oxaddslashes}]";
-    parent.parent.sMenuItem    = "[{oxmultilang ident="heading_title_transaction_details"}]";
-    parent.parent.sMenuSubItem = "[{oxmultilang ident="text_list"}]";
+    parent.parent.sMenuItem    = "[{oxmultilang ident="wdpg_heading_title_transaction_details"}]";
+    parent.parent.sMenuSubItem = "[{oxmultilang ident="wdpg_text_list"}]";
     parent.parent.sWorkArea    = "[{$_act}]";
     parent.parent.setTitle();
 }

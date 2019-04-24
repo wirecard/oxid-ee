@@ -10,11 +10,11 @@
 [{$smarty.block.parent}]
 
 [{if $iPayError == -100}]
-    <div class="alert alert-danger">[{oxmultilang ident="canceled_payment_process"}]</div>
+    <div class="alert alert-danger">[{oxmultilang ident="wdpg_canceled_payment_process"}]</div>
 [{/if}]
 
 [{if $iPayError == -101}]
-    <div class="alert alert-danger">[{oxmultilang ident="order_error"}]</div>
+    <div class="alert alert-danger">[{oxmultilang ident="wdpg_order_error"}]</div>
 [{/if}]
 
 [{if $iPayError == -102}]

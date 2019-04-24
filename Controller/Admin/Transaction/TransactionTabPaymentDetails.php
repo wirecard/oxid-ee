@@ -34,10 +34,10 @@ class TransactionTabPaymentDetails extends TransactionTab
 
         $aListData = $this->_getListDataFromArray($aPaymentDetails);
         $aListData[] = [
-            'title' => Helper::translate('panel_transaction_copy'),
+            'title' => Helper::translate('wdpg_panel_transaction_copy'),
             'value' => $this->oTransaction->getResponseXML(),
             'action' => 'copyToClipboard',
-            'action_title' => Helper::translate('copy_xml_text'),
+            'action_title' => Helper::translate('wdpg_copy_xml_text'),
         ];
 
         return $aListData;

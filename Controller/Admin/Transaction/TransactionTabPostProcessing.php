@@ -116,11 +116,11 @@ class TransactionTabPostProcessing extends Tab
         $fAmount = $aRequestParameters['amount'];
 
         if (!$fAmount || !is_numeric($fAmount)) {
-            throw new Exception(Helper::translate('text_generic_error'));
+            throw new Exception(Helper::translate('wdpg_text_generic_error'));
         }
 
         if ($fAmount < 0 || $fAmount > $this->oTransaction->wdoxidee_ordertransactions__amount->value) {
-            throw new Exception(Helper::translate('total_amount_not_in_range_text'));
+            throw new Exception(Helper::translate('wdpg_total_amount_not_in_range_text'));
         }
     }
 
@@ -166,15 +166,15 @@ class TransactionTabPostProcessing extends Tab
         // TODO return only supported actions for the payment
         return [
             'cancel' => [
-                'title' => Helper::translate('cancel'),
+                'title' => Helper::translate('wdpg_cancel'),
                 'callback' => '_onCancel',
             ],
             'capture' => [
-                'title' => Helper::translate('pay'),
+                'title' => Helper::translate('wdpg_pay'),
                 'callback' => '_onCapture',
             ],
             'refund' => [
-                'title' => Helper::translate('refund'),
+                'title' => Helper::translate('wdpg_refund'),
                 'callback' => '_onRefund',
             ],
         ];
@@ -191,7 +191,7 @@ class TransactionTabPostProcessing extends Tab
     private function _onCancel(float $fAmount): string
     {
         // TODO
-        return Helper::translate('text_generic_success');
+        return Helper::translate('wdpg_text_generic_success');
     }
 
     /**
@@ -205,7 +205,7 @@ class TransactionTabPostProcessing extends Tab
     private function _onCapture(float $fAmount): string
     {
         // TODO
-        return Helper::translate('text_generic_success');
+        return Helper::translate('wdpg_text_generic_success');
     }
 
     /**
@@ -219,6 +219,6 @@ class TransactionTabPostProcessing extends Tab
     private function _onRefund(float $fAmount): string
     {
         // TODO
-        return Helper::translate('text_generic_success');
+        return Helper::translate('wdpg_text_generic_success');
     }
 }

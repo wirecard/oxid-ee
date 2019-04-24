@@ -12,13 +12,13 @@
     [{oxmultilang ident="REGISTERED_YOUR_ORDER" args=$order->oxorder__oxordernr->value}] <br><br>
     <strong>
         [{if $order->isPaymentPending()}]
-            [{oxmultilang ident="payment_awaiting" }]<br>
+            [{oxmultilang ident="wdpg_payment_awaiting" }]<br>
             [{if $sendPendingEmailsSettings }]
                 [{oxmultilang ident="MESSAGE_YOU_RECEIVED_ORDER_CONFIRM"}]<br>
             [{/if}]
-            [{oxmultilang ident="wait_for_final_status"}]<br><br>
+            [{oxmultilang ident="wdpg_wait_for_final_status"}]<br><br>
         [{else}]
-            [{ oxmultilang ident="payment_success_text" }]<br><br>
+            [{ oxmultilang ident="wdpg_payment_success_text" }]<br><br>
         [{/if}]
     </strong>
     [{oxmultilang ident="MESSAGE_WE_WILL_INFORM_YOU"}]<br><br>

@@ -49,6 +49,8 @@ $aModule = array(
     'url'               => 'https://www.wirecard.com',
     'email'             => 'shop-systems-support@wirecard.com',
     'extend'            => array (
+        \OxidEsales\Eshop\Core\Language::class
+            => \Wirecard\Oxid\Extend\Language::class,
         \OxidEsales\Eshop\Core\ViewConfig::class
             => \Wirecard\Oxid\Extend\ViewConfig::class,
         \OxidEsales\Eshop\Application\Controller\Admin\OrderList::class

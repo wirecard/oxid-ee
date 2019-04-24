@@ -3,6 +3,7 @@ class TranslationBuilder
     @log = Logger.new(STDOUT, level: Env::DEBUG ? 'DEBUG' : 'INFO')
     @plugin_dir         = Const::PLUGIN_DIR
     @plugin_i18n_dirs   = Const::PLUGIN_I18N_DIRS
+    @locale_prefix      = Const::LOCALE_PREFIX
     @locale_file_header = Const::LOCALE_FILE_HEADER
   end
 
@@ -48,7 +49,18 @@ class TranslationBuilder
       keys += extract_keys_from_xml_file(file_path)
     end
 
-    keys.uniq
+    keys.uniq!
+    check_keys(keys)
+    keys
+  end
+
+  # Outputs a log warn for every incorrect named translation key
+  def check_keys(keys)
+    keys.each do |key|
+      if key.index(@locale_prefix) != 0
+        @log.warn("Key #{key} uses wrong prefix")
+      end
+    end
   end
 
   # Parses a PHP file and returns used keys based on a predefined regex match
@@ -116,7 +128,7 @@ class TranslationBuilder
       if value.nil? then value = '' end
 
       # strip whitespace and escape quotes
-      line = "    '#{key}' => '#{value.strip.gsub("'") { "\\'" }}',"
+      line = "    '#{@locale_prefix}#{key}' => '#{value.strip.gsub("'") { "\\'" }}',"
       php_file.puts(line)
     end
   end

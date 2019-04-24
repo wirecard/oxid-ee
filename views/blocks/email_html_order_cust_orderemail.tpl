@@ -4,12 +4,12 @@
   <p>
     <strong>
       [{if $order->isPaymentPending() }]
-        [{oxmultilang ident="payment_awaiting"}]<br>
-        [{oxmultilang ident="wait_for_final_status"}]
+        [{oxmultilang ident="wdpg_payment_awaiting"}]<br>
+        [{oxmultilang ident="wdpg_wait_for_final_status"}]
       [{elseif $order->isPaymentSuccess() }]
-        [{oxmultilang ident="payment_success_text"}]
+        [{oxmultilang ident="wdpg_payment_success_text"}]
       [{else}]
-        [{oxmultilang ident="order_error_info"}]
+        [{oxmultilang ident="wdpg_order_error_info"}]
       [{/if}]
     </strong>
   </p>

@@ -105,12 +105,12 @@ class BasketHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $wdBasketIterator->seek(0);
         $currentItem = $wdBasketIterator->current()->mappedProperties();
 
-        $this->assertEquals(Helper::translate('payment_cost'), $currentItem['name']);
+        $this->assertEquals(Helper::translate('wdpg_payment_cost'), $currentItem['name']);
         $this->assertEquals(1, $currentItem['quantity']);
         $this->assertEquals('EUR', $currentItem['amount']['currency']);
         $this->assertEquals(101.0, $currentItem['amount']['value']);
-        $this->assertEquals(Helper::translate('payment_cost'), $currentItem['description']);
-        $this->assertEquals(Helper::translate('payment_cost'), $currentItem['article-number']);
+        $this->assertEquals(Helper::translate('wdpg_payment_cost'), $currentItem['description']);
+        $this->assertEquals(Helper::translate('wdpg_payment_cost'), $currentItem['article-number']);
         $this->assertEquals(20, $currentItem['tax-rate']);
     }
 
@@ -204,12 +204,12 @@ class BasketHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $wdBasketIterator->seek(0);
         $currentItem = $wdBasketIterator->current()->mappedProperties();
 
-        $this->assertEquals(Helper::translate('shipping_title'), $currentItem['name']);
+        $this->assertEquals(Helper::translate('wdpg_shipping_title'), $currentItem['name']);
         $this->assertEquals(1, $currentItem['quantity']);
         $this->assertEquals('USD', $currentItem['amount']['currency']);
         $this->assertEquals(101.0, $currentItem['amount']['value']);
-        $this->assertEquals(Helper::translate('shipping_title'), $currentItem['description']);
-        $this->assertEquals(Helper::translate('shipping_title'), $currentItem['article-number']);
+        $this->assertEquals(Helper::translate('wdpg_shipping_title'), $currentItem['description']);
+        $this->assertEquals(Helper::translate('wdpg_shipping_title'), $currentItem['article-number']);
         $this->assertEquals(20, $currentItem['tax-rate']);
     }
 
@@ -228,12 +228,12 @@ class BasketHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $wdBasketIterator->seek(0);
         $currentItem = $wdBasketIterator->current()->mappedProperties();
 
-        $this->assertEquals(Helper::translate('shipping_title'), $currentItem['name']);
+        $this->assertEquals(Helper::translate('wdpg_shipping_title'), $currentItem['name']);
         $this->assertEquals(1, $currentItem['quantity']);
         $this->assertNull($currentItem['amount']['currency']);
         $this->assertEquals(0, $currentItem['amount']['value']);
-        $this->assertEquals(Helper::translate('shipping_title'), $currentItem['description']);
-        $this->assertEquals(Helper::translate('shipping_title'), $currentItem['article-number']);
+        $this->assertEquals(Helper::translate('wdpg_shipping_title'), $currentItem['description']);
+        $this->assertEquals(Helper::translate('wdpg_shipping_title'), $currentItem['article-number']);
         $this->assertEquals(0, $currentItem['tax-rate']);
     }
 }

@@ -25,7 +25,7 @@
         </tr>
         [{/if}]
         <tr>
-            <td width="25%">[{oxmultilang ident="amount"}] ([{$currency}])</td>
+            <td width="25%">[{oxmultilang ident="wdpg_amount"}] ([{$currency}])</td>
             <td><input type="text" name="amount" value="[{$requestParameters.amount}]" size="25"></td>
         </tr>
         <tr>

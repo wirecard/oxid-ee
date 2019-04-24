@@ -41,7 +41,7 @@ class BasketHelper
         $oPaymentCost = $oBasket->getPaymentCost();
 
         if ($oPaymentCost && !empty($oPaymentCost->getPrice())) {
-            $sName = Helper::translate('payment_cost');
+            $sName = Helper::translate('wdpg_payment_cost');
             $oItem = self::_createItem(
                 $sName,
                 $oPaymentCost->getBruttoPrice(),
@@ -173,7 +173,7 @@ class BasketHelper
             $fVat = $oShippingCost->getVat();
         }
 
-        $sName = Helper::translate('shipping_title');
+        $sName = Helper::translate('wdpg_shipping_title');
         $oItem = self::_createItem(
             $sName,
             $fPrice,

@@ -22,15 +22,15 @@
     <input type="hidden" name="cl" value="wcpg_module_support">
     <input type="hidden" name="fnc" value="sendSupportEmailAction">
 
-    <h3>[{oxmultilang ident="heading_title_support"}]</h3>
+    <h3>[{oxmultilang ident="wdpg_heading_title_support"}]</h3>
 
-    <p>[{oxmultilang ident="support_description"}]: <strong>[{$contactEmail}]</strong></p>
+    <p>[{oxmultilang ident="wdpg_support_description"}]: <strong>[{$contactEmail}]</strong></p>
     <br>
     <table cellspacing="0" cellpadding="0" border="0" width="98%">
       <tbody>
       <tr>
         <td class="edittext" width="70">
-          [{oxmultilang ident="config_email"}]
+          [{oxmultilang ident="wdpg_config_email"}]
         </td>
         <td class="edittext">
           <input type="text" name="module_support_email_from" class="editinput" value="[{$fromEmail}]" placeholder="[{$defaultEmail}]" size="40"/>
@@ -38,7 +38,7 @@
       </tr>
       <tr>
         <td class="edittext" width="70">
-          [{oxmultilang ident="config_reply_to"}]
+          [{oxmultilang ident="wdpg_config_reply_to"}]
         </td>
         <td class="edittext">
           <input type="text" name="module_support_email_reply" class="editinput" value="[{$replyToEmail}]" placeholder="[{$defaultEmail}]" size="40"/>
@@ -46,7 +46,7 @@
       </tr>
       <tr>
         <td class="edittext" width="70">
-          [{oxmultilang ident="config_message"}]
+          [{oxmultilang ident="wdpg_config_message"}]
         </td>
         <td class="edittext">
           <textarea name="module_support_text" class="editinput" rows="6" cols="40">[{$body}]</textarea>
@@ -54,7 +54,7 @@
       </tr>
       <tr>
         <td>
-          <input type="submit" value="[{oxmultilang ident="send_email"}]" />
+          <input type="submit" value="[{oxmultilang ident="wdpg_send_email"}]" />
         </td>
       </tr>
       </tbody>

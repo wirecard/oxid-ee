@@ -25,9 +25,6 @@ class OrderTabTransactions extends OrderTab
      */
     protected $_sThisTemplate = 'tab_table.tpl';
 
-    const SECURED = 'secured';
-    const MANIPULATED = 'manipulated';
-
     /**
      * Returns an array to populate the table body.
      *
@@ -42,9 +39,9 @@ class OrderTabTransactions extends OrderTab
         $aRowData = [];
 
         foreach ($aTransactions as $oTransaction) {
-            $sTransSecurity = Helper::translate(self::SECURED);
+            $sTransSecurity = Helper::translate('wdpg_secured');
             if (!$oTransaction->wdoxidee_ordertransactions__validsignature->value) {
-                $sTransSecurity = Helper::translate(self::MANIPULATED);
+                $sTransSecurity = Helper::translate('wdpg_manipulated');
             }
 
             $aRowData = array_merge(
@@ -104,39 +101,39 @@ class OrderTabTransactions extends OrderTab
         return $aBodyData ? [
             'head' => [
                 [
-                    'text' => Helper::translate('transactionID'),
+                    'text' => Helper::translate('wdpg_transactionID'),
                     'nowrap' => true,
                 ],
                 [
-                    'text' => Helper::translate('requestId'),
+                    'text' => Helper::translate('wdpg_requestId'),
                     'nowrap' => true,
                 ],
                 [
-                    'text' => Helper::translate('panel_action'),
+                    'text' => Helper::translate('wdpg_panel_action'),
                     'nowrap' => true,
                 ],
                 [
-                    'text' => Helper::translate('transactionType'),
+                    'text' => Helper::translate('wdpg_transactionType'),
                     'nowrap' => true,
                 ],
                 [
-                    'text' => Helper::translate('transactionState'),
+                    'text' => Helper::translate('wdpg_transactionState'),
                     'nowrap' => true,
                 ],
                 [
-                    'text' => Helper::translate('amount'),
+                    'text' => Helper::translate('wdpg_amount'),
                     'nowrap' => true,
                 ],
                 [
-                    'text' => Helper::translate('panel_currency'),
+                    'text' => Helper::translate('wdpg_panel_currency'),
                     'nowrap' => true,
                 ],
                 [
-                    'text' => Helper::translate('panel_transaction_date'),
+                    'text' => Helper::translate('wdpg_panel_transaction_date'),
                     'nowrap' => true,
                 ],
                 // [
-                //     'text' => Helper::translate('secured'),
+                //     'text' => Helper::translate('wdpg_secured'),
                 //     'nowrap' => true,
                 // ],
             ],

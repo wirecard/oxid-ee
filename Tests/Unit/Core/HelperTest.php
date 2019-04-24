@@ -28,7 +28,7 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     {
         return [
             'OXID key' => ['WRAPPING', 'Verpackung'],
-            'module key' => ['config_descriptor', 'Deskriptor'],
+            'module key' => ['wdpg_config_descriptor', 'Deskriptor'],
             'unknown key' => ['foo', 'foo'],
         ];
     }

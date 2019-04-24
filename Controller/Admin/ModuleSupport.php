@@ -108,7 +108,7 @@ class ModuleSupport extends AdminController
         $bEmailSent = $oEmail->sendSupportEmail($aEmailData);
         $this->_aViewData += [
             'alertMessage' => $bEmailSent ?
-                Helper::translate('success_email') : Helper::translate('support_send_error'),
+                Helper::translate('wdpg_success_email') : Helper::translate('wdpg_support_send_error'),
             'alertType' => $bEmailSent ? 'success' : 'error',
             'replyToEmail' => '',
             'fromEmail' => '',
@@ -152,7 +152,7 @@ class ModuleSupport extends AdminController
             'shopEdition' => $this->getConfig()->getFullEdition(),
             'phpVersion' => phpversion(),
             'system' => php_uname(),
-            'subject' => Helper::translate('support_email_subject'),
+            'subject' => Helper::translate('wdpg_support_email_subject'),
             'recipient' => $this->_getModule()->getInfo('email'),
             'payments' => Helper::getModulePaymentsIncludingInactive()
         ]);
@@ -209,15 +209,15 @@ class ModuleSupport extends AdminController
         $this->_aViewData['body'] = $sBody;
 
         if (empty($sFromEmail) || !Helper::isEmailValid($sFromEmail)) {
-            throw new Exception(Helper::translate('enter_valid_email_error'));
+            throw new Exception(Helper::translate('wdpg_enter_valid_email_error'));
         }
 
         if ($sReplyToEmail && !Helper::isEmailValid($sReplyToEmail)) {
-            throw new Exception(Helper::translate('enter_valid_email_error'));
+            throw new Exception(Helper::translate('wdpg_enter_valid_email_error'));
         }
 
         if (empty($sBody)) {
-            throw new Exception(Helper::translate('message_empty_error'));
+            throw new Exception(Helper::translate('wdpg_message_empty_error'));
         }
     }
 }
