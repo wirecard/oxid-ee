@@ -25,6 +25,7 @@ use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\PaymentMethod;
+use Wirecard\Oxid\Model\PaypalPaymentMethod;
 
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -148,7 +149,7 @@ class PaymentGateway extends BaseModel
             self::_addDescriptor($oTransaction, $oOrder->oxorder__oxid->value);
         }
 
-        if ($oPayment->oxpayments__wdoxidee_basket->value) {
+        if ($this->_shouldAddBasketInfo($oPaymentMethod, $oPayment)) {
             self::_addBasketInfo($oTransaction, $oBasket);
         }
 
@@ -350,5 +351,23 @@ class PaymentGateway extends BaseModel
         $sRandom = substr(str_shuffle(md5(time())), 0, 15);
         $oSession->setVariable('wdtoken', $sRandom);
         return http_build_query(array('wdpayment' => $sRandom));
+    }
+
+    /**
+     * Checks if basket info should be added
+     *
+     * @param PaymentMethod $oPaymentMethod
+     * @param Payment       $oPayment
+     * @return bool
+     *
+     * @since 1.0.0
+     */
+    private function _shouldAddBasketInfo($oPaymentMethod, $oPayment)
+    {
+        if ($oPaymentMethod instanceof PaypalPaymentMethod) {
+            return !!$oPayment->oxpayments__wdoxidee_basket->value;
+        }
+        
+        return !!$oPayment->oxpayments__wdoxidee_additional_info->value;
     }
 }
