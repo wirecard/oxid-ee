@@ -108,6 +108,26 @@ class SofortPaymentMethod extends PaymentMethod
                 'title'       => Helper::translate('config_additional_info'),
                 'description' => Helper::translate('config_additional_info_desc'),
             ],
+            'deleteCanceledOrder' => [
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_delete_canceled_order',
+                'options' => [
+                    '1' => Helper::translate('yes'),
+                    '0' => Helper::translate('no'),
+                ],
+                'title' => Helper::translate('config_delete_cancel_order'),
+                'description' => Helper::translate('config_delete_cancel_order_desc'),
+            ],
+            'deleteFailedOrder' => [
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_delete_failed_order',
+                'options' => [
+                    '1' => Helper::translate('yes'),
+                    '0' => Helper::translate('no'),
+                ],
+                'title' => Helper::translate('config_delete_failure_order'),
+                'description' => Helper::translate('config_delete_failure_order_desc'),
+            ],
             'countryCode' => [
                 'type'        => 'text',
                 'field'       => 'oxpayments__wdoxidee_countrycode',
@@ -140,6 +160,9 @@ class SofortPaymentMethod extends PaymentMethod
      */
     public function getPublicFieldNames()
     {
-        return array_merge(parent::getPublicFieldNames(), ['additionalInfo', 'countryCode', 'logoType']);
+        return array_merge(
+            parent::getPublicFieldNames(),
+            ['additionalInfo', 'countryCode', 'logoType', 'deleteCanceledOrder', 'deleteFailedOrder']
+        );
     }
 }
