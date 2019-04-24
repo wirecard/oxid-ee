@@ -168,6 +168,7 @@ class PaymentGateway extends BaseModel
     {
         $oShopconfig = Registry::getConfig();
         $sShopUrl = $oShopconfig->getCurrentShopUrl();
+        $sBaseLanguage = Registry::getLang()->getBaseLanguage();
 
         $sSid = Helper::getSidQueryString();
 
@@ -178,7 +179,8 @@ class PaymentGateway extends BaseModel
 
         $oTransaction->setNotificationUrl($sShopUrl
             . 'index.php?cl=wcpg_notifyhandler&fnc=handleRequest&pmt='
-            . PaymentMethod::getOxidFromSDKName($oPaymentMethod->getTransaction()->getConfigKey()));
+            . PaymentMethod::getOxidFromSDKName($oPaymentMethod->getTransaction()->getConfigKey())
+            . '&lang=' . $sBaseLanguage);
 
         if ($oTransaction instanceof PayPalTransaction) {
             $sOrderDetails = $oOrder->oxorder__oxremark->value;
