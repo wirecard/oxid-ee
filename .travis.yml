@@ -54,7 +54,7 @@ install:
 script:
   - docker exec ${OXID_CONTAINER} phpcs-check.sh
   - docker exec ${OXID_CONTAINER} phpmd.sh
-  - docker exec ${OXID_CONTAINER} runtests-unit-coverage.sh
+  - docker exec ${OXID_CONTAINER} bash -c 'runtests-coverage.sh && upload-coverage.sh'
   - docker exec ${OXID_CONTAINER} bash -c 'reset-shop.sh && runtests-selenium.sh'
 
 after_script:

@@ -77,6 +77,11 @@ task :runtests_unit do
   sh "docker exec #{OXID_CONTAINER} runtests-unit.sh"
 end
 
+desc 'Run PHPUnit tests and create code coverage report'
+task :runtests_coverage do
+  sh "docker exec #{OXID_CONTAINER} runtests-coverage.sh"
+end
+
 desc 'Run Selenium tests'
 task :runtests_selenium do
   Rake::Task['reset_shop'].invoke
