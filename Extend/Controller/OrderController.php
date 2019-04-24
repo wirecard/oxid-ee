@@ -277,7 +277,7 @@ class OrderController extends OrderController_parent
      *
      * @since 1.0.0
      */
-    public function getCreditCardFormRequestData()
+    private function _getCreditCardFormRequestData()
     {
         /**
          * @var $oBasket Basket
@@ -292,6 +292,42 @@ class OrderController extends OrderController_parent
         $oTransactionService = $this->_getTransactionService();
 
         return $oTransactionService->getCreditCardUiWithData($oTransaction, $sPaymentAction, $sLanguageCode);
+    }
+
+    /**
+     * Returns the AJAX URL for getting new seamless credit card request data.
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public function getCCRequestDataAjaxLink()
+    {
+        return Registry::getConfig()->getShopHomeUrl() . 'cl=order&fnc=getCreditCardFormRequestDataAjax';
+    }
+
+    /**
+     * Returns the URL for loading the payment page script
+     *
+     * @return string
+     */
+    public function getPaymentPageLoaderScriptUrl()
+    {
+        $oPayment = $this->getPayment();
+
+        return $oPayment->oxpayments__wdoxidee_apiurl . '/engine/hpp/paymentPageLoader.js';
+    }
+
+    /**
+     * Makes the request data for rendering the seamless credit card form accessible via an AJAX call.
+     */
+    public function getCreditCardFormRequestDataAjax()
+    {
+        $aResponse = [
+            'requestData' => $this->_getCreditCardFormRequestData(),
+        ];
+
+        Registry::getUtils()->showMessageAndExit(json_encode($aResponse));
     }
 
     /**
@@ -347,7 +383,7 @@ class OrderController extends OrderController_parent
     public function getInitCreditCardFormJavaScript(): string
     {
         // This string is used in out/blocks/wirecard_credit_card_fields.tpl to render the form
-        return "ModuleCreditCardForm.init(" . $this->getCreditCardFormRequestData() . ")";
+        return "ModuleCreditCardForm.init(" . $this->_getCreditCardFormRequestData() . ")";
     }
 
     /**

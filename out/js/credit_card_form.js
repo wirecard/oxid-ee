@@ -7,7 +7,7 @@
  */
 /* global WirecardPaymentPage */
 var ModuleCreditCardForm = (function($) {
-  var debug = true;
+  var debug = false;
 
   var requestData = null;
 
@@ -51,11 +51,12 @@ var ModuleCreditCardForm = (function($) {
       WirecardPaymentPage.seamlessSubmitForm({
         onSuccess: setParentTransactionId,
         onError: function(error) {
-          console.log('aaaa');
           logError('seamlessSubmitForm', error);
-          console.log('bbbb');
-          console.log('requestData', requestData);
-          initSeamlessRenderForm();
+
+          // if it was not just a local form validation error, reload the seamless credit card form to create a new transaction
+          if (!error['form_validation_result']) {
+            createNewTransaction();
+          }
         },
       });
     }
@@ -63,6 +64,32 @@ var ModuleCreditCardForm = (function($) {
 
   function setRequestData(_requestData) {
     requestData = _requestData;
+  }
+
+  function parseCreditCardFormDataRespone(responseString) {
+    var parsedObj = null;
+
+    try {
+      var dataObj = JSON.parse(responseString);
+
+      var requestDataObj = JSON.parse(dataObj['requestData']);
+
+      parsedObj = requestDataObj;
+    } catch (ex) {}
+
+    return parsedObj;
+  }
+
+  function createNewTransaction() {
+    var ccRequestDataAjaxUrl = $('#ccRequestDataAjaxUrl').val();
+
+    $.get(ccRequestDataAjaxUrl, function(data) {
+      var _requestData = parseCreditCardFormDataRespone(data);
+
+      setRequestData(_requestData);
+
+      initSeamlessRenderForm();
+    });
   }
 
   function initSeamlessRenderForm() {
