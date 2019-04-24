@@ -359,6 +359,8 @@ class PaymentGateway extends BaseModel
      * @param PaymentMethod $oPaymentMethod
      * @param Payment       $oPayment
      * @return bool
+     *
+     * @since 1.0.0
      */
     private function _shouldAddBasketInfo($oPaymentMethod, $oPayment)
     {
