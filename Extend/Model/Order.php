@@ -72,8 +72,8 @@ class Order extends Order_parent
     {
         //getting at least one field before lazy loading the object
         $this->_addField('wdoxidee_transactionid', 0);
-        $query = $this->buildSelectString([$this->getViewName() . '.wdoxidee_transactionid' => $sTransactionId]);
-        $this->_isLoaded = $this->assignRecord($query);
+        $sQuery = $this->buildSelectString([$this->getViewName() . '.wdoxidee_transactionid' => $sTransactionId]);
+        $this->_isLoaded = $this->assignRecord($sQuery);
 
         return $this->_isLoaded;
     }

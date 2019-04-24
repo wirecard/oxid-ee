@@ -78,9 +78,9 @@ class ModuleSupport extends AdminController
     {
         try {
             $this->_validateRequest();
-        } catch (Exception $e) {
+        } catch (Exception $oException) {
             $this->setViewData($this->getViewData() + [
-                'alertMessage' => $e->getMessage(),
+                'alertMessage' => $oException->getMessage(),
                 'alertType' => 'error',
             ]);
             return;
@@ -125,12 +125,12 @@ class ModuleSupport extends AdminController
      */
     protected function _addDataFromForm(&$aEmailData)
     {
-        $body = $this->getConfig()->getRequestParameter('module_support_text');
+        $sBody = $this->getConfig()->getRequestParameter('module_support_text');
         $sFromEmail = $this->getConfig()->getRequestParameter('module_support_email_from');
         $sReplyToEmail = $this->getConfig()->getRequestParameter('module_support_email_reply');
 
         $aEmailData = array_merge($aEmailData, [
-            'body' => $body,
+            'body' => $sBody,
             'replyTo' => $sReplyToEmail,
             'from' => $sFromEmail,
         ]);
@@ -186,8 +186,8 @@ class ModuleSupport extends AdminController
      */
     protected function _getOtherModules()
     {
-        return array_filter(Helper::getModulesList(), function ($module) {
-            return $module->getId() !== $this->_getModule()->getId();
+        return array_filter(Helper::getModulesList(), function ($oModule) {
+            return $oModule->getId() !== $this->_getModule()->getId();
         });
     }
 

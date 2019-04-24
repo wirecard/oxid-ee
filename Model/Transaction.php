@@ -81,8 +81,8 @@ class Transaction extends MultiLanguageModel
     public function loadWithTransactionId($sTransactionId)
     {
         $this->_addField('transactionid', 0);
-        $query = $this->buildSelectString([$this->getViewName() . '.transactionid' => $sTransactionId]);
-        $this->_isLoaded = $this->assignRecord($query);
+        $sQuery = $this->buildSelectString([$this->getViewName() . '.transactionid' => $sTransactionId]);
+        $this->_isLoaded = $this->assignRecord($sQuery);
 
         return $this->isLoaded();
     }

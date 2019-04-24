@@ -179,7 +179,7 @@ class Helper
             }
 
             return $oDateTime;
-        } catch (Exception $e) {
+        } catch (Exception $oException) {
             return null;
         }
     }

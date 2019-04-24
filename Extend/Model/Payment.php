@@ -44,7 +44,7 @@ class Payment extends Payment_parent
     {
         try {
             return PaymentMethodFactory::create($this->getId());
-        } catch (StandardException $e) {
+        } catch (StandardException $oException) {
             return null;
         }
     }

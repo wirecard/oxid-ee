@@ -284,8 +284,8 @@ class TransactionTabPostProcessing extends Tab
             // execute the callback method defined in the "action" request parameter
             $aState['message'] = $this->_handleRequestAction($sActionTitle, $sTransactionAmount);
             $aState['type'] = 'success';
-        } catch (StandardException $e) {
-            $aState['message'] = $e->getMessage();
+        } catch (StandardException $oException) {
+            $aState['message'] = $oException->getMessage();
             $aState['type'] = 'error';
         }
 

@@ -29,12 +29,12 @@ class OrderTabTransactions extends OrderTab
      * Returns an array to populate the table body.
      *
      * @param array $aTransactions
-     * @param int   $level
+     * @param int   $iLevel
      * @return array
      *
      * @since 1.0.0
      */
-    protected function _getBodyData($aTransactions, $level = 0)
+    protected function _getBodyData($aTransactions, $iLevel = 0)
     {
         $aRowData = [];
 
@@ -50,7 +50,7 @@ class OrderTabTransactions extends OrderTab
                     [
                         [
                             'text' => $oTransaction->wdoxidee_ordertransactions__transactionid->value,
-                            'indent' => $level,
+                            'indent' => $iLevel,
                         ],
                         [
                             'text' => $oTransaction->wdoxidee_ordertransactions__requestid->value,
@@ -79,7 +79,7 @@ class OrderTabTransactions extends OrderTab
                         // ],
                     ],
                 ],
-                $this->_getBodyData($oTransaction->getChildTransactions(), $level + 1)
+                $this->_getBodyData($oTransaction->getChildTransactions(), $iLevel + 1)
             );
         };
 

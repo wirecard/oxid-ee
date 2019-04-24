@@ -102,13 +102,13 @@ abstract class PaymentMethod
      */
     public static function getName($bForOxid = false)
     {
-        $childClass = get_called_class();
+        $oChildClass = get_called_class();
 
         if ($bForOxid) {
-            return self::OXID_NAME_PREFIX . $childClass::$_sName;
+            return self::OXID_NAME_PREFIX . $oChildClass::$_sName;
         }
 
-        return $childClass::$_sName;
+        return $oChildClass::$_sName;
     }
 
     /**
@@ -212,8 +212,8 @@ abstract class PaymentMethod
      */
     public function getSupportConfigFields()
     {
-        $aFieldsPublic = array_filter($this->getConfigFields(), function ($field, $key) {
-            return in_array($key, $this->getPublicFieldNames());
+        $aFieldsPublic = array_filter($this->getConfigFields(), function ($aField, $sKey) {
+            return in_array($sKey, $this->getPublicFieldNames());
         }, ARRAY_FILTER_USE_BOTH);
 
         return $aFieldsPublic;

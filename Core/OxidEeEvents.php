@@ -50,7 +50,7 @@ class OxidEeEvents
             try {
                 self::$oDb->Execute($sQuery);
                 return true;
-            } catch (Exception $e) {
+            } catch (Exception $oException) {
             }
         }
 
@@ -84,8 +84,8 @@ class OxidEeEvents
     {
         $sWhere = '';
 
-        foreach ($aKeyValue as $key => $value) {
-            $sWhere .= " AND $key = '$value'";
+        foreach ($aKeyValue as $sKey => $sValue) {
+            $sWhere .= " AND $sKey = '$sValue'";
         }
 
         $sCheckQuery = "SELECT * FROM {$sTableName} WHERE 1" . $sWhere;
