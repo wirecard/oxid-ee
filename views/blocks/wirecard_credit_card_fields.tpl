@@ -18,6 +18,7 @@
   <div id="cc-spinner"></div>
 
   <div id="wirecard-cc-error"></div>
+  <div>
     <form id="wirecard-cc-form" method="post" action="[{$oViewConf->getSslSelfLink()}]">
       [{* Fields from the actual submit form for execute function *}]
       [{$oViewConf->getHiddenSid()}]
