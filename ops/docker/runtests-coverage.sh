@@ -4,4 +4,6 @@ set -ex
 
 # create coverage report
 cd /var/www/html
-vendor/bin/runtests-coverage
+
+RESTORE_SHOP_AFTER_TESTS_SUITE=1 \
+    vendor/bin/runtests-coverage
