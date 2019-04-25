@@ -17,7 +17,8 @@ use Wirecard\Oxid\Controller\Admin\Tab;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\TransactionHandler;
-use Wirecard\Oxid\Core\Payment_Method_Factory;
+use Wirecard\Oxid\Core\PaymentMethodFactory;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 
 use \Wirecard\PaymentSdk\BackendService;
 
@@ -236,15 +237,18 @@ class TransactionTabPostProcessing extends Tab
         // array containing all possible post-processing operations on the currently selected transaction
         $aOperations = array();
 
+        $sPaymentId = $this->oTransaction->getPaymentType();
+        $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
+
         // it is necessary to create a new empty transaction with the ID of the currently
         // selected one in order to get the available post-processing operations
-        $oPaymentMethod = Payment_Method_Factory::create($this->oTransaction->getPaymentType());
+        $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
         $oTransaction = $oPaymentMethod->getTransaction();
         $sParentTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
         $oTransaction->setParentTransactionId($sParentTransactionId);
 
         // load the supported operations array from the backend service
-        $oBackendService = new BackendService($oPaymentMethod->getConfig(), $this->_oLogger);
+        $oBackendService = new BackendService($oPaymentMethod->getConfig($oPayment), $this->_oLogger);
         $aSupportedOperations = $oBackendService->retrieveBackendOperations($oTransaction, true);
 
         if ($aSupportedOperations !== false && count($aSupportedOperations > 0)) {

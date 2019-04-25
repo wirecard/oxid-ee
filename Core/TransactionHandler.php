@@ -15,7 +15,7 @@ use OxidEsales\Eshop\Core\DatabaseProvider;
 use \OxidEsales\Eshop\Core\Registry;
 use \OxidEsales\Eshop\Core\Field;
 
-use Wirecard\Oxid\Model\Payment_Method;
+use Wirecard\Oxid\Model\PaymentMethod;
 use \Wirecard\PaymentSdk\Entity\Amount;
 use \Wirecard\PaymentSdk\Transaction\Operation;
 use \Wirecard\PaymentSdk\Response\SuccessResponse;
@@ -58,11 +58,13 @@ class TransactionHandler
         string $sActionTitle,
         float $fAmount = null
     ): array {
-        $oPayment = $this->_getPaymentMethod($oParentTransaction);
-        $oConfig = $oPayment->getConfig();
+        $oPaymentMethod = $this->_getPaymentMethod($oParentTransaction);
+        $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
         $oOrder = $oParentTransaction->getTransactionOrder();
+        $oConfig = $oPaymentMethod->getConfig($oOrder->getOrderPayment());
 
-        $oTransaction = $this->_getTransactionObject($oPayment, $sActionTitle);
+        // TODO this will not work for sofort.!!!
+        $oTransaction = $oPaymentMethod->getTransaction();
 
         if (empty($oTransaction)) {
             $this->_oLogger->error("action not implemented", ['no implementation for ' . $sActionTitle]);
@@ -122,26 +124,6 @@ class TransactionHandler
         }
 
         return $this->_getSuccessMessage();
-    }
-
-    /**
-     * Returns the appropriate transaction object for the desired operation.
-     *
-     * @param Payment_Method $oPayment
-     * @param string         $sActionTitle
-     *
-     * @return \Wirecard\PaymentSdk\Transaction\Transaction
-     */
-    private function _getTransactionObject($oPayment, $sActionTitle)
-    {
-        switch ($sActionTitle) {
-            case Operation::CANCEL:
-                return $oPayment->getCancelTransaction();
-            case Operation::PAY:
-                return $oPayment->getCaptureTransaction();
-        }
-
-        return null;
     }
 
     /**
@@ -279,16 +261,16 @@ class TransactionHandler
     }
 
     /**
-     * Uses the Payment_Method_Factory to create a new Payment_Method object for the desired payment method.
+     * Uses the PaymentMethodFactory to create a new PaymentMethod object for the desired payment method.
      *
      * @param Transaction $oTransaction
      *
-     * @return array|Payment_Method
+     * @return array|PaymentMethod
      */
     private function _getPaymentMethod(Transaction $oTransaction)
     {
         try {
-            return Payment_Method_Factory::create($oTransaction->getPaymentType());
+            return PaymentMethodFactory::create($oTransaction->getPaymentType());
         } catch (Exception $oExc) {
             $this->_oLogger->error("Error getting the payment method", [$oExc]);
             return $this->_getErrorMessage($oExc->getMessage());
