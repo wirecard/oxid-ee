@@ -7,13 +7,13 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use Wirecard\Oxid\Extend\Payment_Main_Ajax;
+use Wirecard\Test\WdUnitTestCase;
 
-class PaymentMainAjaxTest extends OxidEsales\TestingLibrary\UnitTestCase
+class PaymentMainAjaxTest extends WdUnitTestCase
 {
+
     public function testCheckMerchantCredentials()
     {
-        self::markTestIncomplete("Test fails if there is any log output. TransactionService logs the response");
         oxTestModules::addFunction(
             'oxUtils',
             'showMessageAndExit',
@@ -30,7 +30,6 @@ class PaymentMainAjaxTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testCheckInvalidMerchantCredentials()
     {
-        self::markTestIncomplete("Test fails if there is any log output. TransactionService logs the response");
         oxTestModules::addFunction(
             'oxUtils',
             'showMessageAndExit',

@@ -11,12 +11,14 @@
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Module\Module;
 use OxidEsales\EshopCommunity\Core\Controller\BaseController;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 
 class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
+
     /**
      * @dataProvider testTranslateProvider
      */
@@ -53,7 +55,7 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetModulePayments()
     {
-        foreach (PaymentMethodHelper::getModulePayments() as $key => $payment) {
+        foreach (PaymentMethodHelper::getModulePayments() as $payment) {
             $this->assertTrue($payment->isCustomPaymentMethod());
         }
     }
@@ -253,5 +255,19 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->markTestSkipped("Smarty cannot load 'inputhelp.tpl'");
 
         $this->assertNotNull(Helper::getInputHelpHtml("Test String"));
+    }
+
+    public function testGetSessionChallenge()
+    {
+        Registry::getSession()->setVariable('sess_challenge', 'my session challenge');
+        $sResult = Helper::getSessionChallenge();
+        $this->assertEquals('my session challenge', $sResult);
+    }
+
+    public function testGetSidQueryString()
+    {
+        Registry::getSession()->setId("sessionID");
+        $sResult = Helper::getSidQueryString();
+        $this->assertEquals('&force_sid=sessionID', $sResult);
     }
 }

@@ -7,14 +7,14 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use OxidEsales\Eshop\Application\Model\Payment;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
-use OxidEsales\Eshop\Application\Model\Payment;
-
 class PaypalPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
+
     /**
      * @var PaypalPaymentMethod
      */
@@ -42,7 +42,42 @@ class PaypalPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     public function testGetAdditionalConfigFieldsPaypal()
     {
         $aConfigFields = $this->_oPaymentMethod->getConfigFields();
-        $this->assertCount(9, $aConfigFields);
+        $this->assertCount(12, $aConfigFields);
         $this->assertArrayHasKey('basket', $aConfigFields);
+    }
+
+    /**
+     * @dataProvider testGetNameProvider
+     */
+    public function testGetName($bforOxid, $sExpected)
+    {
+        $sName = PaypalPaymentMethod::getName($bforOxid);
+        $this->assertEquals($sExpected, $sName);
+    }
+
+    public function testGetNameProvider()
+    {
+        return [
+            'for oxid' => [true, 'wdpaypal'],
+            'not for oxid' => [false, 'paypal'],
+        ];
+    }
+
+    public function testGetPublicFieldNames()
+    {
+        $aPublicFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
+        $this->assertCount(8, $aPublicFieldNames);
+        $aExpected = [
+            "apiUrl",
+            "maid",
+            "basket",
+            "descriptor",
+            "additionalInfo",
+            "paymentAction",
+            "deleteCanceledOrder",
+            "deleteFailedOrder",
+        ];
+
+        $this->assertEquals($aExpected, $aPublicFieldNames, '', 0.0, 1, true);
     }
 }

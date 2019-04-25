@@ -111,7 +111,7 @@ class ResponseMapper
      */
     public function getBasket()
     {
-        return $this->_getObjectDataArray($this->oResponse->getBasket());
+        return $this->_getObjectDataArray($this->_oResponse->getBasket());
     }
 
     /**
@@ -123,7 +123,7 @@ class ResponseMapper
      */
     public function getCard()
     {
-        return $this->_getObjectDataArray($this->oResponse->getCard());
+        return $this->_getObjectDataArray($this->_oResponse->getCard());
     }
 
     /**

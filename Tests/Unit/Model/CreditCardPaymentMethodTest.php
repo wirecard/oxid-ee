@@ -12,33 +12,36 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
 class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
+
     /**
      * @var CreditCardPaymentMethod
      */
-    private $oPaymentMethod;
+    private $_oPaymentMethod;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->oPaymentMethod = new CreditCardPaymentMethod();
+        /** @noinspection PhpUnhandledExceptionInspection */
+        $this->_oPaymentMethod = new CreditCardPaymentMethod();
     }
 
     public function testGetConfig()
     {
-        $oConfig = $this->oPaymentMethod->getConfig();
+        $oConfig = $this->_oPaymentMethod->getConfig();
+
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('creditcard'));
     }
 
     public function testGetTransaction()
     {
-        $oTransaction = $this->oPaymentMethod->getTransaction();
+        $oTransaction = $this->_oPaymentMethod->getTransaction();
         $this->assertInstanceOf(CreditCardTransaction::class, $oTransaction);
     }
 
     public function testGetTransactionNotSettingNon3dCredentials()
     {
-        $oConfig = $this->oPaymentMethod->getConfig();
+        $oConfig = $this->_oPaymentMethod->getConfig();
 
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('creditcard'));
@@ -56,7 +59,7 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetTransactionNotSetting3dCredentials()
     {
-        $oConfig = $this->oPaymentMethod->getConfig();
+        $oConfig = $this->_oPaymentMethod->getConfig();
 
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('creditcard'));
@@ -74,7 +77,7 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetTransactionSettingNon3dMaxLimit()
     {
-        $oConfig = $this->oPaymentMethod->getConfig();
+        $oConfig = $this->_oPaymentMethod->getConfig();
 
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('creditcard'));
@@ -90,7 +93,7 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetTransactionSetting3dMinLimit()
     {
-        $oConfig = $this->oPaymentMethod->getConfig();
+        $oConfig = $this->_oPaymentMethod->getConfig();
 
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('creditcard'));
@@ -104,8 +107,9 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertNotEmpty($oCreditCardConfig->getNonThreeDMaxLimit("EUR"));
     }
 
-    public function testGetConfigFields() {
-        $aConfigFields = $this->oPaymentMethod->getConfigFields();
+    public function testGetConfigFields()
+    {
+        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
         $this->assertArrayHasKey("threeDMaid", $aConfigFields);
         $this->assertArrayHasKey("threeDSecret", $aConfigFields);
         $this->assertArrayHasKey("nonThreeDMaxLimit", $aConfigFields);
@@ -118,11 +122,49 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     public function testGetAdditionalConfigFieldsPaypal()
     {
         $aConfigFields = $this->_oPaymentMethod->getConfigFields();
-        $this->assertCount(13, $aConfigFields);
+        $this->assertCount(17, $aConfigFields);
         $this->assertArrayHasKey('threeDMaid', $aConfigFields);
         $this->assertArrayHasKey('threeDSecret', $aConfigFields);
         $this->assertArrayHasKey('nonThreeDMaxLimit', $aConfigFields);
         $this->assertArrayHasKey('threeDMinLimit', $aConfigFields);
         $this->assertArrayHasKey('limitsCurrency', $aConfigFields);
+    }
+
+    /**
+     * @dataProvider testGetNameProvider
+     */
+    public function testGetName($bforOxid, $sExpected)
+    {
+        $sName = CreditCardPaymentMethod::getName($bforOxid);
+        $this->assertEquals($sExpected, $sName);
+    }
+
+    public function testGetNameProvider()
+    {
+        return [
+            'for oxid' => [true, 'wdcreditcard'],
+            'not for oxid' => [false, 'creditcard'],
+        ];
+    }
+
+    public function testGetPublicFieldNames()
+    {
+        $aPublicFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
+        $this->assertCount(11, $aPublicFieldNames);
+        $aExpected = [
+            "apiUrl",
+            "maid",
+            "threeDMaid",
+            "nonThreeDMaxLimit",
+            "threeDMinLimit",
+            "descriptor",
+            "limitsCurrency",
+            "additionalInfo",
+            "paymentAction",
+            "deleteCanceledOrder",
+            "deleteFailedOrder",
+        ];
+
+        $this->assertEquals($aExpected, $aPublicFieldNames, '', 0.0, 1, true);
     }
 }
