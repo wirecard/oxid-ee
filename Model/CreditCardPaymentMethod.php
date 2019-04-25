@@ -146,7 +146,7 @@ class CreditCardPaymentMethod extends PaymentMethod
     public function getConfigFields()
     {
         $aParentConfigFields = parent::getConfigFields();
-        $aPdditionalFields = [
+        $aAdditionalFields = [
             'threeDMaid' => [
                 'type' => 'text',
                 'field' => 'oxpayments__wdoxidee_three_d_maid',
