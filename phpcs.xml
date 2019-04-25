@@ -39,5 +39,4 @@
     </properties>
   </rule>
   <rule ref="Squiz.Classes.ClassFileName"/>
-  <rule ref="Symfony2.Arrays.MultiLineArrayComma"/>
 </ruleset>

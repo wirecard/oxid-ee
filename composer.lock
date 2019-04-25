@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "4f97b3e5e4c825c1b4ec24328c13d0f6",
+    "content-hash": "a33512648a5976a4cb49818e7745239b",
     "packages": [
         {
             "name": "clue/stream-filter",
@@ -1244,53 +1244,6 @@
             "time": "2018-04-30T16:23:12+00:00"
         },
         {
-            "name": "escapestudios/symfony2-coding-standard",
-            "version": "2.x-dev",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/djoos/Symfony-coding-standard.git",
-                "reference": "9f3cee2546b7369c1ecb5045b10a6d479bc99f7e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/djoos/Symfony-coding-standard/zipball/9f3cee2546b7369c1ecb5045b10a6d479bc99f7e",
-                "reference": "9f3cee2546b7369c1ecb5045b10a6d479bc99f7e",
-                "shasum": ""
-            },
-            "require": {
-                "squizlabs/php_codesniffer": "~2.0"
-            },
-            "type": "phpcodesniffer-standard",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.x-dev"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "David Joos",
-                    "email": "david.joos@escapestudios.com"
-                },
-                {
-                    "name": "Community contributors",
-                    "homepage": "https://github.com/djoos/Symfony2-coding-standard/graphs/contributors"
-                }
-            ],
-            "description": "CodeSniffer ruleset for the Symfony 2+ coding standard",
-            "homepage": "https://github.com/djoos/Symfony2-coding-standard",
-            "keywords": [
-                "Coding Standard",
-                "Symfony2",
-                "phpcs",
-                "symfony"
-            ],
-            "time": "2017-06-08T11:06:02+00:00"
-        },
-        {
             "name": "gitonomy/gitlib",
             "version": "v1.0.4",
             "source": {
@@ -2168,8 +2121,7 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "codacy/coverage": 20,
-        "escapestudios/symfony2-coding-standard": 20
+        "codacy/coverage": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
