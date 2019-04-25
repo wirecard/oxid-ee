@@ -310,6 +310,8 @@ class OrderController extends OrderController_parent
      * Returns the URL for loading the payment page script
      *
      * @return string
+     *
+     * @since 1.0.0
      */
     public function getPaymentPageLoaderScriptUrl()
     {
@@ -320,6 +322,8 @@ class OrderController extends OrderController_parent
 
     /**
      * Makes the request data for rendering the seamless credit card form accessible via an AJAX call.
+     *
+     * @since 1.0.0
      */
     public function getCreditCardFormRequestDataAjax()
     {
@@ -380,7 +384,7 @@ class OrderController extends OrderController_parent
      *
      * @since 1.0.0
      */
-    public function getInitCreditCardFormJavaScript(): string
+    public function getInitCreditCardFormJavaScript()
     {
         // This string is used in out/blocks/wirecard_credit_card_fields.tpl to render the form
         return "ModuleCreditCardForm.init(" . $this->_getCreditCardFormRequestData() . ")";
@@ -392,7 +396,7 @@ class OrderController extends OrderController_parent
      *
      * @since 1.0.0
      */
-    private function _getTransactionService(): TransactionService
+    private function _getTransactionService()
     {
         if (is_null($this->_oTransactionService)) {
             $this->_oTransactionService = new TransactionService(
@@ -410,7 +414,7 @@ class OrderController extends OrderController_parent
      *
      * @since 1.0.0
      */
-    private function _getCreditCardPaymentMethod(): CreditCardPaymentMethod
+    private function _getCreditCardPaymentMethod()
     {
         if (is_null($this->_oCreditCardPaymentMethod)) {
             $this->_oCreditCardPaymentMethod = new CreditCardPaymentMethod();
@@ -426,7 +430,7 @@ class OrderController extends OrderController_parent
      *
      * @since 1.0.0
      */
-    private function _getCreditCardPaymentMethodConfig(): Config
+    private function _getCreditCardPaymentMethodConfig()
     {
         if (is_null($this->_oPaymentMethodConfig)) {
             $oPayment = $this->getPayment();
@@ -445,7 +449,7 @@ class OrderController extends OrderController_parent
      *
      * @since 1.0.0
      */
-    private function _getPaymentAction(string $sAction): string
+    private function _getPaymentAction(string $sAction)
     {
         if ($sAction == Operation::PAY) {
             return 'purchase';
