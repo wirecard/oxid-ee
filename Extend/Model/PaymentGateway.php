@@ -9,16 +9,16 @@
 
 namespace Wirecard\Oxid\Extend\Model;
 
-use OxidEsales\Eshop\Application\Model\Shop;
+use Exception;
+
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Payment;
-use OxidEsales\Eshop\Core\Module\Module;
+use OxidEsales\Eshop\Application\Model\Shop;
+use OxidEsales\Eshop\Core\Model\BaseModel;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Session;
 
-use OxidEsales\EshopCommunity\Core\Config;
-use OxidEsales\EshopCommunity\Core\Model\BaseModel;
-use OxidEsales\EshopCommunity\Core\ShopVersion;
+use Psr\Log\LoggerInterface;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
@@ -32,18 +32,15 @@ use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
 use Wirecard\PaymentSdk\Entity\Device;
+use Wirecard\PaymentSdk\Entity\Redirect;
+use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\FormInteractionResponse;
+use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use Wirecard\PaymentSdk\TransactionService;
-use Wirecard\PaymentSdk\Response\FailureResponse;
-use Wirecard\PaymentSdk\Response\InteractionResponse;
-use Wirecard\PaymentSdk\Entity\Redirect;
-
-use Psr\Log\LoggerInterface;
-use Exception;
 
 /**
  * Custom Payment Gateway to handle Module payment methods
@@ -52,6 +49,7 @@ use Exception;
  */
 class PaymentGateway extends BaseModel
 {
+
     /**
      * @var LoggerInterface
      *
@@ -201,19 +199,14 @@ class PaymentGateway extends BaseModel
      */
     private function _addCustomFields(&$oTransaction)
     {
-        $shopId = Registry::getConfig()->getShopId();
-        $shop = oxNew(Shop::class);
-        $shop->load($shopId);
+        $aShopInfoFields = Helper::getShopInfoFields();
 
         $oCustomFields = new CustomFieldCollection();
-        $oCustomFields->add(new CustomField('shopName', $shop->oxshops__oxname->value));
-        $oCustomFields->add(new CustomField('shopVersion', ShopVersion::getVersion()));
+        $oCustomFields->add(new CustomField(Helper::SHOP_NAME_KEY, $aShopInfoFields[HELPER::SHOP_NAME_KEY]));
+        $oCustomFields->add(new CustomField(Helper::SHOP_VERSION_KEY, $aShopInfoFields[Helper::SHOP_VERSION_KEY]));
 
-        $oModule = oxNew(Module::class);
-        $oModule->load(Helper::MODULE_ID);
-
-        $oCustomFields->add(new CustomField('pluginName', $oModule->getTitle()));
-        $oCustomFields->add(new CustomField('pluginVersion', $oModule->getInfo('version')));
+        $oCustomFields->add(new CustomField(Helper::PLUGIN_NAME_KEY, $aShopInfoFields[Helper::PLUGIN_NAME_KEY]));
+        $oCustomFields->add(new CustomField(Helper::PLUGIN_VERSION_KEY, $aShopInfoFields[Helper::PLUGIN_VERSION_KEY]));
 
         $oTransaction->setCustomFields($oCustomFields);
     }
