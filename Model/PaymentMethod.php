@@ -191,26 +191,6 @@ abstract class PaymentMethod
                 'title' => Helper::translate('config_merchant_secret'),
                 'description' => Helper::translate('config_three_d_merchant_secret_desc'),
             ],
-            'deleteCanceledOrder' => [
-                'type' => 'select',
-                'field' => 'oxpayments__wdoxidee_delete_canceled_order',
-                'options' => [
-                    '1' => Helper::translate('yes'),
-                    '0' => Helper::translate('no'),
-                ],
-                'title' => Helper::translate('config_delete_cancel_order'),
-                'description' => Helper::translate('config_delete_cancel_order_desc'),
-            ],
-            'deleteFailedOrder' => [
-                'type' => 'select',
-                'field' => 'oxpayments__wdoxidee_delete_failed_order',
-                'options' => [
-                    '1' => Helper::translate('yes'),
-                    '0' => Helper::translate('no'),
-                ],
-                'title' => Helper::translate('config_delete_failure_order'),
-                'description' => Helper::translate('config_delete_failure_order_desc'),
-            ],
         ];
     }
 

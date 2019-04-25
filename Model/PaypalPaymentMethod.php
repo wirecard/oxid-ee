@@ -107,6 +107,26 @@ class PaypalPaymentMethod extends PaymentMethod
                 'title'       => Helper::translate('config_additional_info'),
                 'description' => Helper::translate('config_additional_info_desc'),
             ],
+            'deleteCanceledOrder' => [
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_delete_canceled_order',
+                'options' => [
+                    '1' => Helper::translate('yes'),
+                    '0' => Helper::translate('no'),
+                ],
+                'title' => Helper::translate('config_delete_cancel_order'),
+                'description' => Helper::translate('config_delete_cancel_order_desc'),
+            ],
+            'deleteFailedOrder' => [
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_delete_failed_order',
+                'options' => [
+                    '1' => Helper::translate('yes'),
+                    '0' => Helper::translate('no'),
+                ],
+                'title' => Helper::translate('config_delete_failure_order'),
+                'description' => Helper::translate('config_delete_failure_order_desc'),
+            ],
             'paymentAction' => [
                 'type'        => 'select',
                 'field'       => 'oxpayments__wdoxidee_transactionaction',
@@ -128,6 +148,9 @@ class PaypalPaymentMethod extends PaymentMethod
      */
     public function getPublicFieldNames()
     {
-        return array_merge(parent::getPublicFieldNames(), ['basket', 'descriptor', 'additionalInfo', 'paymentAction']);
+        return array_merge(
+            parent::getPublicFieldNames(),
+            ['basket', 'descriptor', 'additionalInfo', 'paymentAction', 'deleteCanceledOrder', 'deleteFailedOrder']
+        );
     }
 }
