@@ -61,20 +61,12 @@ var ModuleCreditCardForm = (function($) {
   }
 
   function parseCreditCardFormDataRespone(responseString) {
-    var parsedObj = null;
-
     try {
       var dataObj = JSON.parse(responseString);
-
-      var requestDataObj = JSON.parse(dataObj["requestData"]);
-
-      parsedObj = requestDataObj;
+      return JSON.parse(dataObj["requestData"]);
     } catch (ex) {
-      // eslint-disable-next-line no-console
-      console.log(ex);
+      return null;
     }
-
-    return parsedObj;
   }
 
   function createNewTransaction(cb) {
