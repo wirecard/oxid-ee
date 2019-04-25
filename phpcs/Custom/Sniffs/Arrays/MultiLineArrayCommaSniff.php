@@ -33,7 +33,7 @@ class Custom_Sniffs_Arrays_MultiLineArrayCommaSniff implements PHP_CodeSniffer_S
             return;
         }
 
-        $tokenLastPosition = $phpcsFile->findPrevious(T_WHITESPACE, $tokenCloserPosition - 1, null, true);
+        $tokenLastPosition = $phpcsFile->findPrevious([T_WHITESPACE, T_COMMENT], $tokenCloserPosition - 1, null, true);
         $tokenLast = $tokens[$tokenLastPosition];
 
         if ($tokenLast['code'] !== T_COMMA && $tokenLast !== $tokenOpener) {
