@@ -10,11 +10,17 @@
 [{if $payment->oxpayments__oxid->value === "wdcreditcard"}]
 
   [{oxscript include="js/libs/jquery.min.js" priority=8}]
-  [{oxscript include="https://api-test.wirecard.com/engine/hpp/paymentPageLoader.js" priority=8}]
+  [{oxscript include=$oView->getPaymentPageLoaderScriptUrl() priority=8}]
   [{oxscript include=$oViewConf->getPaymentGatewayUrl('out/js/credit_card_form.js') priority=9}]
-  [{oxscript add=$oView->getInitCreditCardFormJavaScript() priority=10}]
+  [{oxscript add="ModuleCreditCardForm.init()" priority=10}]
+  [{oxstyle include=$oViewConf->getPaymentGatewayUrl("out/css/spinner.css")}]
+
+  <input type="hidden" id="ccRequestDataAjaxUrl" value="[{$oView->getCCRequestDataAjaxLink()}]" />
 
   <div id="wirecard-cc-error"></div>
+
+  <div id="cc-spinner" class="cc-spinner"></div>
+
   <div>
     <form id="wirecard-cc-form" method="post" action="[{$oViewConf->getSslSelfLink()}]">
       [{* Fields from the actual submit form for execute function *}]
