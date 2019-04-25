@@ -48,9 +48,14 @@ class Custom_Sniffs_OXID_PhpSyntaxSniff implements PHP_CodeSniffer_Sniff
 
             if ($fix) {
                 $tokenColonPosition = $phpcsFile->findPrevious(T_COLON, $tokenReturnTypePosition);
+                $tokenNullablePosition = $phpcsFile->findPrevious(T_NULLABLE, $tokenReturnTypePosition, $stackPtr);
 
                 $phpcsFile->fixer->replaceToken($tokenColonPosition, '');
                 $phpcsFile->fixer->replaceToken($tokenReturnTypePosition, '');
+
+                if ($tokenNullablePosition) {
+                    $phpcsFile->fixer->replaceToken($tokenNullablePosition, '');
+                }
             }
         }
     }
