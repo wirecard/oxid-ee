@@ -38,7 +38,7 @@ class PaymentController extends PaymentController_parent
         if ($oOrder->load($sOrderId)) {
             switch (Registry::getConfig()->getRequestParameter('payerror')) {
                 case self::ERROR_CODE_CANCELED:
-                    $oOrder->handleOrderState(Order::STATE_CANCELED);
+                    $oOrder->handleOrderState(Order::STATE_CANCELLED);
                     break;
                 case self::ERROR_CODE_FAILED:
                     $oOrder->handleOrderState(Order::STATE_FAILED);

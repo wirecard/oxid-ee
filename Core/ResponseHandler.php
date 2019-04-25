@@ -14,13 +14,11 @@ use OxidEsales\Eshop\Core\Registry;
 
 use Psr\Log\LoggerInterface;
 
-use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
-use Wirecard\Oxid\Core\PaymentMethodHelper;
 
 /**
  * Class ResponseHandler
@@ -53,12 +51,12 @@ class ResponseHandler
         //    $oLogger->warning('Transaction was possibly manipulated');
         //}
 
-        $oPayment = PaymentMethodHelper::getPaymentById($oOrder->oxorder__oxpaymenttype->value);
+        self::_saveTransaction($oResponse, $oOrder, $oBackendService);
 
-        self::_saveTransaction($oResponse, $oOrder, $oPayment);
-        self::_updateOrder($oOrder, $oResponse, $oBackendService);
-
-        $oOrder->sendOrderByEmail();
+        if (!self::_isPostProcessingAction($oResponse)) {
+            self::_updateOrder($oOrder, $oResponse, $oBackendService);
+            $oOrder->sendOrderByEmail();
+        }
     }
 
     /**
@@ -82,40 +80,61 @@ class ResponseHandler
     }
 
     /**
+     * Determines whether a transaction response belongs to a post processing action.
+     * This is determined by whether a parent transaction ID is set on the response or not.
+     *
+     * @param Response $oResponse
+     *
+     * @return boolean
+     *
+     * @since 1.0.1
+     */
+    private static function _isPostProcessingAction($oResponse)
+    {
+        return self::_getParentTransactionId($oResponse) !== null;
+    }
+
+    /**
+     * Creates a new transaction entry in the database.
+     *
      * @param SuccessResponse $oResponse
      * @param Order           $oOrder
-     * @param Payment         $oPayment
+     * @param BackendService  $oBackendService
      *
      * @throws \Exception
      *
      * @since 1.0.0
      */
-    private static function _saveTransaction($oResponse, $oOrder, $oPayment)
+    private static function _saveTransaction($oResponse, $oOrder, $oBackendService)
     {
         $aData = $oResponse->getData();
+        $oUtilsDate = Registry::getUtilsDate();
+        $sConvertedTimestamp = $oUtilsDate->formatDBTimestamp($oUtilsDate->formTime($aData['completion-time-stamp']));
 
-        $oTransaction = oxNew(Transaction::class);
-        $oTransaction->wdoxidee_ordertransactions__ordernumber = new Field($oOrder->oxorder__oxordernr->value);
-        $oTransaction->wdoxidee_ordertransactions__orderid = new Field($oOrder->oxorder__oxid->value);
-        $oTransaction->wdoxidee_ordertransactions__transactionid = new Field($oResponse->getTransactionId());
-        $oTransaction->wdoxidee_ordertransactions__parenttransactionid
-            = new Field(self::_getParentTransactionId($oResponse));
-        $oTransaction->wdoxidee_ordertransactions__requestid = new Field($oResponse->getRequestId());
-        $oTransaction->wdoxidee_ordertransactions__action
-            = new Field($oPayment->oxpayments__wdoxidee_transactionaction->value);
-        $oTransaction->wdoxidee_ordertransactions__type = new Field($oResponse->getTransactionType());
-        $oTransaction->wdoxidee_ordertransactions__state = new Field($aData['transaction-state']);
+        // determine if transaction state is closed
+        $sTransactionState = $oBackendService->isFinal($oResponse->getTransactionType()) ?
+            Transaction::STATE_CLOSED : Transaction::STATE_SUCCESS;
 
-        $oTransaction->wdoxidee_ordertransactions__amount = new Field($aData['requested-amount']);
-        $oTransaction->wdoxidee_ordertransactions__currency = new Field($aData['currency']);
+        // create an array with the properties to be saved in the transaction database entry
+        $aTransactionProps = [
+            'ordernumber' => $oOrder->oxorder__oxordernr->value,
+            'orderid' => $oOrder->oxorder__oxid->value,
+            'transactionid' => $oResponse->getTransactionId(),
+            'parenttransactionid' => self::_getParentTransactionId($oResponse),
+            'requestid' => $oResponse->getRequestId(),
+            'action' => $oOrder->getOrderPayment()->oxpayments__wdoxidee_transactionaction->value,
+            'type' => $oResponse->getTransactionType(),
+            'state' => $sTransactionState,
+            'amount' => $oResponse->getRequestedAmount()->getValue(),
+            'currency' => $oResponse->getRequestedAmount()->getCurrency(),
+            'responsexml' => base64_encode($oResponse->getRawData()),
+            'date' => $sConvertedTimestamp,
+        ];
 
-        $oTransaction->wdoxidee_ordertransactions__responsexml = new Field(base64_encode($oResponse->getRawData()));
-        $oTransaction->wdoxidee_ordertransactions__date = new Field(
-            Helper::getFormattedDbDate($oResponse->getData()['completion-time-stamp'])
-        );
-        //$oTransaction->wdoxidee_ordertransactions__validsignature = new Field($oResponse->isValidSignature());
+        // TODO enable once highlighting manipulated transactions (WDPD-120)
+        //$aTransactionProps['validsignature'] = $oResponse->isValidSignature();
 
-        $oTransaction->save();
+        Transaction::createDbEntryFromArray($aTransactionProps);
     }
 
     /**

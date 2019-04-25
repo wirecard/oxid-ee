@@ -41,7 +41,7 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     public function testGetTransaction()
     {
         $oTransaction = $this->oPaymentMethod->getTransaction();
-        $this->assertTrue($oTransaction instanceof CreditCardTransaction);
+        $this->assertInstanceOf(CreditCardTransaction::class, $oTransaction);
     }
 
     public function testGetTransactionNotSettingNon3dCredentials()

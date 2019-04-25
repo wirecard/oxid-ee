@@ -161,6 +161,22 @@ class OrderHelper
     }
 
     /**
+     * Uses the backend service to determine the new order state.
+     *
+     * @param Order          $oOrder
+     * @param Response       $oResponse
+     * @param BackendService $oBackendService
+     *
+     * @since 1.0.1
+     */
+    public static function updateOrderState($oOrder, $oResponse, $oBackendService)
+    {
+        $sUpdatedOrderState = $oBackendService->getOrderState($oResponse->getTransactionType());
+        $oOrder->oxorder__wdoxidee_orderstate = new Field($sUpdatedOrderState);
+        $oOrder->save();
+    }
+
+    /**
      * Handle transaction failure response
      *
      * @param Response        $oResponse

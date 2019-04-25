@@ -9,14 +9,15 @@
 
 namespace Wirecard\Oxid\Core;
 
-use DateTime;
-use Exception;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\Shop;
 use OxidEsales\Eshop\Core\Model\ListModel;
 use OxidEsales\Eshop\Core\Module\Module;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ShopVersion;
+
+use Exception;
+use DateTime;
 
 /**
  * Util functions

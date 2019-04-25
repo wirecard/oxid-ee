@@ -11,6 +11,7 @@ use Wirecard\Oxid\Model\TransactionList;
 use Wirecard\Oxid\Extend\Model\Order as WdOrder;
 use Wirecard\Oxid\Extend\Model\Payment;
 
+use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 use OxidEsales\Eshop\Application\Model\Country;
@@ -30,9 +31,9 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
                     'wdoxidee_transactionid',
                 ],
                 'rows' => [
-                    ['1', 'wdpaypal', WdOrder::STATE_AUTHORIZED, '1'],
-                    ['2', 'oxidinvoice', WdOrder::STATE_PROCESSING, '2'],
-                    ['3', 'wdcreditcard', WdOrder::STATE_CANCELED, '3'],
+                    ['1', 'wdpaypal', BackendService::TYPE_AUTHORIZED, '1'],
+                    ['2', 'oxidinvoice', BackendService::TYPE_PROCESSING, '2'],
+                    ['3', 'wdcreditcard', BackendService::TYPE_CANCELLED, '3'],
                 ],
             ],
             [
@@ -181,15 +182,15 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
         $oOrder->handleOrderState($state);
         $this->assertEquals(!$oOrder->load($orderId), $shouldBeDeleted);
     }
-    
+
     public function testHandleOrderStateProvider()
     {
         return [
-            'order with foreign payment method: canceled' => ['2', WdOrder::STATE_CANCELED, false],
+            'order with foreign payment method: canceled' => ['2', WdOrder::STATE_CANCELLED, false],
             'order with foreign payment method: failed' => ['2', WdOrder::STATE_FAILED, false],
-            'order to delete on canceled but not on failed: canceled' => ['1', WdOrder::STATE_CANCELED, true],
+            'order to delete on canceled but not on failed: canceled' => ['1', WdOrder::STATE_CANCELLED, true],
             'order to delete on canceled but not on failed: failed' => ['1', WdOrder::STATE_FAILED, false],
-            'order to delete on both canceled and failed: canceled' => ['3', WdOrder::STATE_CANCELED, true],
+            'order to delete on both canceled and failed: canceled' => ['3', WdOrder::STATE_CANCELLED, true],
             'order to delete on both canceled and failed: failed' => ['3', WdOrder::STATE_FAILED, true],
         ];
     }
