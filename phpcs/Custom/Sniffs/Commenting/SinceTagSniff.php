@@ -12,11 +12,15 @@ class Custom_Sniffs_Commenting_SinceTagSniff implements PHP_CodeSniffer_Sniff
         T_PRIVATE,
     ];
 
+    private $version;
+
     /**
      * @inheritdoc
      */
     public function register()
     {
+        $this->version = $this->getVersion();
+
         return [T_DOC_COMMENT_OPEN_TAG];
     }
 
@@ -48,7 +52,40 @@ class Custom_Sniffs_Commenting_SinceTagSniff implements PHP_CodeSniffer_Sniff
         }
 
         if (!$hasSinceTag) {
-            $phpcsFile->addError('Missing @since tag in comment', $stackPtr, 'NoSinceTag');
+            $fix = $phpcsFile->addFixableError('Missing @since tag in comment', $stackPtr, 'NoSinceTag');
+
+            if ($fix) {
+                $tokenWhiteSpace = $tokens[$tokenDocBlock['comment_closer'] - 1];
+
+                $phpcsFile->fixer->addContentBefore(
+                    $tokenDocBlock['comment_closer'],
+                    '*' . PHP_EOL . $tokenWhiteSpace['content'] .
+                    '* @since ' . $this->version . PHP_EOL . $tokenWhiteSpace['content']
+                );
+            }
+
         }
+    }
+
+    /**
+     * Returns the module's version.
+     *
+     * @return string|null
+     */
+    private function getVersion()
+    {
+        $version = null;
+        $sMetaDataFilePath = dirname(__FILE__, 5) . '/metadata.php';
+
+        if (file_exists($sMetaDataFilePath)) {
+            $sMetaDataFileContents = file_get_contents($sMetaDataFilePath);
+            preg_match('/[\'"]version[\'"]\s*=>\s*[\'"]([\d\.]+)[\'"]/', $sMetaDataFileContents, $matches);
+
+            if ($matches) {
+                $version = $matches[1];
+            }
+        }
+
+        return $version;
     }
 }
