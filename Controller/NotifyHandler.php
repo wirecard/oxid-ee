@@ -76,7 +76,7 @@ class NotifyHandler extends FrontendController
 
         try {
             $oService = new BackendService($oConfig, $this->_oLogger);
-            $oNotificationResponse = $oService->handleNotification($sPostData);
+            $oNotificationResp = $oService->handleNotification($sPostData);
         } catch (InvalidArgumentException $exception) {
             $this->_oLogger->error(__METHOD__ . ': Invalid argument set: ' . $exception->getMessage(), [$exception]);
             return;
@@ -92,11 +92,22 @@ class NotifyHandler extends FrontendController
             return;
         }
 
+        $this->_handleNotificationResponse($oNotificationResp, $oService);
+    }
+
+    /**
+     * Handles the success and error response coming from the paymentSDK.
+     *
+     * @param Response       $oNotificationResp
+     * @param BackendService $oService
+     */
+    private function _handleNotificationResponse($oNotificationResp, $oService)
+    {
         // Return the response or log errors if any happen.
-        if ($oNotificationResponse instanceof SuccessResponse) {
-            $this->_onNotificationSuccess($oNotificationResponse, $oService);
+        if ($oNotificationResp instanceof SuccessResponse) {
+            $this->_onNotificationSuccess($oNotificationResp, $oService);
         } else {
-            $this->_onNotificationError($oNotificationResponse);
+            $this->_onNotificationError($oNotificationResp);
         }
     }
 
@@ -154,5 +165,21 @@ class NotifyHandler extends FrontendController
         $oOrder = oxNew(Order::class);
         $oOrder->loadWithTransactionId($oResponse->getParentTransactionId());
         $oOrder->handleOrderState(Order::STATE_FAILED);
+    }
+
+    /**
+     * Returns the URL of the notification handler
+     *
+     * @param Payment_Method $oPaymentMethod
+     *
+     * @return string
+     */
+    public static function getNotificationUrl($oPaymentMethod)
+    {
+        $sShopUrl = Registry::getConfig()->getCurrentShopUrl();
+
+        return $sShopUrl
+                . 'index.php?cl=wcpg_notifyhandler&fnc=handleRequest&pmt='
+                . Payment_Method::getOxidFromSDKName($oPaymentMethod->getTransaction()->getConfigKey());
     }
 }

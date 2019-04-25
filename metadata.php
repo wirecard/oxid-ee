@@ -95,9 +95,12 @@ $aModule = array(
             => \Wirecard\Oxid\Controller\Admin\Order\OrderTabTransactionDetails::class,
         'wcpg_notifyhandler'
             => \Wirecard\Oxid\Controller\NotifyHandler::class,
-        'wcpg_form_interaction' => \Wirecard\Oxid\Controller\FormInteractionController::class,
+        'wcpg_form_interaction'
+            => \Wirecard\Oxid\Controller\FormInteractionController::class,
         'wcpg_module_support'
             => \Wirecard\Oxid\Controller\Admin\ModuleSupport::class,
+        'wcpg_transaction_response_details'
+            => \Wirecard\Oxid\Controller\Admin\TransactionTabResponseDetails::class,
     ),
     'blocks'            => array(
         array(

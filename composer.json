@@ -56,7 +56,7 @@
     "cs-check": "phpcs --standard=./phpcs.xml .",
     "cs-fix": "phpcbf --standard=./phpcs.xml .",
     "upload-coverage": "codacycoverage clover Tests/reports/clover.xml",
-    "md": "phpmd Core,Extend,Model text phpmd.xml"
+    "md": "phpmd Controller,Core,Extend,Model text phpmd.xml"
   },
   "autoload": {
     "psr-4": {

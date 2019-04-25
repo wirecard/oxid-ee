@@ -16,6 +16,10 @@ use OxidEsales\Eshop\Core\Registry;
 use Wirecard\Oxid\Controller\Admin\Tab;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\TransactionHandler;
+use Wirecard\Oxid\Core\Payment_Method_Factory;
+
+use \Wirecard\PaymentSdk\BackendService;
 
 /**
  * Controls the view for the post-processing transaction tab.
@@ -32,11 +36,24 @@ class TransactionTabPostProcessing extends Tab
     protected $oTransaction;
 
     /**
+     * @var \Psr\Log\LoggerInterface
+     */
+    private $_oLogger;
+
+    /**
      * @inheritdoc
      *
      * @since 1.0.0
      */
     protected $_sThisTemplate = 'tab_post_processing.tpl';
+
+    /*
+     * @var TransactionHandler
+     */
+    private $_oTransactionHandler = null;
+
+    // array containing all possible post-processing actions for a transaction
+    private $_aPostProcessingActions = null;
 
     /**
      * TransactionTab constructor.
@@ -48,6 +65,10 @@ class TransactionTabPostProcessing extends Tab
         parent::__construct();
 
         $this->oTransaction = oxNew(Transaction::class);
+
+        $this->_oLogger = Registry::getLogger();
+
+        $this->_aPostProcessingActions = array();
 
         if ($this->_isListObjectIdSet()) {
             $this->oTransaction->load($this->sListObjectId);
@@ -64,13 +85,23 @@ class TransactionTabPostProcessing extends Tab
     public function render()
     {
         $sTemplate = parent::render();
+
+        $this->_aPostProcessingActions = $this->_getPostProcessingActions();
+
         $aRequestParameters = $this->_getRequestParameters();
 
+        // use the maximum available amount of the transaction as default if there is no action to be processed
+        if (empty($aRequestParameters['action'])) {
+            $sTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
+            $aRequestParameters['amount'] = $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId);
+        }
+
         $this->_aViewData += [
-            'actions' => $this->_getPostProcessingActions(),
+            'actions' => $this->_aPostProcessingActions,
             'requestParameters' => $aRequestParameters,
             'alert' => $this->_processRequest($aRequestParameters),
             'currency' => $this->oTransaction->wdoxidee_ordertransactions__currency->value,
+            'noOperationsAvailableString' => Helper::translate('text_no_further_operations_possible')
         ];
 
         return $sTemplate;
@@ -91,7 +122,7 @@ class TransactionTabPostProcessing extends Tab
         $oConfig = Registry::getConfig();
         $aActionConfig = null;
 
-        foreach ($this->_getPostProcessingActions() as $sActionType => $aSingleActionConfig) {
+        foreach ($this->_aPostProcessingActions as $sActionType => $aSingleActionConfig) {
             if ($oConfig->getRequestParameter($sActionType)) {
                 $aActionConfig = $aSingleActionConfig;
             }
@@ -115,13 +146,38 @@ class TransactionTabPostProcessing extends Tab
     {
         $fAmount = $aRequestParameters['amount'];
 
-        if (!$fAmount || !is_numeric($fAmount)) {
+        if (!$this->_validateAmountIsNumeric($fAmount)) {
             throw new Exception(Helper::translate('text_generic_error'));
         }
 
-        if ($fAmount < 0 || $fAmount > $this->oTransaction->wdoxidee_ordertransactions__amount->value) {
+        if (!$this->_validateAmountInRange($fAmount, $this->oTransaction->wdoxidee_ordertransactions__amount->value)) {
             throw new Exception(Helper::translate('total_amount_not_in_range_text'));
         }
+    }
+
+    /**
+     * Checks that the amount argument is a numeric value
+     *
+     * @param float $fAmount
+     *
+     * @return boolean true/false whether amount argument is a numeric value
+     */
+    private function _validateAmountIsNumeric($fAmount)
+    {
+        return $fAmount && is_numeric($fAmount);
+    }
+
+    /**
+     * Checks that the amount is in the range of the transaction
+     *
+     * @param float $fAmount
+     * @param float $fTransactionAmount
+     *
+     * @return boolean true/false whether amount is in range
+     */
+    private function _validateAmountInRange($fAmount, $fTransactionAmount)
+    {
+        return $fAmount > 0 && $fAmount <= $fTransactionAmount;
     }
 
     /**
@@ -143,8 +199,11 @@ class TransactionTabPostProcessing extends Tab
         try {
             $this->_validateRequest($aRequestParameters);
 
+            $sActionTitle = $aRequestParameters['action']['action'];
+            $sTransactionAmount = $aRequestParameters['amount'];
+
             // execute the callback method defined in the "action" request parameter
-            $aState['message'] = $this->{$aRequestParameters['action']['callback']}($aRequestParameters['amount']);
+            $aState['message'] = $this->_handleRequestAction($sActionTitle, $sTransactionAmount);
             $aState['type'] = 'success';
         } catch (Exception $e) {
             $aState['message'] = $e->getMessage();
@@ -157,68 +216,83 @@ class TransactionTabPostProcessing extends Tab
     /**
      * Returns an array of processing actions to be displayed below the amount input field.
      *
+     * @throws Exception in case the payment method type is not found
+     *
      * @return array
      *
      * @since 1.0.0
      */
     protected function _getPostProcessingActions(): array
     {
-        // TODO return only supported actions for the payment
-        return [
-            'cancel' => [
-                'title' => Helper::translate('cancel'),
-                'callback' => '_onCancel',
-            ],
-            'capture' => [
-                'title' => Helper::translate('pay'),
-                'callback' => '_onCapture',
-            ],
-            'refund' => [
-                'title' => Helper::translate('refund'),
-                'callback' => '_onRefund',
-            ],
-        ];
+        // array containing all possible post-processing operations on the currently selected transaction
+        $aOperations = array();
+
+        // if the transaction state is 'closed', there are no post-processing acitons available
+        if ($this->oTransaction->wdoxidee_ordertransactions__state->value !== Transaction::STATE_CLOSED) {
+            // it is necessary to create a new empty transaction with the ID of the currently
+            // selected one in order to get the available post-processing operations
+            $oPaymentMethod = Payment_Method_Factory::create($this->oTransaction->getPaymentType());
+            $oTransaction = $oPaymentMethod->getTransaction();
+            $sParentTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
+            $oTransaction->setParentTransactionId($sParentTransactionId);
+
+            // load the supported operations array from the backend service
+            $oBackendService = new BackendService($oPaymentMethod->getConfig(), $this->_oLogger);
+            $aSupportedOperations = $oBackendService->retrieveBackendOperations($oTransaction, true);
+
+            if ($aSupportedOperations !== false && count($aSupportedOperations > 0)) {
+                // this look-up array is necessary because of the PhraseApp integration
+                $aOperationTitles = array(
+                    BackendService::CANCEL_BUTTON_TEXT => Helper::translate('cancel'),
+                    BackendService::REFUND_BUTTON_TEXT => Helper::translate('refund'),
+                    BackendService::CAPTURE_BUTTON_TEXT => Helper::translate('capture'),
+                    BackendService::CREDIT_BUTTON_TEXT => Helper::translate('credit')
+                );
+
+                foreach ($aSupportedOperations as $sActionName => $sButtonText) {
+                    $aOperations[] = [
+                        'action' => $sActionName,
+                        'title' => $aOperationTitles[$sButtonText],
+                    ];
+                }
+            }
+        }
+
+        return $aOperations;
     }
 
     /**
-     * Callback function for the 'cancel' action.
+     * Handles the request action by passing it on to the transaction handler
      *
-     * @param float $fAmount
+     * @param string $sActionTitle
+     * @param float  $fAmount
+     *
      * @return string
      *
      * @since 1.0.0
      */
-    private function _onCancel(float $fAmount): string
+    private function _handleRequestAction($sActionTitle, $fAmount)
     {
-        // TODO
-        return Helper::translate('text_generic_success');
+        $oTransactionHandler = $this->_getTransactionHandler();
+        $aResult = $oTransactionHandler->processAction($this->oTransaction, $sActionTitle, $fAmount);
+        if ($aResult["status"] === TransactionHandler::TRANSACTION_STATUS_SUCCESS) {
+            return Helper::translate('text_generic_success');
+        } else {
+            return $aResult['message'];
+        }
     }
 
     /**
-     * Callback function for the 'capture' action.
+     * Returns an instance of TransactionHandler (singleton)
      *
-     * @param float $fAmount
-     * @return string
-     *
-     * @since 1.0.0
+     * @return TransactionHandler
      */
-    private function _onCapture(float $fAmount): string
+    private function _getTransactionHandler(): TransactionHandler
     {
-        // TODO
-        return Helper::translate('text_generic_success');
-    }
+        if (is_null($this->_oTransactionHandler)) {
+            $this->_oTransactionHandler = new TransactionHandler();
+        }
 
-    /**
-     * Callback function for the 'refund' action.
-     *
-     * @param float $fAmount
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    private function _onRefund(float $fAmount): string
-    {
-        // TODO
-        return Helper::translate('text_generic_success');
+        return $this->_oTransactionHandler;
     }
 }

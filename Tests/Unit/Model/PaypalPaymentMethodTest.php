@@ -18,12 +18,12 @@ class PaypalPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     /**
      * @var PaypalPaymentMethod
      */
-    private $oPaymentMethod;
+    private $_oPaymentMethod;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->oPaymentMethod = new PaypalPaymentMethod();
+        $this->_oPaymentMethod = new PaypalPaymentMethod();
     }
 
     public function testGetConfig()
@@ -33,14 +33,24 @@ class PaypalPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
          */
         $oPayment = PaymentMethodHelper::getPaymentById(PaypalPaymentMethod::getName(true));
 
-        $oConfig = $this->oPaymentMethod->getConfig($oPayment);
+        $oConfig = $this->_oPaymentMethod->getConfig($oPayment);
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('paypal'));
     }
 
     public function testGetTransaction()
     {
-        $oTransaction = $this->oPaymentMethod->getTransaction();
-        $this->assertInstanceOf(PayPalTransaction::class, $oTransaction);
+        $oTransaction = $this->_oPaymentMethod->getTransaction();
+        $this->assertTrue($oTransaction instanceof \Wirecard\PaymentSdk\Transaction\PayPalTransaction);
+    }
+
+    public function testGetCancelTransaction() {
+        $oTransaction = $this->_oPaymentMethod->getCancelTransaction();
+        $this->assertTrue($oTransaction instanceof \Wirecard\PaymentSdk\Transaction\PayPalTransaction);
+    }
+
+    public function testGetRefundTransaction() {
+        $oTransaction = $this->_oPaymentMethod->getRefundTransaction();
+        $this->assertTrue($oTransaction instanceof \Wirecard\PaymentSdk\Transaction\PayPalTransaction);
     }
 }
