@@ -16,28 +16,28 @@ var ModuleCreditCardForm = (function($) {
   }
 
   function callback(response) {
-    $('#cc-spinner').fadeOut();
-    $('#creditcard-form-div')
+    $("#cc-spinner").fadeOut();
+    $("#creditcard-form-div")
       .height(350)
       .fadeIn();
-    getOrderButton().prop('disabled', false);
+    getOrderButton().prop("disabled", false);
   }
 
   function logError(where, error) {
     if (error.status_code_1) {
-      $('#wirecard-cc-error')
-        .addClass('alert alert-danger')
-        .html(error.status_code_1 + ' ' + error.status_description_1);
+      $("#wirecard-cc-error")
+        .addClass("alert alert-danger")
+        .html(error.status_code_1 + " " + error.status_description_1);
     }
 
     if (debug) {
       // eslint-disable-next-line no-console
-      console.error('Error on ' + where + ':', error);
+      console.error("Error on " + where + ":", error);
     }
   }
 
   function setParentTransactionId(response) {
-    var form = $('#wirecard-cc-form');
+    var form = $("#wirecard-cc-form");
     $.each(response, function(key, value) {
       form.append("<input type='hidden' name='" + key + "' value='" + value + "'>");
     });
@@ -45,16 +45,35 @@ var ModuleCreditCardForm = (function($) {
     form.submit();
   }
 
+  function initSeamlessRenderForm() {
+    WirecardPaymentPage.seamlessRenderForm({
+      requestData: requestData,
+      wrappingDivId: "creditcard-form-div",
+      onSuccess: callback,
+      onError: function(error) {
+        logError("seamlessRenderForm", error);
+      },
+    });
+  }
+
+  function reloadCCForm() {
+    createNewTransaction(function() {
+      $("#creditcard-form-div").fadeOut();
+      $("#cc-spinner").fadeIn();
+      initSeamlessRenderForm();
+    });
+  }
+
   function submitPaymentForm(event) {
-    if (!$('#wirecard-cc-form input#jsresponse').length) {
+    if (!$("#wirecard-cc-form input#jsresponse").length) {
       event.preventDefault();
       WirecardPaymentPage.seamlessSubmitForm({
         onSuccess: setParentTransactionId,
         onError: function(error) {
-          logError('seamlessSubmitForm', error);
+          logError("seamlessSubmitForm", error);
 
           // if it was not just a local form validation error, reload the seamless credit card form to create a new transaction
-          if (!error['form_validation_result']) {
+          if (!error["form_validation_result"]) {
             document.getElementById("wirecard-cc-error").scrollIntoView();
             reloadCCForm();
           }
@@ -73,16 +92,18 @@ var ModuleCreditCardForm = (function($) {
     try {
       var dataObj = JSON.parse(responseString);
 
-      var requestDataObj = JSON.parse(dataObj['requestData']);
+      var requestDataObj = JSON.parse(dataObj["requestData"]);
 
       parsedObj = requestDataObj;
-    } catch (ex) {}
+    } catch (ex) {
+      console.log(ex);
+    }
 
     return parsedObj;
   }
 
   function createNewTransaction(cb) {
-    var ccRequestDataAjaxUrl = $('#ccRequestDataAjaxUrl').val();
+    var ccRequestDataAjaxUrl = $("#ccRequestDataAjaxUrl").val();
 
     $.get(ccRequestDataAjaxUrl, function(data) {
       var _requestData = parseCreditCardFormDataRespone(data);
@@ -90,28 +111,9 @@ var ModuleCreditCardForm = (function($) {
       setRequestData(_requestData);
 
       // execute callback function if one was passed
-      if (typeof cb === 'function') {
+      if (typeof cb === "function") {
         cb();
       }
-    });
-  }
-
-  function reloadCCForm() {
-    createNewTransaction(function() {
-      $('#creditcard-form-div').fadeOut();
-      $('#cc-spinner').fadeIn();
-      initSeamlessRenderForm();
-    });
-  }
-
-  function initSeamlessRenderForm() {
-    WirecardPaymentPage.seamlessRenderForm({
-      requestData: requestData,
-      wrappingDivId: 'creditcard-form-div',
-      onSuccess: callback,
-      onError: function(error) {
-        logError('seamlessRenderForm', error);
-      },
     });
   }
 
@@ -122,13 +124,13 @@ var ModuleCreditCardForm = (function($) {
       initSeamlessRenderForm();
 
       var orderButton = getOrderButton();
-      orderButton.prop('disabled', true);
-      orderButton.on('click', function(event) {
+      orderButton.prop("disabled", true);
+      orderButton.on("click", function(event) {
         event.preventDefault();
         submitPaymentForm(event);
       });
 
-      $('#wirecard-cc-form').submit(submitPaymentForm);
+      $("#wirecard-cc-form").submit(submitPaymentForm);
     },
   };
-})(jQuery);
+}(jQuery));
