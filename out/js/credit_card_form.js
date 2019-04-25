@@ -55,6 +55,7 @@ var ModuleCreditCardForm = (function($) {
 
           // if it was not just a local form validation error, reload the seamless credit card form to create a new transaction
           if (!error['form_validation_result']) {
+            document.getElementById("wirecard-cc-error").scrollIntoView();
             reloadCCForm();
           }
         },
