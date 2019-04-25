@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Model;
 
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
