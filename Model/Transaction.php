@@ -24,6 +24,7 @@ class Transaction extends MultiLanguageModel
 {
     const ACTION_RESERVE = 'reserve';
     const ACTION_PAY = 'pay';
+    const ACTION_CREDIT = 'credit';
 
     const STATE_AWAITING = 'awaiting';
     const STATE_SUCCESS = 'success';
@@ -143,7 +144,7 @@ class Transaction extends MultiLanguageModel
     }
 
     /**
-     * Returns an associative array of available actions and their translation.
+     * Returns an associative array of selectable actions and their translation.
      *
      * @return array
      *
@@ -166,7 +167,11 @@ class Transaction extends MultiLanguageModel
      */
     public static function getActions()
     {
-        return array_keys(self::getTranslatedActions());
+        return [
+            self::ACTION_RESERVE,
+            self::ACTION_PAY,
+            self::ACTION_CREDIT,
+        ];
     }
 
     /**

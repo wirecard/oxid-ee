@@ -64,6 +64,6 @@ class Payment extends Payment_parent
             return null;
         }
 
-        return $oPaymentMethod->getLogoPath($this);
+        return $oPaymentMethod->getLogoPath();
     }
 }

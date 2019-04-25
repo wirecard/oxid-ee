@@ -28,7 +28,7 @@
         <TAB id="wd_transaction_details_title" cl="wcpg_transaction_transaction_details"/>
         <TAB id="wd_account_holder_title" cl="wcpg_transaction_account_holder"/>
         <TAB id="wd_shipping_title" cl="wcpg_transaction_shipping"/>
-        <TAB id="wd_transaction_response_details" cl="wcpg_transaction_response_details"/>´
+        <TAB id="wd_transaction_response_details" cl="wcpg_transaction_response_details"/>
         <TAB id="wd_text_backend_operations" cl="wcpg_transaction_post_processing" />
       </SUBMENU>
     </MAINMENU>

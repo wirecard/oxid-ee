@@ -11,7 +11,9 @@ namespace Wirecard\Oxid\Core;
 
 use OxidEsales\Eshop\Core\Model\ListModel;
 
+use OxidEsales\Eshop\Core\Registry;
 use Wirecard\Oxid\Extend\Model\Payment;
+use Wirecard\PaymentSdk\Entity\Mandate;
 
 /**
  * Helper class to handle payment methods
@@ -20,6 +22,7 @@ use Wirecard\Oxid\Extend\Model\Payment;
  */
 class PaymentMethodHelper
 {
+    const MAX_MANDATE_ID_LENGTH = 35;
     /**
      * Returns a payment with the selected id.
      *
@@ -64,5 +67,20 @@ class PaymentMethodHelper
         return array_filter(self::getPayments(), function ($oPayment) {
             return $oPayment->isCustomPaymentMethod();
         });
+    }
+
+    /**
+     * Generates a Mandate for SEPA transactions
+     *
+     * @param int $iOrderNumber
+     *
+     * @return Mandate
+     *
+     * @since 1.0.1
+     */
+    public static function getMandate($iOrderNumber)
+    {
+        $iLength = self::MAX_MANDATE_ID_LENGTH - 1 - strlen((string) time());
+        return new Mandate(substr($iOrderNumber, 0, $iLength) . '-' . time());
     }
 }

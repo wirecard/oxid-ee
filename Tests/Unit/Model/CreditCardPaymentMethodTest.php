@@ -28,12 +28,7 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetConfig()
     {
-        /**
-         * @var Payment $oPayment
-         */
-        $oPayment = PaymentMethodHelper::getPaymentById(CreditCardPaymentMethod::getName(true));
-
-        $oConfig = $this->oPaymentMethod->getConfig($oPayment);
+        $oConfig = $this->oPaymentMethod->getConfig();
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('creditcard'));
     }
@@ -52,7 +47,7 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oPayment->oxpayments__wdoxidee_non_three_d_max_limit = new Field("");
         $oPayment->oxpayments__wdoxidee_three_d_min_limit = new Field("");
 
-        $oConfig = $this->oPaymentMethod->getConfig($oPayment);
+        $oConfig = $this->oPaymentMethod->getConfig();
 
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('creditcard'));
@@ -76,7 +71,7 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oPayment->oxpayments__wdoxidee_non_three_d_max_limit = new Field("");
         $oPayment->oxpayments__wdoxidee_three_d_min_limit = new Field("");
 
-        $oConfig = $this->oPaymentMethod->getConfig($oPayment);
+        $oConfig = $this->oPaymentMethod->getConfig();
 
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('creditcard'));
@@ -99,7 +94,7 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oPayment->oxpayments__wdoxidee_limits_currency = new Field('EUR');
         $oPayment->oxpayments__wdoxidee_three_d_min_limit = new Field('');
 
-        $oConfig = $this->oPaymentMethod->getConfig($oPayment);
+        $oConfig = $this->oPaymentMethod->getConfig();
 
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('creditcard'));
@@ -120,7 +115,7 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oPayment->oxpayments__wdoxidee_limits_currency = new Field('EUR');
         $oPayment->oxpayments__wdoxidee_non_three_d_max_limit = new Field('');
 
-        $oConfig = $this->oPaymentMethod->getConfig($oPayment);
+        $oConfig = $this->oPaymentMethod->getConfig();
 
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('creditcard'));

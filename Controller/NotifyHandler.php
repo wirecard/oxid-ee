@@ -10,7 +10,6 @@
 namespace Wirecard\Oxid\Controller;
 
 use Wirecard\Oxid\Core\PaymentMethodFactory;
-use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\ResponseHandler;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Transaction;
@@ -21,7 +20,6 @@ use Wirecard\PaymentSdk\Exception\MalformedResponseException;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 use OxidEsales\Eshop\Application\Controller\FrontendController;
-use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Registry;
 
 use Psr\Log\LoggerInterface;
@@ -67,11 +65,10 @@ class NotifyHandler extends FrontendController
     public function handleRequest()
     {
         $sPaymentId = Registry::getRequest()->getRequestParameter('pmt');
-        $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
 
         $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
 
-        $oConfig = $oPaymentMethod->getConfig($oPayment);
+        $oConfig = $oPaymentMethod->getConfig();
         $sPostData = file_get_contents('php://input');
 
         try {

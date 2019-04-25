@@ -15,6 +15,7 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Field;
 
 use Wirecard\Oxid\Model\PaymentMethod;
+use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
@@ -79,6 +80,10 @@ class TransactionHandler
 
         $sParentTransactionId = $oParentTransaction->wdoxidee_ordertransactions__transactionid->value;
         $oTransaction->setParentTransactionId($sParentTransactionId);
+
+        if ($oPaymentMethod instanceof SepaCreditTransferPaymentMethod) {
+            $oPaymentMethod->addNeededDataToTransaction($oTransaction, $oParentTransaction);
+        }
 
         if (!is_null($fAmount)) {
             $sCurrencyName = $oOrder->oxorder__oxcurrency->value;
@@ -264,7 +269,8 @@ class TransactionHandler
     }
 
     /**
-     * Uses the PaymentMethodFactory to create a new PaymentMethod object for the desired payment method.
+     * Uses the PaymentMethodFactory to create a new (post-processing) PaymentMethod object
+     * for the desired payment method.
      *
      * @param Transaction $oTransaction
      *
@@ -275,7 +281,8 @@ class TransactionHandler
     private function _getPaymentMethod($oTransaction)
     {
         try {
-            return PaymentMethodFactory::create($oTransaction->getPaymentType());
+            $oPaymentMethod = PaymentMethodFactory::create($oTransaction->getPaymentType());
+            return $oPaymentMethod->getPostProcessingPaymentMethod();
         } catch (Exception $oExc) {
             $this->_oLogger->error("Error getting the payment method", [$oExc]);
             return $this->_getErrorMessage($oExc->getMessage());

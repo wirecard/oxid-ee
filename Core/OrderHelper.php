@@ -236,7 +236,7 @@ class OrderHelper
         $oSession->deleteVariable($sFormPostVariable);
         $oPaymentMethod = PaymentMethodFactory::create($oPayment->oxpayments__oxid->value);
 
-        $oConfig = $oPaymentMethod->getConfig($oPayment);
+        $oConfig = $oPaymentMethod->getConfig();
 
         $oLogger = Registry::getLogger();
 

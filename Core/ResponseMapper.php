@@ -43,6 +43,18 @@ class ResponseMapper
     }
 
     /**
+     * Returns the response
+     *
+     * @return SuccessResponse
+     *
+     * @since 1.0.1
+     */
+    public function getResponse()
+    {
+        return $this->oResponse;
+    }
+
+    /**
      * Returns the response's payment details.
      *
      * @return array
