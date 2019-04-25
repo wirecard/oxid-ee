@@ -378,21 +378,6 @@ class OrderController extends OrderController_parent
     }
 
     /**
-     * Returns the parameters used to render the credit card form
-     *
-     * @return string
-     *
-     * @throws Exception
-     *
-     * @since 1.0.0
-     */
-    public function getInitCreditCardFormJavaScript()
-    {
-        // This string is used in out/blocks/wirecard_credit_card_fields.tpl to render the form
-        return "ModuleCreditCardForm.init(" . $this->_getCreditCardFormRequestData() . ")";
-    }
-
-    /**
      * @return TransactionService
      * @throws Exception
      *

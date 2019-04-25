@@ -89,7 +89,7 @@ var ModuleCreditCardForm = (function($) {
     });
   }
 
-  function reloadCCForm() {
+  function loadCCForm() {
     createNewTransaction(function() {
       $("#creditcard-form-div").fadeOut();
       $("#cc-spinner").fadeIn();
@@ -104,11 +104,10 @@ var ModuleCreditCardForm = (function($) {
         onSuccess: setParentTransactionId,
         onError: function(error) {
           logError("seamlessSubmitForm", error);
-
+          document.getElementById("wirecard-cc-error").scrollIntoView();
           // if it was not just a local form validation error, reload the seamless credit card form to create a new transaction
           if (!error["form_validation_result"]) {
-            document.getElementById("wirecard-cc-error").scrollIntoView();
-            reloadCCForm();
+            loadCCForm();
           }
         },
       });
@@ -116,10 +115,8 @@ var ModuleCreditCardForm = (function($) {
   }
 
   return {
-    init: function(_requestData) {
-      setRequestData(_requestData);
-
-      initSeamlessRenderForm();
+    init: function() {
+      loadCCForm();
 
       var orderButton = getOrderButton();
       orderButton.prop("disabled", true);
