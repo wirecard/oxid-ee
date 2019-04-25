@@ -275,6 +275,8 @@ class OrderController extends OrderController_parent
      *
      * @return string
      *
+     * @throws Exception
+     *
      * @since 1.0.0
      */
     private function _getCreditCardFormRequestData()
