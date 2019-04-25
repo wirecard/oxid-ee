@@ -77,9 +77,9 @@ class OrderTabTransactions extends OrderTab
                             'text' => $oTransaction->wdoxidee_ordertransactions__date->value,
                             'nowrap' => true,
                         ],
-                        [
-                            'text' => $sTransSecurity,
-                        ],
+                        // [
+                        //     'text' => $sTransSecurity,
+                        // ],
                     ],
                 ],
                 $this->_getBodyData($oTransaction->getChildTransactions(), $level + 1)
@@ -135,10 +135,10 @@ class OrderTabTransactions extends OrderTab
                     'text' => Helper::translate('panel_transaction_date'),
                     'nowrap' => true,
                 ],
-                [
-                    'text' => Helper::translate('secured'),
-                    'nowrap' => true,
-                ],
+                // [
+                //     'text' => Helper::translate('secured'),
+                //     'nowrap' => true,
+                // ],
             ],
             'body' => $aBodyData,
         ] : [];

@@ -257,7 +257,7 @@ class OxidEEEvents
             `CURRENCY` varchar(32) NOT NULL,
             `RESPONSEXML` mediumtext NOT NULL,
             `DATE` TIMESTAMP NOT NULL,
-            `VALIDSIGNATURE` tinyint(1) NOT NULL DEFAULT 1,
+            `VALIDSIGNATURE` tinyint(1),
             PRIMARY KEY (`OXID`)
         ) Engine=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 

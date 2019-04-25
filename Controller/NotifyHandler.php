@@ -93,7 +93,7 @@ class NotifyHandler extends FrontendController
         }
 
         // Return the response or log errors if any happen.
-        if ($oNotificationResponse instanceof SuccessResponse && $oNotificationResponse->isValidSignature()) {
+        if ($oNotificationResponse instanceof SuccessResponse) {
             $this->_onNotificationSuccess($oNotificationResponse, $oService);
         } else {
             $this->_onNotificationError($oNotificationResponse);
@@ -112,6 +112,15 @@ class NotifyHandler extends FrontendController
      */
     private function _onNotificationSuccess($oResponse, $oBackendService)
     {
+        // check if the response of this transaction type should be handled or not
+        $aExcludedTransactionTypes = [
+            'check-payer-response',
+        ];
+
+        if (in_array($oResponse->getTransactionType(), $aExcludedTransactionTypes)) {
+            return;
+        }
+
         $oOrder = oxNew(Order::class);
         if (!$oOrder->loadWithTransactionId($oResponse->getParentTransactionId())) {
             $this->_oLogger->error('No order found for transactionId: ' . $oResponse->getParentTransactionId());
