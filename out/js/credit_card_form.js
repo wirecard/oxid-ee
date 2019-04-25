@@ -56,6 +56,42 @@ var ModuleCreditCardForm = (function($) {
     });
   }
 
+  function setRequestData(_requestData) {
+    requestData = _requestData;
+  }
+
+  function parseCreditCardFormDataRespone(responseString) {
+    var parsedObj = null;
+
+    try {
+      var dataObj = JSON.parse(responseString);
+
+      var requestDataObj = JSON.parse(dataObj["requestData"]);
+
+      parsedObj = requestDataObj;
+    } catch (ex) {
+      // eslint-disable-next-line no-console
+      console.log(ex);
+    }
+
+    return parsedObj;
+  }
+
+  function createNewTransaction(cb) {
+    var ccRequestDataAjaxUrl = $("#ccRequestDataAjaxUrl").val();
+
+    $.get(ccRequestDataAjaxUrl, function(data) {
+      var _requestData = parseCreditCardFormDataRespone(data);
+
+      setRequestData(_requestData);
+
+      // execute callback function if one was passed
+      if (typeof cb === "function") {
+        cb();
+      }
+    });
+  }
+
   function reloadCCForm() {
     createNewTransaction(function() {
       $("#creditcard-form-div").fadeOut();
@@ -80,41 +116,6 @@ var ModuleCreditCardForm = (function($) {
         },
       });
     }
-  }
-
-  function setRequestData(_requestData) {
-    requestData = _requestData;
-  }
-
-  function parseCreditCardFormDataRespone(responseString) {
-    var parsedObj = null;
-
-    try {
-      var dataObj = JSON.parse(responseString);
-
-      var requestDataObj = JSON.parse(dataObj["requestData"]);
-
-      parsedObj = requestDataObj;
-    } catch (ex) {
-      console.log(ex);
-    }
-
-    return parsedObj;
-  }
-
-  function createNewTransaction(cb) {
-    var ccRequestDataAjaxUrl = $("#ccRequestDataAjaxUrl").val();
-
-    $.get(ccRequestDataAjaxUrl, function(data) {
-      var _requestData = parseCreditCardFormDataRespone(data);
-
-      setRequestData(_requestData);
-
-      // execute callback function if one was passed
-      if (typeof cb === "function") {
-        cb();
-      }
-    });
   }
 
   return {
