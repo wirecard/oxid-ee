@@ -1,0 +1,13 @@
+[
+  {
+    "release": "1.0.0",
+    "shopsystem": "Oxid",
+    "tested": "6.1",
+    "compatibility": "6.1",
+    "changelog": [
+      "Credit card",
+      "PayPal",
+      "Sofort."
+    ]
+  }
+]
