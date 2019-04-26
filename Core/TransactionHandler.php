@@ -17,7 +17,6 @@ use \OxidEsales\Eshop\Core\Field;
 
 use Wirecard\Oxid\Model\PaymentMethod;
 use \Wirecard\PaymentSdk\Entity\Amount;
-use \Wirecard\PaymentSdk\Transaction\Operation;
 use \Wirecard\PaymentSdk\Response\SuccessResponse;
 use \Wirecard\PaymentSdk\Response\FailureResponse;
 use \Wirecard\PaymentSdk\Response\Response;
@@ -59,17 +58,10 @@ class TransactionHandler
         float $fAmount = null
     ): array {
         $oPaymentMethod = $this->_getPaymentMethod($oParentTransaction);
-        $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
         $oOrder = $oParentTransaction->getTransactionOrder();
         $oConfig = $oPaymentMethod->getConfig($oOrder->getOrderPayment());
 
-        // TODO this will not work for sofort.!!!
         $oTransaction = $oPaymentMethod->getTransaction();
-
-        if (empty($oTransaction)) {
-            $this->_oLogger->error("action not implemented", ['no implementation for ' . $sActionTitle]);
-            return $this->_getErrorMessage('Action "' . $sActionTitle . '" is not implemented');
-        }
 
         $sParentTransactionId = $oParentTransaction->wdoxidee_ordertransactions__transactionid->value;
         $oTransaction->setParentTransactionId($sParentTransactionId);

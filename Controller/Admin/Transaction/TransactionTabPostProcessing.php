@@ -25,31 +25,35 @@ use Wirecard\PaymentSdk\BackendService;
 /**
  * Controls the view for the post-processing transaction tab.
  *
- * @since 1.0.0
+ * @since 1.0.1
  */
 class TransactionTabPostProcessing extends Tab
 {
     /**
      * @var Transaction
      *
-     * @since 1.0.0
+     * @since 1.0.1
      */
     protected $oTransaction;
 
     /**
      * @var \Psr\Log\LoggerInterface
+     *
+     * @since 1.0.1
      */
     private $_oLogger;
 
     /**
      * @inheritdoc
      *
-     * @since 1.0.0
+     * @since 1.0.1
      */
     protected $_sThisTemplate = 'tab_post_processing.tpl';
 
     /*
      * @var TransactionHandler
+     *
+     * @since 1.0.1
      */
     private $_oTransactionHandler;
 
@@ -61,7 +65,7 @@ class TransactionTabPostProcessing extends Tab
     /**
      * TransactionTab constructor.
      *
-     * @since 1.0.0
+     * @since 1.0.1
      */
     public function __construct()
     {
@@ -85,7 +89,7 @@ class TransactionTabPostProcessing extends Tab
      *
      * @return string
      *
-     * @since 1.0.0
+     * @since 1.0.1
      */
     public function render()
     {
@@ -122,7 +126,7 @@ class TransactionTabPostProcessing extends Tab
      *
      * @return array
      *
-     * @since 1.0.0
+     * @since 1.0.1
      */
     private function _getRequestParameters(): array
     {
@@ -150,7 +154,7 @@ class TransactionTabPostProcessing extends Tab
      * @param array $aRequestParameters
      * @throws Exception
      *
-     * @since 1.0.0
+     * @since 1.0.1
      */
     private function _validateRequest(array $aRequestParameters)
     {
@@ -171,6 +175,8 @@ class TransactionTabPostProcessing extends Tab
      * @param float $fAmount
      *
      * @return boolean true/false whether amount argument is a numeric value
+     *
+     * @since 1.0.1
      */
     private function _validateAmountIsNumeric($fAmount)
     {
@@ -184,6 +190,8 @@ class TransactionTabPostProcessing extends Tab
      * @param float $fTransactionAmount
      *
      * @return boolean true/false whether amount is in range
+     *
+     * @since 1.0.1
      */
     private function _validateAmountInRange($fAmount, $fTransactionAmount)
     {
@@ -196,7 +204,7 @@ class TransactionTabPostProcessing extends Tab
      * @param array $aRequestParameters
      * @return array|null
      *
-     * @since 1.0.0
+     * @since 1.0.1
      */
     private function _processRequest(array $aRequestParameters)
     {
@@ -230,7 +238,7 @@ class TransactionTabPostProcessing extends Tab
      *
      * @return array
      *
-     * @since 1.0.0
+     * @since 1.0.1
      */
     protected function _getPostProcessingActions(): array
     {
@@ -252,28 +260,47 @@ class TransactionTabPostProcessing extends Tab
         $aSupportedOperations = $oBackendService->retrieveBackendOperations($oTransaction, true);
 
         if ($aSupportedOperations !== false && count($aSupportedOperations > 0)) {
-            // this look-up array is necessary because of the PhraseApp integration
-            $aOperationTitles = array(
-                BackendService::CANCEL_BUTTON_TEXT => Helper::translate('cancel'),
-                BackendService::REFUND_BUTTON_TEXT => Helper::translate('refund'),
-                BackendService::CAPTURE_BUTTON_TEXT => Helper::translate('capture'),
-                BackendService::CREDIT_BUTTON_TEXT => Helper::translate('credit')
-            );
-
-            foreach ($aSupportedOperations as $sActionName => $sButtonText) {
-                // currently there are no post-processing transactions for Sofort
-                if ($oPaymentMethod->getName() === SofortTransaction::NAME) {
-                    continue;
-                }
-
-                $aOperations[] = [
-                    'action' => $sActionName,
-                    'title' => $aOperationTitles[$sButtonText],
-                ];
-            }
+            $aOperations = $this->_getTranslatedPostProcessingActions($aSupportedOperations, $oPaymentMethod);
         }
 
         return $aOperations;
+    }
+
+    /**
+     * Applies the translate function on the supported post processing operations array.
+     *
+     * @param array         $aSupportedOperations
+     * @param PaymentMethod $oPaymentMethod
+     *
+     * @return array
+     *
+     * @since 1.0.1
+     */
+    private function _getTranslatedPostProcessingActions($aSupportedOperations, $oPaymentMethod)
+    {
+        $aTranslatedActions = [];
+
+        // this look-up array is necessary because of the PhraseApp integration
+        $aOperationTitles = array(
+            BackendService::CANCEL_BUTTON_TEXT => Helper::translate('cancel'),
+            BackendService::REFUND_BUTTON_TEXT => Helper::translate('refund'),
+            BackendService::CAPTURE_BUTTON_TEXT => Helper::translate('capture'),
+            BackendService::CREDIT_BUTTON_TEXT => Helper::translate('credit'),
+        );
+
+        foreach ($aSupportedOperations as $sActionName => $sButtonText) {
+            // currently there are no post-processing transactions for Sofort
+            if ($oPaymentMethod->getName() === SofortTransaction::NAME) {
+                continue;
+            }
+
+            $aTranslatedActions[] = [
+                'action' => $sActionName,
+                'title' => $aOperationTitles[$sButtonText],
+            ];
+        }
+
+        return $aTranslatedActions;
     }
 
     /**
@@ -284,23 +311,23 @@ class TransactionTabPostProcessing extends Tab
      *
      * @return string
      *
-     * @since 1.0.0
+     * @since 1.0.1
      */
     private function _handleRequestAction($sActionTitle, $fAmount)
     {
         $oTransactionHandler = $this->_getTransactionHandler();
         $aResult = $oTransactionHandler->processAction($this->oTransaction, $sActionTitle, $fAmount);
-        if ($aResult["status"] === Transaction::STATE_SUCCESS) {
-            return Helper::translate('text_generic_success');
-        } else {
-            return $aResult['message'];
-        }
+
+        return $aResult["status"] === Transaction::STATE_SUCCESS ?
+            Helper::translate('text_generic_success') : $aResult['message'];
     }
 
     /**
      * Returns an instance of TransactionHandler (singleton)
      *
      * @return TransactionHandler
+     *
+     * @since 1.0.1
      */
     private function _getTransactionHandler(): TransactionHandler
     {
