@@ -19,8 +19,8 @@ use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\TransactionHandler;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
-
-use \Wirecard\PaymentSdk\BackendService;
+use Wirecard\PaymentSdk\Transaction\SofortTransaction;
+use Wirecard\PaymentSdk\BackendService;
 
 /**
  * Controls the view for the post-processing transaction tab.
@@ -261,6 +261,11 @@ class TransactionTabPostProcessing extends Tab
             );
 
             foreach ($aSupportedOperations as $sActionName => $sButtonText) {
+                // currently there are no post-processing transactions for Sofort
+                if ($oPaymentMethod->getName() === SofortTransaction::NAME) {
+                    continue;
+                }
+
                 $aOperations[] = [
                     'action' => $sActionName,
                     'title' => $aOperationTitles[$sButtonText],
