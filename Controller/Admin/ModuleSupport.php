@@ -10,7 +10,6 @@
 namespace Wirecard\Oxid\Controller\Admin;
 
 use OxidEsales\Eshop\Application\Controller\Admin\AdminController;
-use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Module\Module;
 
 use Wirecard\Oxid\Core\Helper;
@@ -208,16 +207,54 @@ class ModuleSupport extends AdminController
         $this->_aViewData['fromEmail'] = $sFromEmail;
         $this->_aViewData['body'] = $sBody;
 
-        if (empty($sFromEmail) || !Helper::isEmailValid($sFromEmail)) {
+        if (!$this->_isFromEmailValid($sFromEmail) || !$this->_isReplyToEmailValid($sReplyToEmail)) {
             throw new Exception(Helper::translate('enter_valid_email_error'));
         }
 
-        if ($sReplyToEmail && !Helper::isEmailValid($sReplyToEmail)) {
-            throw new Exception(Helper::translate('enter_valid_email_error'));
-        }
-
-        if (empty($sBody)) {
+        if (!$this->_isBodyValid($sBody)) {
             throw new Exception(Helper::translate('message_empty_error'));
         }
+    }
+
+    /**
+     * Checks if the from email address is valid.
+     *
+     * @param string $sFromEmail
+     *
+     * @return boolean
+     *
+     * @since 1.0.1
+     */
+    private function _isFromEmailValid($sFromEmail)
+    {
+        return !empty($sFromEmail) && Helper::isEmailValid($sFromEmail);
+    }
+
+    /**
+     * Checks if the reply to email address is valid.
+     *
+     * @param string $sReplyToEmail
+     *
+     * @return boolean
+     *
+     * @since 1.0.1
+     */
+    private function _isReplyToEmailValid($sReplyToEmail)
+    {
+        return $sReplyToEmail || Helper::isEmailValid($sReplyToEmail);
+    }
+
+    /**
+     * Checks if the email body is valid.
+     *
+     * @param string $sBody
+     *
+     * @return boolean
+     *
+     * @since 1.0.1
+     */
+    private function _isBodyValid($sBody)
+    {
+        return !empty($sBody);
     }
 }
