@@ -84,15 +84,7 @@ class TranslationBuilder
   def extract_keys_from_xml_file(file_path)
     file_content = File.read(file_path, :encoding => 'utf-8')
     doc = Nokogiri::XML(file_content)
-
-    keys = []
-    doc.xpath("//*[@pg_translate='1']").each do |node|
-      if node.key?('id')
-        keys.push(node.attr('id'))
-      end
-    end
-
-    keys
+    doc.xpath("//*[starts-with(@id, '#{@locale_prefix}')]").map { |node| node.attr('id') }
   end
 
   # Returns an array of absolute paths to PHP files that should be parsed for keys

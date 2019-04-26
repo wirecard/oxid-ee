@@ -90,13 +90,7 @@ class WdProject
     @log.info('Gathering keys from local worktree into a temporary JSON file...')
 
     worktree_keys = @translation_builder.get_all_keys
-
-    keys = []
-    worktree_keys.each do |key|
-      keys.push(key.sub(@locale_prefix, ''))
-    end
-
-    h = Hash[keys.map { |x| [x, ''] }]
+    h = Hash[worktree_keys.map { |x| [x.sub(@locale_prefix, ''), ''] }]
     f = File.join(@tmp_path, 'worktree_keys.json')
     File.write(f, JSON.pretty_generate(h), :encoding => 'utf-8')
   end

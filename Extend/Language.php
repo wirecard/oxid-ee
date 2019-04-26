@@ -19,6 +19,9 @@ namespace Wirecard\Oxid\Extend;
  */
 class Language extends Language_parent
 {
+    const TRANSLATION_KEY_PREFIX = 'wdpg_';
+    const FALLBACK_LANGUAGE_ABBR = 'en';
+
     /**
      * @var int
      *
@@ -31,49 +34,46 @@ class Language extends Language_parent
      *
      * Provides a fallback language string if the chosen language is not available for the plugin
      *
-     * @param string $sStringToTranslate Initial string
-     * @param int    $iLang              optional language number
-     * @param bool   $blAdminMode        force to load language constant from admin/shops language file
+     * @param string $sStringToTranslate
+     * @param int    $iLanguageId
+     * @param bool   $bAdminMode         force to load language constant from admin/shops language file
      *
      * @return string
      *
      * @since 1.0.1
      */
-    public function translateString($sStringToTranslate, $iLang = null, $blAdminMode = null)
+    public function translateString($sStringToTranslate, $iLanguageId = null, $bAdminMode = null)
     {
-        if (strpos($sStringToTranslate, 'wdpg_') === 0) {
-            $sParentString = parent::translateString($sStringToTranslate, $iLang, $blAdminMode);
+        $sParentString = parent::translateString($sStringToTranslate, $iLanguageId, $bAdminMode);
 
-            if ($sParentString === $sStringToTranslate) {
-                return $this->_getFallbackString($sStringToTranslate);
-            }
-
-            return $sParentString;
+        if (!$this->isTranslated() && strpos($sStringToTranslate, self::TRANSLATION_KEY_PREFIX) === 0) {
+            return $this->_getFallbackString($sStringToTranslate, $bAdminMode);
         }
 
-        return parent::translateString($sStringToTranslate, $iLang, $blAdminMode);
+        return $sParentString;
     }
 
     /**
      * Returns the fallback language's string for the provided key
      *
      * @param string $sStringToTranslate
+     * @param bool   $bAdminMode
      *
      * @return string
      *
      * @since 1.0.1
      */
-    private function _getFallbackString($sStringToTranslate)
+    private function _getFallbackString($sStringToTranslate, $bAdminMode = null)
     {
         if ($this->_iFallbackId === null) {
             foreach ($this->getLanguageArray() as $oLanguage) {
-                if ($oLanguage->abbr === 'en') {
+                if ($oLanguage->abbr === self::FALLBACK_LANGUAGE_ABBR) {
                     $this->_iFallbackId = $oLanguage->id;
                     break;
                 }
             }
         }
 
-        return parent::translateString($sStringToTranslate, $this->_iFallbackId);
+        return parent::translateString($sStringToTranslate, $this->_iFallbackId, $bAdminMode);
     }
 }

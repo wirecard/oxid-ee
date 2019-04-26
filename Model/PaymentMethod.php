@@ -183,13 +183,13 @@ abstract class PaymentMethod
                 'type' => 'text',
                 'field' => 'oxpayments__wdoxidee_maid',
                 'title' => Helper::translate('wdpg_config_merchant_account_id'),
-                'description' => Helper::translate('wdpg_config_three_d_merchant_account_id_desc'),
+                'description' => Helper::translate('wdpg_config_merchant_account_id_desc'),
             ],
             'secret' => [
                 'type' => 'text',
                 'field' => 'oxpayments__wdoxidee_secret',
                 'title' => Helper::translate('wdpg_config_merchant_secret'),
-                'description' => Helper::translate('wdpg_config_three_d_merchant_secret_desc'),
+                'description' => Helper::translate('wdpg_config_merchant_secret_desc'),
             ],
         ];
     }
