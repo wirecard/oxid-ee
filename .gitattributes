@@ -1,0 +1,25 @@
+/.gitattributes export-ignore
+/.gitignore export-ignore
+/.codacy.yml export-ignore
+/.dockerignore export-ignore
+/.editorconfig export-ignore
+/.env.template export-ignore
+/.rubocop.yml export-ignore
+/.ruby-version export-ignore
+/.travis export-ignore
+
+/docker-comose.ci.yml export-ignore
+/docker-comose.yml export-ignore
+/Dockerfile export-ignore
+/Gemfile export-ignore
+/Gemfile.lock export-ignore
+/phpcs.xml export-ignore
+/phpmd.xml export-ignore
+/Rakefile export-ignore
+/.bin export-ignore
+/.bundle export-ignore
+/ops export-ignore
+/phpmd export-ignore
+/Tests export-ignore
+/WirecardOxidRuleset export-ignore
+
