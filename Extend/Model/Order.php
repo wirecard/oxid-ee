@@ -480,6 +480,7 @@ class Order extends Order_parent
      * Handles the order after a certain order state is set.
      *
      * @param string $sState
+     *
      * @return void
      *
      * @since 1.0.0
@@ -505,6 +506,7 @@ class Order extends Order_parent
      * Checks if the order should be deleted if a certain order state is set.
      *
      * @param string $sState
+     *
      * @return bool
      *
      * @since 1.0.0
