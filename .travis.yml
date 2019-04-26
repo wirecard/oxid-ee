@@ -14,6 +14,7 @@ env:
     - OXID_VERSION=dev-b-6.1-ce
     - MODULE_NAME=${TRAVIS_REPO_SLUG}
     - MODULE_PATH=wirecard/paymentgateway
+    - github_token: GITHUB_TOKEN
 
 matrix:
   include:
