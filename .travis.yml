@@ -14,8 +14,7 @@ env:
     - OXID_VERSION=dev-b-6.1-ce
     - MODULE_NAME=${TRAVIS_REPO_SLUG}
     - MODULE_PATH=wirecard/paymentgateway
-    - github_token:
-      secure: "Iy/Plz3V++TKSQbz/A0x7ZhETSfcvbXxT4zKQh51W8fjBUlKKrQmDA1rICIjnfFs0bNAe6M2yQxxHgJKUJPBsi9Nk/Ynuk/I5lLK1jLL6THioGB6oKUyRBytlcVLZ+0lNqmV/jRKYdwEPI+jNduCk5GSjubSGMIWGNDcqAUiTu+oy3Gu9FS/auEGxim7UaZYC+MM+7ir0zD6w/0nuCaxalAeLahFz0g3QlXc7FB88SxH//lxzKDZh3U6XKyIEXGG8IQiCYaJRUqr9unzHDVbjOvNT6HWZQ4jGSfnCZTnp4aPfOrk1Ir334/4Cuy4xCP4iiuiRFHoxw++uknh77slUwRtZbrUlwoCbvT0V/GOQaN2HSjrTOc5n1/M0XsPRumbZ+I/4EoCnZUwNiBpWtVhrzSpE84+0BBj67gmStzca1sZMkts+oHnr5S6qajVY5ePY4Sn3rI/JbUJP501zexRHgqKY26a+Hqz9TAnNJqRKfm6ez5pSlXUKk4eCl7slgYuY8I="
+    - github_token: GITHUB_TOKEN
 
 matrix:
   include:
