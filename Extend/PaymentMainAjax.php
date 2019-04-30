@@ -9,10 +9,9 @@
 
 namespace Wirecard\Oxid\Extend;
 
-use Wirecard\PaymentSdk\TransactionService;
-use Wirecard\PaymentSdk\Config\Config;
-
 use OxidEsales\Eshop\Core\Registry;
+use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\TransactionService;
 
 /**
  * Extends the AJAX handler of OXID's payment method configuration page
@@ -56,6 +55,10 @@ class PaymentMainAjax extends PaymentMainAjax_parent
 
     /**
      * Checks the validity of the payment method credentials the merchant set on the frontend.
+     *
+     * @return bool
+     *
+     * @throws \Http\Client\Exception
      *
      * @since 1.0.0
      */

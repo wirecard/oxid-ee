@@ -277,7 +277,7 @@ class Helper
     /**
      * Returns list of modules
      *
-     * @return array;
+     * @return Module[];
      *
      * @since 1.0.0
      */
