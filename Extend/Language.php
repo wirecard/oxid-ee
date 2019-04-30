@@ -46,7 +46,10 @@ class Language extends Language_parent
     {
         $sParentString = parent::translateString($sStringToTranslate, $iLanguageId, $bAdminMode);
 
-        if (!$this->isTranslated() && strpos($sStringToTranslate, self::TRANSLATION_KEY_PREFIX) === 0) {
+        if (!$this->isTranslated()
+            && (strpos($sStringToTranslate, self::TRANSLATION_KEY_PREFIX) === 0
+            || strpos($sStringToTranslate, '_' . self::TRANSLATION_KEY_PREFIX) !== false)
+        ) {
             return $this->_getFallbackString($sStringToTranslate, $bAdminMode);
         }
 

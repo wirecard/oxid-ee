@@ -217,10 +217,10 @@ $aModule = array(
      * The settings below result in a set of auto-generated translatable keys. For the PhraseApp parsing script to pick
      * them up, we construct the list of keys below as a comment:
      *
-     * translate('SHOP_MODULE_blEmailOnPending')
-     * translate('SHOP_MODULE_GROUP_emails')
+     * translate('SHOP_MODULE_wd_blEmailOnPending')
+     * translate('SHOP_MODULE_GROUP_wd_emails')
      */
     'settings' => array(
-        array('group' => 'emails', 'name' => 'blEmailOnPending', 'type' => 'bool', 'value' => 'false')
+        array('group' => 'wd_emails', 'name' => 'wd_blEmailOnPending', 'type' => 'bool', 'value' => 'false')
     )
 );

@@ -13,7 +13,7 @@ class WdProject
 
     @phraseapp = WdPhraseApp.new
     @phraseapp_fallback_locale = Const::PHRASEAPP_FALLBACK_LOCALE
-    @locale_prefix             = Const::LOCALE_PREFIX
+    @locale_prefix = Const::LOCALE_PREFIX
     @locale_map = Const::LOCALE_MAP
     @tmp_path = File.join(Dir.pwd, '.bin', 'phraseapp', 'tmp')
   end
@@ -90,7 +90,9 @@ class WdProject
     @log.info('Gathering keys from local worktree into a temporary JSON file...')
 
     worktree_keys = @translation_builder.get_all_keys
-    h = Hash[worktree_keys.map { |x| [x.sub(@locale_prefix, ''), ''] }]
+    worktree_keys += @translation_builder.get_metadata_keys
+
+    h = Hash[worktree_keys.map { |x| [x.sub(/^#{@locale_prefix}/, ''), ''] }]
     f = File.join(@tmp_path, 'worktree_keys.json')
     File.write(f, JSON.pretty_generate(h), :encoding => 'utf-8')
   end

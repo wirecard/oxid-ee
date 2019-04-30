@@ -425,7 +425,7 @@ class Order extends Order_parent
         $bRet = false;
 
         $oEmail = oxNew(Email::class);
-        $bSendPendingEmails = $this->getConfig()->getConfigParam('blEmailOnPending');
+        $bSendPendingEmails = $this->getConfig()->getConfigParam('wd_blEmailOnPending');
 
         // Dont send pending emails if not enabled in module settings
         if ($this->isPaymentPending() && !$bSendPendingEmails) {

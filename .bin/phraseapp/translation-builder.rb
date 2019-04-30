@@ -87,16 +87,23 @@ class TranslationBuilder
     doc.xpath("//*[starts-with(@id, '#{@locale_prefix}')]").map { |node| node.attr('id') }
   end
 
+  # Parse the metadata.php file for keys, this keys must not be prefixed because of a special handling from oxid
+  def get_metadata_keys
+    metadata_keys = extract_keys_from_php_file(File.join(Dir.pwd, 'metadata.php'))
+    metadata_keys.uniq
+  end
+
   # Returns an array of absolute paths to PHP files that should be parsed for keys
   def get_needed_php_files
     ignored_dirs = [
       'vendor',
       'translations',
+      'metadata.php',
       File.join('views', 'admin'),
     ]
 
     Dir.glob(File.join(Dir.pwd, @plugin_dir, '**', '*.php')).reject do |path|
-      ignored_dirs.any? { |ignored| path =~ /\/#{ignored}\// }
+      ignored_dirs.any? { |ignored| path =~ /\/#{Regexp.escape(ignored)}/ }
     end
   end
 
@@ -112,6 +119,8 @@ class TranslationBuilder
 
   # Writes translations (key-value pairs) to the given file, using valid PHP array syntax
   def write_translations_to_php(translations, php_file)
+    metadata_keys = get_metadata_keys
+
     translations.each do |key, value|
       if value.is_a?(Hash)
         value = value.values[0]
@@ -119,8 +128,9 @@ class TranslationBuilder
 
       if value.nil? then value = '' end
 
+      prefix = metadata_keys.any? { |metadata_key| metadata_key == key } ? '' : @locale_prefix
       # strip whitespace and escape quotes
-      line = "    '#{@locale_prefix}#{key}' => '#{value.strip.gsub("'") { "\\'" }}',"
+      line = "    '#{prefix}#{key}' => '#{value.strip.gsub("'") { "\\'" }}',"
       php_file.puts(line)
     end
   end
