@@ -11,25 +11,25 @@
   <OXMENU id="NAVIGATION_ESHOPADMIN">
     <MAINMENU id="mxorders">
       <SUBMENU id="mxdisplayorders" cl="admin_order" list="order_list">
-        <TAB id="wdpg_text_list" cl="wcpg_order_transactions"/>
-        <TAB id="wdpg_transaction_details_title" cl="wcpg_order_transaction_details"/>
+        <TAB id="wd_text_list" cl="wcpg_order_transactions"/>
+        <TAB id="wd_transaction_details_title" cl="wcpg_order_transaction_details"/>
       </SUBMENU>
     </MAINMENU>
     <MAINMENU id="mxextensions">
       <SUBMENU id="mxmodule" cl="module" list="module_list">
-          <TAB id="wdpg_text_support" cl="wcpg_module_support"/>
+          <TAB id="wd_text_support" cl="wcpg_module_support"/>
       </SUBMENU>
     </MAINMENU>
   </OXMENU>
-  <OXMENU id="wdpg_heading_title">
-    <MAINMENU id="wdpg_heading_title_transaction_details">
-      <SUBMENU id="wdpg_text_list" cl="wcpg_transaction" list="wcpg_transaction_list">
-        <TAB id="wdpg_panel_details" cl="wcpg_transaction_payment_details"/>
-        <TAB id="wdpg_transaction_details_title" cl="wcpg_transaction_transaction_details"/>
-        <TAB id="wdpg_account_holder_title" cl="wcpg_transaction_account_holder"/>
-        <TAB id="wdpg_shipping_title" cl="wcpg_transaction_shipping"/>
+  <OXMENU id="wd_heading_title">
+    <MAINMENU id="wd_heading_title_transaction_details">
+      <SUBMENU id="wd_text_list" cl="wcpg_transaction" list="wcpg_transaction_list">
+        <TAB id="wd_panel_details" cl="wcpg_transaction_payment_details"/>
+        <TAB id="wd_transaction_details_title" cl="wcpg_transaction_transaction_details"/>
+        <TAB id="wd_account_holder_title" cl="wcpg_transaction_account_holder"/>
+        <TAB id="wd_shipping_title" cl="wcpg_transaction_shipping"/>
         <!-- hide the post processing until it is implemented -->
-        <!--<TAB id="wdpg_text_backend_operations" cl="wcpg_transaction_post_processing" />-->
+        <!--<TAB id="wd_text_backend_operations" cl="wcpg_transaction_post_processing" />-->
       </SUBMENU>
     </MAINMENU>
   </OXMENU>

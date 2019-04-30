@@ -223,12 +223,12 @@ class Order extends Order_parent
     public static function getTranslatedStates()
     {
         return [
-            self::STATE_PENDING => Helper::translate('wdpg_order_status_pending'),
-            self::STATE_AUTHORIZED => Helper::translate('wdpg_order_status_authorized'),
-            self::STATE_PROCESSING => Helper::translate('wdpg_order_status_purchased'),
-            self::STATE_CANCELED => Helper::translate('wdpg_order_status_cancelled'),
-            self::STATE_REFUNDED => Helper::translate('wdpg_order_status_refunded'),
-            self::STATE_FAILED => Helper::translate('wdpg_order_status_failed'),
+            self::STATE_PENDING => Helper::translate('wd_order_status_pending'),
+            self::STATE_AUTHORIZED => Helper::translate('wd_order_status_authorized'),
+            self::STATE_PROCESSING => Helper::translate('wd_order_status_purchased'),
+            self::STATE_CANCELED => Helper::translate('wd_order_status_cancelled'),
+            self::STATE_REFUNDED => Helper::translate('wd_order_status_refunded'),
+            self::STATE_FAILED => Helper::translate('wd_order_status_failed'),
         ];
     }
 

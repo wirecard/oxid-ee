@@ -9,22 +9,22 @@
 
 <td class="listheader" height="15">
     <a href="Javascript:top.oxid.admin.setSorting(document.search, 'oxorder', 'wdoxidee_orderstate', 'asc');document.search.submit();" class="listheader">
-        [{oxmultilang ident="wdpg_order_status"}]
+        [{oxmultilang ident="wd_order_status"}]
     </a>
 </td>
 <td class="listheader" height="15">
     <a href="Javascript:top.oxid.admin.setSorting(document.search, 'oxorder', 'wdoxidee_oxpaymenttype', 'asc');document.search.submit();" class="listheader">
-        [{oxmultilang ident="wdpg_panel_payment_method"}]
+        [{oxmultilang ident="wd_panel_payment_method"}]
     </a>
 </td>
 <td class="listheader" height="15">
     <a href="Javascript:top.oxid.admin.setSorting(document.search, 'oxorder', 'wdoxidee_transactionid', 'asc');document.search.submit();" class="listheader">
-        [{oxmultilang ident="wdpg_panel_transcation_id"}]
+        [{oxmultilang ident="wd_panel_transcation_id"}]
     </a>
 </td>
 <td class="listheader" height="15">
     <a href="Javascript:top.oxid.admin.setSorting(document.search, 'oxorder', 'wdoxidee_providertransactionid', 'asc');document.search.submit();" class="listheader">
-        [{oxmultilang ident="wdpg_panel_provider_transaction_id"}]
+        [{oxmultilang ident="wd_panel_provider_transaction_id"}]
     </a>
 </td>
 

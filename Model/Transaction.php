@@ -137,8 +137,8 @@ class Transaction extends MultiLanguageModel
     public static function getTranslatedActions(): array
     {
         return [
-            self::ACTION_RESERVE => Helper::translate('wdpg_text_payment_action_reserve'),
-            self::ACTION_PAY => Helper::translate('wdpg_text_payment_action_pay'),
+            self::ACTION_RESERVE => Helper::translate('wd_text_payment_action_reserve'),
+            self::ACTION_PAY => Helper::translate('wd_text_payment_action_pay'),
         ];
     }
 

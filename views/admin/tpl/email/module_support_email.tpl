@@ -8,7 +8,7 @@
 <table border="0" width="100%" cellspacing="10" cellpadding="2" bgcolor="#FFFFFF" class="column">
   <tr>
     <td class="text-pad" style="white-space:nowrap;">
-      <b>[{oxmultilang ident="wdpg_support_email_from"}]</b>
+      <b>[{oxmultilang ident="wd_support_email_from"}]</b>
     </td>
     <td style="white-space:nowrap;">[{$shop->oxshops__oxname->getRawValue()|oxescape}]</td>
   </tr>
@@ -21,14 +21,14 @@
   [{if $emailData.replyTo }]
     <tr>
       <td class="text-pad" style="white-space:nowrap;">
-        <b>[{oxmultilang ident="wdpg_support_email_reply_to"}]</b>
+        <b>[{oxmultilang ident="wd_support_email_reply_to"}]</b>
       </td>
       <td style="white-space:nowrap;">[{$emailData.replyTo|oxescape}]</td>
     </tr>
   [{/if}]
   <tr>
     <td class="text-pad" style="white-space:nowrap;">
-      <b>[{oxmultilang ident="wdpg_text_message"}]</b>
+      <b>[{oxmultilang ident="wd_text_message"}]</b>
     </td>
     <td>[{$emailData.body|oxescape|nl2br}]</td>
   </tr>
@@ -37,37 +37,37 @@
   </tr>
   <tr>
     <td class="text-pad" style="white-space:nowrap;">
-      <b>[{oxmultilang ident="wdpg_support_email_shop_version"}]</b>
+      <b>[{oxmultilang ident="wd_support_email_shop_version"}]</b>
     </td>
     <td>[{$emailData.shopVersion|oxescape}]</td>
   </tr>
   <tr>
     <td class="text-pad" style="white-space:nowrap;">
-      <b>[{oxmultilang ident="wdpg_support_email_shop_edition"}]</b>
+      <b>[{oxmultilang ident="wd_support_email_shop_edition"}]</b>
     </td>
     <td>[{$emailData.shopEdition|oxescape}]</td>
   </tr>
   <tr>
     <td class="text-pad" style="white-space:nowrap;">
-      <b>[{oxmultilang ident="wdpg_support_email_module_title"}]</b>
+      <b>[{oxmultilang ident="wd_support_email_module_title"}]</b>
     </td>
     <td>[{$emailData.module->getTitle()|oxescape}]</td>
   </tr>
   <tr>
     <td class="text-pad" style="white-space:nowrap;">
-      <b>[{oxmultilang ident="wdpg_support_email_module_version"}]</b>
+      <b>[{oxmultilang ident="wd_support_email_module_version"}]</b>
     </td>
     <td>[{$emailData.module->getInfo('version')|oxescape}]</td>
   </tr>
   <tr>
     <td class="text-pad" style="white-space:nowrap;">
-      <b>[{oxmultilang ident="wdpg_support_email_php"}]</b>
+      <b>[{oxmultilang ident="wd_support_email_php"}]</b>
     </td>
     <td>[{$emailData.phpVersion|oxescape}]</td>
   </tr>
   <tr>
     <td class="text-pad" style="white-space:nowrap;">
-      <b>[{oxmultilang ident="wdpg_support_email_system"}]</b>
+      <b>[{oxmultilang ident="wd_support_email_system"}]</b>
     </td>
     <td>[{$emailData.system|oxescape}]</td>
   </tr>
@@ -76,7 +76,7 @@
   </tr>
   <tr>
     <td class="text-pad" colspan="2">
-      <b style="white-space:nowrap;">[{oxmultilang ident="wdpg_support_email_modules"}]</b>
+      <b style="white-space:nowrap;">[{oxmultilang ident="wd_support_email_modules"}]</b>
     </td>
   </tr>
   <tr>
@@ -84,13 +84,13 @@
       <table>
         <tr>
           <th class="text-pad">
-            [{oxmultilang ident="wdpg_support_email_module_id"}]
+            [{oxmultilang ident="wd_support_email_module_id"}]
           </th>
           <th class="text-pad">
-            [{oxmultilang ident="wdpg_support_email_module_title"}]
+            [{oxmultilang ident="wd_support_email_module_title"}]
           </th>
           <th class="text-pad">
-            [{oxmultilang ident="wdpg_support_email_module_version"}]
+            [{oxmultilang ident="wd_support_email_module_version"}]
           </th>
           <th class="text-pad">
             [{oxmultilang ident="GENERAL_ACTIVE"}]
@@ -109,7 +109,7 @@
             </td>
             <td class="text-pad" style="white-space:nowrap;">
               [{if $module->isActive()}]
-                [{oxmultilang ident="wdpg_yes"}]
+                [{oxmultilang ident="wd_yes"}]
               [{/if}]
             </td>
           </tr>
@@ -122,7 +122,7 @@
   </tr>
   <tr>
     <td class="text-pad" colspan="2">
-      <b style="white-space:nowrap;">[{oxmultilang ident="wdpg_payment_method_settings"}]</b>
+      <b style="white-space:nowrap;">[{oxmultilang ident="wd_payment_method_settings"}]</b>
     </td>
   </tr>
   <tr>
@@ -142,9 +142,9 @@
             </td>
             <td class="text-pad">
               [{if $payment->oxpayments__oxactive->value}]
-                [{oxmultilang ident="wdpg_yes"}]
+                [{oxmultilang ident="wd_yes"}]
               [{else}]
-                [{oxmultilang ident="wdpg_no"}]
+                [{oxmultilang ident="wd_no"}]
               [{/if}]
             </td>
           </tr>

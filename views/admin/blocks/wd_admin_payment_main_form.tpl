@@ -55,7 +55,7 @@
       // check if API URL is a root URL, if not there is no need to perform the request
       if (!/^https\:\/\/[^\/]+$/.test(elements.apiUrl.val())) {
         elements.result
-          .text('[{oxmultilang ident="wdpg_error_credentials"}]')
+          .text('[{oxmultilang ident="wd_error_credentials"}]')
           .add(elements.labels.eq(0))
           .addClass('color-error');
 
@@ -76,11 +76,11 @@
         .done(function (data) {
           if (data && data.success) {
             elements.result
-              .text('[{oxmultilang ident="wdpg_success_credentials"}]')
+              .text('[{oxmultilang ident="wd_success_credentials"}]')
               .addClass('color-success');
           } else {
             elements.result
-              .text('[{oxmultilang ident="wdpg_error_credentials"}]')
+              .text('[{oxmultilang ident="wd_error_credentials"}]')
               .add(elements.labels)
               .addClass('color-error');
           }
@@ -101,7 +101,7 @@
 
       if (!/^[a-z]{2}_[a-z]{2}$/.test(elements.countryCode.val())) {
         elements.result
-          .text('[{oxmultilang ident="wdpg_enter_country_code_error"}]')
+          .text('[{oxmultilang ident="wd_enter_country_code_error"}]')
           .add(elements.countryCode.parent().prev())
           .addClass('color-error');
       }
@@ -115,7 +115,7 @@
     <tr>
       <td colspan="2">
         <div class="messagebox">
-          <div class="warning">[{oxmultilang ident="wdpg_error_save_failed"}]</div>
+          <div class="warning">[{oxmultilang ident="wd_error_save_failed"}]</div>
         </div>
       </td>
     </tr>

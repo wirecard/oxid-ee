@@ -7,10 +7,10 @@
 *}]
 <html>
 <head>
-  <title>[{oxmultilang ident="wdpg_redirect_text"}]</title>
+  <title>[{oxmultilang ident="wd_redirect_text"}]</title>
 </head>
 <div>
-  [{oxmultilang ident="wdpg_redirect_text"}]
+  [{oxmultilang ident="wd_redirect_text"}]
 </div>
 <form id="credit-card-form" method="[{$oView->getMethod()}]" action="[{$oView->getUrl()}]">
   [{assign var="mFormFields" value=$oView->getFormFields()}]

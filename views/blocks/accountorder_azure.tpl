@@ -11,10 +11,10 @@
 
 [{if $order->isCustomPaymentMethod() && $order->isLastArticle($orderitem)}]
     [{if $order->isPaymentPending()}]
-        [{ oxmultilang ident="wdpg_payment_awaiting" }]
+        [{ oxmultilang ident="wd_payment_awaiting" }]
     [{elseif $order->isPaymentSuccess()}]
-        [{ oxmultilang ident="wdpg_payment_success_text" }]
+        [{ oxmultilang ident="wd_payment_success_text" }]
     [{else}]
-        [{ oxmultilang ident="wdpg_payment_failed_text" }]
+        [{ oxmultilang ident="wd_payment_failed_text" }]
     [{/if}]
 [{/if}]

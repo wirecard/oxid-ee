@@ -8,7 +8,7 @@ module Const
   PHRASEAPP_PROJECT_ID = '9036e89959d471e0c2543431713b7ba1'
   PHRASEAPP_FALLBACK_LOCALE = 'en_US'
   PHRASEAPP_TAG = 'oxid'
-  LOCALE_PREFIX = 'wdpg_'
+  LOCALE_PREFIX = 'wd_'
 
   # project-specific mappings for locales, see https://translate.oxidforge.org/ for available OXID locales
   LOCALE_MAP = {

@@ -19,7 +19,7 @@ namespace Wirecard\Oxid\Extend;
  */
 class Language extends Language_parent
 {
-    const TRANSLATION_KEY_PREFIX = 'wdpg_';
+    const TRANSLATION_KEY_PREFIX = 'wd_';
     const FALLBACK_LANGUAGE_ABBR = 'en';
 
     /**
