@@ -316,16 +316,17 @@ class OxidEEEvents
         );
 
         $sQuery = "INSERT INTO " . self::PAYMENT_TABLE . "(`OXID`, `OXACTIVE`, `OXTOAMOUNT`, `OXDESC`, `OXDESC_1`,
-         `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONACTION`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`, `WDOXIDEE_SECRET`,
-         `WDOXIDEE_THREE_D_MAID`, `WDOXIDEE_THREE_D_SECRET`, `WDOXIDEE_NON_THREE_D_MAX_LIMIT`,
-         `WDOXIDEE_THREE_D_MIN_LIMIT`, `WDOXIDEE_LIMITS_CURRENCY`,
-         `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`, `WDOXIDEE_ISOURS`, `WDOXIDEE_BASKET`,
-         `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`, `WDOXIDEE_COUNTRYCODE`, `WDOXIDEE_LOGOVARIANT`) VALUES (
+         `OXSORT`, `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONACTION`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`,
+         `WDOXIDEE_SECRET`, `WDOXIDEE_THREE_D_MAID`, `WDOXIDEE_THREE_D_SECRET`, `WDOXIDEE_NON_THREE_D_MAX_LIMIT`,
+         `WDOXIDEE_THREE_D_MIN_LIMIT`, `WDOXIDEE_LIMITS_CURRENCY`, `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`,
+         `WDOXIDEE_ISOURS`, `WDOXIDEE_BASKET`, `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`,
+         `WDOXIDEE_COUNTRYCODE`, `WDOXIDEE_LOGOVARIANT`) VALUES (
              '{$oPayment->oxid}',
              '{$oPayment->oxactive}',
              '{$oPayment->oxtoamount}',
              '{$oPayment->oxdesc}',
              '{$oPayment->oxdesc_1}',
+             '{$oPayment->oxsort}',
              '{$oPayment->wdoxidee_logo}',
              '{$oPayment->wdoxidee_transactionaction}',
              '{$oPayment->wdoxidee_apiurl}',
