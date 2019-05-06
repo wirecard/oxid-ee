@@ -61,6 +61,7 @@ after_script:
   - .bin/generate-tag.sh
 
 before_deploy:
+  - travis_retry composer install
   - export REPO_NAME=$(echo ${TRAVIS_REPO_SLUG} | awk -F'/' '{print $2}')
   - export RELEASE_NOTES=$(composer make-release-notes)
   - bash .bin/generate-readme-badge.sh
