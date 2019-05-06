@@ -9,10 +9,12 @@
 
 namespace Wirecard\Oxid\Model;
 
+use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Application\Model\Payment;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Entity\BankAccount;
 use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
@@ -65,7 +67,15 @@ class GiropayPaymentMethod extends PaymentMethod
      */
     public function getTransaction(): Transaction
     {
-        return new GiropayTransaction();
+        $oTransaction = new GiropayTransaction();
+        $oBankAccount = new BankAccount();
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+
+        $oBankAccount->setBic($aDynvalues['bic']);
+        $oTransaction->setBankAccount($oBankAccount);
+
+        return $oTransaction;
     }
 
     /**
@@ -113,6 +123,23 @@ class GiropayPaymentMethod extends PaymentMethod
         return array_merge(parent::getConfigFields(), $aAdditionalFields);
     }
 
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @since 1.1.0
+     */
+    public function getCheckoutFields()
+    {
+        return [
+            'bic' => [
+                'type' => 'text',
+                'title' => Helper::translate('bic_input'),
+                'required' => true,
+            ],
+        ];
+    }
 
     /**
      * @inheritdoc
