@@ -21,6 +21,7 @@ use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use Wirecard\PaymentSdk\BackendService;
+use Wirecard\PaymentSdk\Config\Config;
 
 /**
  * Controls the view for the post-processing transaction tab.
@@ -61,6 +62,13 @@ class TransactionTabPostProcessing extends Tab
     private $_oTransactionHandler;
 
     /**
+     * @var BackendService
+     *
+     * @since 1.0.1
+     */
+    private $_oBackendService;
+
+    /**
      * array containing all possible post-processing actions for a transaction
      *
      * @since 1.0.1
@@ -83,6 +91,36 @@ class TransactionTabPostProcessing extends Tab
         if ($this->_isListObjectIdSet()) {
             $this->oTransaction->load($this->sListObjectId);
         }
+    }
+
+    /**
+     * Return the Backend service
+     *
+     * NOTE: for testing use the setter to inject the {@link BackendService}
+     *
+     * @param Config $oConfig
+     *
+     * @return BackendService
+     */
+    private function _getBackendService($oConfig)
+    {
+        if (is_null($this->_oBackendService)) {
+            $this->_oBackendService = new BackendService($oConfig, $this->_oLogger);
+        }
+        return $this->_oBackendService;
+    }
+    /**
+     * Used in tests to mock the backend service
+     *
+     * @internal
+     *
+     * @param BackendService $oBackendService
+     *
+     * @since 1.0.1
+     */
+    public function setBackendService($oBackendService)
+    {
+        $this->_oBackendService = $oBackendService;
     }
 
     /**
@@ -250,7 +288,6 @@ class TransactionTabPostProcessing extends Tab
     protected function _getPostProcessingActions()
     {
         $sPaymentId = $this->oTransaction->getPaymentType();
-        $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
 
         // Need to create a transaction object with the ID of the currently selected one to get
         // the available post-processing operations from the Payment SDK
@@ -259,8 +296,8 @@ class TransactionTabPostProcessing extends Tab
         $sParentTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
         $oTransaction->setParentTransactionId($sParentTransactionId);
 
-        $oBackendService = new BackendService($oPaymentMethod->getConfig($oPayment), $this->_oLogger);
-        $aPossibleOperations = $oBackendService->retrieveBackendOperations($oTransaction, true);
+        $oConfig = $this->_getPaymentMethodConfig();
+        $aPossibleOperations = $this->_getBackendService($oConfig)->retrieveBackendOperations($oTransaction, true);
 
         if ($aPossibleOperations === false || count($aPossibleOperations) <= 0) {
             return [];
@@ -351,9 +388,31 @@ class TransactionTabPostProcessing extends Tab
     private function _getTransactionHandler()
     {
         if (is_null($this->_oTransactionHandler)) {
-            $this->_oTransactionHandler = new TransactionHandler();
+            $oConfig = $this->_getPaymentMethodConfig();
+            $this->_oTransactionHandler = new TransactionHandler($this->_getBackendService($oConfig));
         }
 
         return $this->_oTransactionHandler;
+    }
+
+
+    /**
+     * Returns the payment method config for the currently selected transaction or null if none is set.
+     *
+     * @return Config | null
+     *
+     * @since 1.0.1
+     */
+    private function _getPaymentMethodConfig()
+    {
+        if (!is_null($this->oTransaction)) {
+            $sPaymentId = $this->oTransaction->getPaymentType();
+            $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
+            $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
+
+            return $oPaymentMethod->getConfig($oPayment);
+        }
+
+        return null;
     }
 }

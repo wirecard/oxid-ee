@@ -40,13 +40,23 @@ class TransactionHandler
     private $_oLogger;
 
     /**
-     * TransactionHandler constructor.
+     * @var BackendService
      *
      * @since 1.0.1
      */
-    public function __construct()
+    private $_oBackendService;
+
+    /**
+     * TransactionHandler constructor.
+     *
+     * @param BackendService $oBackendService
+     *
+     * @since 1.0.1
+     */
+    public function __construct($oBackendService)
     {
         $this->_oLogger = Registry::getLogger();
+        $this->_oBackendService = $oBackendService;
     }
 
     /**
@@ -81,30 +91,28 @@ class TransactionHandler
             ));
         }
 
-        $oBackendService = new BackendService($oConfig, $this->_oLogger);
-        $oResponse = $oBackendService->process($oTransaction, $sActionTitle);
+        $oResponse = $this->_oBackendService->process($oTransaction, $sActionTitle);
 
-        return $this->_onActionResponse($oResponse, $oBackendService);
+        return $this->_onActionResponse($oResponse);
     }
 
     /**
      * Handles the success and error response from the post-processing action.
      *
-     * @param Response       $oResponse
-     * @param BackendService $oBackendService
+     * @param Response $oResponse
      *
      * @return array either [status => success] or [status => error, message => errorMessage]
      *
      * @since 1.0.1
      */
-    private function _onActionResponse($oResponse, $oBackendService)
+    private function _onActionResponse($oResponse)
     {
         if ($oResponse instanceof FailureResponse) {
             return $this->_onActionFailure($oResponse);
         }
 
         if ($oResponse instanceof SuccessResponse) {
-            return $this->_onActionSuccess($oResponse, $oBackendService);
+            return $this->_onActionSuccess($oResponse);
         }
 
         return $this->_getErrorMessage('No handler for this response type implemented');
@@ -114,13 +122,12 @@ class TransactionHandler
      * Handle the success response case.
      *
      * @param SuccessResponse $oResponse
-     * @param BackendService  $oBackendService
      *
      * @return array
      *
      * @since 1.0.1
      */
-    private function _onActionSuccess($oResponse, $oBackendService)
+    private function _onActionSuccess($oResponse)
     {
         $sRootTransactionId = $this->_getRootTransactionId($oResponse->getParentTransactionId());
         $oOrder = oxNew(Order::class);
@@ -131,9 +138,9 @@ class TransactionHandler
         }
 
         // the reponse handler creates the transaction entry in the database
-        ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
+        ResponseHandler::onSuccessResponse($oResponse, $this->_oBackendService, $oOrder);
         $this->_updateParentTransactionStateIfNecessary($oResponse);
-        OrderHelper::updateOrderState($oOrder, $oResponse, $oBackendService);
+        OrderHelper::updateOrderState($oOrder, $oResponse, $this->_oBackendService);
 
         return $this->_getSuccessMessage();
     }
