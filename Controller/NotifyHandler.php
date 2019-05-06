@@ -85,13 +85,6 @@ class NotifyHandler extends FrontendController
             return;
         }
 
-        $oTransaction = oxNew(Transaction::class);
-
-        if ($oTransaction->loadWithTransactionId($oNotificationResp->getTransactionId())) {
-            // if a transaction with this ID already exists, we do not need to handle it again
-            return;
-        }
-
         $this->_handleNotificationResponse($oNotificationResp, $oBackendService);
     }
 
@@ -107,6 +100,13 @@ class NotifyHandler extends FrontendController
     {
         // Return the response or log errors if any happen.
         if ($oNotificationResp instanceof SuccessResponse) {
+            $oTransaction = oxNew(Transaction::class);
+
+            if ($oTransaction->loadWithTransactionId($oNotificationResp->getTransactionId())) {
+                // if a transaction with this ID already exists, we do not need to handle it again
+                return;
+            }
+
             $this->_onNotificationSuccess($oNotificationResp, $oBackendService);
         } else {
             $this->_onNotificationError($oNotificationResp);
