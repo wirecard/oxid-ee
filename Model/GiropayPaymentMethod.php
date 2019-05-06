@@ -72,7 +72,7 @@ class GiropayPaymentMethod extends PaymentMethod
         $oSession = Registry::getConfig()->getSession();
         $aDynvalues = $oSession->getVariable('dynvalue');
 
-        $oBankAccount->setBic($aDynvalues['bic']);
+        $oBankAccount->setBic($aDynvalues['bic'] ?? '');
         $oTransaction->setBankAccount($oBankAccount);
 
         return $oTransaction;
