@@ -18,6 +18,7 @@ use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
+use Wirecard\Oxid\Model\GiropayPaymentMethod;
 
 /**
  * Class PaymentMethodFactory
@@ -57,6 +58,8 @@ class PaymentMethodFactory
                 return new SofortPaymentMethod();
             case RatepayInvoicePaymentMethod::getName(true);
                 return new RatepayInvoicePaymentMethod();
+            case GiropayPaymentMethod::getName(true):
+                return new GiropayPaymentMethod();
             default:
                 throw new StandardException("payment type not registered: $sPaymentMethodType");
         }
