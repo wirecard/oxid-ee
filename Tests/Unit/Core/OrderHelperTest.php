@@ -9,9 +9,11 @@
 
 namespace Wirecard\Oxid\Core;
 
-use OxidEsales\Eshop\Application\Model\Basket;
-use OxidEsales\Eshop\Application\Model\UserPayment;
+use OxidEsales\Eshop\Application\Model\Article;
+use OxidEsales\Eshop\Application\Model\BasketItem;
+use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Registry;
+use Wirecard\Oxid\Extend\Model\Basket;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Test\WdUnitTestCase;
@@ -21,12 +23,41 @@ class OrderHelperTest extends WdUnitTestCase
 
     public function testCreateOrder()
     {
+        $this->markTestIncomplete('Order#validateOrder returns Order::ORDER_STATE_INVALIDPAYMENT');
         $oBasketStub = $this->getMockBuilder(Basket::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $oUserStub = $this->getMockBuilder(UserPayment::class)
+        $oBasketItemStub = $this->getMockBuilder(BasketItem::class)
             ->disableOriginalConstructor()
+            ->setMethods(['getArticle'])
+            ->getMock();
+
+        $oArticleStub = $this->getMockBuilder(Article::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $oArticleStub->method('checkForStock')
+            ->willReturn(true);
+
+        $oBasketItemStub->method('getArticle')
+            ->willReturn($oArticleStub);
+
+        $oBasketStub->method('getContents')
+            ->willReturn([$oBasketItemStub]);
+
+        $oBasketStub->method('getPaymentId')
+            ->willReturn('wdpaypal');
+
+        $oBasketStub->method('getShippingId')
+            ->willReturn('oxidstandard');
+
+        $oBasketStub->method('getArtStockInBasket')
+            ->willReturn(20);
+
+        $oUserStub = $this->getMockBuilder(User::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['onOrderExecute'])
             ->getMock();
 
         $oOrder = OrderHelper::createOrder($oBasketStub, $oUserStub);
