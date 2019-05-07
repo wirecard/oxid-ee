@@ -106,6 +106,8 @@ class OrderHelper
      * @param Order               $oOrder
      * @param BackendService|null $oBackendService
      *
+     * @return string|null
+     *
      * @since 1.0.0
      *
      * @throws Exception
