@@ -17,7 +17,7 @@ use Wirecard\PaymentSdk\Entity\StatusCollection;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
-class TransactionHandlerTest extends \Wirecard\Test\WdUnitTestCase
+class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
 {
     /**
      * @var TransactionHandler

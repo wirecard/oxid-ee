@@ -9,7 +9,7 @@
 
 use Wirecard\Oxid\Controller\Admin\Transaction\TransactionTabPostProcessing;
 
-class TransactionTabPostProcessingTest extends \Wirecard\Test\WdUnitTestCase
+class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
 {
     /**
      * @var TransactionTabPostProcessing
