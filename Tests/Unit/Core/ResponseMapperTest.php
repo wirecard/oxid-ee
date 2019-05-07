@@ -99,4 +99,10 @@ class ResponseMapperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertArraySubset($aSubSet, $aResult);
 
     }
+
+    public function testGetCard()
+    {
+        $aResult = $this->_oResponseMapper->getCard();
+        $this->assertArrayHasKey('Masked Pan', $aResult);
+    }
 }
