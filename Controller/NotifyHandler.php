@@ -94,6 +94,8 @@ class NotifyHandler extends FrontendController
      * @param Response       $oNotificationResp
      * @param BackendService $oBackendService
      *
+     * @return null
+     *
      * @since 1.0.0
      */
     private function _handleNotificationResponse($oNotificationResp, $oBackendService)
