@@ -30,6 +30,8 @@
         <wdoxidee_httppass>qD2wzQ_hrc!8</wdoxidee_httppass>
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <wdoxidee_delete_canceled_order>0</wdoxidee_delete_canceled_order>
+        <wdoxidee_delete_failed_order>0</wdoxidee_delete_failed_order>
     </payment>
     <payment>
         <oxid>wdpaypal</oxid>
@@ -49,6 +51,8 @@
         <wdoxidee_basket>1</wdoxidee_basket>
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <wdoxidee_delete_canceled_order>0</wdoxidee_delete_canceled_order>
+        <wdoxidee_delete_failed_order>0</wdoxidee_delete_failed_order>
     </payment>
     <payment>
         <oxid>wdsepadd</oxid>
@@ -67,6 +71,8 @@
         <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <wdoxidee_delete_canceled_order>0</wdoxidee_delete_canceled_order>
+        <wdoxidee_delete_failed_order>0</wdoxidee_delete_failed_order>
         <wdoxidee_bic>0</wdoxidee_bic>
         <wdoxidee_creditorid>DE98ZZZ09999999999</wdoxidee_creditorid>
     </payment>
@@ -87,6 +93,8 @@
         <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <wdoxidee_delete_canceled_order>0</wdoxidee_delete_canceled_order>
+        <wdoxidee_delete_failed_order>0</wdoxidee_delete_failed_order>
         <wdoxidee_countrycode>en_gb</wdoxidee_countrycode>
         <wdoxidee_logovariant>standard</wdoxidee_logovariant>
     </payment>
@@ -111,7 +119,7 @@
     <payment>
         <oxid>wdgiropay</oxid>
         <oxactive>0</oxactive>
-        <oxtoamount>1000000</oxtoamount>
+        <oxtoamount>10000</oxtoamount>
         <oxdesc>Wirecard Giropay</oxdesc>
         <oxdesc_1>Wirecard Giropay</oxdesc_1>
         <wdoxidee_logo>giropay.png</wdoxidee_logo>
@@ -121,9 +129,9 @@
         <wdoxidee_secret>0c8c6f3a-1534-4fa1-99d9-d1c644d43709</wdoxidee_secret>
         <wdoxidee_httpuser>16390-testing</wdoxidee_httpuser>
         <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
-        <wdoxidee_basket>1</wdoxidee_basket>
-        <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <wdoxidee_delete_canceled_order>0</wdoxidee_delete_canceled_order>
+        <wdoxidee_delete_failed_order>0</wdoxidee_delete_failed_order>
     </payment>
 
     <!-- only visible for the merchant -->
