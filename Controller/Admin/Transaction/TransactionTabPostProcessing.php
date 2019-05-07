@@ -82,7 +82,7 @@ class TransactionTabPostProcessing extends Tab
      *
      * @since 1.0.1
      */
-    public function __construct($sTransactionId)
+    public function __construct($sTransactionId = null)
     {
         parent::__construct();
 
