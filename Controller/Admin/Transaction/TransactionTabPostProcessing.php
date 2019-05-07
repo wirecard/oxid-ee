@@ -80,13 +80,18 @@ class TransactionTabPostProcessing extends Tab
      *
      * @since 1.0.1
      */
-    public function __construct()
+    public function __construct($sTransactionId)
     {
         parent::__construct();
 
         $this->oTransaction = oxNew(Transaction::class);
 
         $this->_oLogger = Registry::getLogger();
+
+        // only used for testing purposes
+        if (!is_null($sTransactionId)) {
+            $this->oTransaction->loadWithTransactionId($sTransactionId);
+        }
 
         if ($this->_isListObjectIdSet()) {
             $this->oTransaction->load($this->sListObjectId);
