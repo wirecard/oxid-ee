@@ -193,14 +193,14 @@ class TransactionHandler
     {
         $sParentTransactionId = $oResponse->getParentTransactionId();
 
-        $oParentTansaction = oxNew(Transaction::class);
-        $oParentTansaction->loadWithTransactionId($sParentTransactionId);
+        $oParentTransaction = oxNew(Transaction::class);
+        $oParentTransaction->loadWithTransactionId($sParentTransactionId);
 
         $fRestAmount = $this->getTransactionMaxAmount($sParentTransactionId);
 
         if ($fRestAmount <= 0) {
-            $oParentTansaction->wdoxidee_ordertransactions__state = new Field(Transaction::STATE_CLOSED);
-            $oParentTansaction->save();
+            $oParentTransaction->wdoxidee_ordertransactions__state = new Field(Transaction::STATE_CLOSED);
+            $oParentTransaction->save();
         }
     }
 

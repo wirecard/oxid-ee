@@ -7,7 +7,15 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use PHPUnit\Framework\MockObject\MockObject;
+
+use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Core\TransactionHandler;
+use Wirecard\PaymentSdk\BackendService;
+use Wirecard\PaymentSdk\Entity\Status;
+use Wirecard\PaymentSdk\Entity\StatusCollection;
+use Wirecard\PaymentSdk\Response\FailureResponse;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 class TransactionHandlerTest extends \Wirecard\Test\WdUnitTestCase
 {
@@ -16,9 +24,18 @@ class TransactionHandlerTest extends \Wirecard\Test\WdUnitTestCase
      */
     private $_oTransactionHandler;
 
+    /**
+     * @var BackendService|MockObject
+     */
+    private $_oBackendServiceStub;
+
     protected function setUp()
     {
-        $this->_oTransactionHandler = oxNew(TransactionHandler::class);
+        $this->_oBackendServiceStub = $this->getMockBuilder(BackendService::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->_oTransactionHandler = new TransactionHandler($this->_oBackendServiceStub);
 
         parent::setUp();
     }
@@ -28,9 +45,9 @@ class TransactionHandlerTest extends \Wirecard\Test\WdUnitTestCase
         return [
             [
                 'table' => 'oxorder',
-                'columns' => ['oxid', 'oxordernr', 'wdoxidee_transactionid'],
+                'columns' => ['oxid', 'oxordernr', 'oxpaymenttype', 'wdoxidee_transactionid'],
                 'rows' => [
-                    ['oxid 1', 2, 'transaction 1'],
+                    ['oxid 1', 2, 'wdpaypal', 'transaction 1'],
                 ]
             ],
             [
@@ -46,9 +63,56 @@ class TransactionHandlerTest extends \Wirecard\Test\WdUnitTestCase
         ];
     }
 
-    public function testProcessAction()
+    protected function failOnLoggedExceptions()
     {
-        $this->assertTrue(true);
+        $this->exceptionLogHelper->clearExceptionLogFile();
+    }
+
+    /**
+     * @dataProvider testProcessActionProvider
+     */
+    public function testProcessAction($oResponseStub)
+    {
+        $this->_oBackendServiceStub->method('process')
+            ->willReturn($oResponseStub);
+
+        $this->_oBackendServiceStub->method('isFinal')
+            ->willReturn(false);
+
+        $oParentTransaction = oxNew(Transaction::class);
+        $oParentTransaction->loadWithTransactionId('transaction 1');
+
+        $oResponse = $this->_oTransactionHandler->processAction($oParentTransaction, 'capture', 20);
+
+        $this->assertArrayHasKey('status', $oResponse);
+
+        if ($oResponseStub instanceof FailureResponse) {
+            $this->assertArrayHasKey('message', $oResponse);
+        }
+    }
+
+    public function testProcessActionProvider()
+    {
+        $successXml = simplexml_load_string(file_get_contents(dirname(__FILE__) . '/../../resources/success_response_transaction_handler.xml'));
+        $oSuccessResponse = new SuccessResponse($successXml);
+
+        $oFailureResponseStub = $this->getMockBuilder(FailureResponse::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $statusCollection = new StatusCollection();
+        $statusCollection->add(new Status("123", "description", "minor"));
+
+        $oFailureResponseStub->method('getStatusCollection')
+            ->willReturn($statusCollection);
+
+        $oFailureResponseStub->method('getParentTransactionId')
+            ->willReturn('transaction1');
+
+        return [
+            'success response' => [$oSuccessResponse],
+            'failure response' => [$oFailureResponseStub],
+        ];
     }
 
     /**
