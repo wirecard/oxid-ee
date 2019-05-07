@@ -65,19 +65,20 @@ class OrderController extends OrderController_parent
     /**
      * Extends the parent init function and finalizes the order in case it was a Wirecard payment method
      *
+     * @return mixed
+     *
      * @since 1.0.0
      */
     public function init()
     {
         parent::init();
 
-        $oConfig = Registry::getConfig();
-        $sWdPaymentRedirect = $oConfig->getRequestParameter('wdpayment');
+        $sWdPaymentRedirect = Registry::getRequest()->getRequestParameter('wdpayment');
         $oSession = Registry::getSession();
         $sWdSessionToken = $oSession->getVariable('wdtoken');
 
         if (OrderHelper::isPaymentFinished($sWdSessionToken, $sWdPaymentRedirect)) {
-            $sShopBaseUrl = $oConfig->getShopUrl();
+            $sShopBaseUrl = Registry::getConfig()->getShopUrl();
             $sLanguageCode = Registry::getLang()->getBaseLanguage();
 
             $aParams = [
@@ -95,15 +96,17 @@ class OrderController extends OrderController_parent
                 'wdtoken' => $sWdSessionToken,
             ];
 
-            if ($oConfig->getRequestParameter('redirectFromForm')) {
+            if (Registry::getRequest()->getRequestParameter('redirectFromForm')) {
                 $oSession->setVariable(self::FORM_POST_VARIABLE, $_POST);
             }
 
             $sParamStr = http_build_query($aParams);
 
             $sNewUrl = $sShopBaseUrl . 'index.php?' . $sParamStr;
-            Registry::getUtils()->redirect($sNewUrl, false);
+            return Registry::getUtils()->redirect($sNewUrl, false);
         }
+
+        return true;
     }
 
     /**
