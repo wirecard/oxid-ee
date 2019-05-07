@@ -78,6 +78,8 @@ class TransactionTabPostProcessing extends Tab
     /**
      * TransactionTab constructor.
      *
+     * @param string $sTransactionId
+     *
      * @since 1.0.1
      */
     public function __construct($sTransactionId)
