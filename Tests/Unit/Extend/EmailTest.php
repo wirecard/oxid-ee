@@ -8,20 +8,53 @@
  *
  */
 
+use OxidEsales\Eshop\Application\Model\Article;
+use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Application\Model\UserPayment;
+use OxidEsales\Eshop\Core\Field;
+use PHPUnit\Framework\MockObject\MockObject;
 use Wirecard\Oxid\Extend\Core\Email;
+use Wirecard\Oxid\Extend\Model\Basket;
 
-class EmailTest  extends OxidEsales\TestingLibrary\UnitTestCase
+class EmailTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
+
+    /**
+     * @var Email|MockObject
+     */
+    private $_oEmail;
+
+    protected function setUp()
+    {
+        $this->_oEmail = oxNew(Email::class);
+
+        parent::setUp();
+    }
+
+    protected function failOnLoggedExceptions()
+    {
+        //don't fail on logged exception ->mail function cannot be instantiated
+        $this->exceptionLogHelper->clearExceptionLogFile();
+    }
+
     /**
      * @dataProvider testSendSupportEmailProvider
      */
     public function testSendSupportEmail($aEmailData)
     {
-        $oSmartyMock = $this->getMock("Smarty", array("fetch", "assign"));
-        $oSmartyMock->expects($this->any())->method("fetch")->will($this->returnValue(true));
+        $oSmartyMock = $this->getMockBuilder(Smarty::class)
+            ->setMethods(["fetch", "assign"])
+            ->getMock();
 
-        $oEmail = $this->getMock(Email::class, array("_sendMail", "_getSmarty", "send"));
-        $oEmail->expects($this->any())->method("_getSmarty")->will($this->returnValue($oSmartyMock));
+        $oSmartyMock->expects($this->any())
+            ->method("fetch")
+            ->willReturn(true);
+
+        $oEmail = $this->getMockBuilder(Email::class)
+            ->setMethods(["_sendMail", "_getSmarty", "send"])
+            ->getMock();
+        $oEmail->expects($this->any())->method("_getSmarty")
+            ->willReturn($oSmartyMock);
 
         $oEmail->sendSupportEmail($aEmailData);
 
@@ -34,7 +67,7 @@ class EmailTest  extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals($sSubject, $aEmailData['subject']);
         $this->assertEquals($sFrom, $aEmailData['from']);
 
-        if ($aEmailData['replyTo']){
+        if ($aEmailData['replyTo']) {
             $this->assertEquals($sReplyTo, $aEmailData['replyTo']);
         } else {
             $this->assertEquals($sReplyTo, $aEmailData['from']);
@@ -65,5 +98,113 @@ class EmailTest  extends OxidEsales\TestingLibrary\UnitTestCase
             'withoutReplyTo' => [$aEmailDataWithoutReplyTo],
             'complete' => [$aEmailDataComplete]
         ];
+    }
+
+    public function testSendOrderEmailToUser()
+    {
+        $oOrderStub = $this->getMockBuilder(Order::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isCustomPaymentMethod', 'getOrderUser', 'getBasket', 'getPayment', '__get'])
+            ->getMock();
+
+        $oOrderStub->method('__get')
+            ->willReturn(new Field("magic getter"));
+
+        $oOrderStub->method('isCustomPaymentMethod')
+            ->willReturn(true);
+
+        $oBasket = $this->getMockBuilder(Basket::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getBasketArticles'])
+            ->getMock();
+
+        $oOrderStub->method('getBasket')
+            ->willReturn($oBasket);
+
+        $oPaymentStub = $this->getMockBuilder(UserPayment::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $oPaymentStub->method('__get')
+            ->with('oxuserpayments__oxpaymentsid')
+            ->willReturn(new Field('oxempty'));
+
+        $oOrderStub->method('getPayment')
+            ->willReturn($oPaymentStub);
+
+        $oUserStub = $this->getMockBuilder(\OxidEsales\Eshop\Application\Model\User::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['__get'])
+            ->getMock();
+
+        $oUserStub->method('__get')
+            ->willReturn(new Field('User magic getter'));
+
+        $oOrderStub->method('getOrderUser')
+            ->willReturn($oUserStub);
+
+        $oArticleStub = $this->getMockBuilder(Article::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $oBasket->method('getBasketArticles')
+            ->willReturn([$oArticleStub]);
+
+        $sent = $this->_oEmail->sendOrderEmailToUser($oOrderStub, "my subject");
+
+        //email not send because of the test setup but finished without errors.
+        $this->assertFalse($sent);
+    }
+
+    public function testSendOrderEmailToOwner()
+    {
+        $oOrderStub = $this->getMockBuilder(Order::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['isCustomPaymentMethod', 'getOrderUser', 'getBasket', 'getPayment', '__get'])
+            ->getMock();
+
+        $oOrderStub->method('__get')
+            ->willReturn(new Field('Order magic getter'));
+
+        $oArticleStub = $this->getMockBuilder(Article::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $oBasket = $this->getMockBuilder(Basket::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getBasketArticles'])
+            ->getMock();
+
+        $oBasket->method('getBasketArticles')
+            ->willReturn([$oArticleStub]);
+
+        $oOrderStub->method('getBasket')
+            ->willReturn($oBasket);
+
+        $oPaymentStub = $this->getMockBuilder(UserPayment::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $oPaymentStub->method('__get')
+            ->with('oxuserpayments__oxpaymentsid')
+            ->willReturn(new Field('oxempty'));
+
+        $oOrderStub->method('getPayment')
+            ->willReturn($oPaymentStub);
+
+        $oUserStub = $this->getMockBuilder(\OxidEsales\Eshop\Application\Model\User::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['__get'])
+            ->getMock();
+
+        $oUserStub->method('__get')
+            ->willReturn(new Field('User magic getter'));
+
+        $oOrderStub->method('getOrderUser')
+            ->willReturn($oUserStub);
+
+        $sent = $this->_oEmail->sendOrderEmailToOwner($oOrderStub, "Subject");
+        //email not send because of the test setup but finished without errors.
+        $this->assertFalse($sent);
     }
 }
