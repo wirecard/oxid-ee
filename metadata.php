@@ -49,6 +49,8 @@ $aModule = array(
     'url'               => 'https://www.wirecard.com',
     'email'             => 'shop-systems-support@wirecard.com',
     'extend'            => array (
+        \OxidEsales\Eshop\Core\Language::class
+            => \Wirecard\Oxid\Extend\Language::class,
         \OxidEsales\Eshop\Core\ViewConfig::class
             => \Wirecard\Oxid\Extend\ViewConfig::class,
         \OxidEsales\Eshop\Application\Controller\Admin\OrderList::class
@@ -215,10 +217,10 @@ $aModule = array(
      * The settings below result in a set of auto-generated translatable keys. For the PhraseApp parsing script to pick
      * them up, we construct the list of keys below as a comment:
      *
-     * translate('SHOP_MODULE_blEmailOnPending')
-     * translate('SHOP_MODULE_GROUP_emails')
+     * translate('SHOP_MODULE_wd_email_on_pending_orders')
+     * translate('SHOP_MODULE_GROUP_wd_emails')
      */
     'settings' => array(
-        array('group' => 'emails', 'name' => 'blEmailOnPending', 'type' => 'bool', 'value' => 'false')
+        array('group' => 'wd_emails', 'name' => 'wd_email_on_pending_orders', 'type' => 'bool', 'value' => 'false')
     )
 );

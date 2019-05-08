@@ -160,36 +160,36 @@ abstract class PaymentMethod
             'apiUrl' => [
                 'type' => 'text',
                 'field' => 'oxpayments__wdoxidee_apiurl',
-                'title' => Helper::translate('config_base_url'),
-                'description' => Helper::translate('config_base_url_desc'),
+                'title' => Helper::translate('wd_config_base_url'),
+                'description' => Helper::translate('wd_config_base_url_desc'),
             ],
             'httpUser' => [
                 'type' => 'text',
                 'field' => 'oxpayments__wdoxidee_httpuser',
-                'title' => Helper::translate('config_http_user'),
+                'title' => Helper::translate('wd_config_http_user'),
             ],
             'httpPassword' => [
                 'type' => 'text',
                 'field' => 'oxpayments__wdoxidee_httppass',
-                'title' => Helper::translate('config_http_password'),
+                'title' => Helper::translate('wd_config_http_password'),
             ],
             'testCredentials' => [
                 'type' => 'button',
                 'onclick' => 'wdTestPaymentMethodCredentials()',
-                'text' => Helper::translate('test_credentials'),
+                'text' => Helper::translate('wd_test_credentials'),
                 'colspan' => '2',
             ],
             'maid' => [
                 'type' => 'text',
                 'field' => 'oxpayments__wdoxidee_maid',
-                'title' => Helper::translate('config_merchant_account_id'),
-                'description' => Helper::translate('config_three_d_merchant_account_id_desc'),
+                'title' => Helper::translate('wd_config_merchant_account_id'),
+                'description' => Helper::translate('wd_config_merchant_account_id_desc'),
             ],
             'secret' => [
                 'type' => 'text',
                 'field' => 'oxpayments__wdoxidee_secret',
-                'title' => Helper::translate('config_merchant_secret'),
-                'description' => Helper::translate('config_three_d_merchant_secret_desc'),
+                'title' => Helper::translate('wd_config_merchant_secret'),
+                'description' => Helper::translate('wd_config_merchant_secret_desc'),
             ],
         ];
     }

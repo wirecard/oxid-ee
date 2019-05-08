@@ -3,6 +3,7 @@ class TranslationBuilder
     @log = Logger.new(STDOUT, level: Env::DEBUG ? 'DEBUG' : 'INFO')
     @plugin_dir         = Const::PLUGIN_DIR
     @plugin_i18n_dirs   = Const::PLUGIN_I18N_DIRS
+    @locale_prefix      = Const::LOCALE_PREFIX
     @locale_file_header = Const::LOCALE_FILE_HEADER
   end
 
@@ -48,7 +49,18 @@ class TranslationBuilder
       keys += extract_keys_from_xml_file(file_path)
     end
 
-    keys.uniq
+    keys.uniq!
+    check_keys(keys)
+    keys
+  end
+
+  # Outputs a log warn for every incorrect named translation key
+  def check_keys(keys)
+    keys.each do |key|
+      if key.index(@locale_prefix) != 0
+        @log.warn("Key #{key} uses wrong prefix")
+      end
+    end
   end
 
   # Parses a PHP file and returns used keys based on a predefined regex match
@@ -72,15 +84,13 @@ class TranslationBuilder
   def extract_keys_from_xml_file(file_path)
     file_content = File.read(file_path, :encoding => 'utf-8')
     doc = Nokogiri::XML(file_content)
+    doc.xpath("//*[starts-with(@id, '#{@locale_prefix}')]").map { |node| node.attr('id') }
+  end
 
-    keys = []
-    doc.xpath("//*[@pg_translate='1']").each do |node|
-      if node.key?('id')
-        keys.push(node.attr('id'))
-      end
-    end
-
-    keys
+  # Parse the metadata.php file for keys, this keys must not be prefixed because of a special handling from oxid
+  def get_metadata_keys
+    metadata_keys = extract_keys_from_php_file(File.join(Dir.pwd, 'metadata.php'))
+    metadata_keys.uniq
   end
 
   # Returns an array of absolute paths to PHP files that should be parsed for keys
@@ -88,11 +98,12 @@ class TranslationBuilder
     ignored_dirs = [
       'vendor',
       'translations',
+      'metadata.php',
       File.join('views', 'admin'),
     ]
 
     Dir.glob(File.join(Dir.pwd, @plugin_dir, '**', '*.php')).reject do |path|
-      ignored_dirs.any? { |ignored| path =~ /\/#{ignored}\// }
+      ignored_dirs.any? { |ignored| path =~ /\/#{Regexp.escape(ignored)}/ }
     end
   end
 
@@ -108,6 +119,8 @@ class TranslationBuilder
 
   # Writes translations (key-value pairs) to the given file, using valid PHP array syntax
   def write_translations_to_php(translations, php_file)
+    metadata_keys = get_metadata_keys
+
     translations.each do |key, value|
       if value.is_a?(Hash)
         value = value.values[0]
@@ -115,8 +128,9 @@ class TranslationBuilder
 
       if value.nil? then value = '' end
 
+      prefix = metadata_keys.any? { |metadata_key| metadata_key == key } ? '' : @locale_prefix
       # strip whitespace and escape quotes
-      line = "    '#{key}' => '#{value.strip.gsub("'") { "\\'" }}',"
+      line = "    '#{prefix}#{key}' => '#{value.strip.gsub("'") { "\\'" }}',"
       php_file.puts(line)
     end
   end

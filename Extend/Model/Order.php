@@ -223,12 +223,12 @@ class Order extends Order_parent
     public static function getTranslatedStates()
     {
         return [
-            self::STATE_PENDING => Helper::translate('order_status_pending'),
-            self::STATE_AUTHORIZED => Helper::translate('order_status_authorized'),
-            self::STATE_PROCESSING => Helper::translate('order_status_purchased'),
-            self::STATE_CANCELED => Helper::translate('order_status_cancelled'),
-            self::STATE_REFUNDED => Helper::translate('order_status_refunded'),
-            self::STATE_FAILED => Helper::translate('order_status_failed'),
+            self::STATE_PENDING => Helper::translate('wd_order_status_pending'),
+            self::STATE_AUTHORIZED => Helper::translate('wd_order_status_authorized'),
+            self::STATE_PROCESSING => Helper::translate('wd_order_status_purchased'),
+            self::STATE_CANCELED => Helper::translate('wd_order_status_cancelled'),
+            self::STATE_REFUNDED => Helper::translate('wd_order_status_refunded'),
+            self::STATE_FAILED => Helper::translate('wd_order_status_failed'),
         ];
     }
 
@@ -425,7 +425,7 @@ class Order extends Order_parent
         $bRet = false;
 
         $oEmail = oxNew(Email::class);
-        $bSendPendingEmails = $this->getConfig()->getConfigParam('blEmailOnPending');
+        $bSendPendingEmails = $this->getConfig()->getConfigParam('wd_email_on_pending_orders');
 
         // Dont send pending emails if not enabled in module settings
         if ($this->isPaymentPending() && !$bSendPendingEmails) {
