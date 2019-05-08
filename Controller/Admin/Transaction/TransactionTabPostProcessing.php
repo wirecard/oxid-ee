@@ -320,7 +320,7 @@ class TransactionTabPostProcessing extends Tab
 
         $aPossibleOperations = $this->_filterPostProcessingActions($aPossibleOperations, $oPaymentMethod);
 
-        return $this->_getTranslatedPostProcessingActions($aPossibleOperations, $oPaymentMethod);
+        return $this->_getTranslatedPostProcessingActions($aPossibleOperations);
     }
 
     /**
@@ -336,7 +336,7 @@ class TransactionTabPostProcessing extends Tab
      */
     private function _filterPostProcessingActions($aPossibleOperations, $oPaymentMethod)
     {
-        return array_filter($aPossibleOperations, function ($sActionName) use ($oPaymentMethod) {
+        return array_filter($aPossibleOperations, function () use ($oPaymentMethod) {
             // currently there are no post-processing transactions for Sofort
             return $oPaymentMethod->getName() !== SofortTransaction::NAME;
         }, ARRAY_FILTER_USE_KEY);
@@ -345,14 +345,13 @@ class TransactionTabPostProcessing extends Tab
     /**
      * Applies the translate function to the supported post processing operations array.
      *
-     * @param array         $aSupportedOperations
-     * @param PaymentMethod $oPaymentMethod
+     * @param array $aSupportedOperations
      *
      * @return array
      *
      * @since 1.0.1
      */
-    private function _getTranslatedPostProcessingActions($aSupportedOperations, $oPaymentMethod)
+    private function _getTranslatedPostProcessingActions($aSupportedOperations)
     {
         $aTranslatedActions = [];
 

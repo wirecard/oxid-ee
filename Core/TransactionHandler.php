@@ -74,7 +74,6 @@ class TransactionHandler
     {
         $oPaymentMethod = $this->_getPaymentMethod($oParentTransaction);
         $oOrder = $oParentTransaction->getTransactionOrder();
-        $oConfig = $oPaymentMethod->getConfig($oOrder->getOrderPayment());
 
         $oTransaction = $oPaymentMethod->getTransaction();
 
