@@ -78,22 +78,15 @@ class TransactionTabPostProcessing extends Tab
     /**
      * TransactionTab constructor.
      *
-     * @param string $sTransactionId
-     *
      * @since 1.0.1
      */
-    public function __construct($sTransactionId = null)
+    public function __construct()
     {
         parent::__construct();
 
         $this->oTransaction = oxNew(Transaction::class);
 
         $this->_oLogger = Registry::getLogger();
-
-        // only used for testing purposes
-        if (!is_null($sTransactionId)) {
-            $this->oTransaction->loadWithTransactionId($sTransactionId);
-        }
 
         if ($this->_isListObjectIdSet()) {
             $this->oTransaction->load($this->sListObjectId);
@@ -116,6 +109,7 @@ class TransactionTabPostProcessing extends Tab
         }
         return $this->_oBackendService;
     }
+
     /**
      * Used in tests to mock the backend service
      *
@@ -128,6 +122,20 @@ class TransactionTabPostProcessing extends Tab
     public function setBackendService($oBackendService)
     {
         $this->_oBackendService = $oBackendService;
+    }
+
+    /**
+     * Used in tests to mock the transaction handler
+     *
+     * @internal
+     *
+     * @param TransactionHandler $oTransactionHandler
+     *
+     * @since 1.0.1
+     */
+    public function setTransactionHandler($oTransactionHandler)
+    {
+        $this->_oTransactionHandler = $oTransactionHandler;
     }
 
     /**
@@ -159,13 +167,13 @@ class TransactionTabPostProcessing extends Tab
                 $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId);
         }
 
-        $this->_aViewData += [
+        $this->setViewData($this->getViewData() + [
             'actions' => $this->_aPostProcessingActions,
             'requestParameters' => $aRequestParameters,
             'alert' => $this->_processRequest($aRequestParameters),
             'currency' => $this->oTransaction->wdoxidee_ordertransactions__currency->value,
-            'emptyText' => Helper::translate('wd_text_no_further_operations_possible')
-        ];
+            'emptyText' => Helper::translate('wd_text_no_further_operations_possible'),
+        ]);
 
         return $sTemplate;
     }
@@ -402,7 +410,6 @@ class TransactionTabPostProcessing extends Tab
         return $this->_oTransactionHandler;
     }
 
-
     /**
      * Returns the payment method config for the currently selected transaction or null if none is set.
      *
@@ -412,14 +419,16 @@ class TransactionTabPostProcessing extends Tab
      */
     private function _getPaymentMethodConfig()
     {
+        $oConfig = null;
+
         if (!is_null($this->oTransaction)) {
             $sPaymentId = $this->oTransaction->getPaymentType();
             $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
             $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
 
-            return $oPaymentMethod->getConfig($oPayment);
+            $oConfig = $oPaymentMethod->getConfig($oPayment);
         }
 
-        return null;
+        return $oConfig;
     }
 }
