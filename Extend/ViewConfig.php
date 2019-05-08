@@ -11,6 +11,7 @@
 namespace Wirecard\Oxid\Extend;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 
 /**
  * Extends the OXID ViewConfig
@@ -74,5 +75,54 @@ class ViewConfig extends ViewConfig_parent
     public function isThisModule($sModuleId)
     {
         return Helper::isThisModule($sModuleId);
+    }
+
+    /**
+     * Generates a mandate for SEPA transactions
+     *
+     * @return string
+     *
+     * @since 1.0.1
+     */
+    public function getMandate()
+    {
+        $iOrderNumber = Helper::getSessionChallenge();
+        return PaymentMethodHelper::getMandate($iOrderNumber)->mappedProperties()['mandate-id'];
+    }
+
+    /**
+     * Returns account holder for Sepa Direct Debit
+     *
+     * @return string
+     *
+     * @since 1.0.1
+     */
+    public function getAccountHolder()
+    {
+        return PaymentMethodHelper::getAccountHolder();
+    }
+
+    /**
+     * Returns IBAN
+     *
+     * @return string
+     *
+     * @since 1.0.1
+     */
+    public function getIban()
+    {
+        return PaymentMethodHelper::getIban();
+    }
+
+    /**
+     * Returns shop address
+     *
+     * @return string
+     *
+     * @since 1.0.1
+     */
+    public function getShopAddress()
+    {
+        return Helper::getShopAddress();
     }
 }

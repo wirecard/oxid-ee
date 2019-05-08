@@ -27,6 +27,7 @@ use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
 
 use Wirecard\PaymentSdk\BackendService;
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
@@ -39,6 +40,7 @@ use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
+use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\TransactionService;
 
 /**
@@ -181,6 +183,12 @@ class PaymentGateway extends BaseModel
             }
         }
 
+        if ($oTransaction instanceof SepaDirectDebitTransaction) {
+            $oAccountHolder = new AccountHolder();
+            $oAccountHolder->setLastName(PaymentMethodHelper::getAccountHolder());
+            $oTransaction->setAccountHolder($oAccountHolder);
+        }
+
         $this->_addCustomFields($oTransaction);
     }
 
@@ -294,7 +302,9 @@ class PaymentGateway extends BaseModel
 
         $oTransaction->setIpAddress($sRemoteAddress);
         $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
-        $oTransaction->setAccountHolder($oOrder->getAccountHolder());
+        if (!$oTransaction instanceof SepaDirectDebitTransaction) {
+            $oTransaction->setAccountHolder($oOrder->getAccountHolder());
+        }
         $oTransaction->setShipping($oOrder->getShippingAccountHolder());
 
         $oDevice = new Device($_SERVER['HTTP_USER_AGENT']);
@@ -348,7 +358,7 @@ class PaymentGateway extends BaseModel
         if ($oPaymentMethod instanceof PaypalPaymentMethod) {
             return !!$oPaymentMethod->getPayment()->oxpayments__wdoxidee_basket->value;
         }
-        
+
         return !!$oPaymentMethod->getPayment()->oxpayments__wdoxidee_additional_info->value;
     }
 }

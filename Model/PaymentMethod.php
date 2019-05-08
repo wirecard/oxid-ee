@@ -217,6 +217,18 @@ abstract class PaymentMethod
     }
 
     /**
+     * Returns an array of fields to be displayed in the checkout flow.
+     *
+     * @return array
+     *
+     * @since 1.0.1
+     */
+    public function getCheckoutFields()
+    {
+        return [];
+    }
+
+    /**
      * Returns array of setting names which should be part of output debug infos
      *
      * @return array

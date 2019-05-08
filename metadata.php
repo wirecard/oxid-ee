@@ -95,6 +95,8 @@ $aModule = [
             => \Wirecard\Oxid\Controller\Admin\Order\OrderTabTransactions::class,
         'wcpg_order_transaction_details'
             => \Wirecard\Oxid\Controller\Admin\Order\OrderTabTransactionDetails::class,
+        'wcpg_order_sepa_mandate'
+            => \Wirecard\Oxid\Controller\Admin\Order\OrderTabSepaMandate::class,
         'wcpg_notifyhandler'
             => \Wirecard\Oxid\Controller\NotifyHandler::class,
         'wcpg_form_interaction'
@@ -200,21 +202,33 @@ $aModule = [
             'block' => 'admin_module_config_form',
             'file' => 'views/admin/blocks/admin_module_config_form.tpl',
         ],
+        [
+            'template' => 'page/checkout/payment.tpl',
+            'block' => 'select_payment',
+            'file' => 'views/blocks/select_payment.tpl',
+        ],
+        [
+            'template' => 'page/checkout/order.tpl',
+            'block' => 'checkout_order_btn_confirm_bottom',
+            'file' => 'views/blocks/order_button.tpl',
+        ],
     ],
-    'templates' => [
+    'templates'         => [
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
         'transaction_list.tpl'              => 'wirecard/paymentgateway/views/admin/tpl/transaction_list.tpl',
         'tab_simple.tpl'                    => 'wirecard/paymentgateway/views/admin/tpl/tab_simple.tpl',
         'tab_table.tpl'                     => 'wirecard/paymentgateway/views/admin/tpl/tab_table.tpl',
         'tab_post_processing.tpl'           => 'wirecard/paymentgateway/views/admin/tpl/tab_post_processing.tpl',
+        'tab_sepa_mandate.tpl'              => 'wirecard/paymentgateway/views/admin/tpl/tab_sepa_mandate.tpl',
         'form_interaction.tpl'              => 'wirecard/paymentgateway/views/form_interaction.tpl',
         'module_support.tpl'                => 'wirecard/paymentgateway/views/admin/tpl/module_support.tpl',
         'module_support_email.tpl'          => 'wirecard/paymentgateway/views/admin/tpl/email/module_support_email.tpl',
         'live_chat.tpl'                     => 'wirecard/paymentgateway/views/admin/inc/live_chat.tpl',
+        'sepa_mandate_modal.tpl'            => 'wirecard/paymentgateway/views/blocks/sepa_mandate_modal.tpl',
     ],
-    'events' => [
-        'onActivate'        => '\Wirecard\Oxid\Core\OxidEeEvents::onActivate',
-        'onDeactivate'      => '\Wirecard\Oxid\Core\OxidEeEvents::onDeactivate',
+    'events'            => [
+        'onActivate'        => '\Wirecard\Oxid\Core\OxidEEEvents::onActivate',
+        'onDeactivate'      => '\Wirecard\Oxid\Core\OxidEEEvents::onDeactivate',
     ],
     /**
      * The settings below result in a set of auto-generated translatable keys. For the PhraseApp parsing script to pick

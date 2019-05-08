@@ -13,6 +13,7 @@
       <SUBMENU id="mxdisplayorders" cl="admin_order" list="order_list">
         <TAB id="wd_text_list" cl="wcpg_order_transactions"/>
         <TAB id="wd_transaction_details_title" cl="wcpg_order_transaction_details"/>
+        <TAB id="wd_sepa_mandate" cl="wcpg_order_sepa_mandate"/>
       </SUBMENU>
     </MAINMENU>
     <MAINMENU id="mxextensions">

@@ -101,6 +101,16 @@ class OrderController extends OrderController_parent
             $sNewUrl = $sShopBaseUrl . 'index.php?' . $sParamStr;
             Registry::getUtils()->redirect($sNewUrl, false);
         }
+
+        $oBasket = $oSession->getBasket();
+
+        if ($oBasket->getPaymentId() === 'wdsepadd') {
+            $sSepaMandate = PaymentMethodHelper::generateSepaMandate($oBasket);
+
+            Helper::addToViewData($this, [
+                'sepamandate' => $sSepaMandate,
+            ]);
+        }
     }
 
     /**
@@ -193,7 +203,7 @@ class OrderController extends OrderController_parent
         }
 
         if ($oBasket->getProductsCount()) {
-            $oOrder = OrderHelper::createOrder($oBasket, $oUser);
+            $oOrder = OrderHelper::createOrder($oBasket, $oUser, $this->getViewData()['sepamandate']);
 
             if (!$oOrder) {
                 $iSuccess = $oOrder->oxorder__wdoxidee_finalizeorderstate->value;

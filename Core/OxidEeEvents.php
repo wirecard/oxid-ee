@@ -191,6 +191,32 @@ class OxidEeEvents
         $sQueryAddLogoVariant = "ALTER TABLE " . self::PAYMENT_TABLE .
             " ADD COLUMN `WDOXIDEE_LOGOVARIANT` enum('standard', 'descriptive')";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_LOGOVARIANT', $sQueryAddLogoVariant);
+
+        self::_addSepaDDFields();
+    }
+
+    /**
+     * Adds Sepa Direct Debit related fields to payment table
+     *
+     * @since 1.0.1
+     */
+    private static function _addSepaDDFields()
+    {
+        $sQueryAddBic = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_BIC` tinyint(1) default 0 NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_BIC', $sQueryAddBic);
+
+        $sQueryAddCreditorId = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_CREDITORID` varchar(35) default '' NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_CREDITORID', $sQueryAddCreditorId);
+
+        $sQueryAddSepaMand = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_SEPAMANDATECUSTOM` text default '' NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_SEPAMANDATECUSTOM', $sQueryAddSepaMand);
+
+        $sQueryAddSepaMand_1 = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_SEPAMANDATECUSTOM_1` text default '' NOT NULL";
+        self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_SEPAMANDATECUSTOM_1', $sQueryAddSepaMand_1);
     }
 
     /**
@@ -230,6 +256,9 @@ class OxidEeEvents
 
         $sAddFinalizeOrder = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_FINALIZEORDERSTATE` int NOT NULL";
         self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_FINALIZEORDERSTATE', $sAddFinalizeOrder);
+
+        $sAddSepaMandate = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_SEPAMANDATE` text";
+        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_SEPAMANDATE', $sAddSepaMandate);
     }
 
     /**
@@ -307,7 +336,7 @@ class OxidEeEvents
          `WDOXIDEE_SECRET`, `WDOXIDEE_THREE_D_MAID`, `WDOXIDEE_THREE_D_SECRET`, `WDOXIDEE_NON_THREE_D_MAX_LIMIT`,
          `WDOXIDEE_THREE_D_MIN_LIMIT`, `WDOXIDEE_LIMITS_CURRENCY`, `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`,
          `WDOXIDEE_ISOURS`, `WDOXIDEE_BASKET`, `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`,
-         `WDOXIDEE_COUNTRYCODE`, `WDOXIDEE_LOGOVARIANT`) VALUES (
+         `WDOXIDEE_COUNTRYCODE`, `WDOXIDEE_LOGOVARIANT`, `WDOXIDEE_CREDITORID`) VALUES (
              '{$oPayment->oxid}',
              '{$oPayment->oxactive}',
              '{$oPayment->oxtoamount}',
@@ -331,7 +360,8 @@ class OxidEeEvents
              '{$oPayment->wdoxidee_descriptor}',
              '{$oPayment->wdoxidee_additional_info}',
              '{$oPayment->wdoxidee_countrycode}',
-             '{$oPayment->wdoxidee_logovariant}'
+             '{$oPayment->wdoxidee_logovariant}',
+             '{$oPayment->wdoxidee_creditorid}'
         );";
 
         // insert payment method

@@ -139,7 +139,7 @@ class SofortPaymentMethod extends PaymentMethod
                 'field'       => 'oxpayments__wdoxidee_countrycode',
                 'title'       => Helper::translate('wd_config_country_code'),
                 'description' => Helper::translate('wd_config_country_code_desc'),
-                'onchange'    => 'wdCheckCountryCode()',
+                'onchange'    => 'wdCheckCountryCode()'
             ],
             'logoType' => [
                 'type'        => 'select',

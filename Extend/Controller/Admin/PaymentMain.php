@@ -14,6 +14,8 @@ use OxidEsales\Eshop\Core\Registry;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
+use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
 
@@ -88,8 +90,68 @@ class PaymentMain extends PaymentMain_parent
         $sCountryCode = $aParams['oxpayments__wdoxidee_countrycode'];
         $bCountryCodeValid = $aParams['oxpayments__oxid'] !== SofortPaymentMethod::getName(true)
             || (preg_match('/^[a-z]{2}_[a-z]{2}$/', $sCountryCode) === 1);
+        $sCreditorId = $aParams['oxpayments__wdoxidee_creditorid'];
+        $bCreditorIdValid = $aParams['oxpayments__oxid'] !== SepaDirectDebitPaymentMethod::getName(true)
+            || $this->_creditorIdValidation($sCreditorId);
 
-        return $bCredentialsValid && $bCountryCodeValid;
+        return $bCredentialsValid && $bCountryCodeValid && $bCreditorIdValid;
+    }
+
+    /**
+     * Validates creditor id
+     *
+     * @param string $sCreditorId
+     *
+     * @return bool
+     *
+     * @since 1.0.1
+     */
+    private function _creditorIdValidation($sCreditorId)
+    {
+        $sCreditorId =  strtolower(str_replace(' ', '', $sCreditorId));
+        if (preg_match('/^[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{0,31}$/', $sCreditorId) !== 1 || strlen($sCreditorId) > 35) {
+            return false;
+        }
+
+        //remove the default creditor business code
+        $sCreditorId = str_replace('zzz', '', $sCreditorId);
+        $sConvertedCreditorId = $this->_convertCreditorId($sCreditorId);
+
+        $iModulo = bcmod($sConvertedCreditorId, '97');
+        $sChecksum = substr($sCreditorId, 2, 2);
+        if ($sChecksum < 10) { // removes 0 if number is <10 (09 => 9 ...)
+            $sChecksum = substr($sChecksum, 1);
+        }
+
+        return (98 - $iModulo) === (int) $sChecksum;
+    }
+
+    /**
+     * Converts creditor id
+     *
+     * @param string $sCreditorId
+     *
+     * @return string
+     *
+     * @since 1.0.1
+     */
+    private function _convertCreditorId($sCreditorId)
+    {
+        $aCharMapping = ['a'=>10,'b'=>11,'c'=>12,'d'=>13,'e'=>14,'f'=>15,'g'=>16,'h'=>17,'i'=>18,'j'=>19,'k'=>20,
+            'l'=>21,'m'=>22,'n'=>23,'o'=>24,'p'=>25,'q'=>26,'r'=>27,'s'=>28,'t'=>29,'u'=>30,'v'=>31,'w'=>32,
+            'x'=>33,'y'=>34,'z'=>35,];
+        $sFormattedCreditorId = substr($sCreditorId, 4) . substr($sCreditorId, 0, 2) . '00';
+        $aFormattedCreditorId = str_split($sFormattedCreditorId);
+        $sConvertedCreditorId = "";
+
+        foreach ($aFormattedCreditorId as $iIdx => $sValue) {
+            if (!is_numeric($sValue)) {
+                $aFormattedCreditorId[$iIdx] = $aCharMapping[$sValue];
+            }
+            $sConvertedCreditorId .= $aFormattedCreditorId[$iIdx];
+        }
+
+        return $sConvertedCreditorId;
     }
 
     /**

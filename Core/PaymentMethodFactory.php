@@ -14,6 +14,7 @@ use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
 use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
+use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 
 use OxidEsales\Eshop\Core\Exception\StandardException;
 
@@ -47,6 +48,8 @@ class PaymentMethodFactory
                 return new PaypalPaymentMethod();
             case CreditCardPaymentMethod::getName(true):
                 return new CreditCardPaymentMethod();
+            case SepaDirectDebitPaymentMethod::getName(true):
+                return new SepaDirectDebitPaymentMethod();
             case SofortPaymentMethod::getName(true):
                 return new SofortPaymentMethod();
             case SepaCreditTransferPaymentMethod::getName(true):
