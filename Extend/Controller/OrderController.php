@@ -27,6 +27,7 @@ use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\Operation;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 use Wirecard\PaymentSdk\TransactionService;
 
 /**
@@ -392,7 +393,7 @@ class OrderController extends OrderController_parent
             'requestData' => $this->_getCreditCardFormRequestData(),
         ];
 
-        Registry::getUtils()->showMessageAndExit(json_encode($aResponse));
+        return Registry::getUtils()->showMessageAndExit(json_encode($aResponse));
     }
 
     /**
@@ -400,9 +401,10 @@ class OrderController extends OrderController_parent
      *
      * @param Basket $oBasket
      *
-     * @return Transaction
+     * @return CreditCardTransaction
      *
      * @since 1.0.0
+     * @throws Exception
      */
     public function createCreditCardTransactionFromBasket($oBasket)
     {
