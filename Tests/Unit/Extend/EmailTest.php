@@ -13,7 +13,9 @@ use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\UserPayment;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
+
 use PHPUnit\Framework\MockObject\MockObject;
+
 use Wirecard\Oxid\Extend\Core\Email;
 use Wirecard\Oxid\Extend\Model\Basket;
 

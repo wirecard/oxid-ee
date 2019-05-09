@@ -8,6 +8,7 @@
  */
 
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
+
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
 class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase

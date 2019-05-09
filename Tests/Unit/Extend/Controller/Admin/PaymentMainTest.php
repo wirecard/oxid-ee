@@ -8,6 +8,7 @@
  */
 
 use Wirecard\Oxid\Extend\Controller\Admin\PaymentMain;
+
 use Wirecard\PaymentSdk\TransactionService;
 
 class PaymentMainTest extends \Wirecard\Test\WdUnitTestCase

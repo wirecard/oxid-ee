@@ -8,6 +8,7 @@
  */
 
 use OxidEsales\Eshop\Application\Model\OrderArticle;
+
 use Wirecard\Oxid\Extend\Model\Basket;
 
 class BasketTest extends \Wirecard\Test\WdUnitTestCase

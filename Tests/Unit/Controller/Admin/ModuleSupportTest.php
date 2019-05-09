@@ -8,6 +8,7 @@
  */
 
 use OxidEsales\Eshop\Core\Exception\StandardException;
+
 use Wirecard\Oxid\Controller\Admin\ModuleSupport;
 use Wirecard\Oxid\Core\Helper;
 

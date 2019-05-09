@@ -8,7 +8,9 @@
  */
 
 use OxidEsales\Eshop\Application\Model\Order;
+
 use Wirecard\Oxid\Core\ResponseHandler;
+
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 

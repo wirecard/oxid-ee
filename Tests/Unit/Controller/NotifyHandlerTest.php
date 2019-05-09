@@ -8,7 +8,9 @@
  */
 
 use PHPUnit\Framework\MockObject\MockObject;
+
 use Wirecard\Oxid\Controller\NotifyHandler;
+
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Entity\StatusCollection;

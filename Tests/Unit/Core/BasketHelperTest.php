@@ -15,6 +15,7 @@ use OxidEsales\Eshop\Core\Price;
 
 use Wirecard\Oxid\Core\BasketHelper;
 use Wirecard\Oxid\Core\Helper;
+
 use Wirecard\PaymentSdk\Entity\Basket as TransactionBasket;
 
 class BasketHelperTest extends OxidEsales\TestingLibrary\UnitTestCase

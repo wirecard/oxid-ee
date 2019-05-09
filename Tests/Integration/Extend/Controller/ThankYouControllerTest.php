@@ -8,7 +8,9 @@
  */
 
 use OxidEsales\Eshop\Core\Registry;
+
 use PHPUnit\Framework\MockObject\MockObject;
+
 use Wirecard\Oxid\Extend\Controller\ThankYouController;
 
 class ThankYouControllerTest extends \Wirecard\Test\WdUnitTestCase

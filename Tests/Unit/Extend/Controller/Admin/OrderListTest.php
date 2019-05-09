@@ -7,11 +7,13 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use Wirecard\Oxid\Extend\Controller\Admin\OrderList;
+
 class OrderListTest extends \OxidEsales\TestingLibrary\UnitTestCase
 {
     public function testRender()
     {
-        $oController = oxNew(\Wirecard\Oxid\Extend\Controller\Admin\OrderList::class);
+        $oController = oxNew(OrderList::class);
         $sTplFileName = $oController->render();
 
         $this->assertEquals('order_list.tpl', $sTplFileName);

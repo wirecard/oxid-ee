@@ -9,9 +9,14 @@
 
 namespace Wirecard\Oxid\Controller;
 
+use Exception;
+use InvalidArgumentException;
+
 use OxidEsales\Eshop\Application\Controller\FrontendController;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
+
+use Psr\Log\LoggerInterface;
 
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\ResponseHandler;
@@ -25,10 +30,6 @@ use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Exception\MalformedResponseException;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
-
-use Psr\Log\LoggerInterface;
-use InvalidArgumentException;
-use Exception;
 
 /**
  * Notify handler class.

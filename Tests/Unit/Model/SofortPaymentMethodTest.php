@@ -11,6 +11,7 @@ use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Field;
 
 use Wirecard\Oxid\Model\SofortPaymentMethod;
+
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 
 class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
@@ -29,7 +30,7 @@ class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetConfig()
     {
-        $oConfig = $this->oPaymentMethod->getConfig();
+        $oConfig = $this->_oPaymentMethod->getConfig();
 
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('sofortbanking'));
@@ -43,7 +44,7 @@ class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testIsMerchantOnly()
     {
-        $this->assertFalse($this->oPaymentMethod->isMerchantOnly());
+        $this->assertFalse($this->_oPaymentMethod->isMerchantOnly());
     }
 
     /**

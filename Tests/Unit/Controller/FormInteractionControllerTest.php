@@ -8,6 +8,7 @@
  */
 
 use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Controller\FormInteractionController;
 use Wirecard\Oxid\Model\FormInteractionResponseFields;
 

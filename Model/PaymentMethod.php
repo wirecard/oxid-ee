@@ -102,6 +102,8 @@ abstract class PaymentMethod
     /**
      * Get the payments method transaction configuration
      *
+     * @return \Wirecard\PaymentSdk\Transaction\Transaction
+     *
      * @since 1.0.0
      */
     abstract public function getTransaction();

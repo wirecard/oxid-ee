@@ -9,6 +9,7 @@
 
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Order;
+
 use Wirecard\Oxid\Extend\Model\PaymentGateway;
 
 class PaymentGatewayTest extends \Wirecard\Test\WdUnitTestCase

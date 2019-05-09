@@ -8,6 +8,7 @@
  */
 
 use OxidEsales\Eshop\Application\Model\Payment;
+
 use Wirecard\Oxid\Model\PaymentMethod;
 
 class PaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase

@@ -248,6 +248,8 @@ class PaymentMain extends PaymentMain_parent
      * @param Config $oConfig
      *
      * @return TransactionService
+     *
+     * @since 1.0.1
      */
     private function _getTransactionService($oConfig)
     {

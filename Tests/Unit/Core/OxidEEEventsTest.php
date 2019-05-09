@@ -10,6 +10,7 @@
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\DbMetaDataHandler;
+
 use Wirecard\Oxid\Core\OxidEEEvents;
 
 class OxidEEEventsTest extends OxidEsales\TestingLibrary\UnitTestCase

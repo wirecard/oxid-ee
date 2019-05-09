@@ -12,6 +12,7 @@ use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Price;
 use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Extend\Controller\OrderController;
 use Wirecard\Oxid\Extend\Model\Basket;
 
