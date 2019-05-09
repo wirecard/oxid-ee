@@ -8,7 +8,7 @@
  */
 
 use Wirecard\Oxid\Controller\Admin\Transaction\TransactionTabAccountHolder;
-use Wirecard\Oxid\Tests\Unit\Controller\Admin\Transaction\TransactionTestHelper;
+use Wirecard\Oxid\Tests\Unit\Controller\Admin\TestDataHelper;
 
 class TransactionTabAccountHolderTest extends Wirecard\Test\WdUnitTestCase
 {
@@ -19,7 +19,7 @@ class TransactionTabAccountHolderTest extends Wirecard\Test\WdUnitTestCase
 
     protected function dbData()
     {
-        return TransactionTestHelper::getDemoData();
+        return TestDataHelper::getDemoData();
     }
 
     public function testGetData()

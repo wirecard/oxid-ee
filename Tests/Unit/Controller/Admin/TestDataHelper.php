@@ -7,13 +7,13 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Tests\Unit\Controller\Admin\Transaction;
+namespace Wirecard\Oxid\Tests\Unit\Controller\Admin;
 
-class TransactionTestHelper
+class TestDataHelper
 {
     public static function getDemoData()
     {
-        $sEncodedXml = base64_encode(file_get_contents(dirname(__FILE__) . '/../../../../resources/success_response_transaction_handler.xml'));
+        $sEncodedXml = base64_encode(file_get_contents(dirname(__FILE__) . '/../../../resources/success_response_transaction_handler.xml'));
 
         return [
             [
