@@ -63,11 +63,11 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
     public function testSendSupportEmailActionWithParamsProvider()
     {
         return [
-            'correct params' => ['support text', 'from@email.com', 'reply@email.com', Helper::translate('support_send_error'), true],
-            'correct params without reply email' => ['support text', 'from@email.com', null, Helper::translate('support_send_error'), true],
-            'incorrect "from" email' => ['support text', 'from', 'reply@email.com', Helper::translate('enter_valid_email_error'), false],
-            'incorrect "reply to" email' => ['support text', 'from@email.com', 'reply', Helper::translate('enter_valid_email_error'), false],
-            'no body failure' => [null, 'from@email.com', 'reply@email.com', Helper::translate('message_empty_error'), false],
+            'correct params' => ['support text', 'from@email.com', 'reply@email.com', Helper::translate('wd_support_send_error'), true],
+            'correct params without reply email' => ['support text', 'from@email.com', null, Helper::translate('wd_support_send_error'), true],
+            'incorrect "from" email' => ['support text', 'from', 'reply@email.com', Helper::translate('wd_enter_valid_email_error'), false],
+            'incorrect "reply to" email' => ['support text', 'from@email.com', 'reply', Helper::translate('wd_enter_valid_email_error'), false],
+            'no body failure' => [null, 'from@email.com', 'reply@email.com', Helper::translate('wd_message_empty_error'), false],
         ];
     }
 }
