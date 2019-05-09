@@ -51,7 +51,7 @@ class ModuleSupport extends AdminController
         $sModuleId = $this->getEditObjectId();
         $sDefaultEmail = $this->getConfig()->getActiveShop()->oxshops__oxinfoemail->value;
 
-        $this->setViewData($this->getViewData() + [
+        Helper::addToViewData($this, [
             'oxid' => $sModuleId,
             'contactEmail' => $this->_getModule()->getInfo('email'),
             'defaultEmail' => $sDefaultEmail,
@@ -59,9 +59,9 @@ class ModuleSupport extends AdminController
         ]);
 
         if (empty($this->getViewData('fromEmail'))) {
-            $this->setViewData([
+            Helper::addToViewData($this, [
                 'fromEmail' => $sDefaultEmail,
-            ] + $this->getViewData());
+            ]);
         }
 
         return $this->_sThisTemplate;
@@ -79,10 +79,11 @@ class ModuleSupport extends AdminController
         try {
             $this->_validateRequest();
         } catch (Exception $oException) {
-            $this->setViewData($this->getViewData() + [
+            Helper::addToViewData($this, [
                 'alertMessage' => $oException->getMessage(),
                 'alertType' => 'error',
             ]);
+
             return;
         }
 
@@ -104,9 +105,9 @@ class ModuleSupport extends AdminController
     protected function _sendEmail($aEmailData)
     {
         $oEmail = oxNew(Email::class);
-
         $bEmailSent = $oEmail->sendSupportEmail($aEmailData);
-        $this->setViewData($this->getViewData() + [
+
+        Helper::addToViewData($this, [
             'alertMessage' => $bEmailSent ?
                 Helper::translate('wd_success_email') : Helper::translate('wd_support_send_error'),
             'alertType' => $bEmailSent ? 'success' : 'error',
@@ -204,11 +205,11 @@ class ModuleSupport extends AdminController
         $sFromEmail = $this->getConfig()->getRequestParameter('module_support_email_from');
         $sReplyToEmail = $this->getConfig()->getRequestParameter('module_support_email_reply');
 
-        $this->setViewData([
+        Helper::addToViewData($this, [
             'replyToEmail' => $sReplyToEmail,
             'fromEmail' => $sFromEmail,
             'body' => $sBody,
-        ], $this->getViewData());
+        ]);
 
         // there are two separate validation methods because $sFromEmail is mandatory and $sReplyToEmail
         // is optional - it only needs to be validated if it was set

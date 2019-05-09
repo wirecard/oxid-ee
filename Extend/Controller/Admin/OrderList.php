@@ -9,6 +9,8 @@
 
 namespace Wirecard\Oxid\Extend\Controller\Admin;
 
+use Wirecard\Oxid\Core\Helper;
+
 use OxidEsales\Eshop\Application\Model\Order;
 
 /**
@@ -30,7 +32,8 @@ class OrderList extends OrderList_parent
     public function render()
     {
         $oOrder = oxNew(Order::class);
-        $this->setViewData($this->getViewData() + [
+
+        Helper::addToViewData($this, [
             'orderStates' => $oOrder::getTranslatedStates(),
         ]);
 

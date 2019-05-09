@@ -76,9 +76,9 @@ class OrderTab extends Tab
     public function render()
     {
         if ($this->_isListObjectIdSet()) {
-            $this->setViewData([
+            Helper::addToViewData($this, [
                 'emptyText' => Helper::translate('wd_text_order_no_transactions'),
-            ] + $this->getViewData());
+            ]);
         }
 
         return parent::render();

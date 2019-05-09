@@ -13,6 +13,7 @@ use Wirecard\Oxid\Core\PaymentMethodHelper;
 
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Module\Module;
+use OxidEsales\EshopCommunity\Core\Controller\BaseController;
 
 class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
@@ -165,5 +166,66 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     {
         $this->assertTrue(Helper::isThisModule('wdoxidee'));
         $this->assertFalse(Helper::isThisModule('test'));
+    }
+
+    /**
+     * @dataProvider testAddToViewDataProvider
+     */
+    public function testAddToViewData($oldViewData, $array, $override, $newViewData)
+    {
+        $object = oxNew(BaseController::class);
+        $object->setViewData($oldViewData);
+
+        Helper::addToViewData($object, $array, $override);
+
+        $this->assertEquals($object->getViewData(), $newViewData);
+    }
+
+    public function testAddToViewDataProvider()
+    {
+        return [
+            'associative (override)' => [
+                [
+                    'foo' => 1,
+                ],
+                [
+                    'foo' => 10,
+                    'bar' => 20,
+                ],
+                true,
+                [
+                    'foo' => 10,
+                    'bar' => 20,
+                ],
+            ],
+            'associative (no override)' => [
+                [
+                    'foo' => 1,
+                ],
+                [
+                    'foo' => 10,
+                    'bar' => 20,
+                ],
+                false,
+                [
+                    'foo' => 1,
+                    'bar' => 20,
+                ],
+            ],
+            'numeric' => [
+                [1, 2, 3],
+                [10, 20],
+                true,
+                [1, 2, 3, 10, 20],
+            ],
+        ];
+    }
+
+    /**
+     * @expectedException OxidEsales\Eshop\Core\Exception\StandardException
+     */
+    public function testAddToViewDataThrowsExceptionForInvalidObjects()
+    {
+        Helper::addToViewData(new DateTime(), []);
     }
 }

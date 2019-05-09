@@ -57,7 +57,7 @@ class Tab extends AdminDetailsController
      */
     public function render()
     {
-        $this->setViewData($this->getViewData() + [
+        Helper::addToViewData($this, [
             'data' => $this->_isListObjectIdSet() ? $this->_getData() : [],
             'emptyText' => $this->_isListObjectIdSet() ? Helper::translate('wd_text_no_data_available') : null,
             'controller' => $this->classKey,

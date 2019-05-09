@@ -168,13 +168,13 @@ class TransactionTabPostProcessing extends Tab
                 $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId);
         }
 
-        $this->setViewData([
+        Helper::addToViewData($this, [
             'actions' => $this->_aPostProcessingActions,
             'requestParameters' => $aRequestParameters,
             'alert' => $this->_processRequest($aRequestParameters),
             'currency' => $this->oTransaction->wdoxidee_ordertransactions__currency->value,
             'emptyText' => Helper::translate('wd_text_no_further_operations_possible'),
-        ] + $this->getViewData());
+        ]);
 
         return $sTemplate;
     }
