@@ -25,6 +25,12 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
         parent::setUp();
     }
 
+    protected function failOnLoggedExceptions()
+    {
+        // don't fail on logged exception -> mailer is not instantiated
+        $this->exceptionLogHelper->clearExceptionLogFile();
+    }
+
     public function testRender()
     {
         $this->_moduleSupport->render();
@@ -44,7 +50,7 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
     /**
      * @dataProvider testSendSupportEmailActionWithParamsProvider
      */
-    public function testSendSupportEmailActionWithParams($sText, $sFromEmail, $sReplyEmail, $sErrorText, $bHandleException)
+    public function testSendSupportEmailActionWithParams($sText, $sFromEmail, $sReplyEmail, $sErrorText)
     {
         $this->_moduleSupport->setEditObjectId(Helper::MODULE_ID);
         $_POST['module_support_text'] = $sText;
@@ -53,21 +59,17 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
 
         $this->_moduleSupport->sendSupportEmailAction();
 
-        if ($bHandleException) {
-            $this->assertLoggedException(StandardException::class, "Could not instantiate mail function.");
-        }
-
         $this->assertEquals($sErrorText, $this->_moduleSupport->getViewData()['alertMessage']);
     }
 
     public function testSendSupportEmailActionWithParamsProvider()
     {
         return [
-            'correct params' => ['support text', 'from@email.com', 'reply@email.com', Helper::translate('wd_support_send_error'), true],
-            'correct params without reply email' => ['support text', 'from@email.com', null, Helper::translate('wd_support_send_error'), true],
-            'incorrect "from" email' => ['support text', 'from', 'reply@email.com', Helper::translate('wd_enter_valid_email_error'), false],
-            'incorrect "reply to" email' => ['support text', 'from@email.com', 'reply', Helper::translate('wd_enter_valid_email_error'), false],
-            'no body failure' => [null, 'from@email.com', 'reply@email.com', Helper::translate('wd_message_empty_error'), false],
+            'correct params' => ['support text', 'from@email.com', 'reply@email.com', Helper::translate('wd_support_send_error')],
+            'correct params without reply email' => ['support text', 'from@email.com', null, Helper::translate('wd_support_send_error')],
+            'incorrect "from" email' => ['support text', 'from', 'reply@email.com', Helper::translate('wd_enter_valid_email_error')],
+            'incorrect "reply to" email' => ['support text', 'from@email.com', 'reply', Helper::translate('wd_enter_valid_email_error')],
+            'no body failure' => [null, 'from@email.com', 'reply@email.com', Helper::translate('wd_message_empty_error')],
         ];
     }
 }
