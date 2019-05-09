@@ -54,12 +54,14 @@ class TransactionList extends AdminListController
      */
     public function render()
     {
+        $sTemplate = parent::render();
+
         Helper::addToViewData($this, [
             'payments' => PaymentMethodHelper::getModulePayments(),
             'states' => Transaction::getStates(),
         ]);
 
-        return parent::render();
+        return $sTemplate;
     }
 
     /**
