@@ -133,7 +133,7 @@ class TransactionHandler
         if (!$oOrder->loadWithTransactionId($sRootTransactionId)) {
             $sErrorMessage = 'No order found for transactionId: ' . $oResponse->getParentTransactionId();
             $this->_oLogger->error($sErrorMessage);
-            return $this->_getErrorMessage(Helper::translate('text_generic_error') . '<br>' . $sErrorMessage);
+            return $this->_getErrorMessage(Helper::translate('wd_text_generic_error') . '<br>' . $sErrorMessage);
         }
 
         // the reponse handler creates the transaction entry in the database
@@ -156,7 +156,7 @@ class TransactionHandler
     private function _onActionFailure($oResponse)
     {
         $sErrorDescription = $this->_getErrorString($oResponse);
-        return $this->_getErrorMessage(Helper::translate('text_generic_error') . '<br>' . $sErrorDescription);
+        return $this->_getErrorMessage(Helper::translate('wd_text_generic_error') . '<br>' . $sErrorDescription);
     }
 
     /**
