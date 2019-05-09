@@ -7,15 +7,15 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use Wirecard\Oxid\Model\TransactionList;
+use OxidEsales\Eshop\Application\Model\Country;
+use OxidEsales\Eshop\Application\Model\Order;
+
 use Wirecard\Oxid\Extend\Model\Order as WdOrder;
 use Wirecard\Oxid\Extend\Model\Payment;
+use Wirecard\Oxid\Model\TransactionList;
 
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
-
-use OxidEsales\Eshop\Application\Model\Country;
-use OxidEsales\Eshop\Application\Model\Order;
 
 class OrderTest extends Wirecard\Test\WdUnitTestCase
 {
@@ -52,19 +52,31 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
                 ],
             ],
             [
-               'table' => 'oxpayments',
-               'columns' => [
-                   'oxid',
-                   'wdoxidee_isours',
-                   'wdoxidee_delete_canceled_order',
-                   'wdoxidee_delete_failed_order',
-               ],
-               'rows' => [
-                   ['oxidinvoice', false, false, false],
-                   ['wdpaypal', true, true, false],
-                   ['wdcreditcard', true, true, true],
-               ],
-           ]
+                'table' => 'oxpayments',
+                'columns' => [
+                    'oxid',
+                    'wdoxidee_isours',
+                    'wdoxidee_delete_canceled_order',
+                    'wdoxidee_delete_failed_order',
+                ],
+                'rows' => [
+                    ['oxidinvoice', false, false, false],
+                    ['wdpaypal', true, true, false],
+                    ['wdcreditcard', true, true, true],
+                ],
+            ],
+            [
+                'table' => 'oxorderarticles',
+                'columns' => [
+                    'oxid',
+                    'oxorderid',
+                    'oxartid',
+                ],
+                'rows' => [
+                    ['oxid1', '1', 'article id 1'],
+                    ['oxid2', '1', 'article id 2'],
+                ]
+            ],
         ];
     }
 
@@ -261,6 +273,29 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
             'order to delete on canceled but not on failed: failed' => ['1', WdOrder::STATE_FAILED, false],
             'order to delete on both canceled and failed: canceled' => ['3', WdOrder::STATE_CANCELLED, true],
             'order to delete on both canceled and failed: failed' => ['3', WdOrder::STATE_FAILED, true],
+        ];
+    }
+
+    /**
+     * @dataProvider testIsLastArticleProvider
+     */
+    public function testIsLastArticle($sArticleId, $bExpected)
+    {
+        $oOrder = oxNew(Order::class);
+        $oOrder->load('1');
+
+        $oOrderArticle = oxNew(\OxidEsales\Eshop\Application\Model\OrderArticle::class);
+        $oOrderArticle->load($sArticleId);
+
+        $isLastArticle = $oOrder->isLastArticle($oOrderArticle);
+        $this->assertEquals($bExpected, $isLastArticle);
+    }
+
+    public function testIsLastArticleProvider()
+    {
+        return [
+            'correct last article' => ['oxid2', true],
+            'not last article' => ['oxid1', false],
         ];
     }
 }

@@ -7,16 +7,20 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use OxidEsales\Eshop\Core\Exception\StandardException;
+use Wirecard\Oxid\Controller\Admin\ModuleSupport;
+use Wirecard\Oxid\Core\Helper;
+
 class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
 {
     /**
-     * @var \Wirecard\Oxid\Controller\Admin\ModuleSupport
+     * @var ModuleSupport
      */
     private $_moduleSupport;
 
     protected function setUp()
     {
-        $this->_moduleSupport = oxNew(\Wirecard\Oxid\Controller\Admin\ModuleSupport::class);
+        $this->_moduleSupport = oxNew(ModuleSupport::class);
         parent::setUp();
     }
 
@@ -36,15 +40,33 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
         $this->assertArrayHasKey('alertType', $this->_moduleSupport->getViewData());
     }
 
-    public function testSendSupportEmailActionWithCorrectParams()
+    /**
+     * @dataProvider testSendSupportEmailActionWithParamsProvider
+     */
+    public function testSendSupportEmailActionWithParams($sText, $sFromEmail, $sReplyEmail, $sErrorText, $bHandleException)
     {
-        $this->markTestIncomplete(
-            '$this->getConfig()->getRequestParameter(\'module_support_text\') not working correctly'
-        );
-        $_POST['module_support_text'] = 'support text';
-        $_POST['module_suppot_email_from'] = 'from@email.com';
-        $_POST['module_support_email_reply'] = 'reply@emil.com';
+        $this->_moduleSupport->setEditObjectId(Helper::MODULE_ID);
+        $_POST['module_support_text'] = $sText;
+        $_POST['module_support_email_from'] = $sFromEmail;
+        $_POST['module_support_email_reply'] = $sReplyEmail;
 
         $this->_moduleSupport->sendSupportEmailAction();
+
+        if ($bHandleException) {
+            $this->assertLoggedException(StandardException::class, "Could not instantiate mail function.");
+        }
+
+        $this->assertEquals($sErrorText, $this->_moduleSupport->getViewData()['alertMessage']);
+    }
+
+    public function testSendSupportEmailActionWithParamsProvider()
+    {
+        return [
+            'correct params' => ['support text', 'from@email.com', 'reply@email.com', Helper::translate('support_send_error'), true],
+            'correct params without reply email' => ['support text', 'from@email.com', null, Helper::translate('support_send_error'), true],
+            'incorrect "from" email' => ['support text', 'from', 'reply@email.com', Helper::translate('enter_valid_email_error'), false],
+            'incorrect "reply to" email' => ['support text', 'from@email.com', 'reply', Helper::translate('enter_valid_email_error'), false],
+            'no body failure' => [null, 'from@email.com', 'reply@email.com', Helper::translate('message_empty_error'), false],
+        ];
     }
 }

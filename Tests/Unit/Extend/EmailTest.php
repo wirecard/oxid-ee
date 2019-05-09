@@ -11,6 +11,7 @@
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\UserPayment;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Field;
 use PHPUnit\Framework\MockObject\MockObject;
 use Wirecard\Oxid\Extend\Core\Email;
@@ -29,12 +30,6 @@ class EmailTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->_oEmail = oxNew(Email::class);
 
         parent::setUp();
-    }
-
-    protected function failOnLoggedExceptions()
-    {
-        //don't fail on logged exception ->mail function cannot be instantiated
-        $this->exceptionLogHelper->clearExceptionLogFile();
     }
 
     /**
@@ -108,7 +103,12 @@ class EmailTest extends OxidEsales\TestingLibrary\UnitTestCase
             ->getMock();
 
         $oOrderStub->method('__get')
-            ->willReturn(new Field("magic getter"));
+            ->will(
+                $this->returnCallback(
+                    function ($sA) {
+                        return new Field($sA);
+                    })
+            );
 
         $oOrderStub->method('isCustomPaymentMethod')
             ->willReturn(true);
@@ -138,7 +138,12 @@ class EmailTest extends OxidEsales\TestingLibrary\UnitTestCase
             ->getMock();
 
         $oUserStub->method('__get')
-            ->willReturn(new Field('User magic getter'));
+            ->will(
+                $this->returnCallback(
+                    function ($sA) {
+                        return new Field($sA);
+                    })
+            );
 
         $oOrderStub->method('getOrderUser')
             ->willReturn($oUserStub);
@@ -164,7 +169,12 @@ class EmailTest extends OxidEsales\TestingLibrary\UnitTestCase
             ->getMock();
 
         $oOrderStub->method('__get')
-            ->willReturn(new Field('Order magic getter'));
+            ->will(
+                $this->returnCallback(
+                    function ($sA) {
+                        return new Field($sA);
+                    })
+            );
 
         $oArticleStub = $this->getMockBuilder(Article::class)
             ->disableOriginalConstructor()
@@ -198,7 +208,12 @@ class EmailTest extends OxidEsales\TestingLibrary\UnitTestCase
             ->getMock();
 
         $oUserStub->method('__get')
-            ->willReturn(new Field('User magic getter'));
+            ->will(
+                $this->returnCallback(
+                    function ($sA) {
+                        return new Field($sA);
+                    })
+            );
 
         $oOrderStub->method('getOrderUser')
             ->willReturn($oUserStub);
@@ -206,5 +221,6 @@ class EmailTest extends OxidEsales\TestingLibrary\UnitTestCase
         $sent = $this->_oEmail->sendOrderEmailToOwner($oOrderStub, "Subject");
         //email not send because of the test setup but finished without errors.
         $this->assertFalse($sent);
+        $this->assertLoggedException(StandardException::class, 'Could not instantiate mail function.');
     }
 }
