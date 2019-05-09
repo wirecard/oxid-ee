@@ -181,7 +181,7 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'type' => 'link',
                 'title' => Helper::translate('wd_more_info'),
                 'link' => 'https://github.com/wirecard/oxid-ee/wiki/Credit-Card#non-3-d-secure-and-3-d-secure-limits',
-                'text' => Helper::translate('wd_three_d_link_text')
+                'text' => Helper::translate('wd_three_d_link_text'),
             ],
             'descriptor' => [
                 'type'        => 'select',
