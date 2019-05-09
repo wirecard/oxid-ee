@@ -23,7 +23,7 @@ use Wirecard\Oxid\Model\Transaction;
  */
 class OxidEeEvents
 {
-    const OBJECTPAYMENT_TABLE = "oxobject2payment";
+    const OBJECT_PAYMENT_TABLE = "oxobject2payment";
     const ORDER_TABLE = "oxorder";
     const PAYMENT_TABLE = "oxpayments";
     const TRANSACTION_TABLE = "wdoxidee_ordertransactions";
@@ -339,9 +339,9 @@ class OxidEeEvents
 
         // insert payment method configuration (necessary for making the payment visible in the checkout page)
         self::_insertRowIfNotExists(
-            self::OBJECTPAYMENT_TABLE,
+            self::OBJECT_PAYMENT_TABLE,
             ['OXPAYMENTID' => $oPayment->oxid],
-            "INSERT INTO " . self::OBJECTPAYMENT_TABLE . " (`OXID`, `OXPAYMENTID`, `OXOBJECTID`, `OXTYPE`) VALUES (
+            "INSERT INTO " . self::OBJECT_PAYMENT_TABLE . " (`OXID`, `OXPAYMENTID`, `OXOBJECTID`, `OXTYPE`) VALUES (
                 '{$sRandomOxidId}',
                 '{$oPayment->oxid}',
                 'oxidstandard',

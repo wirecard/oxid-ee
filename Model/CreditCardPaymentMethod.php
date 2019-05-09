@@ -145,7 +145,6 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     public function getConfigFields()
     {
-        $aParentConfigFields = parent::getConfigFields();
         $aAdditionalFields = [
             'threeDMaid' => [
                 'type' => 'text',
@@ -232,7 +231,7 @@ class CreditCardPaymentMethod extends PaymentMethod
             ],
         ];
 
-        return array_merge($aParentConfigFields, $aAdditionalFields);
+        return parent::getConfigFields() + $aAdditionalFields;
     }
 
     /**

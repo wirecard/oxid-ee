@@ -136,7 +136,7 @@ class PaypalPaymentMethod extends PaymentMethod
             ],
         ];
 
-        return array_merge(parent::getConfigFields(), $aAdditionalFields);
+        return parent::getConfigFields() + $aAdditionalFields;
     }
 
     /**
