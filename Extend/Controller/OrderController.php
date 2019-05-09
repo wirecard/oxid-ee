@@ -369,6 +369,24 @@ class OrderController extends OrderController_parent
     }
 
     /**
+     * Makes the request data for rendering the seamless credit card form accessible via an AJAX call.
+     *
+     * @return null
+     *
+     * @throws Exception
+     *
+     * @since 1.0.0
+     */
+    public function getCreditCardFormRequestDataAjax()
+    {
+        $aResponse = [
+            'requestData' => $this->_getCreditCardFormRequestData(),
+        ];
+
+        return Registry::getUtils()->showMessageAndExit(json_encode($aResponse));
+    }
+
+    /**
      * Returns the URL for loading the payment page script
      *
      * @return string
@@ -380,20 +398,6 @@ class OrderController extends OrderController_parent
         $oPayment = $this->getPayment();
 
         return $oPayment->oxpayments__wdoxidee_apiurl . '/engine/hpp/paymentPageLoader.js';
-    }
-
-    /**
-     * Makes the request data for rendering the seamless credit card form accessible via an AJAX call.
-     *
-     * @since 1.0.0
-     */
-    public function getCreditCardFormRequestDataAjax()
-    {
-        $aResponse = [
-            'requestData' => $this->_getCreditCardFormRequestData(),
-        ];
-
-        return Registry::getUtils()->showMessageAndExit(json_encode($aResponse));
     }
 
     /**
