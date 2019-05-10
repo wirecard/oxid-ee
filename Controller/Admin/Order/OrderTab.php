@@ -85,4 +85,16 @@ class OrderTab extends Tab
 
         return $sTemplate;
     }
+
+    /**
+     * Returns true if the payment is one of the module's.
+     *
+     * @return bool
+     *
+     * @since 1.0.1
+     */
+    public function isCustomPaymentMethod()
+    {
+        return $this->oOrder->isCustomPaymentMethod();
+    }
 }

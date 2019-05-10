@@ -71,6 +71,10 @@
     <em>[{$emptyText}]</em>
 [{/if}]
 
+[{if $oView->isCustomPaymentMethod()}]
+  [{include file="live_chat.tpl"}]
+[{/if}]
+
 [{include file="bottomnaviitem.tpl"}]
 
 [{include file="bottomitem.tpl"}]
