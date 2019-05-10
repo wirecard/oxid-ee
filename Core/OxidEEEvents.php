@@ -265,19 +265,6 @@ class OxidEEEvents
     }
 
     /**
-     * Delete the module's order transaction table
-     * ONLY FOR DEVELOPMENT PURPOSES, NOT TO BE USED IN PRODUCTION!
-     *
-     * @since 1.0.0
-     */
-    private static function _deleteOrderTransactionTable()
-    {
-        $sQuery = "DROP TABLE IF EXISTS " . self::TRANSACTION_TABLE;
-
-        self::$oDb->Execute($sQuery);
-    }
-
-    /**
      * Add Wirecard's payment methods defined in payments.xml
      *
      * @return undefined
@@ -407,13 +394,6 @@ class OxidEEEvents
     public static function onDeactivate()
     {
         self::$oDb = DatabaseProvider::getDb();
-        // read the OXID_ENVIRONMENT variable from the .env and docker-compose files
-        $environmentVar = getenv('OXID_ENVIRONMENT');
-
-        // if development, delete the database tables on module de-activation
-        if ($environmentVar === 'development') {
-            self::_deleteOrderTransactionTable();
-        }
 
         self::_disablePaymentTypes();
     }
