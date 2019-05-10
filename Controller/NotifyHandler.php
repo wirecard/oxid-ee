@@ -208,10 +208,9 @@ class NotifyHandler extends FrontendController
             $this->_oLogger->error("\t$sSeverity with code $sCode and message '$sDescription' occurred.");
         }
 
-        // FIXME Failure response does not have a parent transaction id
-//        $oOrder = oxNew(Order::class);
-//        $oOrder->loadWithTransactionId($oResponse->getParentTransactionId());
-//        $oOrder->handleOrderState(Order::STATE_FAILED);
+        $oOrder = oxNew(Order::class);
+        $oOrder->loadWithTransactionId($oResponse->getParentTransactionId());
+        $oOrder->handleOrderState(Order::STATE_FAILED);
     }
 
     /**

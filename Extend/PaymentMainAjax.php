@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Extend;
 
 use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
 

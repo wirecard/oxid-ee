@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Extend\Controller;
 
 use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Extend\Model\Order;
 
 /**

@@ -12,6 +12,7 @@ namespace Wirecard\Oxid\Extend\Model;
 use OxidEsales\Eshop\Application\Model\BasketItem;
 
 use Wirecard\Oxid\Core\BasketHelper;
+
 use Wirecard\PaymentSdk\Entity\Basket as TransactionBasket;
 
 /**
