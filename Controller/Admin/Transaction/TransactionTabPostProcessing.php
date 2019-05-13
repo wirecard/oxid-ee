@@ -167,13 +167,13 @@ class TransactionTabPostProcessing extends Tab
                 $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId);
         }
 
-        $this->setViewData($this->getViewData() + [
+        $this->setViewData([
             'actions' => $this->_aPostProcessingActions,
             'requestParameters' => $aRequestParameters,
             'alert' => $this->_processRequest($aRequestParameters),
             'currency' => $this->oTransaction->wdoxidee_ordertransactions__currency->value,
             'emptyText' => Helper::translate('wd_text_no_further_operations_possible'),
-        ]);
+        ] + $this->getViewData());
 
         return $sTemplate;
     }
@@ -336,10 +336,12 @@ class TransactionTabPostProcessing extends Tab
      */
     private function _filterPostProcessingActions($aPossibleOperations, $oPaymentMethod)
     {
-        return array_filter($aPossibleOperations, function () use ($oPaymentMethod) {
-            // currently there are no post-processing transactions for Sofort
-            return $oPaymentMethod->getName() !== SofortTransaction::NAME;
-        }, ARRAY_FILTER_USE_KEY);
+        // currently there are no post-processing transactions for Sofort
+        if ($oPaymentMethod->getName() === SofortTransaction::NAME) {
+            return [];
+        }
+
+        return $aPossibleOperations;
     }
 
     /**
