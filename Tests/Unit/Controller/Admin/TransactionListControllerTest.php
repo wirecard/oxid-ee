@@ -32,7 +32,6 @@ class TransactionListControllerTest extends Wirecard\Test\WdUnitTestCase
 
         $this->assertGreaterThan(0, count($aViewData));
         $this->assertArrayHasKey('payments', $aViewData);
-        $this->assertArrayHasKey('actions', $aViewData);
         $this->assertArrayHasKey('states', $aViewData);
     }
 }

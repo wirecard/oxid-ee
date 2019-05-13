@@ -55,7 +55,6 @@ class TransactionList extends AdminListController
     {
         $this->setViewData($this->getViewData() + [
             'payments' => PaymentMethodHelper::getModulePayments(),
-            'actions' => Transaction::getActions(),
             'states' => Transaction::getStates(),
         ]);
 
