@@ -131,7 +131,6 @@ class ResponseHandler
             'date' => $sConvertedTimestamp,
         ];
 
-        // TODO enable once highlighting manipulated transactions (WDPD-120)
         //$aTransactionProps['validsignature'] = $oResponse->isValidSignature();
 
         Transaction::createDbEntryFromArray($aTransactionProps);
