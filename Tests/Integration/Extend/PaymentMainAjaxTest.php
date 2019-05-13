@@ -7,6 +7,8 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use Wirecard\Oxid\Extend\PaymentMainAjax;
+
 use Wirecard\Test\WdUnitTestCase;
 
 class PaymentMainAjaxTest extends WdUnitTestCase
@@ -22,7 +24,7 @@ class PaymentMainAjaxTest extends WdUnitTestCase
         $this->setRequestParameter('httpUser', '70000-APITEST-AP');
         $this->setRequestParameter('httpPass', 'qD2wzQ_hrc!8');
 
-        $oPaymentMainAjax = oxNew(Payment_Main_Ajax::class);
+        $oPaymentMainAjax = oxNew(PaymentMainAjax::class);
         $result = $oPaymentMainAjax->checkPaymentMethodCredentials();
 
         $this->assertTrue(json_decode($result[0])->success);
@@ -38,7 +40,7 @@ class PaymentMainAjaxTest extends WdUnitTestCase
         $this->setRequestParameter('httpUser', 'invalid');
         $this->setRequestParameter('httpPass', 'invalid');
 
-        $oPaymentMainAjax = oxNew(Payment_Main_Ajax::class);
+        $oPaymentMainAjax = oxNew(PaymentMainAjax::class);
         $result = $oPaymentMainAjax->checkPaymentMethodCredentials();
 
         $this->assertFalse(json_decode($result[0])->success);

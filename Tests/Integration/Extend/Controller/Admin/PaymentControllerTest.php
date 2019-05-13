@@ -10,6 +10,8 @@
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Registry;
 
+use Wirecard\Oxid\Extend\Controller\PaymentController;
+
 class PaymentControllerTest extends \Wirecard\Test\WdUnitTestCase
 {
 
@@ -34,7 +36,7 @@ class PaymentControllerTest extends \Wirecard\Test\WdUnitTestCase
         Registry::getSession()->setVariable('sess_challenge', 'oxid1');
         $_POST['payerror'] = $iErrorCode;
 
-        $paymentController = new class() extends \Wirecard\Oxid\Extend\Controller\PaymentController
+        $paymentController = new class() extends PaymentController
         {
             public function publicUnsetPaymentErrors()
             {
@@ -50,10 +52,10 @@ class PaymentControllerTest extends \Wirecard\Test\WdUnitTestCase
     public function testUnsetPaymentErrorsProvider()
     {
         return [
-            'state CANCELLED not deleted' => [\Wirecard\Oxid\Extend\Controller\PaymentController::ERROR_CODE_CANCELED, false, false, '1'],
-            'state CANCELLED deleted' => [\Wirecard\Oxid\Extend\Controller\PaymentController::ERROR_CODE_CANCELED, false, true, '0'],
-            'state FAILED not deleted' => [\Wirecard\Oxid\Extend\Controller\PaymentController::ERROR_CODE_FAILED, false, false, '1'],
-            'state FAILED deleted' => [\Wirecard\Oxid\Extend\Controller\PaymentController::ERROR_CODE_FAILED, true, false, '0'],
+            'state CANCELLED not deleted' => [PaymentController::ERROR_CODE_CANCELED, false, false, '1'],
+            'state CANCELLED deleted' => [PaymentController::ERROR_CODE_CANCELED, false, true, '0'],
+            'state FAILED not deleted' => [PaymentController::ERROR_CODE_FAILED, false, false, '1'],
+            'state FAILED deleted' => [PaymentController::ERROR_CODE_FAILED, true, false, '0'],
         ];
     }
 }
