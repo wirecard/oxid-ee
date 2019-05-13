@@ -207,6 +207,8 @@ class ModuleSupport extends AdminController
         $this->_aViewData['fromEmail'] = $sFromEmail;
         $this->_aViewData['body'] = $sBody;
 
+        // there are two separate validation methods because $sFromEmail is mandatory and $sReplyToEmail
+        // is optional - it only needs to be validated if it was set
         if (!$this->_isFromEmailValid($sFromEmail) || !$this->_isReplyToEmailValid($sReplyToEmail)) {
             throw new Exception(Helper::translate('wd_enter_valid_email_error'));
         }
