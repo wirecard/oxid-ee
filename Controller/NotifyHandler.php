@@ -28,7 +28,7 @@ use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Exception\MalformedResponseException;
-use Wirecard\PaymentSdk\Response\Response;
+use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
@@ -190,7 +190,7 @@ class NotifyHandler extends FrontendController
     /**
      * Handles error notifications
      *
-     * @param Response $oResponse
+     * @param FailureResponse $oResponse
      *
      * @since 1.0.0
      */
@@ -208,9 +208,13 @@ class NotifyHandler extends FrontendController
             $this->_oLogger->error("\t$sSeverity with code $sCode and message '$sDescription' occurred.");
         }
 
-        $oOrder = oxNew(Order::class);
-        $oOrder->loadWithTransactionId($oResponse->getParentTransactionId());
-        $oOrder->handleOrderState(Order::STATE_FAILED);
+        $sParentTransactionId = $oResponse->getData()['parent-transaction-id'];
+
+        if (!is_null($sParentTransactionId)) {
+            $oOrder = oxNew(Order::class);
+            $oOrder->loadWithTransactionId($sParentTransactionId);
+            $oOrder->handleOrderState(Order::STATE_FAILED);
+        }
     }
 
     /**

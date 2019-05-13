@@ -17,7 +17,7 @@ class PaymentGatewayTest extends \Wirecard\Test\WdUnitTestCase
     /**
      * @var PaymentGateway
      */
-    private $_oPayemntGateway;
+    private $_oPaymentGateway;
 
     protected function setUp()
     {
@@ -51,7 +51,7 @@ class PaymentGatewayTest extends \Wirecard\Test\WdUnitTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $oTransaction = $this->_oPayemntGateway->createTransaction($oBasketStub, $oOrderStub);
+        $oTransaction = $this->_oPaymentGateway->createTransaction($oBasketStub, $oOrderStub);
         $this->assertInstanceOf($sTransactionClass, $oTransaction);
     }
 
