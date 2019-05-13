@@ -10,8 +10,10 @@
 namespace Wirecard\Oxid\Controller\Admin;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Model\Transaction;
 
 use OxidEsales\Eshop\Application\Controller\Admin\AdminDetailsController;
+use OxidEsales\Eshop\Application\Model\Order;
 
 /**
  * Controls the view for a single tab in the admin details.
@@ -45,6 +47,8 @@ class Tab extends AdminDetailsController
     {
         parent::__construct();
 
+        $this->oOrder = oxNew(Order::class);
+        $this->oTransaction = oxNew(Transaction::class);
         $this->sListObjectId = $this->getEditObjectId();
     }
 
@@ -66,6 +70,18 @@ class Tab extends AdminDetailsController
         ]);
 
         return $sTemplate;
+    }
+
+    /**
+     * Determines whether the live chat should be displayed in the tab.
+     *
+     * @return boolean
+     *
+     * @since 1.0.1
+     */
+    public function shouldDisplayLiveChat()
+    {
+        return $this->oOrder->isCustomPaymentMethod();
     }
 
     /**

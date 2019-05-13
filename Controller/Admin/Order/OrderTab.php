@@ -53,9 +53,6 @@ class OrderTab extends Tab
     {
         parent::__construct();
 
-        $this->oOrder = oxNew(Order::class);
-        $this->oTransaction = oxNew(Transaction::class);
-
         if ($this->_isListObjectIdSet()) {
             $this->oOrder->load($this->sListObjectId);
             $this->oTransaction->loadWithTransactionId($this->oOrder->oxorder__wdoxidee_transactionid->value);
@@ -84,17 +81,5 @@ class OrderTab extends Tab
         }
 
         return $sTemplate;
-    }
-
-    /**
-     * Returns true if the payment is one of the module's.
-     *
-     * @return bool
-     *
-     * @since 1.0.1
-     */
-    public function isCustomPaymentMethod()
-    {
-        return $this->oOrder->isCustomPaymentMethod();
     }
 }

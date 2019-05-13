@@ -64,8 +64,6 @@ class TransactionTab extends Tab
     {
         parent::__construct();
 
-        $this->oTransaction = oxNew(Transaction::class);
-        $this->oOrder = oxNew(Order::class);
         $this->oPayment = oxNew(Payment::class);
 
         if ($this->_isListObjectIdSet()) {

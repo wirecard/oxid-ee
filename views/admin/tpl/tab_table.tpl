@@ -71,7 +71,7 @@
     <em>[{$emptyText}]</em>
 [{/if}]
 
-[{if $oView->isCustomPaymentMethod()}]
+[{if $oView->shouldDisplayLiveChat()}]
   [{include file="live_chat.tpl"}]
 [{/if}]
 
