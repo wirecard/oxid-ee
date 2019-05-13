@@ -21,7 +21,7 @@ class PaymentGatewayTest extends \Wirecard\Test\WdUnitTestCase
 
     protected function setUp()
     {
-        $this->_oPayemntGateway = oxNew(PaymentGateway::class);
+        $this->_oPaymentGateway = oxNew(PaymentGateway::class);
         parent::setUp();
     }
 
