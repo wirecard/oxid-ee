@@ -46,8 +46,8 @@ class SepaCreditTransferPaymentMethod extends PaymentMethod
 
         $oPaymentMethodConfig = new SepaConfig(
             SepaCreditTransferTransaction::NAME,
-            $this->oPayment->oxpayments__wdoxidee_maid->value,
-            $this->oPayment->oxpayments__wdoxidee_secret->value
+            $this->_oPayment->oxpayments__wdoxidee_maid->value,
+            $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
 
         $oConfig->add($oPaymentMethodConfig);

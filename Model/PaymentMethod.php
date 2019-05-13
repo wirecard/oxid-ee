@@ -64,7 +64,7 @@ abstract class PaymentMethod
             throw new StandardException("payment method name not defined: " . get_class());
         }
 
-        $this->oPayment = PaymentMethodHelper::getPaymentById(self::getName(true));
+        $this->_oPayment = PaymentMethodHelper::getPaymentById(self::getName(true));
     }
 
     /**
@@ -77,9 +77,9 @@ abstract class PaymentMethod
     public function getConfig()
     {
         $oConfig = new Config(
-            $this->oPayment->oxpayments__wdoxidee_apiurl->value,
-            $this->oPayment->oxpayments__wdoxidee_httpuser->value,
-            $this->oPayment->oxpayments__wdoxidee_httppass->value
+            $this->_oPayment->oxpayments__wdoxidee_apiurl->value,
+            $this->_oPayment->oxpayments__wdoxidee_httpuser->value,
+            $this->_oPayment->oxpayments__wdoxidee_httppass->value
         );
 
         $aShopInfoFields = Helper::getShopInfoFields();
@@ -108,7 +108,7 @@ abstract class PaymentMethod
      */
     public function getPayment()
     {
-        return $this->oPayment;
+        return $this->_oPayment;
     }
 
     /**
@@ -154,7 +154,7 @@ abstract class PaymentMethod
      */
     public function getLogoPath()
     {
-        $sLogoFile = $this->oPayment->oxpayments__wdoxidee_logo->value;
+        $sLogoFile = $this->_oPayment->oxpayments__wdoxidee_logo->value;
 
         $oConfig = Registry::getConfig();
 

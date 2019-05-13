@@ -67,13 +67,14 @@
         <wdoxidee_countrycode>en_gb</wdoxidee_countrycode>
         <wdoxidee_logovariant>standard</wdoxidee_logovariant>
     </payment>
+
+    <!-- only visible for the merchant -->
     <payment>
         <oxid>wdsepacredit</oxid>
         <oxactive>0</oxactive>
         <oxtoamount>0</oxtoamount>
         <oxdesc>Wirecard SEPA Credit Transfer</oxdesc>
         <oxdesc_1>Wirecard SEPA Credit Transfer</oxdesc_1>
-        <oxsort>0</oxsort>
         <wdoxidee_logo>sepa.png</wdoxidee_logo>
         <wdoxidee_transactionaction>credit</wdoxidee_transactionaction>
         <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>

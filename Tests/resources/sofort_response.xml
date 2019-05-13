@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<payment xmlns="http://www.elastic-payments.com/schema/payment">
+  <merchant-account-id>6c0e7efd-ee58-40f7-9bbd-5e7337a052cd</merchant-account-id>
+  <transaction-id>900bfd35-989d-4bdf-bee0-df7104d76b8c</transaction-id>
+  <request-id>8fa5e6487ca9c73bbb68f48b91a2631c</request-id>
+  <transaction-type>debit</transaction-type>
+  <transaction-state>success</transaction-state>
+  <completion-time-stamp>2019-05-14T08:43:23.000Z</completion-time-stamp>
+  <statuses>
+    <status code="201.1126" description="sofortbanking:Successful confirmation received from the bank."
+            severity="information" />
+  </statuses>
+  <requested-amount currency="EUR">1800.1</requested-amount>
+  <parent-transaction-id>ecd6eb09-74c7-494e-b319-6a1f0b36f40a</parent-transaction-id>
+  <account-holder>
+    <first-name>Max</first-name>
+    <last-name>Mustermann</last-name>
+    <email>fasdf@dsfs.at</email>
+    <phone>+43123456789</phone>
+    <address>
+      <street1>Testaddress 2</street1>
+      <city>Testcity</city>
+      <country>DE</country>
+      <postal-code>1234</postal-code>
+    </address>
+  </account-holder>
+  <shipping>
+    <first-name>sdfs</first-name>
+    <last-name>sdfa</last-name>
+    <phone>+43123456789</phone>
+    <address>
+      <street1>Testaddress 2</street1>
+      <city>Testcity</city>
+      <country>DE</country>
+      <postal-code>1234</postal-code>
+    </address>
+  </shipping>
+  <ip-address>85.237.8.20</ip-address>
+  <order-number>4300d07ac75b0792d79ac97c8be39cdf</order-number>
+  <order-items>
+    <order-item>
+      <name>Kite SPLEENE SP-X 2010</name>
+      <description>The ultimate c-kite feeling</description>
+      <article-number>1203</article-number>
+      <amount currency="EUR">1052.1</amount>
+      <quantity>1</quantity>
+    </order-item>
+    <order-item>
+      <name>Kiteboard CABRINHA CALIBER 2011</name>
+      <description>Freestyle und Freeride Board</description>
+      <article-number>1302</article-number>
+      <amount currency="EUR">479</amount>
+      <quantity>1</quantity>
+    </order-item>
+    <order-item>
+      <name>Wetsuit NPX ASSASSIN</name>
+      <description>Semidry wetsuit for men</description>
+      <article-number>3101</article-number>
+      <amount currency="EUR">269</amount>
+      <quantity>1</quantity>
+    </order-item>
+    <order-item>
+      <name>Shipping</name>
+      <description>Shipping</description>
+      <article-number>Shipping</article-number>
+      <amount currency="EUR">0</amount>
+      <quantity>1</quantity>
+    </order-item>
+  </order-items>
+  <descriptor>OXID eSho 4300d07ac75b0792d</descriptor>
+  <notifications>
+    <notification
+      url="http://b16f0e8c.ngrok.io/index.php?cl=wcpg_notifyhandler&amp;fnc=handleRequest&amp;pmt=wdsofortbanking&amp;lang=1" />
+  </notifications>
+  <custom-fields>
+    <custom-field field-name="paysdk_shopVersion" field-value="6.1.2" />
+    <custom-field field-name="paysdk_shopName" field-value="OXID eShop 6" />
+    <custom-field field-name="paysdk_pluginVersion" field-value="1.0.0" />
+    <custom-field field-name="paysdk_pluginName" field-value="Wirecard OXID Module" />
+  </custom-fields>
+  <payment-methods>
+    <payment-method name="sofortbanking" />
+  </payment-methods>
+  <bank-account>
+    <iban>AT850000000023456789</iban>
+    <bic>SFRTAT20XXX</bic>
+    <account-number>23456789</account-number>
+    <bank-code>00000</bank-code>
+  </bank-account>
+  <api-id>---</api-id>
+  <processing-redirect-url />
+  <cancel-redirect-url>
+    http://b16f0e8c.ngrok.io/index.php?lang=1&amp;cl=payment&amp;payerror=-100&amp;force_sid=9ute5jbnh7t8a07c019di77pah
+  </cancel-redirect-url>
+  <fail-redirect-url>
+    http://b16f0e8c.ngrok.io/index.php?lang=1&amp;cl=payment&amp;payerror=-101&amp;force_sid=9ute5jbnh7t8a07c019di77pah
+  </fail-redirect-url>
+  <success-redirect-url>
+    http://b16f0e8c.ngrok.io/index.php?lang=1&amp;cl=order&amp;wdpayment=a95b0260a8d0c6f&amp;force_sid=9ute5jbnh7t8a07c019di77pah
+  </success-redirect-url>
+  <locale>en</locale>
+  <entry-mode>ecommerce</entry-mode>
+  <device>
+    <fingerprint>6c0e7efd-ee58-40f7-9bbd-5e7337a052cd_9ute5jbnh7t8a07c019di77pah</fingerprint>
+    <policy-score>0</policy-score>
+    <type>pc</type>
+    <operating-system>other</operating-system>
+  </device>
+  <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+    <SignedInfo>
+      <CanonicalizationMethod Algorithm="http://www.w3.org/TR/2001/REC-xml-c14n-20010315" />
+      <SignatureMethod Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha256" />
+      <Reference URI="">
+        <Transforms>
+          <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+        </Transforms>
+        <DigestMethod Algorithm="http://www.w3.org/2001/04/xmlenc#sha256" />
+        <DigestValue>SIZnm28BmB2F3lxCq0PpjHKiQoEx8qc5tzFqAmQ2Ok4=</DigestValue>
+      </Reference>
+    </SignedInfo>
+    <SignatureValue>
+      FSeg+ULo3UO12Kcao3erFs6SXeRQaOKTh8NoIa9bYV/RkVzkRvKRkfxkJNjIwN6QkTBr/PtJ46CoG8cyI1yEl7iK0jKA5ij6DWQaMwuRgEMZ/KBPcnKEmIsQvG+QoMurdUsKroaCp3Qoj5yqs3aZXCWLIH5Pp0amryumxrN6y6ZkK8vdTnMKopVu7sraGfQITbz/80IfV1NcfhTmE+mM2QIXvKUWjGa3s7fAks8TzEG3k08K6bjFw73zUP9GetimLbvGN7OxvXLr++FUCuinfH2KYimoH19EWy+zRnJY2/g02bWocrfZcRPDPtOyZxezmAJxwe0z//QCEIYWSnlAX2GtSh7lh380Ed8As9+V3LnQfDRlKPgIrSt9Olg8an7DUz0kKtHlN6jQTNQxWv/mf4/rxeD9Edj56n+MyOHnIv9hpUViHbTWcfPDzwilT8Zet2wDpXy8tNeS3NYaihnEuj0dIYyMjbYyaVKBDYehRbvU+g8dxgwUxgybfY+TMrzZEvXNgVKkFgUPws0IiM7IHprm6/criNX70s+R2OiaPVhnicX9wdvKEDYN5VaFbWJQ48HTTzCB4HK6rgrEYFo6l7p9lUxyY51kGrE4i3lg89xOb/NpP2FP0IKYjfwc8bOhXELEXWpuz4YHR6fe9978uJ2EpalMogYt7F3ae6ei7rg=
+    </SignatureValue>
+    <KeyInfo>
+      <X509Data>
+        <X509SubjectName>2.5.4.4=#130642617965726e,L=Ascheim,CN=api-test.wirecard.com,OU=Operations,O=Wirecard
+          Technologies GmbH,C=DE</X509SubjectName>
+        <X509Certificate>
+          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
+        </X509Certificate>
+      </X509Data>
+    </KeyInfo>
+  </Signature>
+</payment>

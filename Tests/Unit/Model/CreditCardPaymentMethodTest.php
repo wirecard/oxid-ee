@@ -7,11 +7,8 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use OxidEsales\Eshop\Core\Field;
-use OxidEsales\Eshop\Application\Model\Payment;
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
-use Wirecard\Oxid\Core\PaymentMethodHelper;
 
 class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
@@ -41,12 +38,6 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetTransactionNotSettingNon3dCredentials()
     {
-        $oPayment = oxNew(Payment::class);
-        $oPayment->oxpayments__wdoxidee_three_d_maid = new Field("THREE D MAID");
-        $oPayment->oxpayments__wdoxidee_three_d_secret = new Field("THREE D SECRET");
-        $oPayment->oxpayments__wdoxidee_non_three_d_max_limit = new Field("");
-        $oPayment->oxpayments__wdoxidee_three_d_min_limit = new Field("");
-
         $oConfig = $this->oPaymentMethod->getConfig();
 
         $this->assertNotNull($oConfig);
@@ -57,20 +48,14 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
          */
         $oCreditCardConfig = $oConfig->get('creditcard');
 
-        $this->assertEquals("THREE D MAID", $oCreditCardConfig->getThreeDMerchantAccountId());
-        $this->assertEquals("THREE D SECRET", $oCreditCardConfig->getThreeDSecret());
-        $this->assertNull($oCreditCardConfig->getMerchantAccountId());
-        $this->assertNull($oCreditCardConfig->getSecret());
+        $this->assertEquals("508b8896-b37d-4614-845c-26bf8bf2c948", $oCreditCardConfig->getThreeDMerchantAccountId());
+        $this->assertEquals("dbc5a498-9a66-43b9-bf1d-a618dd399684", $oCreditCardConfig->getThreeDSecret());
+        $this->assertNotNull($oCreditCardConfig->getMerchantAccountId());
+        $this->assertNotNull($oCreditCardConfig->getSecret());
     }
 
     public function testGetTransactionNotSetting3dCredentials()
     {
-        $oPayment = oxNew(Payment::class);
-        $oPayment->oxpayments__wdoxidee_maid = new Field("MAID");
-        $oPayment->oxpayments__wdoxidee_secret = new Field("SECRET");
-        $oPayment->oxpayments__wdoxidee_non_three_d_max_limit = new Field("");
-        $oPayment->oxpayments__wdoxidee_three_d_min_limit = new Field("");
-
         $oConfig = $this->oPaymentMethod->getConfig();
 
         $this->assertNotNull($oConfig);
@@ -81,19 +66,14 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
          */
         $oCreditCardConfig = $oConfig->get('creditcard');
 
-        $this->assertEquals("MAID", $oCreditCardConfig->getMerchantAccountId());
-        $this->assertEquals("SECRET", $oCreditCardConfig->getSecret());
-        $this->assertNull($oCreditCardConfig->getThreeDMerchantAccountId());
-        $this->assertNull($oCreditCardConfig->getThreeDSecret());
+        $this->assertEquals("53f2895a-e4de-4e82-a813-0d87a10e55e6", $oCreditCardConfig->getMerchantAccountId());
+        $this->assertEquals("dbc5a498-9a66-43b9-bf1d-a618dd399684", $oCreditCardConfig->getSecret());
+        $this->assertNotNull($oCreditCardConfig->getThreeDMerchantAccountId());
+        $this->assertNotNull($oCreditCardConfig->getThreeDSecret());
     }
 
     public function testGetTransactionSettingNon3dMaxLimit()
     {
-        $oPayment = oxNew(Payment::class);
-        $oPayment->oxpayments__wdoxidee_non_three_d_max_limit = new Field(300);
-        $oPayment->oxpayments__wdoxidee_limits_currency = new Field('EUR');
-        $oPayment->oxpayments__wdoxidee_three_d_min_limit = new Field('');
-
         $oConfig = $this->oPaymentMethod->getConfig();
 
         $this->assertNotNull($oConfig);
@@ -105,16 +85,11 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oCreditCardConfig = $oConfig->get('creditcard');
 
         $this->assertEquals(300, $oCreditCardConfig->getNonThreeDMaxLimit("EUR"));
-        $this->assertEmpty($oCreditCardConfig->getThreeDMinLimit("EUR"));
+        $this->assertNotEmpty($oCreditCardConfig->getThreeDMinLimit("EUR"));
     }
 
     public function testGetTransactionSetting3dMinLimit()
     {
-        $oPayment = oxNew(Payment::class);
-        $oPayment->oxpayments__wdoxidee_three_d_min_limit = new Field(300);
-        $oPayment->oxpayments__wdoxidee_limits_currency = new Field('EUR');
-        $oPayment->oxpayments__wdoxidee_non_three_d_max_limit = new Field('');
-
         $oConfig = $this->oPaymentMethod->getConfig();
 
         $this->assertNotNull($oConfig);
@@ -125,8 +100,8 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
          */
         $oCreditCardConfig = $oConfig->get('creditcard');
 
-        $this->assertEquals(300, $oCreditCardConfig->getThreeDMinLimit("EUR"));
-        $this->assertEmpty($oCreditCardConfig->getNonThreeDMaxLimit("EUR"));
+        $this->assertEquals(100, $oCreditCardConfig->getThreeDMinLimit("EUR"));
+        $this->assertNotEmpty($oCreditCardConfig->getNonThreeDMaxLimit("EUR"));
     }
 
     public function testGetConfigFields() {

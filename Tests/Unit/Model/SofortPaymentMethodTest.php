@@ -38,4 +38,9 @@ class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oTransaction = $this->oPaymentMethod->getTransaction();
         $this->assertInstanceOf(SofortTransaction::class, $oTransaction);
     }
+
+    public function testIsMerchantOnly()
+    {
+        $this->assertFalse($this->oPaymentMethod->isMerchantOnly());
+    }
 }

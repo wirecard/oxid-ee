@@ -43,8 +43,8 @@ class SofortPaymentMethod extends PaymentMethod
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
             SofortTransaction::NAME,
-            $this->oPayment->oxpayments__wdoxidee_maid->value,
-            $this->oPayment->oxpayments__wdoxidee_secret->value
+            $this->_oPayment->oxpayments__wdoxidee_maid->value,
+            $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
 
         $oConfig->add($oPaymentMethodConfig);
@@ -73,9 +73,9 @@ class SofortPaymentMethod extends PaymentMethod
      */
     public function getLogoPath()
     {
-        $sLogoPath = $this->oPayment->oxpayments__wdoxidee_logo->value;
-        $sCountryCode = $this->oPayment->oxpayments__wdoxidee_countrycode->value;
-        $sLogoVariant = $this->oPayment->oxpayments__wdoxidee_logovariant->value;
+        $sLogoPath = $this->_oPayment->oxpayments__wdoxidee_logo->value;
+        $sCountryCode = $this->_oPayment->oxpayments__wdoxidee_countrycode->value;
+        $sLogoVariant = $this->_oPayment->oxpayments__wdoxidee_logovariant->value;
 
         return sprintf(
             $sLogoPath,
