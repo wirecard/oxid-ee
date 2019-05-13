@@ -26,7 +26,7 @@ use Wirecard\PaymentSdk\Config\Config;
 /**
  * Controls the view for the post-processing transaction tab.
  *
- * @since 1.0.1
+ * @since 1.0.0
  */
 class TransactionTabPostProcessing extends Tab
 {
@@ -36,7 +36,7 @@ class TransactionTabPostProcessing extends Tab
     /**
      * @var Transaction
      *
-     * @since 1.0.1
+     * @since 1.0.0
      */
     protected $oTransaction;
 
@@ -50,7 +50,7 @@ class TransactionTabPostProcessing extends Tab
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.0.0
      */
     protected $_sThisTemplate = 'tab_post_processing.tpl';
 
@@ -78,7 +78,7 @@ class TransactionTabPostProcessing extends Tab
     /**
      * TransactionTab constructor.
      *
-     * @since 1.0.1
+     * @since 1.0.0
      */
     public function __construct()
     {
@@ -101,6 +101,8 @@ class TransactionTabPostProcessing extends Tab
      * @param Config $oConfig
      *
      * @return BackendService
+     *
+     * @since 1.0.1
      */
     private function _getBackendService($oConfig)
     {
@@ -145,7 +147,7 @@ class TransactionTabPostProcessing extends Tab
      *
      * @return string
      *
-     * @since 1.0.1
+     * @since 1.0.0
      */
     public function render()
     {
