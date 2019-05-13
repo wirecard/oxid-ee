@@ -25,6 +25,20 @@ class Tab extends AdminDetailsController
     const NOTHING_SELECTED = '-1';
 
     /**
+     * @var Transaction
+     *
+     * @since 1.0.1
+     */
+    protected $oTransaction;
+
+    /**
+     * @var Order
+     *
+     * @since 1.0.1
+     */
+    protected $oOrder;
+
+    /**
      * @var string
      *
      * @since 1.0.0

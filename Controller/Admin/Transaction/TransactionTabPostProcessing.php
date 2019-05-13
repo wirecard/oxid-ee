@@ -13,7 +13,6 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 
 use Wirecard\Oxid\Controller\Admin\Transaction\TransactionTab;
-use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\TransactionHandler;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
@@ -31,13 +30,6 @@ class TransactionTabPostProcessing extends TransactionTab
 {
     const KEY_ACTION = 'action';
     const KEY_AMOUNT = 'amount';
-
-    /**
-     * @var Transaction
-     *
-     * @since 1.0.0
-     */
-    protected $oTransaction;
 
     /**
      * @var \Psr\Log\LoggerInterface

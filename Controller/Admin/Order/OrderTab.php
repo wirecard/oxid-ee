@@ -9,12 +9,9 @@
 
 namespace Wirecard\Oxid\Controller\Admin\Order;
 
-use OxidEsales\Eshop\Application\Model\Order;
-
 use Wirecard\Oxid\Controller\Admin\Tab;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\ResponseMapper;
-use Wirecard\Oxid\Model\Transaction;
 
 /**
  * Controls the view for a single order tab.
@@ -23,20 +20,6 @@ use Wirecard\Oxid\Model\Transaction;
  */
 class OrderTab extends Tab
 {
-    /**
-     * @var Transaction
-     *
-     * @since 1.0.0
-     */
-    protected $oTransaction;
-
-    /**
-     * @var Order
-     *
-     * @since 1.0.0
-     */
-    protected $oOrder;
-
     /**
      * @var ResponseMapper
      *
