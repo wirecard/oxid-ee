@@ -147,7 +147,7 @@ class ResponseMapper
      */
     public function getDataReadable()
     {
-        $aResponseData = $this->oResponse->getData();
+        $aResponseData = $this->_oResponse->getData();
 
         $aSortKeys = [
             'payment-methods.0.name',

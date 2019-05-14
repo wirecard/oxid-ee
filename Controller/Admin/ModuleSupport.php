@@ -9,9 +9,12 @@
 
 namespace Wirecard\Oxid\Controller\Admin;
 
+use Exception;
+
 use OxidEsales\Eshop\Application\Controller\Admin\AdminController;
 use OxidEsales\Eshop\Core\Module\Module;
 use OxidEsales\Eshop\Core\Exception\StandardException;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Extend\Core\Email;
