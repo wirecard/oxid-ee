@@ -9,8 +9,20 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
+/**
+ * Basic acceptance test class to be used by all acceptance tests.
+ */
 abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\AcceptanceTestCase
 {
+    private $config;
+
+    public function __construct($name = null, $data = [], $dataName = '')
+    {
+        parent::__construct($name, $data, $dataName);
+
+        $this->config = require_once(__DIR__ . '/config.php');
+    }
+
     /**
      * @inheritdoc
      */
@@ -27,5 +39,24 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
      */
     protected function failOnLoggedExceptions()
     {
+    }
+
+    /**
+     * Returns a config value by a path in dot notation.
+     * @param string $path
+     */
+    public function getConfigValue($path)
+    {
+        $value = $this->config;
+
+        foreach (explode('.', $path) as $pathPart) {
+            if (!isset($value[$pathPart])) {
+                return null;
+            }
+
+            $value = $value[$pathPart];
+        }
+
+        return $value;
     }
 }
