@@ -52,6 +52,9 @@ class TransactionTab extends Tab
      */
     protected $oResponseMapper;
 
+    // transaction state key in transaction response
+    const KEY_TRANSACTION_STATE = 'transactionState';
+
     /**
      * TransactionTab constructor.
      *
@@ -88,19 +91,34 @@ class TransactionTab extends Tab
         $aListData = [];
 
         foreach ($aArray as $sKey => $sValue) {
-            // add current transaction state as a hint if it differs from the response transaction state
-            if ($sTransactionState && $sKey === 'transactionState') {
-                $sValue = $sTransactionState !== Transaction::STATE_AWAITING
-                    ? $sValue
-                    : $sValue . ' (confirmation awaiting)';
-            }
-
             $aListData[] = [
                 'title' => Helper::translate($sKey),
-                'value' => $sValue,
+                'value' => $this->_getTransactionStateText($sKey, $sValue, $sTransactionState),
             ];
         }
 
         return $aListData;
+    }
+
+    /**
+     * Adds the current transaction state as a hint for the merchant if it differs from the response transaction state
+     *
+     * @param string $sKey
+     * @param string $sValue
+     * @param string $sTransactionState
+     *
+     * @return string the transaction state text
+     *
+     * @since 1.0.0
+     */
+    private function _getTransactionStateText($sKey, $sValue, $sTransactionState = null)
+    {
+        if ($sTransactionState &&
+                $sKey === self::KEY_TRANSACTION_STATE &&
+                $sTransactionState === Transaction::STATE_AWAITING) {
+            $sValue .= ' (confirmation awaiting)';
+        }
+
+        return $sValue;
     }
 }

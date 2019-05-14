@@ -7,21 +7,21 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Controller\Admin\Order;
+namespace Wirecard\Oxid\Controller\Admin\Transaction;
 
 /**
- * Controls the view for the order transaction details tab.
+ * Controls the view for the order details tab.
  *
- * @since 1.0.0
+ * @since 1.0.1
  */
-class OrderTabTransactionDetails extends OrderTab
+class TransactionTabResponseDetails extends TransactionTab
 {
     /**
      * @inheritdoc
      *
      * @return array
      *
-     * @since 1.0.0
+     * @since 1.0.1
      */
     protected function _getData(): array
     {

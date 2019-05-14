@@ -16,6 +16,7 @@ use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\EshopCommunity\Core\Field;
 use OxidEsales\EshopCommunity\Core\Registry;
 
+use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Model\Transaction;
@@ -35,11 +36,8 @@ use Psr\Log\LoggerInterface;
  */
 class Order extends Order_parent
 {
-    const STATE_PENDING = 'pending';
-    const STATE_AUTHORIZED = 'authorized';
-    const STATE_PROCESSING = 'processing';
-    const STATE_CANCELED = 'canceled';
-    const STATE_REFUNDED = 'refunded';
+    // constant strings that are used by several response handlers to handle the specific merchant settings
+    const STATE_CANCELLED = BackendService::TYPE_CANCELLED;
     const STATE_FAILED = 'failed';
 
     /**
@@ -47,17 +45,16 @@ class Order extends Order_parent
      *
      * @since 1.0.0
      */
-    protected $_oLogger;
+    private $_oLogger;
 
     /**
-     * @inheritdoc
+     * Order constructor.
      *
-     * @since 1.0.0
+     * @since 1.0.1
      */
     public function __construct()
     {
         parent::__construct();
-
         $this->_oLogger = Registry::getLogger();
     }
 
@@ -190,8 +187,8 @@ class Order extends Order_parent
      */
     public function isPaymentSuccess()
     {
-        return $this->oxorder__wdoxidee_orderstate->value === self::STATE_AUTHORIZED
-            || $this->oxorder__wdoxidee_orderstate->value === self::STATE_PROCESSING;
+        return $this->oxorder__wdoxidee_orderstate->value === BackendService::TYPE_AUTHORIZED
+            || $this->oxorder__wdoxidee_orderstate->value === BackendService::TYPE_PROCESSING;
     }
 
     /**
@@ -223,12 +220,11 @@ class Order extends Order_parent
     public static function getTranslatedStates()
     {
         return [
-            self::STATE_PENDING => Helper::translate('wd_order_status_pending'),
-            self::STATE_AUTHORIZED => Helper::translate('wd_order_status_authorized'),
-            self::STATE_PROCESSING => Helper::translate('wd_order_status_purchased'),
-            self::STATE_CANCELED => Helper::translate('wd_order_status_cancelled'),
-            self::STATE_REFUNDED => Helper::translate('wd_order_status_refunded'),
-            self::STATE_FAILED => Helper::translate('wd_order_status_failed'),
+            BackendService::TYPE_PENDING => Helper::translate('wd_order_status_pending'),
+            BackendService::TYPE_AUTHORIZED => Helper::translate('wd_order_status_authorized'),
+            BackendService::TYPE_PROCESSING => Helper::translate('wd_order_status_purchased'),
+            BackendService::TYPE_CANCELLED => Helper::translate('wd_order_status_cancelled'),
+            BackendService::TYPE_REFUNDED => Helper::translate('wd_order_status_refunded'),
         ];
     }
 
@@ -479,7 +475,7 @@ class Order extends Order_parent
     {
         $oPayment = $this->getOrderPayment();
 
-        return ($sState === self::STATE_CANCELED && $oPayment->oxpayments__wdoxidee_delete_canceled_order->value) ||
+        return ($sState === self::STATE_CANCELLED && $oPayment->oxpayments__wdoxidee_delete_canceled_order->value) ||
             ($sState === self::STATE_FAILED && $oPayment->oxpayments__wdoxidee_delete_failed_order->value);
     }
 }

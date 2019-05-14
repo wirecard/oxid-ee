@@ -75,8 +75,8 @@ class NotifyHandler extends FrontendController
         $sPostData = file_get_contents('php://input');
 
         try {
-            $oService = new BackendService($oConfig, $this->_oLogger);
-            $oNotificationResponse = $oService->handleNotification($sPostData);
+            $oBackendService = new BackendService($oConfig, $this->_oLogger);
+            $oNotificationResp = $oBackendService->handleNotification($sPostData);
         } catch (InvalidArgumentException $exception) {
             $this->_oLogger->error(__METHOD__ . ': Invalid argument set: ' . $exception->getMessage(), [$exception]);
             return;
@@ -85,18 +85,33 @@ class NotifyHandler extends FrontendController
             return;
         }
 
-        $oTransaction = oxNew(Transaction::class);
+        $this->_handleNotificationResponse($oNotificationResp, $oBackendService);
+    }
 
-        if ($oTransaction->loadWithTransactionId($oNotificationResponse->getTransactionId())) {
-            // if a transaction with this ID already exists, we do not need to handle it again
-            return;
-        }
-
+    /**
+     * Handles the success and error response coming from the paymentSDK.
+     *
+     * @param Response       $oNotificationResp
+     * @param BackendService $oBackendService
+     *
+     * @return null
+     *
+     * @since 1.0.0
+     */
+    private function _handleNotificationResponse($oNotificationResp, $oBackendService)
+    {
         // Return the response or log errors if any happen.
-        if ($oNotificationResponse instanceof SuccessResponse) {
-            $this->_onNotificationSuccess($oNotificationResponse, $oService);
+        if ($oNotificationResp instanceof SuccessResponse) {
+            $oTransaction = oxNew(Transaction::class);
+
+            if ($oTransaction->loadWithTransactionId($oNotificationResp->getTransactionId())) {
+                // if a transaction with this ID already exists, we do not need to handle it again
+                return;
+            }
+
+            $this->_onNotificationSuccess($oNotificationResp, $oBackendService);
         } else {
-            $this->_onNotificationError($oNotificationResponse);
+            $this->_onNotificationError($oNotificationResp);
         }
     }
 
@@ -113,11 +128,11 @@ class NotifyHandler extends FrontendController
     private function _onNotificationSuccess($oResponse, $oBackendService)
     {
         // check if the response of this transaction type should be handled or not
-        $aExcludedTransactionTypes = [
+        $aExcludedTypes = [
             'check-payer-response',
         ];
 
-        if (in_array($oResponse->getTransactionType(), $aExcludedTransactionTypes)) {
+        if (in_array($oResponse->getTransactionType(), $aExcludedTypes)) {
             return;
         }
 
@@ -154,5 +169,23 @@ class NotifyHandler extends FrontendController
         $oOrder = oxNew(Order::class);
         $oOrder->loadWithTransactionId($oResponse->getParentTransactionId());
         $oOrder->handleOrderState(Order::STATE_FAILED);
+    }
+
+    /**
+     * Returns the URL of the notification handler
+     *
+     * @param Payment_Method $oPaymentMethod
+     *
+     * @return string
+     *
+     * @since 1.0.0
+     */
+    public static function getNotificationUrl($oPaymentMethod)
+    {
+        $sShopUrl = Registry::getConfig()->getCurrentShopUrl();
+
+        return $sShopUrl
+                . 'index.php?cl=wcpg_notifyhandler&fnc=handleRequest&pmt='
+                . Payment_Method::getOxidFromSDKName($oPaymentMethod->getTransaction()->getConfigKey());
     }
 }

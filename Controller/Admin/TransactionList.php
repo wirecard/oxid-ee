@@ -53,11 +53,11 @@ class TransactionList extends AdminListController
      */
     public function render()
     {
-        $this->_aViewData += [
+        $this->setViewData($this->getViewData() + [
             'payments' => PaymentMethodHelper::getModulePayments(),
             'actions' => Transaction::getActions(),
             'states' => Transaction::getStates(),
-        ];
+        ]);
 
         return parent::render();
     }
