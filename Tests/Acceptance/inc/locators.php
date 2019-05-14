@@ -8,7 +8,7 @@
  */
 
 /**
- * Contains all locators used in the tests. Individual locators can be retrieved by the `getLocator` method.
+ * Contains all locators used in the tests.
  */
 return [
     'checkout' => [
@@ -19,6 +19,8 @@ return [
     ],
     'external' => [
         'paypal' => [
+            'loginEmail' => 'email',
+            'loginPassword' => 'password',
             'loginButton' => 'btnLogin',
             'buyNowButton' => 'confirmButtonTop',
         ],

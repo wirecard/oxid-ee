@@ -8,7 +8,7 @@
  */
 
 /**
- * Config data for all acceptance tests. Data is available via the tests' `getConfigValue` method.
+ * Config data for all acceptance tests.
  */
 return [
     'payments' => [

@@ -21,8 +21,8 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->config = require_once(__DIR__ . '/inc/config.php');
-        $this->locators = require_once(__DIR__ . '/inc/locators.php');
+        $this->config = require __DIR__ . '/inc/config.php';
+        $this->locators = require __DIR__ . '/inc/locators.php';
     }
 
     /**
@@ -33,6 +33,16 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
         parent::setUp();
 
         $this->activateTheme('azure');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    protected function tearDown()
+    {
+        parent::tearDown();
+
+        self::stopMinkSession();
     }
 
     /**
