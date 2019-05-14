@@ -75,7 +75,7 @@ class OrderHelper
         } catch (OutOfStockException $oEx) {
             $oEx->setDestination('basket');
             Registry::getUtilsView()->addErrorToDisplay($oEx, false, true, 'basket');
-        } catch (NoArticleException | ArticleInputException | Exception $oEx) {
+        } catch (Exception $oEx) {
             Registry::getUtilsView()->addErrorToDisplay($oEx);
         }
 
