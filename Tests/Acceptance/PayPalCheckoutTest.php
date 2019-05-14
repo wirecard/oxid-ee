@@ -27,7 +27,7 @@ class PayPalCheckoutTest extends CheckoutTestCase
         $this->continueToNextStep();
 
         // Step 3
-        $this->click('payment_wdpaypal');
+        $this->click($this->getLocator('checkout.paymentMethods.paypal'));
         $this->continueToNextStep();
 
         // Step 4
@@ -36,8 +36,8 @@ class PayPalCheckoutTest extends CheckoutTestCase
         // PayPal flow
         $this->type('email', $this->getConfigValue('payments.paypal.email'));
         $this->type('password', $this->getConfigValue('payments.paypal.password'));
-        $this->clickAndWait('btnLogin', 30);
-        $this->clickAndWait('confirmButtonTop', 30);
+        $this->clickAndWait($this->getLocator('external.paypal.loginButton'), 30);
+        $this->clickAndWait($this->getLocator('external.paypal.buyNowButton'), 30);
 
         // Redirect
         $this->waitForRedirectConfirmation();

@@ -15,12 +15,14 @@ namespace Wirecard\Oxid\Tests\Acceptance;
 abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\AcceptanceTestCase
 {
     private $config;
+    private $locators;
 
     public function __construct($name = null, $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->config = require_once(__DIR__ . '/config.php');
+        $this->config = require_once(__DIR__ . '/inc/config.php');
+        $this->locators = require_once(__DIR__ . '/inc/locators.php');
     }
 
     /**
@@ -42,12 +44,14 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
     }
 
     /**
-     * Returns a config value by a path in dot notation.
+     * Returns an value in an array by a path in dot notation (e.g. "a.b.c").
+     * @param array $array
      * @param string $path
+     * @return mixed
      */
-    public function getConfigValue($path)
+    private function getArrayValueByPath($array, $path)
     {
-        $value = $this->config;
+        $value = $array;
 
         foreach (explode('.', $path) as $pathPart) {
             if (!isset($value[$pathPart])) {
@@ -58,5 +62,25 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
         }
 
         return $value;
+    }
+
+    /**
+     * Returns a config value by path.
+     * @param string $path
+     * @return mixed
+     */
+    public function getConfigValue($path)
+    {
+        return $this->getArrayValueByPath($this->config, $path);
+    }
+
+    /**
+     * Returns a locator by path.
+     * @param string $path
+     * @return mixed
+     */
+    public function getLocator($path)
+    {
+        return $this->getArrayValueByPath($this->locators, $path);
     }
 }

@@ -63,7 +63,7 @@ class CheckoutTestCase extends BaseAcceptanceTestCase
      */
     public function continueToNextStep()
     {
-        $this->clickAndWait('//button[contains(@class, "nextStep")]');
+        $this->clickAndWait($this->getLocator('checkout.nextStep'));
     }
 
     /**
