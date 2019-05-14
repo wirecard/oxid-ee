@@ -6,7 +6,7 @@
  * - License can be found under:
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
- 
+
 namespace Wirecard\Oxid\Tests\Acceptance;
 
 abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\AcceptanceTestCase
