@@ -72,7 +72,7 @@ class TransactionTabPostProcessing extends Tab
      *
      * @since 1.0.1
      */
-    private $_aPostProcessingActions;
+    private $_aActions;
 
     /**
      * TransactionTab constructor.
@@ -152,11 +152,11 @@ class TransactionTabPostProcessing extends Tab
     {
         $sTemplate = parent::render();
 
-        $this->_aPostProcessingActions = [];
+        $this->_aActions = [];
 
         // if the transaction state is 'closed', there are no post-processing actions available
         if ($this->oTransaction->wdoxidee_ordertransactions__state->value !== Transaction::STATE_CLOSED) {
-            $this->_aPostProcessingActions = $this->_getPostProcessingActions();
+            $this->_aActions = $this->_getPostProcessingActions();
         }
 
         $aRequestParameters = $this->_getRequestParameters();
@@ -169,7 +169,7 @@ class TransactionTabPostProcessing extends Tab
         }
 
         Helper::addToViewData($this, [
-            'actions' => $this->_aPostProcessingActions,
+            'actions' => $this->_aActions,
             'requestParameters' => $aRequestParameters,
             'alert' => $this->_processRequest($aRequestParameters),
             'currency' => $this->oTransaction->wdoxidee_ordertransactions__currency->value,
@@ -194,7 +194,7 @@ class TransactionTabPostProcessing extends Tab
         $oConfig = Registry::getConfig();
         $aActionConfig = null;
 
-        foreach ($this->_aPostProcessingActions as $sActionType => $aSingleActionConfig) {
+        foreach ($this->_aActions as $sActionType => $aSingleActionConfig) {
             if ($oConfig->getRequestParameter($sActionType)) {
                 $aActionConfig = $aSingleActionConfig;
             }

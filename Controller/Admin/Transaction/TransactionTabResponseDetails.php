@@ -23,7 +23,7 @@ class TransactionTabResponseDetails extends TransactionTab
      *
      * @since 1.0.1
      */
-    protected function _getData(): array
+    protected function _getData()
     {
         if (!$this->oResponseMapper) {
             return [];

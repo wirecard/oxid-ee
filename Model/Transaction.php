@@ -135,7 +135,7 @@ class Transaction extends MultiLanguageModel
      *
      * @since 1.0.1
      */
-    public static function createDbEntryFromArray(array $aArgs)
+    public static function createDbEntryFromArray($aArgs)
     {
         $oTransaction = oxNew(Transaction::class);
         $oTransaction->assign($aArgs);
@@ -191,7 +191,7 @@ class Transaction extends MultiLanguageModel
      *
      * @since 1.0.1
      */
-    public function getPaymentType(): string
+    public function getPaymentType()
     {
         return $this->getTransactionOrder()->oxorder__oxpaymenttype->value;
     }

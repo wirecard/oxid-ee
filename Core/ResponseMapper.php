@@ -133,7 +133,7 @@ class ResponseMapper
      *
      * @since 1.0.0
      */
-    public function getDataReadable(): array
+    public function getDataReadable()
     {
         $aResponseData = $this->oResponse->getData();
 
