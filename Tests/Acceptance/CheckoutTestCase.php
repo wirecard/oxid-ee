@@ -9,6 +9,9 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
+/**
+ * Acceptance test class for testing checkout flows.
+ */
 class CheckoutTestCase extends BaseAcceptanceTestCase
 {
     /**
