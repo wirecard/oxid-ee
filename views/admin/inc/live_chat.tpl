@@ -1,4 +1,4 @@
-[{oxstyle include=$oViewConf->getPaymentGatewayUrl("out/css/livechat.css")}]
+[{oxstyle include=$oViewConf->getPaymentGatewayUrl("out/css/wirecard_wdoxidee_livechat.css")}]
 [{oxstyle}]
 
 <div class="livezilla-wrap">
