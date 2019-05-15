@@ -164,8 +164,6 @@ class EmailTest extends OxidEsales\TestingLibrary\UnitTestCase
 
         $isSent = $this->_oEmail->sendOrderEmailToUser($oOrderStub, "my subject");
 
-        //email not send because of the test setup but finished without errors.
-
         //this will end up in a flaky test depending on the email settings of the test server
         //$this->assertFalse($isSent);
     }
@@ -227,8 +225,9 @@ class EmailTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oOrderStub->method('getOrderUser')
             ->willReturn($oUserStub);
 
-        $sent = $this->_oEmail->sendOrderEmailToOwner($oOrderStub, "Subject");
-        //email not send because of the test setup but finished without errors.
-        $this->assertFalse($sent);
+        $isSent = $this->_oEmail->sendOrderEmailToOwner($oOrderStub, "Subject");
+
+        //this will end up in a flaky test depending on the email settings of the test server
+        $this->assertFalse($isSent);
     }
 }
