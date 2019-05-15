@@ -204,7 +204,7 @@ class OrderHelper
      * @param LoggerInterface $oLogger
      * @param Order           $oOrder
      *
-     * @return string
+     * @return null
      *
      * @since 1.0.0
      */
