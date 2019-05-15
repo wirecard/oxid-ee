@@ -62,14 +62,24 @@ task :md do
   sh "docker exec #{OXID_CONTAINER} phpmd.sh"
 end
 
-desc 'Run PHP CodeSniffer'
+desc 'Run PHP CodeSniffer check'
 task :cs_check do
-  sh "docker exec #{OXID_CONTAINER} phpcs.sh"
+  sh "docker exec #{OXID_CONTAINER} phpcs-check.sh"
+end
+
+desc 'Run PHP CodeSniffer fix'
+task :cs_fix do
+  sh "docker exec #{OXID_CONTAINER} phpcs-fix.sh"
 end
 
 desc 'Run PHPUnit tests'
 task :runtests_unit do
   sh "docker exec #{OXID_CONTAINER} runtests-unit.sh"
+end
+
+desc 'Run PHPUnit tests and create code coverage report'
+task :runtests_coverage do
+  sh "docker exec #{OXID_CONTAINER} runtests-coverage.sh"
 end
 
 desc 'Run Selenium tests'

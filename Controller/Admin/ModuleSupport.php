@@ -11,11 +11,10 @@ namespace Wirecard\Oxid\Controller\Admin;
 
 use OxidEsales\Eshop\Application\Controller\Admin\AdminController;
 use OxidEsales\Eshop\Core\Module\Module;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Extend\Core\Email;
-
-use Exception;
 
 /**
  * Controls the view for the Module support tab in Module detail.
@@ -52,15 +51,17 @@ class ModuleSupport extends AdminController
         $sModuleId = $this->getEditObjectId();
         $sDefaultEmail = $this->getConfig()->getActiveShop()->oxshops__oxinfoemail->value;
 
-        $this->_aViewData += [
+        Helper::addToViewData($this, [
             'oxid' => $sModuleId,
             'contactEmail' => $this->_getModule()->getInfo('email'),
             'defaultEmail' => $sDefaultEmail,
             'isOurModule' => Helper::isThisModule($sModuleId),
-        ];
+        ]);
 
-        if (empty($this->_aViewData['fromEmail'])) {
-            $this->_aViewData['fromEmail'] = $sDefaultEmail;
+        if (empty($this->getViewData('fromEmail'))) {
+            Helper::addToViewData($this, [
+                'fromEmail' => $sDefaultEmail,
+            ]);
         }
 
         return $this->_sThisTemplate;
@@ -77,11 +78,12 @@ class ModuleSupport extends AdminController
     {
         try {
             $this->_validateRequest();
-        } catch (Exception $e) {
-            $this->_aViewData += [
-                'alertMessage' => $e->getMessage(),
+        } catch (Exception $oException) {
+            Helper::addToViewData($this, [
+                'alertMessage' => $oException->getMessage(),
                 'alertType' => 'error',
-            ];
+            ]);
+
             return;
         }
 
@@ -103,16 +105,16 @@ class ModuleSupport extends AdminController
     protected function _sendEmail($aEmailData)
     {
         $oEmail = oxNew(Email::class);
-
         $bEmailSent = $oEmail->sendSupportEmail($aEmailData);
-        $this->_aViewData += [
+
+        Helper::addToViewData($this, [
             'alertMessage' => $bEmailSent ?
                 Helper::translate('wd_success_email') : Helper::translate('wd_support_send_error'),
             'alertType' => $bEmailSent ? 'success' : 'error',
             'replyToEmail' => '',
             'fromEmail' => '',
             'body' => '',
-        ];
+        ]);
     }
 
     /**
@@ -124,14 +126,14 @@ class ModuleSupport extends AdminController
      */
     protected function _addDataFromForm(&$aEmailData)
     {
-        $body = $this->getConfig()->getRequestParameter('module_support_text');
+        $sBody = $this->getConfig()->getRequestParameter('module_support_text');
         $sFromEmail = $this->getConfig()->getRequestParameter('module_support_email_from');
         $sReplyToEmail = $this->getConfig()->getRequestParameter('module_support_email_reply');
 
         $aEmailData = array_merge($aEmailData, [
-            'body' => $body,
+            'body' => $sBody,
             'replyTo' => $sReplyToEmail,
-            'from' => $sFromEmail
+            'from' => $sFromEmail,
         ]);
     }
 
@@ -153,7 +155,7 @@ class ModuleSupport extends AdminController
             'system' => php_uname(),
             'subject' => Helper::translate('wd_support_email_subject'),
             'recipient' => $this->_getModule()->getInfo('email'),
-            'payments' => Helper::getModulePaymentsIncludingInactive()
+            'payments' => Helper::getModulePaymentsIncludingInactive(),
         ]);
     }
 
@@ -185,8 +187,8 @@ class ModuleSupport extends AdminController
      */
     protected function _getOtherModules()
     {
-        return array_filter(Helper::getModulesList(), function ($module) {
-            return $module->getId() !== $this->_getModule()->getId();
+        return array_filter(Helper::getModulesList(), function ($oModule) {
+            return $oModule->getId() !== $this->_getModule()->getId();
         });
     }
 
@@ -203,18 +205,20 @@ class ModuleSupport extends AdminController
         $sFromEmail = $this->getConfig()->getRequestParameter('module_support_email_from');
         $sReplyToEmail = $this->getConfig()->getRequestParameter('module_support_email_reply');
 
-        $this->_aViewData['replyToEmail'] = $sReplyToEmail;
-        $this->_aViewData['fromEmail'] = $sFromEmail;
-        $this->_aViewData['body'] = $sBody;
+        Helper::addToViewData($this, [
+            'replyToEmail' => $sReplyToEmail,
+            'fromEmail' => $sFromEmail,
+            'body' => $sBody,
+        ]);
 
         // there are two separate validation methods because $sFromEmail is mandatory and $sReplyToEmail
         // is optional - it only needs to be validated if it was set
         if (!$this->_isFromEmailValid($sFromEmail) || !$this->_isReplyToEmailValid($sReplyToEmail)) {
-            throw new Exception(Helper::translate('wd_enter_valid_email_error'));
+            throw new StandardException(Helper::translate('wd_enter_valid_email_error'));
         }
 
         if (!$this->_isBodyValid($sBody)) {
-            throw new Exception(Helper::translate('wd_message_empty_error'));
+            throw new StandardException(Helper::translate('wd_message_empty_error'));
         }
     }
 

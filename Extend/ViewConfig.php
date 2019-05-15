@@ -31,7 +31,7 @@ class ViewConfig extends ViewConfig_parent
      *
      * @since 1.0.0
      */
-    public function getModuleDeviceId(string $sMaid): string
+    public function getModuleDeviceId($sMaid)
     {
         return Helper::createDeviceFingerprint($sMaid, $this->getSessionId());
     }
@@ -45,7 +45,7 @@ class ViewConfig extends ViewConfig_parent
      *
      * @since 1.0.0
      */
-    public function getInputHelpHtml(string $sText): string
+    public function getInputHelpHtml($sText)
     {
         return Helper::getInputHelpHtml($sText);
     }

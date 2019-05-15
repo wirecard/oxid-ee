@@ -49,7 +49,7 @@ class FormInteractionResponseFields
      *
      * @since 1.0.0
      */
-    public function __construct(string $sUrl, string $sMethod, FormFieldMap $aFormFields)
+    public function __construct($sUrl, $sMethod, $aFormFields)
     {
         $this->sUrl = $sUrl;
         $this->sMethod = $sMethod;

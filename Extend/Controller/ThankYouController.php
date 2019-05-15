@@ -9,6 +9,8 @@
 
 namespace Wirecard\Oxid\Extend\Controller;
 
+use Wirecard\Oxid\Core\Helper;
+
 use OxidEsales\Eshop\Core\Registry;
 
 /**
@@ -30,8 +32,9 @@ class ThankYouController extends ThankYouController_parent
     {
         Registry::getSession()->deleteVariable("wdtoken");
 
-        $this->_aViewData['sendPendingEmailsSettings'] = $this->getConfig()
-            ->getConfigParam('wd_email_on_pending_orders');
+        Helper::addToViewData($this, [
+            'sendPendingEmailsSettings' => $this->getConfig()->getConfigParam('wd_email_on_pending_orders'),
+        ]);
 
         parent::init();
     }

@@ -37,7 +37,7 @@ class ResponseMapper
      *
      * @since 1.0.0
      */
-    public function __construct(string $sXml)
+    public function __construct($sXml)
     {
         $this->oResponse = new SuccessResponse(simplexml_load_string($sXml));
     }
@@ -49,7 +49,7 @@ class ResponseMapper
      *
      * @since 1.0.0
      */
-    public function getPaymentDetails(): array
+    public function getPaymentDetails()
     {
         return $this->_getObjectDataArray($this->oResponse->getPaymentDetails());
     }
@@ -61,7 +61,7 @@ class ResponseMapper
      *
      * @since 1.0.0
      */
-    public function getTransactionDetails(): array
+    public function getTransactionDetails()
     {
         return $this->_getObjectDataArray($this->oResponse->getTransactionDetails());
     }
@@ -73,7 +73,7 @@ class ResponseMapper
      *
      * @since 1.0.0
      */
-    public function getAccountHolder(): array
+    public function getAccountHolder()
     {
         return $this->_getObjectDataArray($this->oResponse->getAccountHolder());
     }
@@ -85,7 +85,7 @@ class ResponseMapper
      *
      * @since 1.0.0
      */
-    public function getShipping(): array
+    public function getShipping()
     {
         return $this->_getObjectDataArray($this->oResponse->getShipping());
     }
@@ -97,7 +97,7 @@ class ResponseMapper
      *
      * @since 1.0.0
      */
-    public function getBasket(): array
+    public function getBasket()
     {
         return $this->_getObjectDataArray($this->oResponse->getBasket());
     }
@@ -109,7 +109,7 @@ class ResponseMapper
      *
      * @since 1.0.0
      */
-    public function getCard(): array
+    public function getCard()
     {
         return $this->_getObjectDataArray($this->oResponse->getCard());
     }
@@ -121,7 +121,7 @@ class ResponseMapper
      *
      * @since 1.0.0
      */
-    public function getData(): array
+    public function getData()
     {
         return $this->oResponse->getData();
     }
@@ -133,7 +133,7 @@ class ResponseMapper
      *
      * @since 1.0.0
      */
-    public function getDataReadable(): array
+    public function getDataReadable()
     {
         $aResponseData = $this->oResponse->getData();
 
@@ -182,7 +182,7 @@ class ResponseMapper
      *
      * @since 1.0.0
      */
-    private function _parseHtml(string $sHtml): array
+    private function _parseHtml($sHtml)
     {
         $aFields = [];
         preg_match_all('/<tr><td>(.+?)<\/td><td>(.+?)<\/td><\/tr>/', $sHtml, $aMatches, PREG_SET_ORDER);

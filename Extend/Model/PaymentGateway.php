@@ -80,10 +80,10 @@ class PaymentGateway extends BaseModel
      */
     private static function _addDescriptor(&$oTransaction, $sOrderId)
     {
-        $shopId = Registry::getConfig()->getShopId();
-        $shop = oxNew(Shop::class);
-        $shop->load($shopId);
-        $oTransaction->setDescriptor(substr(substr($shop->oxshops__oxname->value, 0, 9) . " " . $sOrderId, 0, 27));
+        $sShopId = Registry::getConfig()->getShopId();
+        $oShop = oxNew(Shop::class);
+        $oShop->load($sShopId);
+        $oTransaction->setDescriptor(substr(substr($oShop->oxshops__oxname->value, 0, 9) . " " . $sOrderId, 0, 27));
     }
 
     /**
@@ -343,7 +343,7 @@ class PaymentGateway extends BaseModel
     {
         $sRandom = substr(str_shuffle(md5(time())), 0, 15);
         $oSession->setVariable('wdtoken', $sRandom);
-        return http_build_query(array('wdpayment' => $sRandom));
+        return http_build_query(['wdpayment' => $sRandom]);
     }
 
     /**

@@ -26,29 +26,29 @@ $sModuleDescriptionEn = file_get_contents(dirname(__FILE__) . '/out/html/module-
 $sModuleDescriptionDe = file_get_contents(dirname(__FILE__) . '/out/html/module-description.de.html');
 
 // the array contains the complete description HTML string for each language
-$sTermsContentPlaceholder = '{{ TERMS_CONTENT }}';
-$aModuleDescriptions = array(
-    'de' => $sToggleTermsJs . str_replace($sTermsContentPlaceholder, $sTermsContentDe, $sModuleDescriptionDe),
-    'en' => $sToggleTermsJs . str_replace($sTermsContentPlaceholder, $sTermsContentEn, $sModuleDescriptionEn)
-);
+$sTermsContentSnippet = '{{ TERMS_CONTENT }}';
+$aModuleDescriptions = [
+    'de' => $sToggleTermsJs . str_replace($sTermsContentSnippet, $sTermsContentDe, $sModuleDescriptionDe),
+    'en' => $sToggleTermsJs . str_replace($sTermsContentSnippet, $sTermsContentEn, $sModuleDescriptionEn),
+];
 
 /**
  * Module information
  */
-$aModule = array(
+$aModule = [
     'id'                => Helper::MODULE_ID,
     'title'             => 'Wirecard OXID Module',
-    'description'       => array(
+    'description'       => [
         'de' => $aModuleDescriptions['de'],
-        'en' => $aModuleDescriptions['en']
-    ),
+        'en' => $aModuleDescriptions['en'],
+    ],
     'lang'              => 'en',
     'thumbnail'         => 'logo.png',
     'version'           => '1.0.0',
     'author'            => 'Wirecard',
     'url'               => 'https://www.wirecard.com',
     'email'             => 'shop-systems-support@wirecard.com',
-    'extend'            => array (
+    'extend'            => [
         \OxidEsales\Eshop\Core\Language::class
             => \Wirecard\Oxid\Extend\Language::class,
         \OxidEsales\Eshop\Core\ViewConfig::class
@@ -75,8 +75,8 @@ $aModule = array(
             => \Wirecard\Oxid\Extend\Core\Email::class,
         \OxidEsales\Eshop\Core\Model\ListModel::class
             => \Wirecard\Oxid\Extend\ListModel::class,
-    ),
-    'controllers'       => array(
+    ],
+    'controllers' => [
         'wcpg_transaction'
             => \Wirecard\Oxid\Controller\Admin\TransactionController::class,
         'wcpg_transaction_list'
@@ -103,105 +103,105 @@ $aModule = array(
             => \Wirecard\Oxid\Controller\Admin\ModuleSupport::class,
         'wcpg_transaction_response_details'
             => \Wirecard\Oxid\Controller\Admin\Transaction\TransactionTabResponseDetails::class,
-    ),
-    'blocks'            => array(
-        array(
+    ],
+    'blocks' => [
+        [
             'template' => 'payment_main.tpl',
             'block' => 'admin_payment_main_form',
-            'file' => 'views/admin/blocks/wd_admin_payment_main_form.tpl'
-        ),
-        array(
+            'file' => 'views/admin/blocks/wd_admin_payment_main_form.tpl',
+        ],
+        [
             'template' => 'order_list.tpl',
             'block' => 'admin_order_list_colgroup',
             'file' => 'views/admin/blocks/wd_admin_order_list_colgroup.tpl',
             'position' => 10,
-        ),
-        array(
+        ],
+        [
             'template' => 'order_list.tpl',
             'block' => 'admin_order_list_filter',
             'file' => 'views/admin/blocks/wd_admin_order_list_filter.tpl',
             'position' => 10,
-        ),
-        array(
+        ],
+        [
             'template' => 'order_list.tpl',
             'block' => 'admin_order_list_sorting',
             'file' => 'views/admin/blocks/wd_admin_order_list_sorting.tpl',
             'position' => 10,
-        ),
-        array(
+        ],
+        [
             'template' => 'order_list.tpl',
             'block' => 'admin_order_list_item',
             'file' => 'views/admin/blocks/wd_admin_order_list_item.tpl',
             'position' => 10,
-        ),
-        array(
+        ],
+        [
             'template' => 'page/checkout/order.tpl',
             'block' => 'checkout_order_main',
-            'file' => 'views/blocks/profiling_tags.tpl'
-        ),
-        array(
+            'file' => 'views/blocks/profiling_tags.tpl',
+        ],
+        [
             'template' => 'page/checkout/payment.tpl',
             'block' => 'checkout_payment_errors',
-            'file' => 'views/blocks/checkout_errors.tpl'
-        ),
-        array(
+            'file' => 'views/blocks/checkout_errors.tpl',
+        ],
+        [
             'template' => 'page/checkout/thankyou.tpl',
             'block' => 'checkout_thankyou_info',
-            'file' => 'views/blocks/thankyou.tpl'
-        ),
-        array (
+            'file' => 'views/blocks/thankyou.tpl',
+        ],
+        [
             'template' => 'page/checkout/order.tpl',
             'block' => 'shippingAndPayment',
-            'file' => 'views/blocks/wirecard_credit_card_fields.tpl'
-        ),
-        array(
+            'file' => 'views/blocks/wirecard_credit_card_fields.tpl',
+        ],
+        [
             'theme' => 'azure',
             'template' => 'page/account/order.tpl',
             'block' => 'account_order_persparams',
-            'file' => 'views/blocks/accountorder_azure.tpl'
-        ),
-        array(
+            'file' => 'views/blocks/accountorder_azure.tpl',
+        ],
+        [
             'template' => 'page/account/order.tpl',
             'block' => 'account_order_history_cart_items',
-            'file' => 'views/blocks/accountorder.tpl'
-        ),
-        array(
+            'file' => 'views/blocks/accountorder.tpl',
+        ],
+        [
             'template' => 'email/html/order_cust.tpl',
             'block' => 'email_html_order_cust_orderemail',
-            'file' => 'views/blocks/email_html_order_cust_orderemail.tpl'
-        ),
-        array(
+            'file' => 'views/blocks/email_html_order_cust_orderemail.tpl',
+        ],
+        [
             'template' => 'email/plain/order_cust.tpl',
             'block' => 'email_plain_order_cust_orderemail',
-            'file' => 'views/blocks/email_plain_order_cust_orderemail.tpl'
-        ),
-        array(
+            'file' => 'views/blocks/email_plain_order_cust_orderemail.tpl',
+        ],
+        [
             'template' => 'email/html/order_owner.tpl',
             'block' => 'email_html_order_owner_orderemail',
-            'file' => 'views/blocks/email_html_order_owner_orderemail.tpl'
-        ),
-        array(
+            'file' => 'views/blocks/email_html_order_owner_orderemail.tpl',
+        ],
+        [
             'template' => 'email/plain/order_owner.tpl',
             'block' => 'email_plain_order_owner_orderemail',
-            'file' => 'views/blocks/email_plain_order_owner_orderemail.tpl'
-        ),
-        array(
+            'file' => 'views/blocks/email_plain_order_owner_orderemail.tpl',
+        ],
+        [
             'template' => 'module_config.tpl',
             'block' => 'admin_module_config_form',
-            'file' => 'views/admin/blocks/admin_module_config_form.tpl'
-        ),
-        array(
+            'file' => 'views/admin/blocks/admin_module_config_form.tpl',
+        ],
+        [
             'template' => 'payment_main.tpl',
             'block' => 'admin_payment_main_editor',
-            'file' => 'views/admin/blocks/admin_payment_main_editor.tpl'
-        ),
-        array(
+            'file' => 'views/admin/blocks/admin_payment_main_editor.tpl',
+        ],
+        [
             'template' => 'module_config.tpl',
             'block' => 'admin_module_config_form',
-            'file' => 'views/admin/blocks/admin_module_config_form.tpl'
-        ),
-    ),
-    'templates'         => array(
+            'file' => 'views/admin/blocks/admin_module_config_form.tpl',
+        ],
+    ],
+    'templates' => [
         'transaction.tpl'                   => 'wirecard/paymentgateway/views/admin/tpl/transaction.tpl',
         'transaction_list.tpl'              => 'wirecard/paymentgateway/views/admin/tpl/transaction_list.tpl',
         'tab_simple.tpl'                    => 'wirecard/paymentgateway/views/admin/tpl/tab_simple.tpl',
@@ -211,11 +211,11 @@ $aModule = array(
         'module_support.tpl'                => 'wirecard/paymentgateway/views/admin/tpl/module_support.tpl',
         'module_support_email.tpl'          => 'wirecard/paymentgateway/views/admin/tpl/email/module_support_email.tpl',
         'live_chat.tpl'                     => 'wirecard/paymentgateway/views/admin/inc/live_chat.tpl',
-    ),
-    'events'            => array(
-        'onActivate'        => '\Wirecard\Oxid\Core\OxidEEEvents::onActivate',
-        'onDeactivate'      => '\Wirecard\Oxid\Core\OxidEEEvents::onDeactivate'
-    ),
+    ],
+    'events' => [
+        'onActivate'        => '\Wirecard\Oxid\Core\OxidEeEvents::onActivate',
+        'onDeactivate'      => '\Wirecard\Oxid\Core\OxidEeEvents::onDeactivate',
+    ],
     /**
      * The settings below result in a set of auto-generated translatable keys. For the PhraseApp parsing script to pick
      * them up, we construct the list of keys below as a comment:
@@ -223,7 +223,12 @@ $aModule = array(
      * translate('SHOP_MODULE_wd_email_on_pending_orders')
      * translate('SHOP_MODULE_GROUP_wd_emails')
      */
-    'settings' => array(
-        array('group' => 'wd_emails', 'name' => 'wd_email_on_pending_orders', 'type' => 'bool', 'value' => 'false')
-    )
-);
+    'settings' => [
+        [
+            'group' => 'wd_emails',
+            'name' => 'wd_email_on_pending_orders',
+            'type' => 'bool',
+            'value' => 'false',
+        ],
+    ],
+];

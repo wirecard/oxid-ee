@@ -37,7 +37,7 @@ class TransactionList extends ListModel
      *
      * @since 1.0.0
      */
-    public function getListByConditions(array $aConditions = [], string $sOrderByField = 'date'): TransactionList
+    public function getListByConditions($aConditions = [], $sOrderByField = 'date')
     {
         $oDb = DatabaseProvider::getDb();
         $oListObject = $this->getBaseObject();
@@ -64,7 +64,7 @@ class TransactionList extends ListModel
      *
      * @since 1.0.0
      */
-    protected function _getChildTransactionIds(Transaction $oTransaction)
+    protected function _getChildTransactionIds($oTransaction)
     {
         $aChildTransactionIds = [];
 

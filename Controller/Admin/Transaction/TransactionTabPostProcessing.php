@@ -9,9 +9,8 @@
 
 namespace Wirecard\Oxid\Controller\Admin\Transaction;
 
-use Exception;
-
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 
 use Wirecard\Oxid\Controller\Admin\Tab;
 use Wirecard\Oxid\Model\Transaction;
@@ -73,7 +72,7 @@ class TransactionTabPostProcessing extends Tab
      *
      * @since 1.0.1
      */
-    private $_aPostProcessingActions;
+    private $_aActions;
 
     /**
      * TransactionTab constructor.
@@ -153,11 +152,11 @@ class TransactionTabPostProcessing extends Tab
     {
         $sTemplate = parent::render();
 
-        $this->_aPostProcessingActions = [];
+        $this->_aActions = [];
 
         // if the transaction state is 'closed', there are no post-processing actions available
         if ($this->oTransaction->wdoxidee_ordertransactions__state->value !== Transaction::STATE_CLOSED) {
-            $this->_aPostProcessingActions = $this->_getPostProcessingActions();
+            $this->_aActions = $this->_getPostProcessingActions();
         }
 
         $aRequestParameters = $this->_getRequestParameters();
@@ -169,13 +168,13 @@ class TransactionTabPostProcessing extends Tab
                 $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId);
         }
 
-        $this->setViewData([
-            'actions' => $this->_aPostProcessingActions,
+        Helper::addToViewData($this, [
+            'actions' => $this->_aActions,
             'requestParameters' => $aRequestParameters,
             'alert' => $this->_processRequest($aRequestParameters),
             'currency' => $this->oTransaction->wdoxidee_ordertransactions__currency->value,
             'emptyText' => Helper::translate('wd_text_no_further_operations_possible'),
-        ] + $this->getViewData());
+        ]);
 
         return $sTemplate;
     }
@@ -187,7 +186,7 @@ class TransactionTabPostProcessing extends Tab
      *
      * @since 1.0.1
      */
-    private function _getRequestParameters(): array
+    private function _getRequestParameters()
     {
         /**
          * @var OxidEsales\Eshop\Core\Config
@@ -195,7 +194,7 @@ class TransactionTabPostProcessing extends Tab
         $oConfig = Registry::getConfig();
         $aActionConfig = null;
 
-        foreach ($this->_aPostProcessingActions as $sActionType => $aSingleActionConfig) {
+        foreach ($this->_aActions as $sActionType => $aSingleActionConfig) {
             if ($oConfig->getRequestParameter($sActionType)) {
                 $aActionConfig = $aSingleActionConfig;
             }
@@ -211,23 +210,23 @@ class TransactionTabPostProcessing extends Tab
      * Validates a request.
      *
      * @param array $aRequestParameters
-     * @throws Exception
+     * @throws StandardException
      *
      * @since 1.0.1
      */
-    private function _validateRequest(array $aRequestParameters)
+    private function _validateRequest($aRequestParameters)
     {
         $fAmount = $aRequestParameters[self::KEY_AMOUNT];
 
         if (!$this->_isAmountNumeric($fAmount)) {
-            throw new Exception(Helper::translate('wd_text_generic_error'));
+            throw new StandardException(Helper::translate('wd_text_generic_error'));
         }
 
         $sTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
         $fMaxAmount = $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId);
 
         if (!$this->_isPositiveBelowMax($fAmount, $fMaxAmount)) {
-            throw new Exception(Helper::translate('wd_total_amount_not_in_range_text'));
+            throw new StandardException(Helper::translate('wd_total_amount_not_in_range_text'));
         }
     }
 
@@ -268,7 +267,7 @@ class TransactionTabPostProcessing extends Tab
      *
      * @since 1.0.1
      */
-    private function _processRequest(array $aRequestParameters)
+    private function _processRequest($aRequestParameters)
     {
         if (empty($aRequestParameters[self::KEY_ACTION])) {
             return null;
@@ -285,8 +284,8 @@ class TransactionTabPostProcessing extends Tab
             // execute the callback method defined in the "action" request parameter
             $aState['message'] = $this->_handleRequestAction($sActionTitle, $sTransactionAmount);
             $aState['type'] = 'success';
-        } catch (Exception $e) {
-            $aState['message'] = $e->getMessage();
+        } catch (StandardException $oException) {
+            $aState['message'] = $oException->getMessage();
             $aState['type'] = 'error';
         }
 

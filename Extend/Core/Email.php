@@ -27,23 +27,23 @@ class Email extends Email_parent
      *
      * @since 1.0.0
      */
-    private $_sSupportEmailTemplate = 'module_support_email.tpl';
+    private $_sSupportTemplate = 'module_support_email.tpl';
 
     /**
      * @inheritdoc
      *
      * For custom payment method send the email in order language
      *
-     * @param \OxidEsales\Eshop\Application\Model\Order $order   Order object
-     * @param string                                    $subject user defined subject [optional]
+     * @param \OxidEsales\Eshop\Application\Model\Order $oOrder   Order object
+     * @param string                                    $sSubject user defined subject [optional]
      *
      * @return bool
      *
      * @since 1.0.0
      */
-    public function sendOrderEmailToUser($order, $subject = null)
+    public function sendOrderEmailToUser($oOrder, $sSubject = null)
     {
-        return $this->_sendEmailWithOrderLanguage($order, $subject, array(parent, 'sendOrderEmailToUser'));
+        return $this->_sendEmailWithOrderLanguage($oOrder, $sSubject, [parent, 'sendOrderEmailToUser']);
     }
 
     /**
@@ -51,34 +51,34 @@ class Email extends Email_parent
      *
      * For custom payment method send the email in order language
      *
-     * @param \OxidEsales\Eshop\Application\Model\Order $order   Order object
-     * @param string                                    $subject user defined subject [optional]
+     * @param \OxidEsales\Eshop\Application\Model\Order $oOrder   Order object
+     * @param string                                    $sSubject user defined subject [optional]
      *
      * @return bool
      *
      * @since 1.0.0
      */
-    public function sendOrderEmailToOwner($order, $subject = null)
+    public function sendOrderEmailToOwner($oOrder, $sSubject = null)
     {
-        return $this->_sendEmailWithOrderLanguage($order, $subject, array(parent, 'sendOrderEmailToOwner'));
+        return $this->_sendEmailWithOrderLanguage($oOrder, $sSubject, [parent, 'sendOrderEmailToOwner']);
     }
 
     /**
      * Wrapper for parent methods.
      * If custom payment is used language will be switched to order language
      *
-     * @param object   $order
-     * @param string   $subject
-     * @param callable $function
+     * @param object   $oOrder
+     * @param string   $sSubject
+     * @param callable $cFunction
      *
      * @return bool
      *
      * @since 1.0.0
      */
-    private function _sendEmailWithOrderLanguage($order, $subject, $function)
+    private function _sendEmailWithOrderLanguage($oOrder, $sSubject, $cFunction)
     {
-        if (!$order->isCustomPaymentMethod()) {
-            return call_user_func($function, $order, $subject);
+        if (!$oOrder->isCustomPaymentMethod()) {
+            return call_user_func($cFunction, $oOrder, $sSubject);
         }
 
         $oConfig = Registry::getConfig();
@@ -89,7 +89,7 @@ class Email extends Email_parent
         $oOldShop = $this->_getShop();
         $iOldTplLang = $oLang->getTplLanguage();
         $iOldBaseLang = $oLang->getTplLanguage();
-        $iOrderLanguage = $order->oxorder__oxlang->value;
+        $iOrderLanguage = $oOrder->oxorder__oxlang->value;
 
         // set new language settings before calling parent method
         $oLang->setTplLanguage($iOrderLanguage);
@@ -101,7 +101,7 @@ class Email extends Email_parent
         }
 
         // send emails
-        $iReturn = call_user_func($function, $order, $subject);
+        $iReturn = call_user_func($cFunction, $oOrder, $sSubject);
 
         // reset language settings to the initial state
         $oLang->setTplLanguage($iOldTplLang);
@@ -139,15 +139,15 @@ class Email extends Email_parent
         //set mail params (from, fromName, smtp)
         $this->_setMailParams($oShop);
 
-        $this->setBody($oSmarty->fetch($this->_sSupportEmailTemplate));
+        $this->setBody($oSmarty->fetch($this->_sSupportTemplate));
         $this->setSubject($aEmailData['subject']);
 
         $this->setRecipient($aEmailData['recipient'], "");
         $this->setFrom($aEmailData['from'], "");
 
         $this->clearReplyTos();
-        $replyTo = !empty($aEmailData['replyTo']) ? $aEmailData['replyTo'] : $aEmailData['from'];
-        $this->setReplyTo($replyTo, "");
+        $sReplyTo = !empty($aEmailData['replyTo']) ? $aEmailData['replyTo'] : $aEmailData['from'];
+        $this->setReplyTo($sReplyTo, "");
 
         return $this->send();
     }

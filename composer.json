@@ -54,8 +54,8 @@
   "scripts": {
     "make-readme-badge": "@php .bin/version-helper.php -r",
     "make-release-notes": "@php .bin/version-helper.php",
-    "cs-check": "phpcs --standard=./phpcs.xml .",
-    "cs-fix": "phpcbf --standard=./phpcs.xml .",
+    "cs-check": "phpcs --runtime-set ignore_warnings_on_exit true --standard=./phpcs.xml .",
+    "cs-fix": "phpcbf --runtime-set ignore_warnings_on_exit true --standard=./phpcs.xml .",
     "upload-coverage": "codacycoverage clover Tests/reports/clover.xml",
     "md": "phpmd Controller,Core,Extend,Model text phpmd.xml"
   },

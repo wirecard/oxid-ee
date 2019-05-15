@@ -25,7 +25,7 @@ class TransactionTabPaymentDetails extends TransactionTab
      *
      * @since 1.0.0
      */
-    protected function _getData(): array
+    protected function _getData()
     {
         $aPaymentDetails = $this->oResponseMapper->getPaymentDetails();
         $this->_unsetOrderNumber($aPaymentDetails);

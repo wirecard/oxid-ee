@@ -50,14 +50,14 @@ class OrderController extends OrderController_parent
      *
      * @since 1.0.0
      */
-    private $_oCreditCardPaymentMethod;
+    private $_oCcPaymentMethod;
 
     /**
      * @var Config
      *
      * @since 1.0.0
      */
-    private $_oPaymentMethodConfig;
+    private $_oConfig;
 
     /**
      * Extends the parent init function and finalizes the order in case it was a Wirecard payment method
@@ -77,7 +77,7 @@ class OrderController extends OrderController_parent
             $sShopBaseUrl = $oConfig->getShopUrl();
             $sLanguageCode = Registry::getLang()->getBaseLanguage();
 
-            $aParams = array(
+            $aParams = [
                 'lang' => $sLanguageCode,
                 'force_sid' => $oSession->getId(),
                 'stoken' => $oSession->getSessionChallengeToken(),
@@ -89,8 +89,8 @@ class OrderController extends OrderController_parent
                 'ord_agb' => '1',
                 'oxdownloadableproductsagreement' => '0',
                 'oxserviceproductsagreement' => '0',
-                'wdtoken' => $sWdSessionToken
-            );
+                'wdtoken' => $sWdSessionToken,
+            ];
 
             if ($oConfig->getRequestParameter('redirectFromForm')) {
                 $oSession->setVariable(self::FORM_POST_VARIABLE, $_POST);
@@ -258,8 +258,8 @@ class OrderController extends OrderController_parent
         try {
             $oTransaction = $oPaymentGateway->createTransaction($oBasket, $oOrder);
             $oResponse = $oPaymentGateway->executeTransaction($oTransaction, $oOrder, $oBasket);
-        } catch (\Exception $exc) {
-            $oLogger->error(__METHOD__ . ": Error processing transaction: " . $exc->getMessage(), [$exc]);
+        } catch (\Exception $oException) {
+            $oLogger->error(__METHOD__ . ": Error processing transaction: " . $oException->getMessage(), [$oException]);
             $oOrder->handleOrderState(Order::STATE_FAILED);
 
             return $this->_getNextStep(Order::ORDER_STATE_PAYMENTERROR);
@@ -403,11 +403,11 @@ class OrderController extends OrderController_parent
      */
     private function _getCreditCardPaymentMethod()
     {
-        if (is_null($this->_oCreditCardPaymentMethod)) {
-            $this->_oCreditCardPaymentMethod = new CreditCardPaymentMethod();
+        if (is_null($this->_oCcPaymentMethod)) {
+            $this->_oCcPaymentMethod = new CreditCardPaymentMethod();
         }
 
-        return $this->_oCreditCardPaymentMethod;
+        return $this->_oCcPaymentMethod;
     }
 
     /**
@@ -419,12 +419,12 @@ class OrderController extends OrderController_parent
      */
     private function _getCreditCardPaymentMethodConfig()
     {
-        if (is_null($this->_oPaymentMethodConfig)) {
+        if (is_null($this->_oConfig)) {
             $oPayment = $this->getPayment();
-            $this->_oPaymentMethodConfig = $this->_getCreditCardPaymentMethod()->getConfig($oPayment);
+            $this->_oConfig = $this->_getCreditCardPaymentMethod()->getConfig($oPayment);
         }
 
-        return $this->_oPaymentMethodConfig;
+        return $this->_oConfig;
     }
 
     /**
@@ -436,7 +436,7 @@ class OrderController extends OrderController_parent
      *
      * @since 1.0.0
      */
-    private function _getPaymentAction(string $sAction)
+    private function _getPaymentAction($sAction)
     {
         if ($sAction == Operation::PAY) {
             return 'purchase';

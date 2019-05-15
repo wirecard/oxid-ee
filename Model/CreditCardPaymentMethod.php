@@ -145,8 +145,7 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     public function getConfigFields()
     {
-        $parentConfigFields = parent::getConfigFields();
-        $additionalFields = [
+        $aAdditionalFields = [
             'threeDMaid' => [
                 'type' => 'text',
                 'field' => 'oxpayments__wdoxidee_three_d_maid',
@@ -181,7 +180,7 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'type' => 'link',
                 'title' => Helper::translate('wd_more_info'),
                 'link' => 'https://github.com/wirecard/oxid-ee/wiki/Credit-Card#non-3-d-secure-and-3-d-secure-limits',
-                'text' => Helper::translate('wd_three_d_link_text')
+                'text' => Helper::translate('wd_three_d_link_text'),
             ],
             'descriptor' => [
                 'type'        => 'select',
@@ -232,7 +231,7 @@ class CreditCardPaymentMethod extends PaymentMethod
             ],
         ];
 
-        return array_merge($parentConfigFields, $additionalFields);
+        return parent::getConfigFields() + $aAdditionalFields;
     }
 
     /**
@@ -265,9 +264,17 @@ class CreditCardPaymentMethod extends PaymentMethod
     {
         return array_merge(
             parent::getPublicFieldNames(),
-            ['threeDMaid', 'nonThreeDMaxLimit', 'threeDMinLimit', 'limitsCurrency',
-            'descriptor', 'additionalInfo', 'paymentAction', 'deleteCanceledOrder',
-            'deleteFailedOrder']
+            [
+                'threeDMaid',
+                'nonThreeDMaxLimit',
+                'threeDMinLimit',
+                'limitsCurrency',
+                'descriptor',
+                'additionalInfo',
+                'paymentAction',
+                'deleteCanceledOrder',
+                'deleteFailedOrder',
+            ]
         );
     }
 }

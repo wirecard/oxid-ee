@@ -4,4 +4,6 @@ set -ex
 
 # run tests
 cd /var/www/html
-vendor/bin/runtests
+
+RESTORE_SHOP_AFTER_TESTS_SUITE=1 \
+    vendor/bin/runtests

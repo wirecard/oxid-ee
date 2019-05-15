@@ -57,7 +57,7 @@ class FormInteractionController extends FrontendController
      *
      * @since 1.0.0
      */
-    public function getUrl(): string
+    public function getUrl()
     {
         return $this->_oResponse->sUrl;
     }
@@ -67,7 +67,7 @@ class FormInteractionController extends FrontendController
      *
      * @since 1.0.0
      */
-    public function getMethod(): string
+    public function getMethod()
     {
         return $this->_oResponse->sMethod;
     }
@@ -77,7 +77,7 @@ class FormInteractionController extends FrontendController
      *
      * @since 1.0.0
      */
-    public function getFormFields(): FormFieldMap
+    public function getFormFields()
     {
         return $this->_oResponse->aFormFields;
     }

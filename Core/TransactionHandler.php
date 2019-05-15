@@ -227,7 +227,7 @@ class TransactionHandler
         $sDbQuery = "SELECT SUM(amount) AS childTransactionsTotalAmount FROM {$sDbIdentifier}
                         WHERE PARENTTRANSACTIONID = ?";
 
-        $aQueryArgs = array($sTransactionId);
+        $aQueryArgs = [$sTransactionId];
 
         $aResult = $oDb->select($sDbQuery, $aQueryArgs);
 
@@ -272,7 +272,7 @@ class TransactionHandler
      *
      * @since 1.0.1
      */
-    private function _getPaymentMethod(Transaction $oTransaction)
+    private function _getPaymentMethod($oTransaction)
     {
         try {
             return PaymentMethodFactory::create($oTransaction->getPaymentType());

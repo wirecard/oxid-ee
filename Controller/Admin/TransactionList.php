@@ -13,6 +13,7 @@ use OxidEsales\Eshop\Application\Controller\Admin\AdminListController;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\TableViewNameGenerator;
 
+use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\Transaction;
 
@@ -53,12 +54,14 @@ class TransactionList extends AdminListController
      */
     public function render()
     {
-        $this->setViewData($this->getViewData() + [
+        $sTemplate = parent::render();
+
+        Helper::addToViewData($this, [
             'payments' => PaymentMethodHelper::getModulePayments(),
             'states' => Transaction::getStates(),
         ]);
 
-        return parent::render();
+        return $sTemplate;
     }
 
     /**
@@ -70,7 +73,7 @@ class TransactionList extends AdminListController
      *
      * @since 1.0.0
      */
-    protected function _buildSelectString($oListObject = null): string
+    protected function _buildSelectString($oListObject = null)
     {
         $sQuery = parent::_buildSelectString($oListObject);
 

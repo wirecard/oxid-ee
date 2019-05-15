@@ -28,7 +28,7 @@ class AccountHolderHelper
      *
      * @since 1.0.0
      */
-    public function createAccountHolder(array $aArgs): AccountHolder
+    public function createAccountHolder($aArgs)
     {
         $oAccountHolder = new AccountHolder();
 
@@ -60,7 +60,7 @@ class AccountHolderHelper
      *
      * @since 1.0.0
      */
-    private function _createAddress(array $aArgs): Address
+    private function _createAddress($aArgs)
     {
         $oAddress = new Address(
             $aArgs['countryCode'] ?? '',

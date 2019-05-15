@@ -9,10 +9,9 @@
 
 namespace Wirecard\Oxid\Model;
 
-use Exception;
-
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 
 use Psr\Log\LoggerInterface;
 
@@ -45,7 +44,7 @@ abstract class PaymentMethod
     /**
      * PaymentMethod constructor.
      *
-     * @throws Exception if payment method name is not overwritten in child class
+     * @throws StandardException if payment method name is not overwritten in child class
      *
      * @since 1.0.0
      */
@@ -54,7 +53,7 @@ abstract class PaymentMethod
         $this->_oLogger = Registry::getLogger();
 
         if ($this::$_sName == 'undefined') {
-            throw new Exception("payment method name not defined: " . get_class());
+            throw new StandardException("payment method name not defined: " . get_class());
         }
     }
 
@@ -99,19 +98,17 @@ abstract class PaymentMethod
      *
      * @return string
      *
-     * @SuppressWarnings(PHPMD.BooleanArgumentFlag)
-     *
      * @since 1.0.0
      */
-    public static function getName(bool $bForOxid = false): string
+    public static function getName($bForOxid = false)
     {
-        $childClass = get_called_class();
+        $oChildClass = get_called_class();
 
         if ($bForOxid) {
-            return self::OXID_NAME_PREFIX . $childClass::$_sName;
+            return self::OXID_NAME_PREFIX . $oChildClass::$_sName;
         }
 
-        return $childClass::$_sName;
+        return $oChildClass::$_sName;
     }
 
     /**
@@ -123,7 +120,7 @@ abstract class PaymentMethod
      *
      * @since 1.0.0
      */
-    public static function getOxidFromSDKName(string $sSDKName): string
+    public static function getOxidFromSDKName($sSDKName)
     {
         return self::OXID_NAME_PREFIX . $sSDKName;
     }
@@ -211,14 +208,12 @@ abstract class PaymentMethod
      *
      * @return array
      *
-     * @SuppressWarnings(PHPMD)
-     *
      * @since 1.0.0
      */
     public function getSupportConfigFields()
     {
-        $aFieldsPublic = array_filter($this->getConfigFields(), function ($field, $key) {
-            return in_array($key, $this->getPublicFieldNames());
+        $aFieldsPublic = array_filter($this->getConfigFields(), function ($aField, $sKey) {
+            return in_array($sKey, $this->getPublicFieldNames());
         }, ARRAY_FILTER_USE_BOTH);
 
         return $aFieldsPublic;
