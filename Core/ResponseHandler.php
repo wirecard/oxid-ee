@@ -9,8 +9,6 @@
 
 namespace Wirecard\Oxid\Core;
 
-use Exception;
-
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Exception\SystemComponentException;
@@ -61,7 +59,7 @@ class ResponseHandler
 
             try {
                 $oOrder->sendOrderByEmail();
-            } catch (Exception $oException) {
+            } catch (SystemComponentException $oException) {
                 // this error occurs when the 'Azure' theme is activated and a non-3DS credit card transaction is made
                 // everything was actually successful, but the 'getThumbnailUrl' method does not exist on the BasketItem
                 // in the 'order_cust.tpl' file. There is no need to do anything in this case but normally continue with
@@ -69,8 +67,7 @@ class ResponseHandler
                 // Otherwise the exception is re-thrown.
                 $sAzureErrorMsg = "Function 'getThumbnailUrl' does not exist or is not accessible!";
 
-                $bIsAzureErrorMessage = strpos($oException->getMessage(), $sAzureErrorMsg) === 0;
-                if (!($oException instanceof SystemComponentException && $bIsAzureErrorMessage)) {
+                if (strpos($oException->getMessage(), $sAzureErrorMsg) !== 0) {
                     throw $exc;
                 }
             }
