@@ -152,8 +152,8 @@ class OxidEeEvents
             " ADD COLUMN `WDOXIDEE_THREE_D_MIN_LIMIT` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_THREE_D_MIN_LIMIT', $sQueryAddMinLimit);
 
-        $sQueryLimitsCurrency = "ALTER TABLE " . self::PAYMENT_TABLE . "
-            ADD COLUMN `WDOXIDEE_LIMITS_CURRENCY` varchar(128) default '' NOT NULL";
+        $sQueryLimitsCurrency = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_LIMITS_CURRENCY` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_LIMITS_CURRENCY', $sQueryLimitsCurrency);
 
         $sQueryAddHttpUser = "ALTER TABLE " . self::PAYMENT_TABLE .

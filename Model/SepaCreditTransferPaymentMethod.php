@@ -16,7 +16,6 @@ use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 
-use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Model\Transaction;
 
 /**

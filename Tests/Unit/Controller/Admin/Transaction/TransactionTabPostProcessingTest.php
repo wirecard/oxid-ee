@@ -7,11 +7,15 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use OxidEsales\Eshop\Core\Field;
+
+use Wirecard\PaymentSdk\BackendService;
+
 use Wirecard\Oxid\Controller\Admin\Transaction\TransactionTabPostProcessing;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\TransactionHandler;
+use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\Transaction;
-use Wirecard\PaymentSdk\BackendService;
 
 class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
 {
@@ -81,9 +85,9 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
 
     public function testRenderSepaCredit()
     {
-        $oPayment = oxNew(\Wirecard\Oxid\Extend\Model\Payment::class);
+        $oPayment = oxNew(Payment::class);
         $oPayment->load('wdsepacredit');
-        $oPayment->oxpayments__oxactive = new \OxidEsales\Eshop\Core\Field(0);
+        $oPayment->oxpayments__oxactive = new Field(0);
         $oPayment->save();
         $this->_oBackendServiceStub->method('retrieveBackendOperations')->willReturn(['testkey' => 'testvalue']);
 
@@ -187,25 +191,6 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
 
     public function testRequestActionProvider()
     {
-        $aSuccessResponseStub = ['status' => Transaction::STATE_SUCCESS];
-        $aFailureResponseStub = ['status' => Transaction::STATE_ERROR];
-
-        return [
-            'success response' => [$aSuccessResponseStub],
-            'failure response' => [$aFailureResponseStub],
-        ];
-    }
-
-    public function testFilterPostProcessingActions()
-    {
-        $extendedTransactionTabPostProcessing = new class() extends TransactionTabPostProcessing
-        {
-            public function publicMappedSpecificProperties()
-            {
-                return parent::mappedSpecificProperties();
-            }
-        };
-
         $aSuccessResponseStub = ['status' => Transaction::STATE_SUCCESS];
         $aFailureResponseStub = ['status' => Transaction::STATE_ERROR];
 

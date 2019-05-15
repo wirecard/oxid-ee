@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * Shop System Plugins:
  * - Terms of Use can be found under:
@@ -34,7 +35,9 @@ class PaymentMethodFactory
      * @return PaymentMethod
      * @throws StandardException if $sPaymentMethodType is not registered
      *
+     * will grow as we add new payment methods
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @codingStandardsIgnoreStart Generic.Metrics.CyclomaticComplexity
      *
      * @since 1.0.0
      */
@@ -53,4 +56,5 @@ class PaymentMethodFactory
                 throw new StandardException("payment type not registered: $sPaymentMethodType");
         }
     }
+    // @codingStandardsIgnoreEnd Generic.Metrics.CyclomaticComplexity
 }
