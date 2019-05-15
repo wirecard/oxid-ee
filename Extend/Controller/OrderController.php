@@ -440,6 +440,7 @@ class OrderController extends OrderController_parent
         if ($sAction == Operation::PAY) {
             return 'purchase';
         }
+
         return 'authorization';
     }
 }
