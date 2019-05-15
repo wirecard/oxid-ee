@@ -8,7 +8,8 @@
  */
 
 /**
- * Contains all locators used in the tests.
+ * Contains a map for UI locators.
+ * @see https://www.seleniumhq.org/docs/06_test_design_considerations.jsp#user-interface-mapping
  */
 return [
     'checkout' => [

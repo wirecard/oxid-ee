@@ -8,7 +8,7 @@
  */
 
 /**
- * Config data for all acceptance tests.
+ * Contains config data.
  */
 return [
     'payments' => [

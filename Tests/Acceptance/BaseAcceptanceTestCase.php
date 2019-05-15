@@ -42,6 +42,7 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
     {
         parent::tearDown();
 
+        // the session has to be closed to get a fresh browser window
         self::stopMinkSession();
     }
 
@@ -54,7 +55,7 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
     }
 
     /**
-     * Returns an value in an array by a path in dot notation (e.g. "a.b.c").
+     * Returns a value in an array by a path in dot notation (e.g. "a.b.c").
      * @param array $array
      * @param string $path
      * @return mixed

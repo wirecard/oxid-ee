@@ -21,14 +21,14 @@ class CheckoutTestCase extends BaseAcceptanceTestCase
     {
         parent::setUp();
 
-        $this->activateCustomPaymentMethods();
+        $this->activateModulePaymentMethods();
         $this->addMockData();
     }
 
     /**
-     * Activates all the module payment methods.
+     * Activates all module payment methods.
      */
-    public function activateCustomPaymentMethods()
+    public function activateModulePaymentMethods()
     {
         $this->executeSql("UPDATE `oxpayments` SET `OXACTIVE` = '1' WHERE `OXID` LIKE 'wd%'");
     }
