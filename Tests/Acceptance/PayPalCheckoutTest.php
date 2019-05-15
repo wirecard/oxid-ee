@@ -14,11 +14,16 @@ use Wirecard\Oxid\Model\PaypalPaymentMethod;
 /**
  * Acceptance tests for the PayPal checkout flow.
  */
-class PayPalCheckoutTest extends CheckoutTestCase
+class PaypalCheckoutTest extends CheckoutTestCase
 {
+    public function getPaymentMethod()
+    {
+        return new PaypalPaymentMethod();
+    }
+
     public function testCheckoutForPurchase()
     {
-        $this->setPaymentActionPurchase(PaypalPaymentMethod::getName(true));
+        $this->setPaymentActionPurchase();
         $this->goThroughCheckout();
 
         $this->assertPaymentSuccessful();
@@ -26,7 +31,7 @@ class PayPalCheckoutTest extends CheckoutTestCase
 
     public function testCheckoutForAuthorize()
     {
-        $this->setPaymentActionAuthorize(PaypalPaymentMethod::getName(true));
+        $this->setPaymentActionAuthorize();
         $this->goThroughCheckout();
 
         $this->assertPaymentSuccessful();

@@ -14,8 +14,13 @@ use Wirecard\Oxid\Model\Transaction;
 /**
  * Acceptance test class for testing checkout flows.
  */
-class CheckoutTestCase extends BaseAcceptanceTestCase
+abstract class CheckoutTestCase extends BaseAcceptanceTestCase
 {
+    /**
+     * @var Wirecard\Oxid\Model\PaymentMethod
+     */
+    private $paymentMethod;
+
     /**
      * @inheritdoc
      */
@@ -23,9 +28,16 @@ class CheckoutTestCase extends BaseAcceptanceTestCase
     {
         parent::setUp();
 
-        $this->activateModulePaymentMethods();
+        $this->paymentMethod = $this->getPaymentMethod();
+
+        $this->activatePaymentMethod();
         $this->addMockData();
     }
+
+    /**
+     * Payment method getter.
+     */
+    abstract public function getPaymentMethod();
 
     /**
      * Adds mock data required to complete a checkout.
@@ -37,29 +49,27 @@ class CheckoutTestCase extends BaseAcceptanceTestCase
     }
 
     /**
-     * Activates all module payment methods.
+     * Activates the payment method.
      */
-    public function activateModulePaymentMethods()
+    public function activatePaymentMethod()
     {
-        $this->executeSql("UPDATE `oxpayments` SET `OXACTIVE` = '1' WHERE `WDOXIDEE_ISOURS` = '1'");
+        $this->executeSql("UPDATE `oxpayments` SET `OXACTIVE` = '1' WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
     }
 
     /**
      * Sets a payment method's payment action to "purchase".
-     * @param string $paymentMethodName
      */
-    public function setPaymentActionPurchase($paymentMethodName)
+    public function setPaymentActionPurchase()
     {
-        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_PAY . "' WHERE `OXID` = '{$paymentMethodName}'");
+        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_PAY . "' WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
     }
 
     /**
      * Sets a payment method's payment action to "authorize".
-     * @param string $paymentMethodName
      */
-    public function setPaymentActionAuthorize($paymentMethodName)
+    public function setPaymentActionAuthorize()
     {
-        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_RESERVE . "' WHERE `OXID` = '{$paymentMethodName}'");
+        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_RESERVE . "' WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
     }
 
     /**
