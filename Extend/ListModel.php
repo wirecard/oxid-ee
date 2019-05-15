@@ -12,6 +12,8 @@ namespace Wirecard\Oxid\Extend;
 /**
  * @inheritdoc
  *
+ * @mixin \OxidEsales\Eshop\Core\Model\ListModel
+ *
  * @since 1.0.0
  */
 class ListModel extends ListModel_parent

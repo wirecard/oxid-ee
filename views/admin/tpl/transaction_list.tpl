@@ -32,7 +32,7 @@ window.onload = function ()
                     <td class="listfilter first">
                         <div class="r1">
                             <div class="b1">
-                                <input class="listedit" type="text" size="20" name="where[wdoxidee_ordertransactions][oxid]" value="[{$where.wdoxidee_ordertransactions.oxid}]">
+                                <input class="listedit" type="text" size="20" name="where[wdoxidee_ordertransactions][transactionnumber]" value="[{$where.wdoxidee_ordertransactions.transactionnumber}]">
                             </div>
                         </div>
                     </td>
@@ -115,7 +115,7 @@ window.onload = function ()
 
             <tr>
                 [{block name="admin_transaction_list_sorting"}]
-                    <td class="listheader first" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'oxid', 'asc');document.search.submit();">[{oxmultilang ident="wd_panel_transaction"}]</a></td>
+                    <td class="listheader first" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'transactionnumber', 'desc');document.search.submit();">[{oxmultilang ident="wd_panel_transaction"}]</a></td>
                     <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'orderid', 'asc');document.search.submit();">[{oxmultilang ident="wd_panel_order_id"}]</a></td>
                     <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'ordernumber', 'asc');document.search.submit();">[{oxmultilang ident="wd_panel_order_number"}]</a></td>
                     <td class="listheader" height="15"><a href="Javascript:top.oxid.admin.setSorting(document.search, 'wdoxidee_ordertransactions', 'transactionid', 'asc');document.search.submit();">[{oxmultilang ident="wd_panel_transcation_id"}]</a></td>
@@ -139,7 +139,7 @@ window.onload = function ()
                         [{assign var="listclass" value=null}]
                     [{/if}]
                     <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__oxid->value}]</a>
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__transactionnumber->value}]');">[{$listitem->wdoxidee_ordertransactions__transactionnumber->value}]</a>
                     </td>
                     <td class="[{$listclass}]">
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__orderid->value}]</a>
