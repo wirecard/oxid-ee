@@ -112,4 +112,12 @@ class CheckoutTestCase extends BaseAcceptanceTestCase
             'cl' => 'thankyou',
         ])) === 0;
     }
+
+    /**
+     * Asserts that, based on the current page, a payment was successful.
+     */
+    public function assertPaymentSuccessful()
+    {
+        $this->assertTrue($this->isThankYouPage($this->getLocation()), 'Payment was not successful.');
+    }
 }

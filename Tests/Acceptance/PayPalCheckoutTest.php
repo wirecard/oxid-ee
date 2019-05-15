@@ -21,7 +21,7 @@ class PayPalCheckoutTest extends CheckoutTestCase
         $this->setPaymentActionPurchase(PaypalPaymentMethod::getName(true));
         $this->goThroughCheckout();
 
-        $this->assertEquals(true, $this->isThankYouPage($this->getLocation()), 'Payment was not successful.');
+        $this->assertPaymentSuccessful();
     }
 
     public function testCheckoutForAuthorize()
@@ -29,7 +29,7 @@ class PayPalCheckoutTest extends CheckoutTestCase
         $this->setPaymentActionAuthorize(PaypalPaymentMethod::getName(true));
         $this->goThroughCheckout();
 
-        $this->assertEquals(true, $this->isThankYouPage($this->getLocation()), 'Payment was not successful.');
+        $this->assertPaymentSuccessful();
     }
 
     private function goThroughCheckout()
