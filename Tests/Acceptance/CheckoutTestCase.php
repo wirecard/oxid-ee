@@ -9,6 +9,8 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
+use Wirecard\Oxid\Model\Transaction;
+
 /**
  * Acceptance test class for testing checkout flows.
  */
@@ -26,6 +28,15 @@ class CheckoutTestCase extends BaseAcceptanceTestCase
     }
 
     /**
+     * Adds mock data required to complete a checkout.
+     */
+    public function addMockData()
+    {
+        $this->executeSql("INSERT INTO `oxuser` (`OXID`, `OXRIGHTS`, `OXUSERNAME`, `OXPASSWORD`, `OXPASSSALT`, `OXFNAME`, `OXLNAME`, `OXSTREET`, `OXSTREETNR`, `OXCITY`, `OXCOUNTRYID`, `OXZIP`, `OXSAL`) VALUES ('wdcheckoutuser', 'user', 'payment@test.com', 'd04c7c05808811484a38486479ebecd5776bdf76966db23b6a7469d6f0724af5fcb7bb3f77de6372435567951dbc1b8eda29521bcc6b5ccbe778af60847c7825', 'a022994047f11859e9430ec3b37d977d', 'Payment', 'Test', 'Tester Street', '1', 'Berlin', 'a7c40f631fc920687.20179984', '10115', 'MR')");
+        $this->executeSql("INSERT INTO `oxarticles` (`OXID`, `OXARTNUM`, `OXTITLE_1`, `OXPRICE`, `OXSTOCK`) VALUES ('wdcheckoutarticle', '1337', 'Test Article', '100.99', '10')");
+    }
+
+    /**
      * Activates all module payment methods.
      */
     public function activateModulePaymentMethods()
@@ -34,12 +45,21 @@ class CheckoutTestCase extends BaseAcceptanceTestCase
     }
 
     /**
-     * Adds mock data required to complete a checkout.
+     * Sets a payment method's payment action to "purchase".
+     * @param string $paymentMethodName
      */
-    public function addMockData()
+    public function setPaymentActionPurchase($paymentMethodName)
     {
-        $this->executeSql("INSERT INTO `oxuser` (`OXID`, `OXRIGHTS`, `OXUSERNAME`, `OXPASSWORD`, `OXPASSSALT`, `OXFNAME`, `OXLNAME`, `OXSTREET`, `OXSTREETNR`, `OXCITY`, `OXCOUNTRYID`, `OXZIP`, `OXSAL`) VALUES ('wdcheckoutuser', 'user', 'payment@test.com', 'd04c7c05808811484a38486479ebecd5776bdf76966db23b6a7469d6f0724af5fcb7bb3f77de6372435567951dbc1b8eda29521bcc6b5ccbe778af60847c7825', 'a022994047f11859e9430ec3b37d977d', 'Payment', 'Test', 'Tester Street', '1', 'Berlin', 'a7c40f631fc920687.20179984', '10115', 'MR')");
-        $this->executeSql("INSERT INTO `oxarticles` (`OXID`, `OXARTNUM`, `OXTITLE_1`, `OXPRICE`, `OXSTOCK`) VALUES ('wdcheckoutarticle', '1337', 'Test Article', '100.99', '10')");
+        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_PAY . "' WHERE `OXID` = '{$paymentMethodName}'");
+    }
+
+    /**
+     * Sets a payment method's payment action to "authorize".
+     * @param string $paymentMethodName
+     */
+    public function setPaymentActionAuthorize($paymentMethodName)
+    {
+        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_RESERVE . "' WHERE `OXID` = '{$paymentMethodName}'");
     }
 
     /**

@@ -18,19 +18,15 @@ class PayPalCheckoutTest extends CheckoutTestCase
 {
     public function testCheckoutForPurchase()
     {
-        // set the payment action to "purchase"
-        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = 'pay' WHERE `OXID` LIKE '" . PaypalPaymentMethod::getName(true) . "'");
-
+        $this->setPaymentActionPurchase(PaypalPaymentMethod::getName(true));
         $this->goThroughCheckout();
 
         $this->assertEquals(true, $this->isThankYouPage($this->getLocation()), 'Payment was not successful.');
     }
 
-    public function testCheckoutForAuthorization()
+    public function testCheckoutForAuthorize()
     {
-        // set the payment action to "authorize"
-        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = 'reserve' WHERE `OXID` LIKE '" . PaypalPaymentMethod::getName(true) . "'");
-
+        $this->setPaymentActionAuthorize(PaypalPaymentMethod::getName(true));
         $this->goThroughCheckout();
 
         $this->assertEquals(true, $this->isThankYouPage($this->getLocation()), 'Payment was not successful.');
