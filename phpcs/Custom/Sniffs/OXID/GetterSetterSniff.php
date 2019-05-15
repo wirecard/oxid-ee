@@ -4,11 +4,15 @@
  * Ensures that getters and setters are used for certain properties.
  *
  * @see https://docs.oxid-esales.com/developer/en/6.0/modules/certification/software_quality.html#modules-certification-getters-setters
+ *
+ * @since 1.0.1
  */
 class Custom_Sniffs_OXID_GetterSetterSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * @inheritdoc
+     *
+     * @since 1.0.1
      */
     public function register()
     {
@@ -17,6 +21,8 @@ class Custom_Sniffs_OXID_GetterSetterSniff implements PHP_CodeSniffer_Sniff
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.1
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {

@@ -4,6 +4,8 @@
  * Ensures that only custom exceptions are thrown.
  *
  * @see https://docs.oxid-esales.com/developer/en/6.0/modules/certification/software_quality.html#exception-handling
+ *
+ * @since 1.0.1
  */
 class Custom_Sniffs_OXID_CustomExceptionSniff implements PHP_CodeSniffer_Sniff
 {
@@ -13,6 +15,8 @@ class Custom_Sniffs_OXID_CustomExceptionSniff implements PHP_CodeSniffer_Sniff
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.1
      */
     public function register()
     {
@@ -21,6 +25,8 @@ class Custom_Sniffs_OXID_CustomExceptionSniff implements PHP_CodeSniffer_Sniff
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.1
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {

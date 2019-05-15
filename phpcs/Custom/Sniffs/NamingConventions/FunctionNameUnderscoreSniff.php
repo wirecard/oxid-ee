@@ -2,11 +2,15 @@
 
 /**
  * Ensures that all private and protected methods start with an underscore and public methods do not.
+ *
+ * @since 1.0.1
  */
 class Custom_Sniffs_NamingConventions_FunctionNameUnderscoreSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * @inheritdoc
+     *
+     * @since 1.0.1
      */
     public function register()
     {
@@ -15,6 +19,8 @@ class Custom_Sniffs_NamingConventions_FunctionNameUnderscoreSniff implements PHP
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.1
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {

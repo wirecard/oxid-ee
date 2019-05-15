@@ -4,6 +4,8 @@
  * Ensures that functions do not exceed a certain amount of lines of code.
  *
  * @see https://docs.oxid-esales.com/developer/en/6.0/modules/certification/software_quality.html#maximum-length-of-methods-80-lines
+ *
+ * @since 1.0.1
  */
 class Custom_Sniffs_Functions_FunctionLinesOfCodeSniff implements PHP_CodeSniffer_Sniff
 {
@@ -11,6 +13,8 @@ class Custom_Sniffs_Functions_FunctionLinesOfCodeSniff implements PHP_CodeSniffe
      * The limit of lines of code a function should not exceed.
      *
      * @var int
+     *
+     * @since 1.0.1
      */
     public $linesLimit = 80;
 
@@ -18,11 +22,15 @@ class Custom_Sniffs_Functions_FunctionLinesOfCodeSniff implements PHP_CodeSniffe
      * The limit of lines of code a function must not exceed.
      *
      * @var int
+     *
+     * @since 1.0.1
      */
     public $absoluteLinesLimit = 120;
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.1
      */
     public function register()
     {
@@ -31,6 +39,8 @@ class Custom_Sniffs_Functions_FunctionLinesOfCodeSniff implements PHP_CodeSniffe
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.1
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {

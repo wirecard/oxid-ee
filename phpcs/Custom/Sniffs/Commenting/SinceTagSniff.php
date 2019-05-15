@@ -2,6 +2,8 @@
 
 /**
  * Ensures that docblocks contain a @since tag.
+ *
+ * @since 1.0.1
  */
 class Custom_Sniffs_Commenting_SinceTagSniff implements PHP_CodeSniffer_Sniff
 {
@@ -16,6 +18,8 @@ class Custom_Sniffs_Commenting_SinceTagSniff implements PHP_CodeSniffer_Sniff
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.1
      */
     public function register()
     {
@@ -26,6 +30,8 @@ class Custom_Sniffs_Commenting_SinceTagSniff implements PHP_CodeSniffer_Sniff
 
     /**
      * @inheritdoc
+     *
+     * @since 1.0.1
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
@@ -71,6 +77,8 @@ class Custom_Sniffs_Commenting_SinceTagSniff implements PHP_CodeSniffer_Sniff
      * Returns the module's version.
      *
      * @return string|null
+     *
+     * @since 1.0.1
      */
     private function getVersion()
     {
