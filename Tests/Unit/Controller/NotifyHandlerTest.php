@@ -10,6 +10,9 @@
 use PHPUnit\Framework\MockObject\MockObject;
 
 use Wirecard\Oxid\Controller\NotifyHandler;
+use Wirecard\Oxid\Model\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\PaypalPaymentMethod;
+use Wirecard\Oxid\Model\SofortPaymentMethod;
 
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Status;
@@ -107,12 +110,29 @@ class NotifyHandlerTest extends \Wirecard\Test\WdUnitTestCase
         $oFailureResponseStub->method('getStatusCollection')
             ->willReturn($statusCollection);
 
-        $oFailureResponseStub->method('getParentTransactionId')
-            ->willReturn('transactionId');
+        $oFailureResponseStub->method('getData')
+            ->willReturn(['parent-transaction-id' => "parent Transaction Id"]);
 
         return [
             'success response' => [$oSuccessResponseStub],
             'failure response' => [$oFailureResponseStub],
+        ];
+    }
+
+    /**
+     * @dataProvider testGetNotificationUrlProvider
+     */
+    public function testGetNotificationUrl($oPaymentMethod, $oPaymentId) {
+        $result = NotifyHandler::getNotificationUrl($oPaymentMethod);
+
+        $this->assertContains("cl=wcpg_notifyhandler&fnc=handleRequest&pmt=$oPaymentId", $result);
+    }
+
+    public function testGetNotificationUrlProvider() {
+        return [
+            "Paypal notification Url" => [new PaypalPaymentMethod(), 'wdpaypal'],
+            "Credit card notification Url" => [new CreditCardPaymentMethod(), 'wdcreditcard'],
+            "Sofort. notification Url" => [new SofortPaymentMethod(), 'wdsofortbanking'],
         ];
     }
 }
