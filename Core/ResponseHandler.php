@@ -62,7 +62,7 @@ class ResponseHandler
             try {
                 $oOrder->sendOrderByEmail();
             } catch (Exception $exc) {
-                // this error occurrs when the 'Azure' theme is activated and a non-3DS credit card transaction is made
+                // this error occurs when the 'Azure' theme is activated and a non-3DS credit card transaction is made
                 // everything was actually successful, but the 'getThumbnailUrl' method does not exist on the BasketItem
                 // in the 'order_cust.tpl' file. There is no need to do anything in this case but normally continue with
                 // the response handling.
@@ -72,8 +72,6 @@ class ResponseHandler
                 if (!($exc instanceof SystemComponentException && strpos($exc->getMessage(), $sAzureErrorMsg) === 0)) {
                     throw $exc;
                 }
-
-                $oLogger->debug($exc->getMessage());
             }
         }
     }
