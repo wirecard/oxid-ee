@@ -24,8 +24,7 @@
     "phpmd/phpmd": "^2.6.0",
     "oxid-esales/coding-standards": "^3.0.0",
     "codacy/coverage": "dev-master",
-    "symfony/yaml": "^4.2",
-    "escapestudios/symfony2-coding-standard": "2.x-dev"
+    "symfony/yaml": "^4.2"
   },
   "extra": {
     "oxideshop": {
