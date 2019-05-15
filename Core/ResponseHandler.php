@@ -68,7 +68,7 @@ class ResponseHandler
                 $sAzureErrorMsg = "Function 'getThumbnailUrl' does not exist or is not accessible!";
 
                 if (strpos($oException->getMessage(), $sAzureErrorMsg) !== 0) {
-                    throw $exc;
+                    throw $oException;
                 }
             }
         }
