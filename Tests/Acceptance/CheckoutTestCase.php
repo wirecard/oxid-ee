@@ -30,7 +30,7 @@ class CheckoutTestCase extends BaseAcceptanceTestCase
      */
     public function activateModulePaymentMethods()
     {
-        $this->executeSql("UPDATE `oxpayments` SET `OXACTIVE` = '1' WHERE `OXID` LIKE 'wd%'");
+        $this->executeSql("UPDATE `oxpayments` SET `OXACTIVE` = '1' WHERE `WDOXIDEE_ISOURS` = '1'");
     }
 
     /**

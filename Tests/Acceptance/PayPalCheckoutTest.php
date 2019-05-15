@@ -9,6 +9,8 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
+use Wirecard\Oxid\Model\PaypalPaymentMethod;
+
 /**
  * Acceptance tests for the PayPal checkout flow.
  */
@@ -17,7 +19,7 @@ class PayPalCheckoutTest extends CheckoutTestCase
     public function testCheckoutForPurchase()
     {
         // set the payment action to "purchase"
-        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = 'pay' WHERE `OXID` LIKE 'wdpaypal'");
+        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = 'pay' WHERE `OXID` LIKE '" . PaypalPaymentMethod::getName(true) . "'");
 
         $this->goThroughCheckout();
 
@@ -27,7 +29,7 @@ class PayPalCheckoutTest extends CheckoutTestCase
     public function testCheckoutForAuthorization()
     {
         // set the payment action to "authorize"
-        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = 'reserve' WHERE `OXID` LIKE 'wdpaypal'");
+        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = 'reserve' WHERE `OXID` LIKE '" . PaypalPaymentMethod::getName(true) . "'");
 
         $this->goThroughCheckout();
 
