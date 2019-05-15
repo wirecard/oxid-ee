@@ -19,7 +19,7 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     /**
      * @var Wirecard\Oxid\Model\PaymentMethod
      */
-    private $paymentMethod;
+    protected $paymentMethod;
 
     /**
      * @inheritdoc
