@@ -11,7 +11,7 @@
     $this->dbName = \getenv('MYSQL_DATABASE'); // database name
     $this->dbUser = \getenv('MYSQL_USER'); // database user name
     $this->dbPwd  = \getenv('MYSQL_PASSWORD'); // database user password
-    $this->sShopURL     = 'http://' . \getenv('OXID_HOSTNAME'); // eShop base url, required
+    $this->sShopURL     = 'http://' . ($_SERVER['HTTP_HOST'] ?? \getenv('OXID_HOSTNAME')); // eShop base url, required
     $this->sSSLShopURL  = null;            // eShop SSL url, optional
     $this->sAdminSSLURL = null;            // eShop Admin SSL url, optional
     $this->sShopDir     = \getenv('WEBROOT_DIR');
