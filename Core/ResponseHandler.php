@@ -69,7 +69,7 @@ class ResponseHandler
                 $oLogger->debug($exc->getMessage());
             } catch (Exception $exc) {
                 // if it is a different exception, we have to re-throw it
-                throw $ecx;
+                throw $exc;
             }
         }
     }
