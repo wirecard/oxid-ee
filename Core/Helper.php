@@ -254,7 +254,7 @@ class Helper
      *
      * @since 1.0.0
      */
-    public static function getFormattedDbDate($sTimeStamp)
+    public static function getFormattedDbDate($sTimeStamp = null)
     {
         $oUtilsDate = Registry::getUtilsDate();
         return $oUtilsDate->formatDBTimestamp($oUtilsDate->formTime($sTimeStamp));

@@ -115,6 +115,25 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         ];
     }
 
+    /**
+     * @dataProvider testGetFormattedDbDateProvider
+     */
+    public function testGetFormattedDbDate($input, $expected)
+    {
+        $this->assertContains($expected, Helper::getFormattedDbDate($input));
+    }
+
+    public function testGetFormattedDbDateProvider()
+    {
+        return [
+            'date time format' => [
+                '2010-10-10T13:10:10.000Z',
+                date('Y-m-d H:i:s', strtotime('2010-10-10T13:10:10.000Z'))
+            ],
+            'date time format now' => [null, date('Y-m-d')],
+        ];
+    }
+
     public function testIsEmailValid()
     {
         $this->assertTrue(Helper::isEmailValid('test@test.com'));

@@ -44,7 +44,6 @@ class OxidEEEvents
      */
     private static function _addColumnIfNotExists($sTableName, $sColumnName, $sQuery)
     {
-
         $aColumns = self::$oDb->getAll("SHOW COLUMNS FROM {$sTableName} LIKE '{$sColumnName}'");
 
         if (!$aColumns || count($aColumns) === 0) {
@@ -83,7 +82,6 @@ class OxidEEEvents
      */
     private static function _insertRowIfNotExists($sTableName, $aKeyValue, $sQuery)
     {
-
         $sWhere = '';
 
         foreach ($aKeyValue as $key => $value) {
@@ -395,7 +393,7 @@ class OxidEEEvents
     {
         self::$oDb = DatabaseProvider::getDb();
 
-        self::_disablePaymentTypes();
+        self::_disablePaymentMethods();
     }
 
     /**
@@ -403,7 +401,7 @@ class OxidEEEvents
      *
      * @since 1.0.0
      */
-    private static function _disablePaymentTypes()
+    private static function _disablePaymentMethods()
     {
         $sQuery = "UPDATE oxpayments SET `OXACTIVE` = 0 WHERE `OXID` LIKE 'wd%'";
 
