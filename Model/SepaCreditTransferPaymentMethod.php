@@ -10,10 +10,8 @@
 namespace Wirecard\Oxid\Model;
 
 use Wirecard\Oxid\Core\PaymentMethodHelper;
-use Wirecard\Oxid\Core\ResponseMapper;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\SepaConfig;
-use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 
 use Wirecard\Oxid\Model\Transaction;
@@ -79,15 +77,6 @@ class SepaCreditTransferPaymentMethod extends PaymentMethod
         $oMandate = PaymentMethodHelper::getMandate(
             $oParentTransaction->wdoxidee_ordertransactions__orderid->value
         );
-        $oResponseMapper = new ResponseMapper($oParentTransaction->getResponseXML());
-
-        $oTransaction->setIban($oResponseMapper->getData()['bank-account.0.iban']);
-        $oTransaction->setBic($oResponseMapper->getData()['bank-account.0.bic']);
-
-        $oAccountHolder = new AccountHolder();
-        $oAccountHolder->setFirstName($oResponseMapper->getData()['account-holder.0.first-name']);
-        $oAccountHolder->setLastName($oResponseMapper->getData()['account-holder.0.last-name']);
-        $oTransaction->setAccountHolder($oAccountHolder);
 
         $oTransaction->setMandate($oMandate);
     }
