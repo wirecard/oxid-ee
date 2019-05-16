@@ -9,6 +9,15 @@
       "password": "password",
       "login": "btnLogin",
       "nextStep": "//*[contains(@class, 'continueButton')]"
+    },
+    "sofort": {
+      "country": "MultipaysSessionSenderCountryId",
+      "bank": "BankCodeSearch",
+      "userId": "BackendFormLOGINNAMEUSERID",
+      "password": "BackendFormUSERPIN",
+      "tan": "BackendFormTAN",
+      "account": "account-1",
+      "nextStep": "//button[contains(@class, 'button-right')]"
     }
   }
 }

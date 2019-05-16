@@ -3,6 +3,13 @@
     "paypal": {
       "email": "paypal.buyer2@wirecard.com",
       "password": "Wirecardbuyer"
+    },
+    "sofort": {
+      "country": "AT",
+      "bank": "00000",
+      "userId": "1234",
+      "password": "1234",
+      "tan": "1234"
     }
   }
 }
