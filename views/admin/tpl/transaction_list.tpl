@@ -139,7 +139,7 @@ window.onload = function ()
                         [{assign var="listclass" value=null}]
                     [{/if}]
                     <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__transactionnumber->value}]');">[{$listitem->wdoxidee_ordertransactions__transactionnumber->value}]</a>
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__transactionnumber->value}]</a>
                     </td>
                     <td class="[{$listclass}]">
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__orderid->value}]</a>
