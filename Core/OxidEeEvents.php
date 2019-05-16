@@ -256,7 +256,8 @@ class OxidEeEvents
             `RESPONSEXML` mediumtext NOT NULL,
             `DATE` TIMESTAMP NOT NULL,
             `VALIDSIGNATURE` tinyint(1),
-            PRIMARY KEY (`OXID`)
+            `TRANSACTIONNUMBER` int NOT NULL AUTO_INCREMENT,
+            PRIMARY KEY (`TRANSACTIONNUMBER`)
         ) Engine=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 
         self::$oDb->Execute($sQuery);
@@ -370,6 +371,9 @@ class OxidEeEvents
         // create the module's own order transaction table
         self::_createOrderTransactionTable();
 
+        // needs to be executed before _addPaymentMethods()
+        self::_migrateFrom100To101();
+
         // view tables must be regenerated after modifying database table structure
         self::_regenerateViews();
 
@@ -406,5 +410,21 @@ class OxidEeEvents
         $sQuery = "UPDATE oxpayments SET `OXACTIVE` = 0 WHERE `OXID` LIKE 'wd%'";
 
         self::$oDb->execute($sQuery);
+    }
+
+    /**
+     * Migration steps from version 1.0.0 to 1.0.1
+     *
+     * @since 1.0.1
+     */
+    private static function _migrateFrom100To101()
+    {
+        $oDbMetaDataHandler = oxNew(\OxidEsales\Eshop\Core\DbMetaDataHandler::class);
+
+        if (!$oDbMetaDataHandler->fieldExists('TRANSACTIONNUMBER', self::TRANSACTION_TABLE)) {
+            $sQuery = "ALTER TABLE " . self::TRANSACTION_TABLE .
+                " DROP PRIMARY KEY, ADD COLUMN `TRANSACTIONNUMBER` int AUTO_INCREMENT NOT NULL PRIMARY KEY";
+            self::$oDb->execute($sQuery);
+        }
     }
 }

@@ -43,7 +43,14 @@ class TransactionList extends AdminListController
      *
      * @since 1.0.0
      */
-    protected $_sDefSortField = 'oxid';
+    protected $_sDefSortField = 'transactionnumber';
+
+    /**
+     * @inheritdoc
+     *
+     * @since 1.0.1
+     */
+    protected $_blDesc = true;
 
     /**
      * @inheritdoc
