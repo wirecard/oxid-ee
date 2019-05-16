@@ -65,9 +65,9 @@ class ResponseHandler
                 // in the 'order_cust.tpl' file. There is no need to do anything in this case but normally continue with
                 // the response handling.
                 // Otherwise the exception is re-thrown.
-                $sAzureErrorMsg = "Function 'getThumbnailUrl' does not exist or is not accessible!";
+                $sAzureErrorMsgPart = 'getThumbnailUrl';
 
-                if (strpos($oException->getMessage(), $sAzureErrorMsg) !== 0) {
+                if (strpos($oException->getMessage(), $sAzureErrorMsgPart) === false) {
                     throw $oException;
                 }
             }
