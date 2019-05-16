@@ -67,18 +67,6 @@ class SepaCreditTransferPaymentMethod extends PaymentMethod
     }
 
     /**
-     * @inheritdoc
-     *
-     * @return array
-     *
-     * @since 1.0.1
-     */
-    public function getPublicFieldNames()
-    {
-        return array_merge(parent::getPublicFieldNames(), ['deleteCanceledOrder', 'deleteFailedOrder']);
-    }
-
-    /**
      * Adds all needed data to the post-processing transaction
      *
      * @param SepaCreditTransferTransaction $oTransaction

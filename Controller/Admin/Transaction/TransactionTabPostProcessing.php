@@ -395,35 +395,37 @@ class TransactionTabPostProcessing extends TransactionTab
     }
 
     /**
-     * Returns an instance of TransactionHandler
+     * Gets the transaction handler and configures it according to the needed functionality.
+     * Depending on the payment method's used function, the transaction handler needs to be configured
+     * for post processing or not.
      *
-     * @param bool $bPostProcessing
+     * @param bool $bSetupForPostProcessing
      *
      * @return TransactionHandler
      *
      * @since 1.0.1
      */
-    private function _getTransactionHandler($bPostProcessing)
+    private function _getTransactionHandler($bSetupForPostProcessing)
     {
         // NOTE: if _oTransactionHandler got injected for testing, use it
         if ($this->_oTransactionHandler) {
             return $this->_oTransactionHandler;
         }
 
-        $oConfig = $this->_getPaymentMethodConfig($bPostProcessing);
+        $oConfig = $this->_getPaymentMethodConfig($bSetupForPostProcessing);
         return new TransactionHandler($this->_getBackendService($oConfig));
     }
 
     /**
      * Returns the payment method config for the currently selected transaction or null if none is set.
      *
-     * @param bool $bPostProcessing
+     * @param bool $bSetupForPostProcessing
      *
      * @return Config | null
      *
      * @since 1.0.1
      */
-    private function _getPaymentMethodConfig($bPostProcessing)
+    private function _getPaymentMethodConfig($bSetupForPostProcessing)
     {
         $oConfig = null;
 
@@ -431,7 +433,7 @@ class TransactionTabPostProcessing extends TransactionTab
             $sPaymentId = $this->oTransaction->getPaymentType();
             $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
 
-            if ($bPostProcessing) {
+            if ($bSetupForPostProcessing) {
                 $oPaymentMethod = $oPaymentMethod->getPostProcessingPaymentMethod();
             }
 
