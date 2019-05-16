@@ -17,12 +17,10 @@ use Wirecard\Oxid\Controller\Admin\Tab;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\TransactionHandler;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
-use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
 
-use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Config\Config;
 
@@ -103,11 +101,11 @@ class TransactionTabPostProcessing extends TransactionTab
     private function _getBackendService($oConfig)
     {
         // NOTE: if _oBackendService got injected for testing, use it
-        if ($this->_oBackendService) {
-            return $this->_oBackendService;
+        if (is_null($this->_oBackendService)) {
+            $this->_oBackendService = new BackendService($oConfig, $this->_oLogger);
         }
 
-        return new BackendService($oConfig, $this->_oLogger);
+        return $this->_oBackendService;
     }
 
     /**
@@ -164,7 +162,7 @@ class TransactionTabPostProcessing extends TransactionTab
         if (empty($aRequestParameters[self::KEY_ACTION])) {
             $sTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
             $aRequestParameters[self::KEY_AMOUNT] =
-                $this->_getTransactionHandler(false)->getTransactionMaxAmount($sTransactionId);
+                $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId);
         }
 
         Helper::addToViewData($this, [
@@ -222,7 +220,7 @@ class TransactionTabPostProcessing extends TransactionTab
         }
 
         $sTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
-        $fMaxAmount = $this->_getTransactionHandler(false)->getTransactionMaxAmount($sTransactionId);
+        $fMaxAmount = $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId);
 
         if (!$this->_isPositiveBelowMax($fAmount, $fMaxAmount)) {
             throw new StandardException(Helper::translate('wd_total_amount_not_in_range_text'));
@@ -311,7 +309,7 @@ class TransactionTabPostProcessing extends TransactionTab
         $sParentTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
         $oTransaction->setParentTransactionId($sParentTransactionId);
 
-        $oConfig = $this->_getPaymentMethodConfig(false);
+        $oConfig = $this->_getPaymentMethodConfig();
         $aPossibleOperations = $this->_getBackendService($oConfig)->retrieveBackendOperations($oTransaction, true);
 
         if ($aPossibleOperations === false || count($aPossibleOperations) <= 0) {
@@ -387,7 +385,7 @@ class TransactionTabPostProcessing extends TransactionTab
      */
     private function _handleRequestAction($sActionTitle, $fAmount)
     {
-        $oTransactionHandler = $this->_getTransactionHandler(true);
+        $oTransactionHandler = $this->_getTransactionHandler();
         $aResult = $oTransactionHandler->processAction($this->oTransaction, $sActionTitle, $fAmount);
 
         return $aResult["status"] === Transaction::STATE_SUCCESS ?
@@ -395,48 +393,37 @@ class TransactionTabPostProcessing extends TransactionTab
     }
 
     /**
-     * Gets the transaction handler and configures it according to the needed functionality.
-     * Depending on the payment method's used function, the transaction handler needs to be configured
-     * for post processing or not.
-     *
-     * @param bool $bForPostProcessing
+     * Returns an instance of TransactionHandler (singleton)
      *
      * @return TransactionHandler
      *
      * @since 1.0.1
      */
-    private function _getTransactionHandler($bForPostProcessing)
+    private function _getTransactionHandler()
     {
         // NOTE: if _oTransactionHandler got injected for testing, use it
-        if ($this->_oTransactionHandler) {
-            return $this->_oTransactionHandler;
+        if (is_null($this->_oTransactionHandler)) {
+            $oConfig = $this->_getPaymentMethodConfig();
+            $this->_oTransactionHandler = new TransactionHandler($this->_getBackendService($oConfig));
         }
 
-        $oConfig = $this->_getPaymentMethodConfig($bForPostProcessing);
-        return new TransactionHandler($this->_getBackendService($oConfig));
+        return $this->_oTransactionHandler;
     }
 
     /**
      * Returns the payment method config for the currently selected transaction or null if none is set.
      *
-     * @param bool $bForPostProcessing
-     *
      * @return Config | null
      *
      * @since 1.0.1
      */
-    private function _getPaymentMethodConfig($bForPostProcessing)
+    private function _getPaymentMethodConfig()
     {
         $oConfig = null;
 
         if (!is_null($this->oTransaction)) {
             $sPaymentId = $this->oTransaction->getPaymentType();
             $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
-
-            if ($bForPostProcessing) {
-                $oPaymentMethod = $oPaymentMethod->getPostProcessingPaymentMethod();
-            }
-
             $oConfig = $oPaymentMethod->getConfig();
         }
 

@@ -36,6 +36,13 @@ abstract class PaymentMethod
     protected static $_sName = 'undefined';
 
     /**
+     * @var bool
+     *
+     * @since 1.0.1
+     */
+    protected static $_bMerchantOnly = false;
+
+    /**
      * @var LoggerInterface
      *
      * @since 1.0.0
@@ -238,6 +245,18 @@ abstract class PaymentMethod
     }
 
     /**
+     * Adds all needed data to the post-processing transaction
+     *
+     * @param Transaction $oTransaction
+     * @param Transaction $oParentTransaction
+     *
+     * @since 1.0.1
+     */
+    public function addNeededDataToTransaction(&$oTransaction, $oParentTransaction)
+    {
+    }
+
+    /**
      * Returns the post-processing payment method for this payment method
      *
      * @return PaymentMethod
@@ -258,6 +277,7 @@ abstract class PaymentMethod
      */
     public function isMerchantOnly()
     {
-        return false;
+        $oChildClass = get_called_class();
+        return $oChildClass::$_bMerchantOnly;
     }
 }

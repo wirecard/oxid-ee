@@ -423,10 +423,12 @@ class OxidEeEvents
         $oDbMetaDataHandler = oxNew(DbMetaDataHandler::class);
 
         if (!$oDbMetaDataHandler->fieldExists('TRANSACTIONNUMBER', self::TRANSACTION_TABLE)) {
+            // adds a sortable transaction number
             $sQuery = "ALTER TABLE " . self::TRANSACTION_TABLE .
                 " DROP PRIMARY KEY, ADD COLUMN `TRANSACTIONNUMBER` int AUTO_INCREMENT NOT NULL PRIMARY KEY";
             self::$oDb->execute($sQuery);
 
+            // adds new enum to transactionActions field
             $sTransactionActions = implode("','", Transaction::getActions());
 
             $sQuery = "ALTER TABLE " . self::TRANSACTION_TABLE .

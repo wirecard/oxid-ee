@@ -1,5 +1,4 @@
 <?php
-// phpcs:ignoreFile
 /**
  * Shop System Plugins:
  * - Terms of Use can be found under:

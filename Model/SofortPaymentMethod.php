@@ -9,8 +9,11 @@
 
 namespace Wirecard\Oxid\Model;
 
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Config\SepaConfig;
+use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
@@ -46,8 +49,15 @@ class SofortPaymentMethod extends PaymentMethod
             $this->_oPayment->oxpayments__wdoxidee_maid->value,
             $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
-
         $oConfig->add($oPaymentMethodConfig);
+
+        $oSepaCtPayment = PaymentMethodHelper::getPaymentById(SepaCreditTransferPaymentMethod::getName(true));
+        $oSepaCtConfig = new SepaConfig(
+            SepaCreditTransferTransaction::NAME,
+            $oSepaCtPayment->oxpayments__wdoxidee_maid->value,
+            $oSepaCtPayment->oxpayments__wdoxidee_secret->value
+        );
+        $oConfig->add($oSepaCtConfig);
 
         return $oConfig;
     }

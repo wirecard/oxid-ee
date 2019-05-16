@@ -31,6 +31,13 @@ class SepaCreditTransferPaymentMethod extends PaymentMethod
     protected static $_sName = "sepacredit";
 
     /**
+     * @var bool
+     *
+     * @since 1.0.1
+     */
+    protected static $_bMerchantOnly = true;
+
+    /**
      * @inheritdoc
      *
      * @return Config
@@ -79,17 +86,5 @@ class SepaCreditTransferPaymentMethod extends PaymentMethod
         );
 
         $oTransaction->setMandate($oMandate);
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @return bool
-     *
-     * @since 1.0.1
-     */
-    public function isMerchantOnly()
-    {
-        return true;
     }
 }
