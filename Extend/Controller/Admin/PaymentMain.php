@@ -72,7 +72,7 @@ class PaymentMain extends PaymentMain_parent
     }
 
     /**
-     * Checks if it is possible to save the config
+     * Validates credentials, country code and creditor id
      *
      * @return bool
      *
@@ -94,6 +94,22 @@ class PaymentMain extends PaymentMain_parent
         $bCreditorIdValid = $aParams['oxpayments__oxid'] !== SepaDirectDebitPaymentMethod::getName(true)
             || $this->_creditorIdValidation($sCreditorId);
 
+        return $this->_isInputValid($bCredentialsValid, $bCountryCodeValid, $bCreditorIdValid);
+    }
+
+    /**
+     * Checks if it is possible to save the config
+     *
+     * @param bool $bCredentialsValid
+     * @param bool $bCountryCodeValid
+     * @param bool $bCreditorIdValid
+     *
+     * @return bool
+     *
+     * @since 1.0.1
+     */
+    private function _isInputValid($bCredentialsValid, $bCountryCodeValid, $bCreditorIdValid)
+    {
         return $bCredentialsValid && $bCountryCodeValid && $bCreditorIdValid;
     }
 

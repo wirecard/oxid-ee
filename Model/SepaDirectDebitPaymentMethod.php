@@ -36,23 +36,21 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
     /**
      * @inheritdoc
      *
-     * @param Payment $oPayment
-     *
      * @return Config
      *
      * @since 1.0.1
      */
-    public function getConfig($oPayment)
+    public function getConfig()
     {
-        $oConfig = parent::getConfig($oPayment);
+        $oConfig = parent::getConfig($this->_oPayment);
 
         $oPaymentMethodConfig = new SepaConfig(
             SepaDirectDebitTransaction::NAME,
-            $oPayment->oxpayments__wdoxidee_maid->value,
-            $oPayment->oxpayments__wdoxidee_secret->value
+            $this->_oPayment->oxpayments__wdoxidee_maid->value,
+            $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
 
-        $oPaymentMethodConfig->setCreditorId($oPayment->oxpayments__wdoxidee_creditorid->value);
+        $oPaymentMethodConfig->setCreditorId($this->_oPayment->oxpayments__wdoxidee_creditorid->value);
 
         $oConfig->add($oPaymentMethodConfig);
         return $oConfig;
@@ -197,8 +195,7 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
             ],
         ];
 
-        $oPayment = PaymentMethodHelper::getPaymentById('wd' . $this::$_sName);
-        if ($oPayment->oxpayments__wdoxidee_bic->value) {
+        if ($this->_oPayment->oxpayments__wdoxidee_bic->value) {
             $aCheckoutFields = array_merge($aCheckoutFields, [
                 'bic' => [
                     'type' => 'text',
