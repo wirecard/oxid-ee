@@ -14,7 +14,6 @@ use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\ResponseMapper;
 use Wirecard\Oxid\Model\Transaction;
 
-use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\Payment;
 
 /**
@@ -24,20 +23,6 @@ use OxidEsales\Eshop\Application\Model\Payment;
  */
 class TransactionTab extends Tab
 {
-    /**
-     * @var Transaction
-     *
-     * @since 1.0.0
-     */
-    protected $oTransaction;
-
-    /**
-     * @var Order
-     *
-     * @since 1.0.0
-     */
-    protected $oOrder;
-
     /**
      * @var Payment
      *
@@ -64,8 +49,6 @@ class TransactionTab extends Tab
     {
         parent::__construct();
 
-        $this->oTransaction = oxNew(Transaction::class);
-        $this->oOrder = oxNew(Order::class);
         $this->oPayment = oxNew(Payment::class);
 
         if ($this->_isListObjectIdSet()) {

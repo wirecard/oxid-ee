@@ -50,7 +50,9 @@
     </script>
 [{/if}]
 
-[{include file="live_chat.tpl"}]
+[{if $oView->shouldDisplayLiveChat()}]
+  [{include file="live_chat.tpl"}]
+[{/if}]
 
 [{include file="bottomnaviitem.tpl"}]
 

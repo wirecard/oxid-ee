@@ -71,6 +71,10 @@
     <em>[{$emptyText}]</em>
 [{/if}]
 
+[{if $oView->shouldDisplayLiveChat()}]
+  [{include file="live_chat.tpl"}]
+[{/if}]
+
 [{include file="bottomnaviitem.tpl"}]
 
 [{include file="bottomitem.tpl"}]

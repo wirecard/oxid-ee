@@ -45,6 +45,8 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
 
     protected function dbData()
     {
+        $sEncodedXml = base64_encode(file_get_contents(dirname(__FILE__) . '/../../../../resources/success_response_transaction_handler.xml'));
+
         return [
             [
                 'table' => 'oxorder',
@@ -55,9 +57,9 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
             ],
             [
                 'table' => 'wdoxidee_ordertransactions',
-                'columns' => ['oxid', 'orderid', 'ordernumber', 'transactionid', 'parenttransactionid', 'action', 'type', 'state', 'amount', 'currency'],
+                'columns' => ['oxid', 'orderid', 'ordernumber', 'transactionid', 'parenttransactionid', 'action', 'type', 'state', 'amount', 'currency', 'responsexml'],
                 'rows' => [
-                    ['transaction 1', 'oxid 1', 2, 'transaction 1', null, 'reserve', 'authorization', 'success', 100, 'EUR'],
+                    ['transaction 1', 'oxid 1', 2, 'transaction 1', null, 'reserve', 'authorization', 'success', 100, 'EUR', $sEncodedXml],
                 ]
             ],
         ];

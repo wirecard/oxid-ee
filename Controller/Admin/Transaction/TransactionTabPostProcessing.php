@@ -12,12 +12,12 @@ namespace Wirecard\Oxid\Controller\Admin\Transaction;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 
-use Wirecard\Oxid\Controller\Admin\Tab;
-use Wirecard\Oxid\Model\Transaction;
+use Wirecard\Oxid\Controller\Admin\Transaction\TransactionTab;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\TransactionHandler;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Model\Transaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Config\Config;
@@ -27,17 +27,10 @@ use Wirecard\PaymentSdk\Config\Config;
  *
  * @since 1.0.0
  */
-class TransactionTabPostProcessing extends Tab
+class TransactionTabPostProcessing extends TransactionTab
 {
     const KEY_ACTION = 'action';
     const KEY_AMOUNT = 'amount';
-
-    /**
-     * @var Transaction
-     *
-     * @since 1.0.0
-     */
-    protected $oTransaction;
 
     /**
      * @var \Psr\Log\LoggerInterface
@@ -82,8 +75,6 @@ class TransactionTabPostProcessing extends Tab
     public function __construct()
     {
         parent::__construct();
-
-        $this->oTransaction = oxNew(Transaction::class);
 
         $this->_oLogger = Registry::getLogger();
 
