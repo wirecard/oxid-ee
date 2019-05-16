@@ -11,9 +11,9 @@
 
   [{oxscript include="js/libs/jquery.min.js" priority=8}]
   [{oxscript include=$oView->getPaymentPageLoaderScriptUrl() priority=8}]
-  [{oxscript include=$oViewConf->getPaymentGatewayUrl('out/js/credit_card_form.js') priority=9}]
+  [{oxscript include=$oViewConf->getPaymentGatewayUrl('out/js/wirecard_wdoxidee_credit_card_form.js') priority=9}]
   [{oxscript add="ModuleCreditCardForm.init()" priority=10}]
-  [{oxstyle include=$oViewConf->getPaymentGatewayUrl("out/css/spinner.css")}]
+  [{oxstyle include=$oViewConf->getPaymentGatewayUrl("out/css/wirecard_wdoxidee_spinner.css")}]
 
   <input type="hidden" id="ccRequestDataAjaxUrl" value="[{$oView->getCCRequestDataAjaxLink()}]" />
 

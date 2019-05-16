@@ -14,8 +14,6 @@ use Psr\Log\LoggerInterface;
 
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\Exception\ArticleInputException;
-use OxidEsales\Eshop\Core\Exception\NoArticleException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
@@ -75,7 +73,7 @@ class OrderHelper
         } catch (OutOfStockException $oEx) {
             $oEx->setDestination('basket');
             Registry::getUtilsView()->addErrorToDisplay($oEx, false, true, 'basket');
-        } catch (NoArticleException | ArticleInputException | Exception $oEx) {
+        } catch (Exception $oEx) {
             Registry::getUtilsView()->addErrorToDisplay($oEx);
         }
 
