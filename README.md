@@ -1,4 +1,4 @@
-# Wirecard Oxid Module for OXID 6
+# Wirecard OXID Module for OXID 6
 
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/wirecard/oxid-ee/master/LICENSE)
 [![PHP v7.1](https://img.shields.io/badge/php-v7.1-yellow.svg)](http://www.php.net)
@@ -12,4 +12,4 @@ Before you proceed, please read our [General Information](https://github.com/wir
 ***
 ## Documentation
 
-Our [documentation](https://github.com/wirecard/oxid-ee/wiki) provides detailed technical information: it includes extensive instructions on how to [install](https://github.com/wirecard/oxid-ee/wiki/Installation) and [configure](https://github.com/wirecard/oxid-ee/wiki/Configuration) the extension. It also lists all available [payment methods](https://github.com/wirecard/oxid-ee/wiki#supported-payment-methods) and post-processing operations.
+Our [documentation](https://github.com/wirecard/oxid-ee/wiki) provides detailed technical information: it includes extensive instructions on how to [install](https://github.com/wirecard/oxid-ee/wiki/Installation) and [configure](https://github.com/wirecard/oxid-ee/wiki/Configuration) the module. It also lists all available [payment methods](https://github.com/wirecard/oxid-ee/wiki#supported-payment-methods) and post-processing operations.
