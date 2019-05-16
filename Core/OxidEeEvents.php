@@ -35,6 +35,8 @@ class OxidEeEvents
 
     /**
      * @var DatabaseInterface
+     *
+     * @since 1.0.0
      */
     private static $oDb;
 

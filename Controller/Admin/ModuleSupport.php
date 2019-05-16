@@ -195,7 +195,6 @@ class ModuleSupport extends AdminController
              * @var $module Module
              */
             return $oModule->getId() !== $this->_getModule()->getId();
-
         });
     }
 
