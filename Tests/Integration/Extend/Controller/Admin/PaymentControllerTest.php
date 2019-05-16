@@ -24,13 +24,13 @@ class PaymentControllerTest extends \Wirecard\Test\WdUnitTestCase
     /**
      * @dataProvider testUnsetPaymentErrorsProvider
      */
-    public function testUnsetPaymentErrors($iErrorCode, $shouldDeleteOnFail, $shouldDeleteOnCancel, $sExpected)
+    public function testUnsetPaymentErrors($iErrorCode, $bShouldDeleteOnFail, $bShouldDeleteOnCancel, $sExpected)
     {
         $oDb = DatabaseProvider::getDb();
         $oDb->execute("INSERT INTO oxorder (`OXID`, `OXPAYMENTTYPE`) VALUES('oxid1', 'wdpaypal')");
         $oDb->execute(
             "UPDATE oxpayments SET `WDOXIDEE_DELETE_CANCELED_ORDER` = ?, `WDOXIDEE_DELETE_FAILED_ORDER` = ? WHERE `OXID` = 'wdpaypal'",
-            [$shouldDeleteOnCancel, $shouldDeleteOnFail]
+            [$bShouldDeleteOnCancel, $bShouldDeleteOnFail]
         );
 
         Registry::getSession()->setVariable('sess_challenge', 'oxid1');

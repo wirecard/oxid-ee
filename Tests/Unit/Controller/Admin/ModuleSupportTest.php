@@ -64,7 +64,7 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
     {
         return [
             // this will end up in a flaky test depending on the email settings of the test server
-//            'correct params' => ['support text', 'from@email.com', 'reply@email.com', Helper::translate('wd_support_send_error')],
+            // 'correct params' => ['support text', 'from@email.com', 'reply@email.com', Helper::translate('wd_support_send_error')],
             //'correct params without reply email' => ['support text', 'from@email.com', null, Helper::translate('wd_support_send_error')],
             'incorrect "from" email' => ['support text', 'from', 'reply@email.com', Helper::translate('wd_enter_valid_email_error')],
             'incorrect "reply to" email' => ['support text', 'from@email.com', 'reply', Helper::translate('wd_enter_valid_email_error')],
