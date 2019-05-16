@@ -160,7 +160,7 @@ class TransactionTabPostProcessing extends TransactionTab
         if (empty($aRequestParameters[self::KEY_ACTION])) {
             $sTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
             $aRequestParameters[self::KEY_AMOUNT] =
-                $this->_getTransactionHandler(false)->getTransactionMaxAmount($sTransactionId);
+                $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId);
         }
 
         Helper::addToViewData($this, [
@@ -218,7 +218,7 @@ class TransactionTabPostProcessing extends TransactionTab
         }
 
         $sTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
-        $fMaxAmount = $this->_getTransactionHandler(false)->getTransactionMaxAmount($sTransactionId);
+        $fMaxAmount = $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId);
 
         if (!$this->_isPositiveBelowMax($fAmount, $fMaxAmount)) {
             throw new StandardException(Helper::translate('wd_total_amount_not_in_range_text'));
@@ -307,7 +307,7 @@ class TransactionTabPostProcessing extends TransactionTab
         $sParentTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
         $oTransaction->setParentTransactionId($sParentTransactionId);
 
-        $oConfig = $this->_getPaymentMethodConfig(false);
+        $oConfig = $this->_getPaymentMethodConfig();
         $aPossibleOperations = $this->_getBackendService($oConfig)->retrieveBackendOperations($oTransaction, true);
 
         if ($aPossibleOperations === false || count($aPossibleOperations) <= 0) {
@@ -383,7 +383,7 @@ class TransactionTabPostProcessing extends TransactionTab
      */
     private function _handleRequestAction($sActionTitle, $fAmount)
     {
-        $oTransactionHandler = $this->_getTransactionHandler(true);
+        $oTransactionHandler = $this->_getTransactionHandler();
         $aResult = $oTransactionHandler->processAction($this->oTransaction, $sActionTitle, $fAmount);
 
         return $aResult["status"] === Transaction::STATE_SUCCESS ?
@@ -391,15 +391,13 @@ class TransactionTabPostProcessing extends TransactionTab
     }
 
     /**
-     * Returns an instance of TransactionHandler
-     *
-     * @param bool $bPostProcessing
+     * Returns an instance of TransactionHandler (singleton)
      *
      * @return TransactionHandler
      *
      * @since 1.0.1
      */
-    private function _getTransactionHandler($bPostProcessing)
+    private function _getTransactionHandler()
     {
         // NOTE: if _oTransactionHandler got injected for testing, use it
         if (is_null($this->_oTransactionHandler)) {
@@ -407,20 +405,17 @@ class TransactionTabPostProcessing extends TransactionTab
             $this->_oTransactionHandler = new TransactionHandler($this->_getBackendService($oConfig));
         }
 
-        $oConfig = $this->_getPaymentMethodConfig($bPostProcessing);
-        return new TransactionHandler($this->_getBackendService($oConfig));
+        return $this->_oTransactionHandler;
     }
 
     /**
      * Returns the payment method config for the currently selected transaction or null if none is set.
      *
-     * @param bool $bPostProcessing
-     *
      * @return Config | null
      *
      * @since 1.0.1
      */
-    private function _getPaymentMethodConfig($bPostProcessing)
+    private function _getPaymentMethodConfig()
     {
         $oConfig = null;
 
