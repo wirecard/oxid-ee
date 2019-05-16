@@ -64,6 +64,6 @@ class Custom_Sniffs_NamingConventions_HungarianNotationVariableNameSniff impleme
      */
     private function variableNameIsHungarianNotation(string $variableName)
     {
-        return preg_match('/^\$_?[a-z][A-Z]/', $variableName);
+        return preg_match('/^\$_?[a-z]{1,2}[A-Z]/', $variableName);
     }
 }
