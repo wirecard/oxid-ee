@@ -9,6 +9,8 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
+use Selenium\Exception;
+
 /**
  * Basic acceptance test class to be used by all acceptance tests.
  */
@@ -93,5 +95,21 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
     public function getLocator($path)
     {
         return $this->getArrayValueByPath($this->locators, $path);
+    }
+
+    /**
+     * Patches the select method by ignoring an event exception thrown in Selenium RC.
+     * @see https://github.com/seleniumhq/selenium-google-code-issue-archive/issues/8184
+     * @inheritdoc
+     */
+    public function select($selector, $optionSelector)
+    {
+        try {
+            parent::select($selector, $optionSelector);
+        } catch (Exception $exception) {
+            if (strpos($exception->getMessage(), 'EventTarget.dispatchEvent') === false) {
+                throw $exception;
+            }
+        }
     }
 }
