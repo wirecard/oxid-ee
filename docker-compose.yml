@@ -21,6 +21,10 @@ services:
       - ./:/var/www/html/source/modules/${MODULE_PATH}:consistent
     depends_on:
       - db
+    networks:
+      global:
+        aliases:
+          - localhost.dev
   db:
     image: mysql:5.7
     container_name: oxid_ee_db
@@ -30,6 +34,8 @@ services:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       - ${MYSQL_PORT}:3306
+    networks:
+      - global
   pma:
     image: phpmyadmin/phpmyadmin:4.8
     container_name: oxid_ee_pma
@@ -40,9 +46,15 @@ services:
     environment:
       PMA_USER: root
       PMA_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - global
   selenium:
     image: selenium/standalone-firefox-debug:2.53.1
     container_name: oxid_ee_selenium
     shm_size: 2g
     ports:
       - ${SELENIUM_VNC_PORT}:5900
+    networks:
+      - global
+networks:
+  global:
