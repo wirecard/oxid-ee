@@ -124,6 +124,8 @@ class PaymentMain extends PaymentMain_parent
      */
     private function _creditorIdValidation($sCreditorId)
     {
+        //explanation for creditor id validation: https://www.iban.de/iban-pruefsumme.html
+
         $sCreditorId =  strtolower(str_replace(' ', '', $sCreditorId));
         if (preg_match('/^[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{0,31}$/', $sCreditorId) !== 1 || strlen($sCreditorId) > 35) {
             return false;
