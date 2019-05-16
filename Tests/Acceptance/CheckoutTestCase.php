@@ -44,8 +44,12 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
      */
     public function addMockData()
     {
-        $this->executeSql("INSERT INTO `oxuser` (`OXID`, `OXRIGHTS`, `OXUSERNAME`, `OXPASSWORD`, `OXPASSSALT`, `OXFNAME`, `OXLNAME`, `OXSTREET`, `OXSTREETNR`, `OXCITY`, `OXCOUNTRYID`, `OXZIP`, `OXSAL`) VALUES ('wdcheckoutuser', 'user', 'payment@test.com', 'd04c7c05808811484a38486479ebecd5776bdf76966db23b6a7469d6f0724af5fcb7bb3f77de6372435567951dbc1b8eda29521bcc6b5ccbe778af60847c7825', 'a022994047f11859e9430ec3b37d977d', 'Payment', 'Test', 'Tester Street', '1', 'Berlin', 'a7c40f631fc920687.20179984', '10115', 'MR')");
-        $this->executeSql("INSERT INTO `oxarticles` (`OXID`, `OXARTNUM`, `OXTITLE_1`, `OXPRICE`, `OXSTOCK`) VALUES ('wdcheckoutarticle', '1337', 'Test Article', '100.99', '10')");
+        $this->executeSql("INSERT INTO `oxuser`
+            (`OXID`, `OXRIGHTS`, `OXUSERNAME`, `OXPASSWORD`, `OXPASSSALT`, `OXFNAME`, `OXLNAME`, `OXSTREET`, `OXSTREETNR`, `OXCITY`, `OXCOUNTRYID`, `OXZIP`, `OXSAL`)
+            VALUES ('wdcheckoutuser', 'user', 'payment@test.com', 'd04c7c05808811484a38486479ebecd5776bdf76966db23b6a7469d6f0724af5fcb7bb3f77de6372435567951dbc1b8eda29521bcc6b5ccbe778af60847c7825', 'a022994047f11859e9430ec3b37d977d', 'Payment', 'Test', 'Tester Street', '1', 'Berlin', 'a7c40f631fc920687.20179984', '10115', 'MR')");
+        $this->executeSql("INSERT INTO `oxarticles`
+            (`OXID`, `OXARTNUM`, `OXTITLE_1`, `OXPRICE`, `OXSTOCK`)
+            VALUES ('wdcheckoutarticle', '1337', 'Test Article', '100.99', '10')");
     }
 
     /**
@@ -53,7 +57,8 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
      */
     public function activatePaymentMethod()
     {
-        $this->executeSql("UPDATE `oxpayments` SET `OXACTIVE` = '1' WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
+        $this->executeSql("UPDATE `oxpayments` SET `OXACTIVE` = '1'
+            WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
     }
 
     /**
@@ -61,7 +66,8 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
      */
     public function setPaymentActionPurchase()
     {
-        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_PAY . "' WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
+        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_PAY .
+            "' WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
     }
 
     /**
@@ -69,7 +75,8 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
      */
     public function setPaymentActionAuthorize()
     {
-        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_RESERVE . "' WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
+        $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_RESERVE .
+            "' WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
     }
 
     /**

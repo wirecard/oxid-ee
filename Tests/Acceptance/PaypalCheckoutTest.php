@@ -57,8 +57,14 @@ class PaypalCheckoutTest extends CheckoutTestCase
         $this->continueToNextStep();
 
         // PayPal flow
-        $this->type($this->getLocator('external.paypal.loginEmail'), $this->getConfigValue('payments.paypal.email'));
-        $this->type($this->getLocator('external.paypal.loginPassword'), $this->getConfigValue('payments.paypal.password'));
+        $this->type(
+            $this->getLocator('external.paypal.loginEmail'),
+            $this->getConfigValue('payments.paypal.email')
+        );
+        $this->type(
+            $this->getLocator('external.paypal.loginPassword'),
+            $this->getConfigValue('payments.paypal.password')
+        );
         $this->clickAndWait($this->getLocator('external.paypal.loginButton'), 30);
         $this->clickAndWait($this->getLocator('external.paypal.buyNowButton'), 30);
 
