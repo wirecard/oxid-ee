@@ -4,6 +4,15 @@
       "email": "paypal.buyer2@wirecard.com",
       "password": "Wirecardbuyer"
     },
+    "creditcard": {
+      "firstName": "First",
+      "lastName": "Last",
+      "cardNumber": "4012000300001003",
+      "cvv": "003",
+      "expiryMonth": "01",
+      "expiryYear": "2023",
+      "password": "wirecard"
+    },
     "sofort": {
       "country": "AT",
       "bank": "00000",

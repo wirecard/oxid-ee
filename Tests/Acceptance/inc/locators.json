@@ -10,6 +10,15 @@
       "login": "btnLogin",
       "nextStep": "//*[contains(@class, 'continueButton')]"
     },
+    "creditcard": {
+      "frame": "2",
+      "firstName": "first_name",
+      "lastName": "last_name",
+      "cardNumber": "account_number",
+      "cvv": "card_security_code",
+      "expiryMonth": "expiration_month_list",
+      "expiryYear": "expiration_year_list"
+    },
     "sofort": {
       "country": "MultipaysSessionSenderCountryId",
       "bank": "BankCodeSearch",
