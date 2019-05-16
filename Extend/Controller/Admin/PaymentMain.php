@@ -11,6 +11,7 @@ namespace Wirecard\Oxid\Extend\Controller\Admin;
 
 use OxidEsales\Eshop\Core\Registry;
 
+use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
