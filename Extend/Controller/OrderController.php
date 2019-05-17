@@ -226,7 +226,7 @@ class OrderController extends OrderController_parent
             $oOrder = OrderHelper::createOrder(
                 $oBasket,
                 $oUser,
-                PaymentMethodHelper::getSepaMandateHtml($oBasket, $this->getUser())
+                PaymentMethodHelper::getSepaMandateHtml($oBasket, $oUser)
             );
 
             if (!$oOrder) {
