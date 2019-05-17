@@ -52,7 +52,7 @@
         <oxid>wdsepadd</oxid>
         <oxactive>0</oxactive>
         <oxtoamount>1000000</oxtoamount>
-        <oxdesc>Wirecard SEPA Direct Debit</oxdesc>
+        <oxdesc>Wirecard SEPA-Lastschrift</oxdesc>
         <oxdesc_1>Wirecard SEPA Direct Debit</oxdesc_1>
         <oxsort>30</oxsort>
         <wdoxidee_logo>sepa.png</wdoxidee_logo>

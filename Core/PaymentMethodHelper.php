@@ -171,7 +171,7 @@ class PaymentMethodHelper
      */
     public static function getSepaMandateHeader($oShop, $oPayment, $iOrderNumber)
     {
-        return '<h3>' . Helper::translate('wd_sepa_mandate') . '</h3><hr>
+        $sSepaMandateHeader = '<h3>' . Helper::translate('wd_sepa_mandate') . '</h3><hr>
             <i>' . Helper::translate('wd_creditor') . '</i><p style="margin-bottom: 30px">' .
             $oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname . ',<br>' .
             $oShop->oxshops__oxstreet . '<br>' .
@@ -182,7 +182,12 @@ class PaymentMethodHelper
             self::getMandate($iOrderNumber)->mappedProperties()['mandate-id'] . '</p>
             <i>' . Helper::translate('wd_debtor') . '</i><p style="margin-bottom: 30px">
             ' . Helper::translate('wd_debtor_acc_owner') . ' ' . self::getAccountHolder() . '<br>' .
-            Helper::translate('wd_iban') . ' ' . self::getIban() . '</p>';
+            Helper::translate('wd_iban') . ' ' . self::getIban();
+        if (self::getBic()) {
+            $sSepaMandateHeader .= '<br>' . Helper::translate('wd_bic') . ' ' . self::getBic();
+        }
+        $sSepaMandateHeader .= '</p>';
+        return $sSepaMandateHeader;
     }
 
     /**
