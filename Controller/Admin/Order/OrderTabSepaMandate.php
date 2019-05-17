@@ -36,9 +36,9 @@ class OrderTabSepaMandate extends OrderTab
     {
         $sTemplate = parent::render();
 
-        $this->setViewData([
+        Helper::addToViewData($this, [
             'emptyText' => Helper::translate('wd_text_no_data_available'),
-        ] + $this->getViewData());
+        ]);
 
         return $sTemplate;
     }

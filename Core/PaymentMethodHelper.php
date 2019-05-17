@@ -151,7 +151,8 @@ class PaymentMethodHelper
         $sSepaMandateMain = self::getSepaMandateMainText($oShop);
 
         if ($oPayment->oxpayments__wdoxidee_sepamandatecustom->value) {
-            $sSepaMandateMain = $oPayment->oxpayments__wdoxidee_sepamandatecustom->value;
+            $sSepaMandateMain =
+                '<p>' . nl2br(htmlspecialchars($oPayment->oxpayments__wdoxidee_sepamandatecustom->value)) . '</p>';
         }
 
         return $sSepaMandateHeader . $sSepaMandateMain . $sSepaMandateFooter;
@@ -161,9 +162,7 @@ class PaymentMethodHelper
      * Generates SEPA mandate header text
      *
      * @param Shop    $oShop
-     *
      * @param Payment $oPayment
-     *
      * @param integer $iOrderNumber
      *
      * @return string

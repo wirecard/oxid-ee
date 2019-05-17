@@ -179,7 +179,7 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      *
      * @return array
      *
-     * @since 1.1.0
+     * @since 1.0.1
      */
     public function getCheckoutFields()
     {

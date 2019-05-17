@@ -53,7 +53,7 @@ class OrderHelper
      *
      * @since 1.0.0
      */
-    public static function createOrder($oBasket, $oUser, $sSepaMandate = '')
+    public static function createOrder($oBasket, $oUser, $sSepaMandate = null)
     {
         $oOrder = null;
 

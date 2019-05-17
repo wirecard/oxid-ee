@@ -80,43 +80,6 @@ class ViewConfig extends ViewConfig_parent
     }
 
     /**
-     * Generates a mandate for SEPA transactions
-     *
-     * @return string
-     *
-     * @since 1.0.1
-     */
-    public function getMandate()
-    {
-        $iOrderNumber = Helper::getSessionChallenge();
-        return PaymentMethodHelper::getMandate($iOrderNumber)->mappedProperties()['mandate-id'];
-    }
-
-    /**
-     * Returns account holder for SEPA Direct Debit
-     *
-     * @return string
-     *
-     * @since 1.0.1
-     */
-    public function getAccountHolder()
-    {
-        return PaymentMethodHelper::getAccountHolder();
-    }
-
-    /**
-     * Returns IBAN
-     *
-     * @return string
-     *
-     * @since 1.0.1
-     */
-    public function getIban()
-    {
-        return PaymentMethodHelper::getIban();
-    }
-
-    /**
      * Returns shop
      *
      * @return Shop
