@@ -173,7 +173,7 @@ class PaymentMethodHelper
     {
         $sSepaMandateHeader = '<h3>' . Helper::translate('wd_sepa_mandate') . '</h3><hr>
             <i>' . Helper::translate('wd_creditor') . '</i><p style="margin-bottom: 30px">' .
-            $oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname . ',<br>' .
+            $oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname . '<br>' .
             $oShop->oxshops__oxstreet . '<br>' .
             $oShop->oxshops__oxzip . ' ' . $oShop->oxshops__oxcity . '<br>' .
             $oShop->oxshops__oxcountry . '<br>' .
