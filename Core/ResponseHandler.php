@@ -41,6 +41,12 @@ class ResponseHandler
      */
     public static function onSuccessResponse($oResponse, $oBackendService, $oOrder)
     {
+        $oTransaction = oxNew(Transaction::class);
+        if ($oTransaction->loadWithTransactionId($oResponse->getTransactionId())) {
+            // if a transaction with this ID already exists, we do not need to handle it again
+            return;
+        }
+
         /**
          * @var $oLogger LoggerInterface
          */
