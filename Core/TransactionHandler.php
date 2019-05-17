@@ -72,7 +72,7 @@ class TransactionHandler
      */
     public function processAction($oParentTransaction, $sActionTitle, $fAmount = null)
     {
-        $oPaymentMethod = $this->_getPaymentMethod($oParentTransaction);
+        $oPaymentMethod = $this->_getPaymentMethod($oParentTransaction, $sActionTitle);
         $oOrder = $oParentTransaction->getTransactionOrder();
 
         $oTransaction = $oPaymentMethod->getTransaction();
@@ -270,16 +270,17 @@ class TransactionHandler
      * for the desired payment method.
      *
      * @param Transaction $oTransaction
+     * @param string      $sActionTitle
      *
      * @return array|PaymentMethod
      *
      * @since 1.0.1
      */
-    private function _getPaymentMethod($oTransaction)
+    private function _getPaymentMethod($oTransaction, $sActionTitle)
     {
         try {
             $oPaymentMethod = PaymentMethodFactory::create($oTransaction->getPaymentType());
-            return $oPaymentMethod->getPostProcessingPaymentMethod();
+            return $oPaymentMethod->getPostProcessingPaymentMethod($sActionTitle);
         } catch (Exception $oExc) {
             $this->_oLogger->error("Error getting the payment method", [$oExc]);
             return $this->_getErrorMessage($oExc->getMessage());

@@ -271,11 +271,13 @@ abstract class PaymentMethod
     /**
      * Returns the post-processing payment method for this payment method
      *
+     * @param string $sAction
+     *
      * @return PaymentMethod
      *
      * @since 1.0.1
      */
-    public function getPostProcessingPaymentMethod()
+    public function getPostProcessingPaymentMethod($sAction)
     {
         return $this;
     }

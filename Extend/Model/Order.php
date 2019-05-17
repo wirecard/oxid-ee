@@ -425,7 +425,7 @@ class Order extends Order_parent
 
         // Dont send pending emails if not enabled in module settings
         if ($this->isPaymentPending() && !$bSendPendingEmails) {
-            $this->logger->debug('Prevent sending pending order by email with id: '. $this->getId());
+            $this->_oLogger->debug('Prevent sending pending order by email with id: '. $this->getId());
             return true;
         }
 

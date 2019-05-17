@@ -206,4 +206,22 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
 
         return $aCheckoutFields;
     }
+
+    /**
+     * @inheritdoc
+     *
+     * @param string $sAction
+     *
+     * @return PaymentMethod
+     *
+     * @since 1.0.1
+     */
+    public function getPostProcessingPaymentMethod($sAction)
+    {
+        if ($sAction === TransactionModel::ACTION_CREDIT) {
+            return new SepaCreditTransferPaymentMethod();
+        }
+
+        return parent::getPostProcessingPaymentMethod($sAction);
+    }
 }
