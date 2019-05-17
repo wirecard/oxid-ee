@@ -13,7 +13,6 @@ namespace Wirecard\Oxid\Extend;
 use OxidEsales\Eshop\Application\Model\Shop;
 
 use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Core\PaymentMethodHelper;
 
 /**
  * Extends the OXID ViewConfig
