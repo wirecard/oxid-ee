@@ -50,15 +50,8 @@ class PaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetLogoPath()
     {
-        $oPaymentStub = $this->getMockBuilder(Payment::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $oPaymentStub->method('__get')
-            ->willReturn(new \OxidEsales\Eshop\Core\Field('mylogo.png'));
-
-        $sLogoUrl = $this->_oPaymentMethodsStub->getLogoPath($oPaymentStub);
-        $this->assertContains("mylogo.png", $sLogoUrl);
+        $sLogoUrl = $this->_oPaymentMethodsStub->getLogoPath();
+        $this->assertContains("wirecard/paymentgateway/out/img/", $sLogoUrl);
     }
 
     public function getPublicFieldNames()

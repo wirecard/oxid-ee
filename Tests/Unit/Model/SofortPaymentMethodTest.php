@@ -66,15 +66,8 @@ class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetLogoPath()
     {
-        $oPaymentStub = $this->getMockBuilder(Payment::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $oPaymentStub->method('__get')
-            ->will($this->onConsecutiveCalls(new Field('CC=%s Variant=%s'), new Field('cc'), new Field('variant')));
-
-        $sLogoUrl = $this->_oPaymentMethod->getLogoPath($oPaymentStub);
-        $this->assertEquals('CC=cc Variant=variant', $sLogoUrl);
+        $sLogoUrl = $this->_oPaymentMethod->getLogoPath();
+        $this->assertContains('en_gb/pay_now/standard', $sLogoUrl);
     }
 
     public function testGetConfigFields()
