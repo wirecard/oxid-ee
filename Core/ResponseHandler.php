@@ -148,6 +148,8 @@ class ResponseHandler
 
         //$aTransactionProps['validsignature'] = $oResponse->isValidSignature();
 
+        // check if transaction exists directly before saving it because of timing issues with
+        // HTTP calls in backend service
         $oTransaction = oxNew(Transaction::class);
         if ($oTransaction->loadWithTransactionId($oResponse->getTransactionId())) {
             // if a transaction with this ID already exists, we do not need to handle it again
