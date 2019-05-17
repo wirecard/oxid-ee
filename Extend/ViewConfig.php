@@ -93,7 +93,7 @@ class ViewConfig extends ViewConfig_parent
     }
 
     /**
-     * Returns account holder for Sepa Direct Debit
+     * Returns account holder for SEPA Direct Debit
      *
      * @return string
      *

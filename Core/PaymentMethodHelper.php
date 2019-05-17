@@ -87,7 +87,7 @@ class PaymentMethodHelper
     }
 
     /**
-     * Returns account holder for Sepa Direct Debit
+     * Returns account holder for SEPA Direct Debit
      *
      * @return string
      *
@@ -130,7 +130,7 @@ class PaymentMethodHelper
     }
 
     /**
-     * Generates sepa mandate text
+     * Generates SEPA mandate text
      *
      * @param Basket $oBasket
      *
@@ -157,7 +157,7 @@ class PaymentMethodHelper
     }
 
     /**
-     * Generates sepa mandate header text
+     * Generates SEPA mandate header text
      *
      * @param Shop    $oShop
      *
@@ -186,7 +186,7 @@ class PaymentMethodHelper
     }
 
     /**
-     * Generates sepa mandate header text
+     * Generates SEPA mandate header text
      *
      * @param Shop $oShop
      *
@@ -201,7 +201,7 @@ class PaymentMethodHelper
     }
 
     /**
-     * Generates sepa mandate main text
+     * Generates SEPA mandate main text
      *
      * @param Shop $oShop
      *

@@ -12,7 +12,7 @@ namespace Wirecard\Oxid\Controller\Admin\Order;
 use Wirecard\Oxid\Core\Helper;
 
 /**
- * Controls the view for the order sepa mandate tab.
+ * Controls the view for the order SEPA mandate tab.
  *
  * @since 1.0.1
  */

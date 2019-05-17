@@ -196,7 +196,7 @@ class OxidEeEvents
     }
 
     /**
-     * Adds Sepa Direct Debit related fields to payment table
+     * Adds SEPA Direct Debit related fields to payment table
      *
      * @since 1.0.1
      */

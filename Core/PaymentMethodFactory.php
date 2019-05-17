@@ -48,12 +48,12 @@ class PaymentMethodFactory
                 return new PaypalPaymentMethod();
             case CreditCardPaymentMethod::getName(true):
                 return new CreditCardPaymentMethod();
+            case SepaCreditTransferPaymentMethod::getName(true):
+                return new SepaCreditTransferPaymentMethod();
             case SepaDirectDebitPaymentMethod::getName(true):
                 return new SepaDirectDebitPaymentMethod();
             case SofortPaymentMethod::getName(true):
                 return new SofortPaymentMethod();
-            case SepaCreditTransferPaymentMethod::getName(true):
-                return new SepaCreditTransferPaymentMethod();
             default:
                 throw new StandardException("payment type not registered: $sPaymentMethodType");
         }
