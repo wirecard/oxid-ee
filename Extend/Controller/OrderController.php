@@ -101,7 +101,22 @@ class OrderController extends OrderController_parent
             $sNewUrl = $sShopBaseUrl . 'index.php?' . $sParamStr;
             Registry::getUtils()->redirect($sNewUrl, false);
         }
+    }
 
+    /**
+     * Extends the parent render function
+     *
+     * @return string
+     *
+     * @since 1.0.1
+     */
+    public function render()
+    {
+        //after calling parent::render() we are sure we will have order id stored in the session
+        //order id is needed in sepa mandate
+        $sTemplateName = parent::render();
+
+        $oSession = Registry::getSession();
         $oBasket = $oSession->getBasket();
 
         if ($oBasket->getPaymentId() === 'wdsepadd') {
@@ -111,6 +126,7 @@ class OrderController extends OrderController_parent
                 'sepamandate' => $sSepaMandate,
             ]);
         }
+        return $sTemplateName;
     }
 
     /**
