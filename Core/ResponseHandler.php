@@ -116,6 +116,8 @@ class ResponseHandler
      * @param Order           $oOrder
      * @param BackendService  $oBackendService
      *
+     * @return void
+     *
      * @throws \Exception
      *
      * @since 1.0.0
