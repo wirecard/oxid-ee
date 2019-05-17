@@ -15,6 +15,7 @@ use OxidEsales\Eshop\Core\Registry;
 use Wirecard\PaymentSdk\Entity\Mandate;
 
 use Wirecard\Oxid\Extend\Model\Payment;
+use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Core\Helper;
 
 /**
@@ -134,12 +135,13 @@ class PaymentMethodHelper
      * Generates SEPA mandate html body
      *
      * @param Basket $oBasket
+     * @param User   $oUser
      *
      * @return string
      *
      * @since 1.0.1
      */
-    public static function getSepaMandateHtml($oBasket)
+    public static function getSepaMandateHtml($oBasket, $oUser)
     {
         $oShop = Helper::getShop();
         $iOrderNumber = Helper::getSessionChallenge();
@@ -147,7 +149,7 @@ class PaymentMethodHelper
         $oPayment->load($oBasket->getPaymentId());
 
         $sSepaMandateHeader = self::getSepaMandateHeader($oShop, $oPayment, $iOrderNumber);
-        $sSepaMandateFooter = self::getSepaMandateFooter($oShop);
+        $sSepaMandateFooter = self::getSepaMandateFooter($oShop, $oUser->oxuser__oxcity->value);
         $sSepaMandateMain = self::getSepaMandateMainText($oShop);
 
         if ($oPayment->oxpayments__wdoxidee_sepamandatecustom->value) {
@@ -193,15 +195,16 @@ class PaymentMethodHelper
     /**
      * Generates SEPA mandate header text
      *
-     * @param Shop $oShop
+     * @param Shop   $oShop
+     * @param string $sConsumerCity
      *
      * @return string
      *
      * @since 1.0.1
      */
-    public static function getSepaMandateFooter($oShop)
+    public static function getSepaMandateFooter($oShop, $sConsumerCity)
     {
-        return '<p style="margin-top: 30px">' . $oShop->oxshops__oxcity . ', ' . date("d.m.Y", time()) . ' '
+        return '<p style="margin-top: 30px">' . $sConsumerCity . ', ' . date("d.m.Y", time()) . ' '
             . self::getAccountHolder() . '</p>';
     }
 

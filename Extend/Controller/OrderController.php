@@ -123,7 +123,7 @@ class OrderController extends OrderController_parent
         $oBasket = $oSession->getBasket();
 
         if ($oBasket->getPaymentId() === SepaDirectDebitPaymentMethod::getName(true)) {
-            $sSepaMandate = PaymentMethodHelper::getSepaMandateHtml($oBasket);
+            $sSepaMandate = PaymentMethodHelper::getSepaMandateHtml($oBasket, $this->getUser());
 
             Helper::addToViewData($this, [
                 self::SEPA_MANDATE_KEY => $sSepaMandate,
@@ -223,7 +223,11 @@ class OrderController extends OrderController_parent
         }
 
         if ($oBasket->getProductsCount()) {
-            $oOrder = OrderHelper::createOrder($oBasket, $oUser, PaymentMethodHelper::getSepaMandateHtml($oBasket));
+            $oOrder = OrderHelper::createOrder(
+                $oBasket,
+                $oUser,
+                PaymentMethodHelper::getSepaMandateHtml($oBasket, $this->getUser())
+            );
 
             if (!$oOrder) {
                 $iSuccess = $oOrder->oxorder__wdoxidee_finalizeorderstate->value;
