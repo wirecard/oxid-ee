@@ -10,6 +10,8 @@
 
 namespace Wirecard\Oxid\Extend;
 
+use OxidEsales\Eshop\Application\Model\Shop;
+
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 
@@ -115,14 +117,14 @@ class ViewConfig extends ViewConfig_parent
     }
 
     /**
-     * Returns shop address
+     * Returns shop
      *
-     * @return string
+     * @return Shop
      *
      * @since 1.0.1
      */
-    public function getShopAddress()
+    public function getShop()
     {
-        return Helper::getShopAddress();
+        return Helper::getShop();
     }
 }

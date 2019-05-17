@@ -353,13 +353,13 @@ class Helper
     }
 
     /**
-     * Returns shop address
+     * Returns shop
      *
-     * @return object
+     * @return Shop
      *
      * @since 1.0.1
      */
-    public static function getShopAddress()
+    public static function getShop()
     {
         $sShopId = Registry::getConfig()->getShopId();
         $oShop = oxNew(Shop::class);

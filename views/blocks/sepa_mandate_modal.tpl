@@ -9,8 +9,6 @@
 
 <div id="mandateModal" class="modal">
 
-  [{assign var="shopAddress" value=$oViewConf->getShopAddress()}]
-
   <div class="modal-content">
     <span class="close-modal">&times;</span>
 

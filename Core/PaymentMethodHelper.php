@@ -140,14 +140,14 @@ class PaymentMethodHelper
      */
     public static function getSepaMandateHtml($oBasket)
     {
-        $oShopAddress = Helper::getShopAddress();
+        $oShop = Helper::getShop();
         $iOrderNumber = Helper::getSessionChallenge();
         $oPayment = oxNew(Payment::class);
         $oPayment->load($oBasket->getPaymentId());
 
-        $sSepaMandateHeader = self::getSepaMandateHeader($oShopAddress, $oPayment, $iOrderNumber);
-        $sSepaMandateFooter = self::getSepaMandateFooter($oShopAddress);
-        $sSepaMandateMain = self::getSepaMandateMainText($oShopAddress);
+        $sSepaMandateHeader = self::getSepaMandateHeader($oShop, $oPayment, $iOrderNumber);
+        $sSepaMandateFooter = self::getSepaMandateFooter($oShop);
+        $sSepaMandateMain = self::getSepaMandateMainText($oShop);
 
         if ($oPayment->oxpayments__wdoxidee_sepamandatecustom->value) {
             $sSepaMandateMain = $oPayment->oxpayments__wdoxidee_sepamandatecustom->value;
@@ -159,7 +159,7 @@ class PaymentMethodHelper
     /**
      * Generates sepa mandate header text
      *
-     * @param Shop    $oShopAddress
+     * @param Shop    $oShop
      *
      * @param Payment $oPayment
      *
@@ -169,14 +169,14 @@ class PaymentMethodHelper
      *
      * @since 1.0.1
      */
-    public static function getSepaMandateHeader($oShopAddress, $oPayment, $iOrderNumber)
+    public static function getSepaMandateHeader($oShop, $oPayment, $iOrderNumber)
     {
         return '<h3>' . Helper::translate('wd_sepa_mandate') . '</h3><hr>
             <i>' . Helper::translate('wd_creditor') . '</i><p style="margin-bottom: 30px">' .
-            $oShopAddress->oxshops__oxfname . ' ' . $oShopAddress->oxshops__oxlname . ',<br>' .
-            $oShopAddress->oxshops__oxstreet . '<br>' .
-            $oShopAddress->oxshops__oxzip . ' ' . $oShopAddress->oxshops__oxcity . '<br>' .
-            $oShopAddress->oxshops__oxcountry . '<br>' .
+            $oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname . ',<br>' .
+            $oShop->oxshops__oxstreet . '<br>' .
+            $oShop->oxshops__oxzip . ' ' . $oShop->oxshops__oxcity . '<br>' .
+            $oShop->oxshops__oxcountry . '<br>' .
             Helper::translate('wd_config_creditor_id') . ' ' . $oPayment->oxpayments__wdoxidee_creditorid->value
             . '<br> ' . Helper::translate('wd_creditor_mandate_id') . ' ' .
             self::getMandate($iOrderNumber)->mappedProperties()['mandate-id'] . '</p>
@@ -188,36 +188,36 @@ class PaymentMethodHelper
     /**
      * Generates sepa mandate header text
      *
-     * @param Shop $oShopAddress
+     * @param Shop $oShop
      *
      * @return string
      *
      * @since 1.0.1
      */
-    public static function getSepaMandateFooter($oShopAddress)
+    public static function getSepaMandateFooter($oShop)
     {
-        return '<p style="margin-top: 30px">' . $oShopAddress->oxshops__oxcity . ', ' . date("d.m.Y", time()) . ' '
+        return '<p style="margin-top: 30px">' . $oShop->oxshops__oxcity . ', ' . date("d.m.Y", time()) . ' '
             . self::getAccountHolder() . '</p>';
     }
 
     /**
      * Generates sepa mandate main text
      *
-     * @param Shop $oShopAddress
+     * @param Shop $oShop
      *
      * @return string
      *
      * @since 1.0.1
      */
-    public static function getSepaMandateMainText($oShopAddress)
+    public static function getSepaMandateMainText($oShop)
     {
-        return '<p> ' . Helper::translate('wd_sepa_text_1') . ' ' . $oShopAddress->oxshops__oxfname . ' ' .
-            $oShopAddress->oxshops__oxlname . ' ' . Helper::translate('wd_sepa_text_2') . ' ' .
-            $oShopAddress->oxshops__oxfname . ' ' . $oShopAddress->oxshops__oxlname . ' ' .
+        return '<p> ' . Helper::translate('wd_sepa_text_1') . ' ' . $oShop->oxshops__oxfname . ' ' .
+            $oShop->oxshops__oxlname . ' ' . Helper::translate('wd_sepa_text_2') . ' ' .
+            $oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname . ' ' .
             Helper::translate('wd_sepa_text_2b') . '</p>
             <p>' . Helper::translate('wd_sepa_text_3') . '</p>
             <p style="margin-bottom: 30px">' . Helper::translate('wd_sepa_text_4') . ' ' .
-            $oShopAddress->oxshops__oxfname . ' ' . $oShopAddress->oxshops__oxlname . ' ' .
+            $oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname . ' ' .
             Helper::translate('wd_sepa_text_5') . '</p> ';
     }
 }
