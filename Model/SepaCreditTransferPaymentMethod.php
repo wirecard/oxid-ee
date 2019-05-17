@@ -14,8 +14,6 @@ use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 
-use Wirecard\Oxid\Model\Transaction;
-
 /**
  * Payment method implementation for Sepa Credit Transfer.
  *

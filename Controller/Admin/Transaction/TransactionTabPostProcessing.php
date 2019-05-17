@@ -12,8 +12,6 @@ namespace Wirecard\Oxid\Controller\Admin\Transaction;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 
-use Wirecard\Oxid\Controller\Admin\Transaction\TransactionTab;
-use Wirecard\Oxid\Controller\Admin\Tab;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\TransactionHandler;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
