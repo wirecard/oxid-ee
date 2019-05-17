@@ -9,7 +9,6 @@
 
 namespace Wirecard\Oxid\Model;
 
-use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Registry;
 
@@ -50,33 +49,31 @@ class CreditCardPaymentMethod extends PaymentMethod
     /**
      * @inheritdoc
      *
-     * @param Payment $oPayment
-     *
      * @return PaymentSdkConfig
      *
      * @since 1.0.0
      */
-    public function getConfig($oPayment)
+    public function getConfig()
     {
-        $oConfig = parent::getConfig($oPayment);
+        $oConfig = parent::getConfig();
 
         $oCreditCardConfig = new CreditCardConfig();
 
-        if (!empty($oPayment->oxpayments__wdoxidee_maid->value)) {
+        if (!empty($this->_oPayment->oxpayments__wdoxidee_maid->value)) {
             $oCreditCardConfig->setNonThreeDCredentials(
-                $oPayment->oxpayments__wdoxidee_maid->value,
-                $oPayment->oxpayments__wdoxidee_secret->value
+                $this->_oPayment->oxpayments__wdoxidee_maid->value,
+                $this->_oPayment->oxpayments__wdoxidee_secret->value
             );
         }
 
-        if (!empty($oPayment->oxpayments__wdoxidee_three_d_maid->value)) {
+        if (!empty($this->_oPayment->oxpayments__wdoxidee_three_d_maid->value)) {
             $oCreditCardConfig->setThreeDCredentials(
-                $oPayment->oxpayments__wdoxidee_three_d_maid->value,
-                $oPayment->oxpayments__wdoxidee_three_d_secret->value
+                $this->_oPayment->oxpayments__wdoxidee_three_d_maid->value,
+                $this->_oPayment->oxpayments__wdoxidee_three_d_secret->value
             );
         }
 
-        $this->_addThreeDLimits($oPayment, $oCreditCardConfig);
+        $this->_addThreeDLimits($oCreditCardConfig);
 
         $oConfig->add($oCreditCardConfig);
 
@@ -84,25 +81,25 @@ class CreditCardPaymentMethod extends PaymentMethod
     }
 
     /**
-     * @param Payment          $oPayment
      * @param CreditCardConfig $oCreditCardConfig
      *
      * @since 1.0.0
      */
-    private function _addThreeDLimits($oPayment, &$oCreditCardConfig)
+    private function _addThreeDLimits(&$oCreditCardConfig)
     {
         /**
          * @var $oShopConfig Config
          */
         $oShopConfig = Registry::getConfig();
 
-        $oThreeDCurrency = $oShopConfig->getCurrencyObject($oPayment->oxpayments__wdoxidee_limits_currency->value);
+        $oThreeDCurrency =
+            $oShopConfig->getCurrencyObject($this->_oPayment->oxpayments__wdoxidee_limits_currency->value);
         $oShopCurrency = $oShopConfig->getActShopCurrencyObject();
 
-        if ($oPayment->oxpayments__wdoxidee_non_three_d_max_limit->value !== '') {
+        if ($this->_oPayment->oxpayments__wdoxidee_non_three_d_max_limit->value !== '') {
             $oCreditCardConfig->addNonThreeDMaxLimit(new Amount(
                 $this->_convertAmountCurrency(
-                    $oPayment->oxpayments__wdoxidee_non_three_d_max_limit->value,
+                    $this->_oPayment->oxpayments__wdoxidee_non_three_d_max_limit->value,
                     $oThreeDCurrency->rate,
                     $oShopCurrency
                 ),
@@ -110,10 +107,10 @@ class CreditCardPaymentMethod extends PaymentMethod
             ));
         }
 
-        if ($oPayment->oxpayments__wdoxidee_three_d_min_limit->value !== '') {
+        if ($this->_oPayment->oxpayments__wdoxidee_three_d_min_limit->value !== '') {
             $oCreditCardConfig->addThreeDMinLimit(new Amount(
                 $this->_convertAmountCurrency(
-                    $oPayment->oxpayments__wdoxidee_three_d_min_limit->value,
+                    $this->_oPayment->oxpayments__wdoxidee_three_d_min_limit->value,
                     $oThreeDCurrency->rate,
                     $oShopCurrency
                 ),

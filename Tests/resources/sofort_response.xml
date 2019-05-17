@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<payment xmlns="http://www.elastic-payments.com/schema/payment">
+  <transaction-id>900bfd35-989d-cccc-bee0-df7104d76b8c</transaction-id>
+  <request-id>8fa5e6487ca9c7cccc68f48b91a2631c</request-id>
+  <transaction-type>debit</transaction-type>
+  <transaction-state>success</transaction-state>
+  <completion-time-stamp>2010-05-14T08:43:23.000Z</completion-time-stamp>
+  <statuses>
+    <status code="201.1126" description="sofortbanking:Successful confirmation received from the bank."
+            severity="information" />
+  </statuses>
+  <account-holder>
+    <first-name>Max</first-name>
+    <last-name>Mustermann</last-name>
+  </account-holder>
+  <bank-account>
+    <iban>AT850000000023456789</iban>
+    <bic>SFRTAT20XXX</bic>
+  </bank-account>
+</payment>

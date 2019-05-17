@@ -28,12 +28,7 @@ class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetConfig()
     {
-        /**
-         * @var Payment $oPayment
-         */
-        $oPayment = PaymentMethodHelper::getPaymentById(SofortPaymentMethod::getName(true));
-
-        $oConfig = $this->oPaymentMethod->getConfig($oPayment);
+        $oConfig = $this->oPaymentMethod->getConfig();
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('sofortbanking'));
     }
@@ -42,5 +37,10 @@ class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     {
         $oTransaction = $this->oPaymentMethod->getTransaction();
         $this->assertInstanceOf(SofortTransaction::class, $oTransaction);
+    }
+
+    public function testIsMerchantOnly()
+    {
+        $this->assertFalse($this->oPaymentMethod->isMerchantOnly());
     }
 }

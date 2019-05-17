@@ -9,13 +9,14 @@
 
 namespace Wirecard\Oxid\Model;
 
-use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 
 use Psr\Log\LoggerInterface;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\PaymentSdk\Config\Config;
 
 /**
@@ -35,11 +36,25 @@ abstract class PaymentMethod
     protected static $_sName = 'undefined';
 
     /**
+     * @var bool
+     *
+     * @since 1.0.1
+     */
+    protected static $_bMerchantOnly = false;
+
+    /**
      * @var LoggerInterface
      *
      * @since 1.0.0
      */
     protected $_oLogger;
+
+    /**
+     * @var Payment
+     *
+     * @since 1.0.1
+     */
+    protected $_oPayment;
 
     /**
      * PaymentMethod constructor.
@@ -55,23 +70,23 @@ abstract class PaymentMethod
         if ($this::$_sName == 'undefined') {
             throw new StandardException("payment method name not defined: " . get_class());
         }
+
+        $this->_oPayment = PaymentMethodHelper::getPaymentById(self::getName(true));
     }
 
     /**
      * Get the payments method configuration
      *
-     * @param Payment $oPayment
-     *
      * @return Config
      *
      * @since 1.0.0
      */
-    public function getConfig($oPayment)
+    public function getConfig()
     {
         $oConfig = new Config(
-            $oPayment->oxpayments__wdoxidee_apiurl->value,
-            $oPayment->oxpayments__wdoxidee_httpuser->value,
-            $oPayment->oxpayments__wdoxidee_httppass->value
+            $this->_oPayment->oxpayments__wdoxidee_apiurl->value,
+            $this->_oPayment->oxpayments__wdoxidee_httpuser->value,
+            $this->_oPayment->oxpayments__wdoxidee_httppass->value
         );
 
         $aShopInfoFields = Helper::getShopInfoFields();
@@ -90,6 +105,18 @@ abstract class PaymentMethod
      * @since 1.0.0
      */
     abstract public function getTransaction();
+
+    /**
+     * Get the payments for the payment method
+     *
+     * @return Payment
+     *
+     * @since 1.0.1
+     */
+    public function getPayment()
+    {
+        return $this->_oPayment;
+    }
 
     /**
      * Get the payment methods name
@@ -128,15 +155,13 @@ abstract class PaymentMethod
     /**
      * Returns the logo path for a payment method.
      *
-     * @param Payment $oPayment
-     *
      * @return string
      *
      * @since 1.0.0
      */
-    public function getLogoPath($oPayment)
+    public function getLogoPath()
     {
-        $sLogoFile = $oPayment->oxpayments__wdoxidee_logo->value;
+        $sLogoFile = $this->_oPayment->oxpayments__wdoxidee_logo->value;
 
         $oConfig = Registry::getConfig();
 
@@ -217,5 +242,42 @@ abstract class PaymentMethod
         }, ARRAY_FILTER_USE_BOTH);
 
         return $aFieldsPublic;
+    }
+
+    /**
+     * Adds all needed data to the post-processing transaction
+     *
+     * @param Transaction $oTransaction
+     * @param Transaction $oParentTransaction
+     *
+     * @since 1.0.1
+     */
+    public function addPostProcessingTransactionData(&$oTransaction, $oParentTransaction)
+    {
+    }
+
+    /**
+     * Returns the post-processing payment method for this payment method
+     *
+     * @return PaymentMethod
+     *
+     * @since 1.0.1
+     */
+    public function getPostProcessingPaymentMethod()
+    {
+        return $this;
+    }
+
+    /**
+     * Returns true if the payment method can only be used by the merchant and should be hidden for the user
+     *
+     * @return bool
+     *
+     * @since 1.0.1
+     */
+    public function isMerchantOnly()
+    {
+        $oChildClass = get_called_class();
+        return $oChildClass::$_bMerchantOnly;
     }
 }

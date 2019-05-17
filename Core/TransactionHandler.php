@@ -80,6 +80,8 @@ class TransactionHandler
         $sParentTransactionId = $oParentTransaction->wdoxidee_ordertransactions__transactionid->value;
         $oTransaction->setParentTransactionId($sParentTransactionId);
 
+        $oPaymentMethod->addPostProcessingTransactionData($oTransaction, $oParentTransaction);
+
         if (!is_null($fAmount)) {
             $sCurrencyName = $oOrder->oxorder__oxcurrency->value;
             $oCurrency = Registry::getConfig()->getCurrencyObject($sCurrencyName);
@@ -264,7 +266,8 @@ class TransactionHandler
     }
 
     /**
-     * Uses the PaymentMethodFactory to create a new PaymentMethod object for the desired payment method.
+     * Uses the PaymentMethodFactory to create a new (post-processing) PaymentMethod object
+     * for the desired payment method.
      *
      * @param Transaction $oTransaction
      *
@@ -275,7 +278,8 @@ class TransactionHandler
     private function _getPaymentMethod($oTransaction)
     {
         try {
-            return PaymentMethodFactory::create($oTransaction->getPaymentType());
+            $oPaymentMethod = PaymentMethodFactory::create($oTransaction->getPaymentType());
+            return $oPaymentMethod->getPostProcessingPaymentMethod();
         } catch (Exception $oExc) {
             $this->_oLogger->error("Error getting the payment method", [$oExc]);
             return $this->_getErrorMessage($oExc->getMessage());

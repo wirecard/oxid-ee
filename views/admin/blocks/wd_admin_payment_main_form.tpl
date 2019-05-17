@@ -108,7 +108,7 @@
     }
     //-->
   </script>
-  [{/if}]
+[{/if}]
 
 [{if $paymentMethod}]
   [{if $bConfigNotValid}]
@@ -131,9 +131,30 @@
   <tr>
     <td height="40" valign="top">[{ $edit->oxpayments__oxdesc->value }]</td>
   </tr>
-  [{/if}]
+[{/if}]
 
-[{$smarty.block.parent}]
+[{if $paymentMethod && $paymentMethod->isMerchantOnly()}]
+  <tr>
+    <td class="edittext" width="70">
+      [{oxmultilang ident="GENERAL_ACTIVE"}]
+    </td>
+    <td class="edittext">
+      <input class="edittext" type="checkbox" name="editval[oxpayments__oxactive]" value='1' [{if $edit->oxpayments__oxactive->value == 1}]checked[{/if}] [{$readonly}]>
+      [{oxinputhelp ident="HELP_GENERAL_ACTIVE"}]
+    </td>
+  </tr>
+  <tr>
+    <td class="edittext" width="100">
+      [{oxmultilang ident="PAYMENT_MAIN_NAME"}]
+    </td>
+    <td class="edittext">
+      <input type="text" class="editinput" size="25" maxlength="[{$edit->oxpayments__oxdesc->fldmax_length}]" name="editval[oxpayments__oxdesc]" value="[{$edit->oxpayments__oxdesc->value}]" [{$readonly}]>
+      [{oxinputhelp ident="HELP_PAYMENT_MAIN_NAME"}]
+    </td>
+  </tr>
+[{else}]
+  [{$smarty.block.parent}]
+[{/if}]
 
 [{if $configFields}]
   [{foreach from=$configFields key=configKey item=configField}]

@@ -7,11 +7,15 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use OxidEsales\Eshop\Core\Field;
+
+use Wirecard\PaymentSdk\BackendService;
+
 use Wirecard\Oxid\Controller\Admin\Transaction\TransactionTabPostProcessing;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\TransactionHandler;
+use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\Transaction;
-use Wirecard\PaymentSdk\BackendService;
 
 class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
 {
@@ -53,6 +57,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
                 'columns' => ['oxid', 'oxordernr', 'oxpaymenttype', 'wdoxidee_transactionid'],
                 'rows' => [
                     ['oxid 1', 2, 'wdpaypal', 'transaction 1'],
+                    ['oxid 2', 3, 'wdsofortbanking', 'transaction 2'],
                 ]
             ],
             [
@@ -60,6 +65,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
                 'columns' => ['oxid', 'orderid', 'ordernumber', 'transactionid', 'parenttransactionid', 'action', 'type', 'state', 'amount', 'currency', 'responsexml'],
                 'rows' => [
                     ['transaction 1', 'oxid 1', 2, 'transaction 1', null, 'reserve', 'authorization', 'success', 100, 'EUR', $sEncodedXml],
+                    ['transaction 2', 'oxid 2', 3, 'transaction 2', null, 'pay', 'debit', 'success', 100, 'EUR', $sEncodedXml],
                 ]
             ],
         ];
@@ -75,6 +81,23 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
         $this->assertArrayHasKey('alert', $this->_transactionTabPostProcessing->getViewData());
         $this->assertArrayHasKey('currency', $this->_transactionTabPostProcessing->getViewData());
         $this->assertArrayHasKey('emptyText', $this->_transactionTabPostProcessing->getViewData());
+    }
+
+    public function testRenderSepaCredit()
+    {
+        $oPayment = oxNew(Payment::class);
+        $oPayment->load('wdsepacredit');
+        $oPayment->oxpayments__oxactive = new Field(0);
+        $oPayment->save();
+        $this->_oBackendServiceStub->method('retrieveBackendOperations')->willReturn(['testkey' => 'testvalue']);
+
+        $_GET['oxid'] = 'transaction 2';
+        $this->_transactionTabPostProcessing = new TransactionTabPostProcessing();
+        $this->_transactionTabPostProcessing->setBackendService($this->_oBackendServiceStub);
+        $this->_transactionTabPostProcessing->render();
+
+        $this->assertArrayHasKey('actions', $this->_transactionTabPostProcessing->getViewData());
+        $this->assertEmpty($this->_transactionTabPostProcessing->getViewData()['actions']);
     }
 
     public function testDefaultTransactionAmount()

@@ -23,7 +23,6 @@ use Psr\Log\LoggerInterface;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
-use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
 
@@ -127,27 +126,20 @@ class PaymentGateway extends BaseModel
         $oSession = $this->getSession();
 
         $sPaymentId = $oBasket->getPaymentId();
-
-        /**
-         * @var $oPayment Payment
-         */
-        $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
-
         $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
-
         $oTransaction = $oPaymentMethod->getTransaction();
 
         $this->_addMandatoryTransactionData($oTransaction, $oSession, $oBasket, $oPaymentMethod, $oOrder);
 
-        if ($oPayment->oxpayments__wdoxidee_additional_info->value) {
-            self::_addAdditionalInfo($oTransaction, $oOrder, $oPayment, $oSession->getId());
+        if ($oPaymentMethod->getPayment()->oxpayments__wdoxidee_additional_info->value) {
+            self::_addAdditionalInfo($oTransaction, $oOrder, $oPaymentMethod->getPayment(), $oSession->getId());
         }
 
-        if ($oPayment->oxpayments__wdoxidee_descriptor->value) {
+        if ($oPaymentMethod->getPayment()->oxpayments__wdoxidee_descriptor->value) {
             self::_addDescriptor($oTransaction, $oOrder->oxorder__oxid->value);
         }
 
-        if ($this->_shouldAddBasketInfo($oPaymentMethod, $oPayment)) {
+        if ($this->_shouldAddBasketInfo($oPaymentMethod)) {
             self::_addBasketInfo($oTransaction, $oBasket);
         }
 
@@ -227,14 +219,10 @@ class PaymentGateway extends BaseModel
     public function executeTransaction($oTransaction, $oOrder, $oBasket)
     {
         $oSession = $this->getSession();
-        /**
-         * @var $oPayment Payment
-         */
-        $oPayment = PaymentMethodHelper::getPaymentById($oBasket->getPaymentId());
 
-        $oPaymentMethod = PaymentMethodFactory::create($oPayment->oxpayments__oxid->value);
+        $oPaymentMethod = PaymentMethodFactory::create($oBasket->getPaymentId());
 
-        $oTransactionConfig = $oPaymentMethod->getConfig($oPayment);
+        $oTransactionConfig = $oPaymentMethod->getConfig();
         $oTransactionService = new TransactionService($oTransactionConfig, $this->_oLogger);
 
         $oShopConfig = Registry::getConfig();
@@ -252,7 +240,7 @@ class PaymentGateway extends BaseModel
 
         $oResponse = $oTransactionService->process(
             $oTransaction,
-            $oPayment->oxpayments__wdoxidee_transactionaction->value
+            $oPaymentMethod->getPayment()->oxpayments__wdoxidee_transactionaction->value
         );
 
         return $oResponse;
@@ -350,17 +338,17 @@ class PaymentGateway extends BaseModel
      * Checks if basket info should be added
      *
      * @param PaymentMethod $oPaymentMethod
-     * @param Payment       $oPayment
+     *
      * @return bool
      *
      * @since 1.0.0
      */
-    private function _shouldAddBasketInfo($oPaymentMethod, $oPayment)
+    private function _shouldAddBasketInfo($oPaymentMethod)
     {
         if ($oPaymentMethod instanceof PaypalPaymentMethod) {
-            return !!$oPayment->oxpayments__wdoxidee_basket->value;
+            return !!$oPaymentMethod->getPayment()->oxpayments__wdoxidee_basket->value;
         }
         
-        return !!$oPayment->oxpayments__wdoxidee_additional_info->value;
+        return !!$oPaymentMethod->getPayment()->oxpayments__wdoxidee_additional_info->value;
     }
 }

@@ -9,10 +9,11 @@
 
 namespace Wirecard\Oxid\Model;
 
-use OxidEsales\Eshop\Application\Model\Payment;
-
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Config\SepaConfig;
+use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
@@ -35,23 +36,28 @@ class SofortPaymentMethod extends PaymentMethod
     /**
      * @inheritdoc
      *
-     * @param Payment $oPayment
-     *
      * @return Config
      *
      * @since 1.0.0
      */
-    public function getConfig($oPayment)
+    public function getConfig()
     {
-        $oConfig = parent::getConfig($oPayment);
+        $oConfig = parent::getConfig();
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
             SofortTransaction::NAME,
-            $oPayment->oxpayments__wdoxidee_maid->value,
-            $oPayment->oxpayments__wdoxidee_secret->value
+            $this->_oPayment->oxpayments__wdoxidee_maid->value,
+            $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
-
         $oConfig->add($oPaymentMethodConfig);
+
+        $oSepaCtPayment = PaymentMethodHelper::getPaymentById(SepaCreditTransferPaymentMethod::getName(true));
+        $oSepaCtConfig = new SepaConfig(
+            SepaCreditTransferTransaction::NAME,
+            $oSepaCtPayment->oxpayments__wdoxidee_maid->value,
+            $oSepaCtPayment->oxpayments__wdoxidee_secret->value
+        );
+        $oConfig->add($oSepaCtConfig);
 
         return $oConfig;
     }
@@ -71,17 +77,15 @@ class SofortPaymentMethod extends PaymentMethod
     /**
      * Sofort has a variable logo depending on the shop language
      *
-     * @param Payment $oPayment
-     *
      * @return string
      *
      * @since 1.0.0
      */
-    public function getLogoPath($oPayment)
+    public function getLogoPath()
     {
-        $sLogoPath = $oPayment->oxpayments__wdoxidee_logo->value;
-        $sCountryCode = $oPayment->oxpayments__wdoxidee_countrycode->value;
-        $sLogoVariant = $oPayment->oxpayments__wdoxidee_logovariant->value;
+        $sLogoPath = $this->_oPayment->oxpayments__wdoxidee_logo->value;
+        $sCountryCode = $this->_oPayment->oxpayments__wdoxidee_countrycode->value;
+        $sLogoVariant = $this->_oPayment->oxpayments__wdoxidee_logovariant->value;
 
         return sprintf(
             $sLogoPath,
@@ -166,5 +170,17 @@ class SofortPaymentMethod extends PaymentMethod
             parent::getPublicFieldNames(),
             ['additionalInfo', 'countryCode', 'logoType', 'deleteCanceledOrder', 'deleteFailedOrder']
         );
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return SepaCreditTransferPaymentMethod
+     *
+     * @since 1.0.1
+     */
+    public function getPostProcessingPaymentMethod()
+    {
+        return new SepaCreditTransferPaymentMethod();
     }
 }

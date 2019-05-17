@@ -12,13 +12,13 @@ namespace Wirecard\Oxid\Controller\Admin\Transaction;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 
-use Wirecard\Oxid\Controller\Admin\Transaction\TransactionTab;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\TransactionHandler;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
-use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\Transaction;
-use Wirecard\PaymentSdk\Transaction\SofortTransaction;
+use Wirecard\Oxid\Model\PaymentMethod;
+use Wirecard\Oxid\Model\SofortPaymentMethod;
+
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Config\Config;
 
@@ -47,6 +47,7 @@ class TransactionTabPostProcessing extends TransactionTab
     protected $_sThisTemplate = 'tab_post_processing.tpl';
 
     /**
+     * NOTE: for testing use the setter to inject the {@link TransactionHandler}
      * @var TransactionHandler
      *
      * @since 1.0.1
@@ -54,6 +55,7 @@ class TransactionTabPostProcessing extends TransactionTab
     private $_oTransactionHandler;
 
     /**
+     * NOTE: for testing use the setter to inject the {@link BackendService}
      * @var BackendService
      *
      * @since 1.0.1
@@ -96,9 +98,11 @@ class TransactionTabPostProcessing extends TransactionTab
      */
     private function _getBackendService($oConfig)
     {
+        // NOTE: if _oBackendService got injected for testing, use it
         if (is_null($this->_oBackendService)) {
             $this->_oBackendService = new BackendService($oConfig, $this->_oLogger);
         }
+
         return $this->_oBackendService;
     }
 
@@ -328,8 +332,8 @@ class TransactionTabPostProcessing extends TransactionTab
      */
     private function _filterPostProcessingActions($aPossibleOperations, $oPaymentMethod)
     {
-        // currently there are no post-processing transactions for Sofort
-        if ($oPaymentMethod->getName() === SofortTransaction::NAME) {
+        if ($oPaymentMethod->getName(true) === SofortPaymentMethod::getName(true)
+            && !$oPaymentMethod->getPostProcessingPaymentMethod()->getPayment()->oxpayments__oxactive->value) {
             return [];
         }
 
@@ -395,6 +399,7 @@ class TransactionTabPostProcessing extends TransactionTab
      */
     private function _getTransactionHandler()
     {
+        // NOTE: if _oTransactionHandler got injected for testing, use it
         if (is_null($this->_oTransactionHandler)) {
             $oConfig = $this->_getPaymentMethodConfig();
             $this->_oTransactionHandler = new TransactionHandler($this->_getBackendService($oConfig));
@@ -416,10 +421,8 @@ class TransactionTabPostProcessing extends TransactionTab
 
         if (!is_null($this->oTransaction)) {
             $sPaymentId = $this->oTransaction->getPaymentType();
-            $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
             $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
-
-            $oConfig = $oPaymentMethod->getConfig($oPayment);
+            $oConfig = $oPaymentMethod->getConfig();
         }
 
         return $oConfig;

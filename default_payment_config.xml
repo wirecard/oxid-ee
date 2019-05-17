@@ -67,4 +67,20 @@
         <wdoxidee_countrycode>en_gb</wdoxidee_countrycode>
         <wdoxidee_logovariant>standard</wdoxidee_logovariant>
     </payment>
+
+    <!-- only visible for the merchant -->
+    <payment>
+        <oxid>wdsepacredit</oxid>
+        <oxactive>0</oxactive>
+        <oxtoamount>0</oxtoamount>
+        <oxdesc>Wirecard SEPA Credit Transfer</oxdesc>
+        <oxdesc_1>Wirecard SEPA Credit Transfer</oxdesc_1>
+        <wdoxidee_logo>sepa.png</wdoxidee_logo>
+        <wdoxidee_transactionaction>credit</wdoxidee_transactionaction>
+        <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
+        <wdoxidee_maid>59a01668-693b-49f0-8a1f-f3c1ba025d45</wdoxidee_maid>
+        <wdoxidee_secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</wdoxidee_secret>
+        <wdoxidee_httpuser>16390-testing</wdoxidee_httpuser>
+        <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
+    </payment>
 </payments>

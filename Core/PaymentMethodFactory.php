@@ -12,6 +12,7 @@ namespace Wirecard\Oxid\Core;
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
+use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
 
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -33,6 +34,10 @@ class PaymentMethodFactory
      * @return PaymentMethod
      * @throws StandardException if $sPaymentMethodType is not registered
      *
+     * will grow as we add new payment methods
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @codingStandardsIgnoreStart Generic.Metrics.CyclomaticComplexity
+     *
      * @since 1.0.0
      */
     public static function create($sPaymentMethodType)
@@ -44,8 +49,11 @@ class PaymentMethodFactory
                 return new CreditCardPaymentMethod();
             case SofortPaymentMethod::getName(true):
                 return new SofortPaymentMethod();
+            case SepaCreditTransferPaymentMethod::getName(true):
+                return new SepaCreditTransferPaymentMethod();
             default:
                 throw new StandardException("payment type not registered: $sPaymentMethodType");
         }
     }
+    // @codingStandardsIgnoreEnd Generic.Metrics.CyclomaticComplexity
 }

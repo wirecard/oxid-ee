@@ -11,6 +11,7 @@ namespace Wirecard\Oxid\Core;
 
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\DbMetaDataHandler;
 
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Transaction;
@@ -116,8 +117,8 @@ class OxidEeEvents
 
         $aTransactionActions = Transaction::getActions();
         $sTransactionActions = implode("','", $aTransactionActions);
-        $sQueryAddTransAction = "ALTER TABLE oxpayments ADD COLUMN `WDOXIDEE_TRANSACTIONACTION`
-            enum('{$sTransactionActions}') default '{$aTransactionActions[0]}' NOT NULL";
+        $sQueryAddTransAction = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_TRANSACTIONACTION` enum('{$sTransactionActions}') NOT NULL";
         self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_TRANSACTIONACTION', $sQueryAddTransAction);
         $sQueryAddApiUrl = "ALTER TABLE " . self::PAYMENT_TABLE .
             " ADD COLUMN `WDOXIDEE_APIURL` varchar(128) default '' NOT NULL";
@@ -151,8 +152,8 @@ class OxidEeEvents
             " ADD COLUMN `WDOXIDEE_THREE_D_MIN_LIMIT` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_THREE_D_MIN_LIMIT', $sQueryAddMinLimit);
 
-        $sQueryLimitsCurrency = "ALTER TABLE " . self::PAYMENT_TABLE . "
-            ADD COLUMN `WDOXIDEE_LIMITS_CURRENCY` varchar(128) default '' NOT NULL";
+        $sQueryLimitsCurrency = "ALTER TABLE " . self::PAYMENT_TABLE .
+            " ADD COLUMN `WDOXIDEE_LIMITS_CURRENCY` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_LIMITS_CURRENCY', $sQueryLimitsCurrency);
 
         $sQueryAddHttpUser = "ALTER TABLE " . self::PAYMENT_TABLE .
@@ -366,13 +367,13 @@ class OxidEeEvents
         // extend OXID's order table
         self::_extendOrderTable();
 
-        self::_addPaymentMethods();
-
         // create the module's own order transaction table
         self::_createOrderTransactionTable();
 
         // needs to be executed before _addPaymentMethods()
         self::_migrateFrom100To101();
+
+        self::_addPaymentMethods();
 
         // view tables must be regenerated after modifying database table structure
         self::_regenerateViews();
@@ -419,12 +420,24 @@ class OxidEeEvents
      */
     private static function _migrateFrom100To101()
     {
-        $oDbMetaDataHandler = oxNew(\OxidEsales\Eshop\Core\DbMetaDataHandler::class);
+        $oDbMetaDataHandler = oxNew(DbMetaDataHandler::class);
 
         if (!$oDbMetaDataHandler->fieldExists('TRANSACTIONNUMBER', self::TRANSACTION_TABLE)) {
+            // adds a sortable transaction number
             $sQuery = "ALTER TABLE " . self::TRANSACTION_TABLE .
                 " DROP PRIMARY KEY, ADD COLUMN `TRANSACTIONNUMBER` int AUTO_INCREMENT NOT NULL PRIMARY KEY";
             self::$oDb->execute($sQuery);
+
+            // adds new enum to transactionActions field
+            $sTransactionActions = implode("','", Transaction::getActions());
+
+            $sQuery = "ALTER TABLE " . self::TRANSACTION_TABLE .
+                " MODIFY `ACTION` enum('{$sTransactionActions}')";
+            self::$oDb->Execute($sQuery);
+
+            $sQuery = "ALTER TABLE " . self::PAYMENT_TABLE .
+                " MODIFY COLUMN `WDOXIDEE_TRANSACTIONACTION` enum('{$sTransactionActions}')";
+            self::$oDb->Execute($sQuery);
         }
     }
 }

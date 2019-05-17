@@ -420,8 +420,7 @@ class OrderController extends OrderController_parent
     private function _getCreditCardPaymentMethodConfig()
     {
         if (is_null($this->_oPaymentMethodConf)) {
-            $oPayment = $this->getPayment();
-            $this->_oPaymentMethodConf = $this->_getCreditCardPaymentMethod()->getConfig($oPayment);
+            $this->_oPaymentMethodConf = $this->_getCreditCardPaymentMethod()->getConfig();
         }
 
         return $this->_oPaymentMethodConf;
@@ -441,6 +440,7 @@ class OrderController extends OrderController_parent
         if ($sAction == Operation::PAY) {
             return 'purchase';
         }
+
         return 'authorization';
     }
 }
