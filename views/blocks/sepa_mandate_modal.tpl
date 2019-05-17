@@ -16,7 +16,7 @@
 
     [{$sepamandate}]
 
-    <input type="checkbox" id="sepadd-checkbox" style="margin-right: 5px"/>[{oxmultilang ident="wd_sepa_text_6"}]
+    <input type="checkbox" id="sepadd-checkbox" style="margin-right: 5px"/><label for="sepadd-checkbox">[{oxmultilang ident="wd_sepa_text_6"}]</label>
 
     <hr>
 

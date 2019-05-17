@@ -21,6 +21,7 @@ use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Extend\Model\PaymentGateway;
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -38,6 +39,8 @@ use Wirecard\PaymentSdk\TransactionService;
 class OrderController extends OrderController_parent
 {
     const FORM_POST_VARIABLE = 'formPost';
+    const SEPA_MANDATE_KEY = 'sepamandate';
+
     /**
      * @var TransactionService
      *
@@ -112,20 +115,21 @@ class OrderController extends OrderController_parent
      */
     public function render()
     {
-        //after calling parent::render() we are sure we will have order id stored in the session
-        //order id is needed in sepa mandate
+        // after calling parent::render() we are sure we will have order id stored in the session
+        // order id is needed in sepa mandate
         $sTemplateName = parent::render();
 
         $oSession = Registry::getSession();
         $oBasket = $oSession->getBasket();
 
-        if ($oBasket->getPaymentId() === 'wdsepadd') {
-            $sSepaMandate = PaymentMethodHelper::generateSepaMandate($oBasket);
+        if ($oBasket->getPaymentId() === SepaDirectDebitPaymentMethod::getName(true)) {
+            $sSepaMandate = PaymentMethodHelper::getSepaMandateHtml($oBasket);
 
             Helper::addToViewData($this, [
-                'sepamandate' => $sSepaMandate,
+                self::SEPA_MANDATE_KEY => $sSepaMandate,
             ]);
         }
+
         return $sTemplateName;
     }
 
@@ -219,7 +223,7 @@ class OrderController extends OrderController_parent
         }
 
         if ($oBasket->getProductsCount()) {
-            $oOrder = OrderHelper::createOrder($oBasket, $oUser, $this->getViewData()['sepamandate']);
+            $oOrder = OrderHelper::createOrder($oBasket, $oUser, PaymentMethodHelper::getSepaMandateHtml($oBasket));
 
             if (!$oOrder) {
                 $iSuccess = $oOrder->oxorder__wdoxidee_finalizeorderstate->value;

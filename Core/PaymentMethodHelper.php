@@ -138,16 +138,16 @@ class PaymentMethodHelper
      *
      * @since 1.0.1
      */
-    public static function generateSepaMandate($oBasket)
+    public static function getSepaMandateHtml($oBasket)
     {
         $oShopAddress = Helper::getShopAddress();
         $iOrderNumber = Helper::getSessionChallenge();
         $oPayment = oxNew(Payment::class);
         $oPayment->load($oBasket->getPaymentId());
 
-        $sSepaMandateHeader = self::generateSepaMandateHeader($oShopAddress, $oPayment, $iOrderNumber);
-        $sSepaMandateFooter = self::generateSepaMandateFooter($oShopAddress);
-        $sSepaMandateMain = self::generateSepaMandateMainText($oShopAddress);
+        $sSepaMandateHeader = self::getSepaMandateHeader($oShopAddress, $oPayment, $iOrderNumber);
+        $sSepaMandateFooter = self::getSepaMandateFooter($oShopAddress);
+        $sSepaMandateMain = self::getSepaMandateMainText($oShopAddress);
 
         if ($oPayment->oxpayments__wdoxidee_sepamandatecustom->value) {
             $sSepaMandateMain = $oPayment->oxpayments__wdoxidee_sepamandatecustom->value;
@@ -169,7 +169,7 @@ class PaymentMethodHelper
      *
      * @since 1.0.1
      */
-    public static function generateSepaMandateHeader($oShopAddress, $oPayment, $iOrderNumber)
+    public static function getSepaMandateHeader($oShopAddress, $oPayment, $iOrderNumber)
     {
         return '<h3>' . Helper::translate('wd_sepa_mandate') . '</h3><hr>
             <i>' . Helper::translate('wd_creditor') . '</i><p style="margin-bottom: 30px">' .
@@ -194,7 +194,7 @@ class PaymentMethodHelper
      *
      * @since 1.0.1
      */
-    public static function generateSepaMandateFooter($oShopAddress)
+    public static function getSepaMandateFooter($oShopAddress)
     {
         return '<p style="margin-top: 30px">' . $oShopAddress->oxshops__oxcity . ', ' . date("d.m.Y", time()) . ' '
             . self::getAccountHolder() . '</p>';
@@ -209,7 +209,7 @@ class PaymentMethodHelper
      *
      * @since 1.0.1
      */
-    public static function generateSepaMandateMainText($oShopAddress)
+    public static function getSepaMandateMainText($oShopAddress)
     {
         return '<p> ' . Helper::translate('wd_sepa_text_1') . ' ' . $oShopAddress->oxshops__oxfname . ' ' .
             $oShopAddress->oxshops__oxlname . ' ' . Helper::translate('wd_sepa_text_2') . ' ' .
