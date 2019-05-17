@@ -72,18 +72,19 @@ class PaymentMethodHelper
     }
 
     /**
-    * Generates a Mandate for SEPA transactions
-    *
-    * @param int $iOrderNumber
-    *
-    * @return Mandate
-    *
-    * @since 1.0.1
-    */
+     * Generates a Mandate for SEPA transactions
+     *
+     * @param int $iOrderNumber
+     *
+     * @return Mandate
+     *
+     * @since 1.0.1
+     */
     public static function getMandate($iOrderNumber)
     {
-        $iLength = self::MAX_MANDATE_ID_LENGTH - 1 - strlen((string) time());
-        return new Mandate(substr($iOrderNumber, 0, $iLength) . '-' . time());
+        $sTime = (string) time();
+        $iLength = self::MAX_MANDATE_ID_LENGTH - 1 - strlen($sTime);
+        return new Mandate(substr($iOrderNumber, 0, $iLength) . '-' . $sTime);
     }
 
     /**
@@ -130,7 +131,7 @@ class PaymentMethodHelper
     }
 
     /**
-     * Generates SEPA mandate text
+     * Generates SEPA mandate html body
      *
      * @param Basket $oBasket
      *

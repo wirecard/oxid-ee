@@ -67,8 +67,9 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
     {
         $oTransaction = new SepaDirectDebitTransaction();
         $oTransaction->setIban(PaymentMethodHelper::getIban());
-        if (PaymentMethodHelper::getBic()) {
-            $oTransaction->setBic(PaymentMethodHelper::getBic());
+        $sBic = PaymentMethodHelper::getBic();
+        if ($sBic) {
+            $oTransaction->setBic($sBic);
         }
         $iOrderNumber = Helper::getSessionChallenge();
         $oMandate = PaymentMethodHelper::getMandate($iOrderNumber);
