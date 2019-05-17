@@ -80,7 +80,7 @@ class TransactionHandler
         $sParentTransactionId = $oParentTransaction->wdoxidee_ordertransactions__transactionid->value;
         $oTransaction->setParentTransactionId($sParentTransactionId);
 
-        $oPaymentMethod->addNeededDataToTransaction($oTransaction, $oParentTransaction);
+        $oPaymentMethod->addPostProcessingTransactionData($oTransaction, $oParentTransaction);
 
         if (!is_null($fAmount)) {
             $sCurrencyName = $oOrder->oxorder__oxcurrency->value;
