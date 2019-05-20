@@ -110,6 +110,8 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
             if (strpos($exception->getMessage(), 'EventTarget.dispatchEvent') === false) {
                 throw $exception;
             }
+
+            $this->fireEvent($selector, 'change');
         }
     }
 }
