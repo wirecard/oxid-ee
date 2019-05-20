@@ -15,7 +15,6 @@ use OxidEsales\Eshop\Core\Registry;
 use Wirecard\PaymentSdk\Entity\Mandate;
 
 use Wirecard\Oxid\Extend\Model\Payment;
-use Wirecard\Oxid\Core\Helper;
 
 /**
  * Helper class to handle payment methods
