@@ -66,16 +66,7 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      */
     public function getTransaction()
     {
-        $oTransaction = new SepaDirectDebitTransaction();
-        $oTransaction->setIban(PaymentMethodHelper::getIban());
-        $sBic = PaymentMethodHelper::getBic();
-        if ($sBic) {
-            $oTransaction->setBic($sBic);
-        }
-        $sSessionChallenge = Helper::getSessionChallenge();
-        $oMandate = PaymentMethodHelper::getMandate($sSessionChallenge);
-        $oTransaction->setMandate($oMandate);
-        return $oTransaction;
+        return new SepaDirectDebitTransaction();
     }
 
     /**
@@ -218,6 +209,17 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      */
     public function addMandatoryTransactionData(&$oTransaction)
     {
+        $oTransaction->setIban(PaymentMethodHelper::getIban());
+        $sBic = PaymentMethodHelper::getBic();
+
+        if ($sBic) {
+            $oTransaction->setBic($sBic);
+        }
+
+        $sSessionChallenge = Helper::getSessionChallenge();
+        $oMandate = PaymentMethodHelper::getMandate($sSessionChallenge);
+        $oTransaction->setMandate($oMandate);
+
         $oAccountHolder = new AccountHolder();
         $oAccountHolder->setLastName(PaymentMethodHelper::getAccountHolder());
         $oTransaction->setAccountHolder($oAccountHolder);
