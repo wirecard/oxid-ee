@@ -257,7 +257,7 @@ abstract class PaymentMethod
     }
 
     /**
-     * Adds all needed data to the post-processing transaction
+     * Adds all mandatory transaction data
      *
      * @param Transaction $oTransaction
      *
