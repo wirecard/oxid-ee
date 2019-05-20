@@ -77,16 +77,4 @@ class ViewConfig extends ViewConfig_parent
     {
         return Helper::isThisModule($sModuleId);
     }
-
-    /**
-     * Returns shop
-     *
-     * @return Shop
-     *
-     * @since 1.0.1
-     */
-    public function getShop()
-    {
-        return Helper::getShop();
-    }
 }
