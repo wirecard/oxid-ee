@@ -98,9 +98,9 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     /**
      * Navigates to the next step in the checkout.
      */
-    public function continueToNextStep()
+    public function continueToNextStep($seconds = 10)
     {
-        $this->clickAndWait($this->getLocator('checkout.nextStep'));
+        $this->clickAndWait($this->getLocator('checkout.nextStep'), $seconds);
     }
 
     /**
