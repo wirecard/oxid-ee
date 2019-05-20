@@ -15,9 +15,7 @@ use OxidEsales\Eshop\Core\Registry;
 use Wirecard\PaymentSdk\Entity\Mandate;
 
 use Wirecard\Oxid\Extend\Model\Payment;
-use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
 /**
  * Helper class to handle payment methods
@@ -144,7 +142,6 @@ class PaymentMethodHelper
      */
     public static function getSepaMandateHtml($oBasket, $oUser)
     {
-        $oShop = Helper::getShop();
         $iOrderNumber = Helper::getSessionChallenge();
         $oPayment = oxNew(Payment::class);
         $oPayment->load($oBasket->getPaymentId());
@@ -161,19 +158,5 @@ class PaymentMethodHelper
         $oSmarty->assign('sDate', date('d.m.Y', time()));
 
         return $oSmarty->fetch('sepa_mandate.tpl');
-    }
-
-    /**
-     * Checks if the action is refund
-     *
-     * @param string $sAction
-     *
-     * @return boolean
-     *
-     * @since 1.0.1
-     */
-    public function isRefund($sAction)
-    {
-        return $sAction === TransactionModel::ACTION_CREDIT;
     }
 }

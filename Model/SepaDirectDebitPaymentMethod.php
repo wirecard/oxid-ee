@@ -235,10 +235,24 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      */
     public function getPostProcessingPaymentMethod($sAction)
     {
-        if (PaymentMethodHelper::isRefund($sAction)) {
+        if ($this->_isRefundAction($sAction)) {
             return new SepaCreditTransferPaymentMethod();
         }
 
         return parent::getPostProcessingPaymentMethod($sAction);
+    }
+
+    /**
+     * Checks if the action is refund
+     *
+     * @param string $sAction
+     *
+     * @return boolean
+     *
+     * @since 1.0.1
+     */
+    private function _isRefundAction($sAction)
+    {
+        return $sAction === TransactionModel::ACTION_CREDIT;
     }
 }

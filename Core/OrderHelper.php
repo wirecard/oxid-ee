@@ -63,7 +63,9 @@ class OrderHelper
             //finalizing ordering process (validating, storing order into DB, executing payment, setting status ...)
             $iSuccess = $oOrder->finalizeOrder($oBasket, $oUser);
             $oOrder->oxorder__wdoxidee_finalizeorderstate = new Field($iSuccess);
-            $oOrder->oxorder__wdoxidee_sepamandate = new Field($sSepaMandate);
+            if ($sSepaMandate) {
+                $oOrder->oxorder__wdoxidee_sepamandate = new Field($sSepaMandate);
+            }
 
             $oOrder->save();
 

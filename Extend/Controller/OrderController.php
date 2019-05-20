@@ -213,6 +213,8 @@ class OrderController extends OrderController_parent
      *
      * @return mixed integer/string
      *
+     * @throws Exception
+     *
      * @since 1.0.0
      */
     private function _processOrderTransaction($oOrder, $oBasket, $oUser)
@@ -243,7 +245,7 @@ class OrderController extends OrderController_parent
     }
 
     /**
-     * Prepares sepa mandate text
+     * Prepares SEPA mandate text
      *
      * @param Basket $oBasket
      * @param User   $oUser
