@@ -63,9 +63,7 @@ class OrderHelper
             //finalizing ordering process (validating, storing order into DB, executing payment, setting status ...)
             $iSuccess = $oOrder->finalizeOrder($oBasket, $oUser);
             $oOrder->oxorder__wdoxidee_finalizeorderstate = new Field($iSuccess);
-            if ($sSepaMandate) {
-                $oOrder->oxorder__wdoxidee_sepamandate = new Field($sSepaMandate);
-            }
+            self::_addSepaMandateToOrder($oOrder, $sSepaMandate);
 
             $oOrder->save();
 
@@ -83,6 +81,23 @@ class OrderHelper
         }
 
         return $oOrder;
+    }
+
+    /**
+     * Adds Sepa Mandate to order
+     *
+     * @param object $oOrder
+     * @param string $sSepaMandate
+     *
+     * @since 1.0.0
+     *
+     * @throws Exception
+     */
+    private static function _addSepaMandateToOrder(&$oOrder, $sSepaMandate)
+    {
+        if ($sSepaMandate) {
+            $oOrder->oxorder__wdoxidee_sepamandate = new Field($sSepaMandate);
+        }
     }
 
     /**
