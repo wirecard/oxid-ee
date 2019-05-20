@@ -116,6 +116,8 @@ class ResponseHandler
      * @param Order           $oOrder
      * @param BackendService  $oBackendService
      *
+     * @return void
+     *
      * @throws \Exception
      *
      * @since 1.0.0
@@ -147,6 +149,14 @@ class ResponseHandler
         ];
 
         //$aTransactionProps['validsignature'] = $oResponse->isValidSignature();
+
+        // check if transaction exists directly before saving it because of timing issues with
+        // HTTP calls in backend service
+        $oTransaction = oxNew(Transaction::class);
+        if ($oTransaction->loadWithTransactionId($oResponse->getTransactionId())) {
+            // if a transaction with this ID already exists, we do not need to handle it again
+            return;
+        }
 
         Transaction::createDbEntryFromArray($aTransactionProps);
     }
