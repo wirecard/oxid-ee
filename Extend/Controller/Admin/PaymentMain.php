@@ -122,24 +122,6 @@ class PaymentMain extends PaymentMain_parent
             || $this->_creditorIdValidation($sCreditorId);
     }
 
-
-
-    /**
-     * Checks if it is possible to save the config
-     *
-     * @param bool $bCredentialsValid
-     * @param bool $bCountryCodeValid
-     * @param bool $bCreditorIdValid
-     *
-     * @return bool
-     *
-     * @since 1.0.1
-     */
-    private function _isInputValid($bCredentialsValid, $bCountryCodeValid, $bCreditorIdValid)
-    {
-        return $bCredentialsValid && $bCountryCodeValid && $bCreditorIdValid;
-    }
-
     /**
      * Validates creditor id
      *
