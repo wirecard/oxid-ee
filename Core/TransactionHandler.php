@@ -234,10 +234,10 @@ class TransactionHandler
         $aResult = $oDb->select($sDbQuery, $aQueryArgs);
 
         if ($aResult !== false && $aResult->count() > 0) {
-            $fChildAmount = $aResult->fields['childTransactionsTotalAmount'];
+            $fChildAmount = (float) $aResult->fields['childTransactionsTotalAmount'];
         }
 
-        return $fBaseAmount - $fChildAmount;
+        return round(bcsub($fBaseAmount, $fChildAmount, Helper::BCSUB_SCALE), Helper::ROUND_PRECISION);
     }
 
     /**

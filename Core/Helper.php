@@ -36,6 +36,10 @@ class Helper
     const PLUGIN_VERSION_KEY = 'pluginVersion';
     const SHOP_SYSTEM_VALUE = 'OXID';
 
+    const FLOATING_POINT_EPSILON = 0.000001;
+    const BCSUB_SCALE = 12;
+    const ROUND_PRECISION = 3;
+
     /**
      * Gets the translation for a given key.
      *

@@ -251,7 +251,8 @@ class TransactionTabPostProcessing extends TransactionTab
      */
     private function _isPositiveBelowMax($fAmount, $fMaxAmount)
     {
-        return $fAmount > 0 && $fAmount <= $fMaxAmount;
+        return $fAmount > 0 &&
+            ((bcsub($fAmount, $fMaxAmount, Helper::BCSUB_SCALE) / $fMaxAmount) < Helper::FLOATING_POINT_EPSILON);
     }
 
     /**
