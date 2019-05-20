@@ -31,26 +31,14 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
         $this->paymentMethod = $this->getPaymentMethod();
 
         $this->activatePaymentMethod();
-        $this->addMockData();
+        $this->addMockUser();
+        $this->addMockArticle();
     }
 
     /**
      * Payment method getter.
      */
     abstract public function getPaymentMethod();
-
-    /**
-     * Adds mock data required to complete a checkout.
-     */
-    public function addMockData()
-    {
-        $this->executeSql("INSERT INTO `oxuser`
-            (`OXID`, `OXRIGHTS`, `OXUSERNAME`, `OXPASSWORD`, `OXPASSSALT`, `OXFNAME`, `OXLNAME`, `OXSTREET`, `OXSTREETNR`, `OXCITY`, `OXCOUNTRYID`, `OXZIP`, `OXSAL`)
-            VALUES ('wdcheckoutuser', 'user', 'payment@test.com', 'd04c7c05808811484a38486479ebecd5776bdf76966db23b6a7469d6f0724af5fcb7bb3f77de6372435567951dbc1b8eda29521bcc6b5ccbe778af60847c7825', 'a022994047f11859e9430ec3b37d977d', 'Payment', 'Test', 'Tester Street', '1', 'Berlin', 'a7c40f631fc920687.20179984', '10115', 'MR')");
-        $this->executeSql("INSERT INTO `oxarticles`
-            (`OXID`, `OXARTNUM`, `OXTITLE_1`, `OXPRICE`, `OXSTOCK`)
-            VALUES ('wdcheckoutarticle', '1337', 'Test Article', '100.99', '10')");
-    }
 
     /**
      * Activates the payment method.
@@ -77,6 +65,27 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     {
         $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_RESERVE .
             "' WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
+    }
+
+    /**
+     * Adds a demo user to the database.
+     */
+    public function addMockUser()
+    {
+        $this->executeSql("INSERT INTO `oxuser`
+            (`OXID`, `OXRIGHTS`, `OXUSERNAME`, `OXPASSWORD`, `OXPASSSALT`, `OXFNAME`, `OXLNAME`, `OXSTREET`, `OXSTREETNR`, `OXCITY`, `OXCOUNTRYID`, `OXZIP`, `OXSAL`)
+            VALUES ('wdcheckoutuser', 'user', 'payment@test.com', 'd04c7c05808811484a38486479ebecd5776bdf76966db23b6a7469d6f0724af5fcb7bb3f77de6372435567951dbc1b8eda29521bcc6b5ccbe778af60847c7825', 'a022994047f11859e9430ec3b37d977d', 'Payment', 'Test', 'Tester Street', '1', 'Berlin', 'a7c40f631fc920687.20179984', '10115', 'MR')");
+
+    }
+
+    /**
+     * Adds a demo article to the database.
+     */
+    public function addMockArticle()
+    {
+        $this->executeSql("INSERT INTO `oxarticles`
+            (`OXID`, `OXARTNUM`, `OXTITLE_1`, `OXPRICE`, `OXSTOCK`)
+            VALUES ('wdcheckoutarticle', '1337', 'Test Article', '100.99', '10')");
     }
 
     /**
