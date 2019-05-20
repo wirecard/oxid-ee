@@ -112,7 +112,7 @@ class CreditCardCheckoutTest extends CheckoutTestCase
             $this->getLocator('external.creditcard.cardNumber'),
             $this->getConfigValue('payments.creditcard.cardNumber')
         );
-        $this->keyUp($this->getLocator('external.creditcard.cardNumber'), ' '); // forces validation
+        $this->fireEvent($this->getLocator('external.creditcard.cardNumber'), 'keyup');
         $this->type(
             $this->getLocator('external.creditcard.cvv'),
             $this->getConfigValue('payments.creditcard.cvv')
