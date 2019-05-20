@@ -21,14 +21,12 @@ use OxidEsales\Eshop\Core\Session;
 use Psr\Log\LoggerInterface;
 
 use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
 
 use Wirecard\PaymentSdk\BackendService;
-use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\CustomField;
 use Wirecard\PaymentSdk\Entity\CustomFieldCollection;
@@ -183,12 +181,7 @@ class PaymentGateway extends BaseModel
                 $oTransaction->setOrderDetail($sOrderDetails);
             }
         }
-
-        if ($oTransaction instanceof SepaDirectDebitTransaction) {
-            $oAccountHolder = new AccountHolder();
-            $oAccountHolder->setLastName(PaymentMethodHelper::getAccountHolder());
-            $oTransaction->setAccountHolder($oAccountHolder);
-        }
+        $oPaymentMethod->addMandatoryTransactionData($oTransaction);
 
         $this->_addCustomFields($oTransaction);
     }

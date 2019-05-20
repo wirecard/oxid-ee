@@ -18,6 +18,7 @@ use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Config\SepaConfig;
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 /**
  * Payment method implementation for SEPA Direct Debit
@@ -209,6 +210,21 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
     }
 
     /**
+     * Adds all needed data to the post-processing transaction
+     *
+     * @param SepaDirectDebitTransaction $oTransaction
+     * @param Transaction                $oParentTransaction
+     *
+     * @since 1.0.1
+     */
+    public function addMandatoryTransactionData(&$oTransaction, $oParentTransaction = null)
+    {
+        $oAccountHolder = new AccountHolder();
+        $oAccountHolder->setLastName(PaymentMethodHelper::getAccountHolder());
+        $oTransaction->setAccountHolder($oAccountHolder);
+    }
+
+    /**
      * @inheritdoc
      *
      * @param string $sAction
@@ -219,7 +235,7 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      */
     public function getPostProcessingPaymentMethod($sAction)
     {
-        if ($sAction === TransactionModel::ACTION_CREDIT) {
+        if (PaymentMethodHelper::isRefund($sAction)) {
             return new SepaCreditTransferPaymentMethod();
         }
 

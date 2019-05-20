@@ -264,7 +264,7 @@ abstract class PaymentMethod
      *
      * @since 1.0.1
      */
-    public function addPostProcessingTransactionData(&$oTransaction, $oParentTransaction)
+    public function addMandatoryTransactionData(&$oTransaction, $oParentTransaction = null)
     {
     }
 

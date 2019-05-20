@@ -225,6 +225,7 @@ $aModule = [
         'module_support_email.tpl'          => 'wirecard/paymentgateway/views/admin/tpl/email/module_support_email.tpl',
         'live_chat.tpl'                     => 'wirecard/paymentgateway/views/admin/inc/live_chat.tpl',
         'sepa_mandate_modal.tpl'            => 'wirecard/paymentgateway/views/blocks/sepa_mandate_modal.tpl',
+        'sepa_mandate.tpl'                  => 'wirecard/paymentgateway/views/blocks/sepa_mandate.tpl',
     ],
     'events'            => [
         'onActivate'        => '\Wirecard\Oxid\Core\OxidEeEvents::onActivate',

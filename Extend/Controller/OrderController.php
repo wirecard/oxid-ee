@@ -223,10 +223,14 @@ class OrderController extends OrderController_parent
         }
 
         if ($oBasket->getProductsCount()) {
+            $sSepaMandate = '';
+            if ($oBasket->getPaymentId() === SepaDirectDebitPaymentMethod::getName(true)) {
+                $sSepaMandate = PaymentMethodHelper::getSepaMandateHtml($oBasket, $oUser);
+            }
             $oOrder = OrderHelper::createOrder(
                 $oBasket,
                 $oUser,
-                PaymentMethodHelper::getSepaMandateHtml($oBasket, $oUser)
+                $sSepaMandate
             );
 
             if (!$oOrder) {

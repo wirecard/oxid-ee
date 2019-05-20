@@ -17,6 +17,7 @@ use Wirecard\PaymentSdk\Entity\Mandate;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
 /**
  * Helper class to handle payment methods
@@ -148,84 +149,31 @@ class PaymentMethodHelper
         $oPayment = oxNew(Payment::class);
         $oPayment->load($oBasket->getPaymentId());
 
-        $sSepaMandateHeader = self::getSepaMandateHeader($oShop, $oPayment, $iOrderNumber);
-        $sSepaMandateFooter = self::getSepaMandateFooter($oShop, $oUser->oxuser__oxcity->value);
-        $sSepaMandateMain = self::getSepaMandateMainText($oShop);
+        $oSmarty = Registry::getUtilsView()->getSmarty();
 
-        if ($oPayment->oxpayments__wdoxidee_sepamandatecustom->value) {
-            $sSepaMandateMain =
-                '<p>' . nl2br(htmlspecialchars($oPayment->oxpayments__wdoxidee_sepamandatecustom->value)) . '</p>';
-        }
+        $oSmarty->assign('sAccountHolder', self::getAccountHolder());
+        $oSmarty->assign('oShop', Helper::getShop());
+        $oSmarty->assign('oPayment', $oPayment);
+        $oSmarty->assign('sMandateId', self::getMandate($iOrderNumber)->mappedProperties()['mandate-id']);
+        $oSmarty->assign('sIban', self::getIban());
+        $oSmarty->assign('sBic', self::getBic());
+        $oSmarty->assign('sConsumerCity', $oUser->oxuser__oxcity->value);
+        $oSmarty->assign('sDate', date('d.m.Y', time()));
 
-        return $sSepaMandateHeader . $sSepaMandateMain . $sSepaMandateFooter;
+        return $oSmarty->fetch('sepa_mandate.tpl');
     }
 
     /**
-     * Generates SEPA mandate header text
+     * Checks if the action is refund
      *
-     * @param Shop    $oShop
-     * @param Payment $oPayment
-     * @param integer $iOrderNumber
+     * @param string $sAction
      *
-     * @return string
+     * @return boolean
      *
      * @since 1.0.1
      */
-    public static function getSepaMandateHeader($oShop, $oPayment, $iOrderNumber)
+    public function isRefund($sAction)
     {
-        $sSepaMandateHeader = '<h3>' . Helper::translate('wd_sepa_mandate') . '</h3><hr>
-            <i>' . Helper::translate('wd_creditor') . '</i><p style="margin-bottom: 30px">' .
-            $oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname . '<br>' .
-            $oShop->oxshops__oxstreet . '<br>' .
-            $oShop->oxshops__oxzip . ' ' . $oShop->oxshops__oxcity . '<br>' .
-            $oShop->oxshops__oxcountry . '<br>' .
-            Helper::translate('wd_config_creditor_id') . ' ' . $oPayment->oxpayments__wdoxidee_creditorid->value
-            . '<br> ' . Helper::translate('wd_creditor_mandate_id') . ' ' .
-            self::getMandate($iOrderNumber)->mappedProperties()['mandate-id'] . '</p>
-            <i>' . Helper::translate('wd_debtor') . '</i><p style="margin-bottom: 30px">
-            ' . Helper::translate('wd_debtor_acc_owner') . ' ' . self::getAccountHolder() . '<br>' .
-            Helper::translate('wd_iban') . ' ' . self::getIban();
-        if (self::getBic()) {
-            $sSepaMandateHeader .= '<br>' . Helper::translate('wd_bic') . ' ' . self::getBic();
-        }
-        $sSepaMandateHeader .= '</p>';
-        return $sSepaMandateHeader;
-    }
-
-    /**
-     * Generates SEPA mandate header text
-     *
-     * @param Shop   $oShop
-     * @param string $sConsumerCity
-     *
-     * @return string
-     *
-     * @since 1.0.1
-     */
-    public static function getSepaMandateFooter($oShop, $sConsumerCity)
-    {
-        return '<p style="margin-top: 30px">' . $sConsumerCity . ', ' . date("d.m.Y", time()) . ' '
-            . self::getAccountHolder() . '</p>';
-    }
-
-    /**
-     * Generates SEPA mandate main text
-     *
-     * @param Shop $oShop
-     *
-     * @return string
-     *
-     * @since 1.0.1
-     */
-    public static function getSepaMandateMainText($oShop)
-    {
-        return '<p> ' . Helper::translate('wd_sepa_text_1') . ' ' . $oShop->oxshops__oxfname . ' ' .
-            $oShop->oxshops__oxlname . ' ' . Helper::translate('wd_sepa_text_2') . ' ' .
-            $oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname . ' ' .
-            Helper::translate('wd_sepa_text_2b') . '</p>
-            <p>' . Helper::translate('wd_sepa_text_3') . '</p>
-            <p style="margin-bottom: 30px">' . Helper::translate('wd_sepa_text_4') . ' ' .
-            $oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname . ' ' .
-            Helper::translate('wd_sepa_text_5') . '</p> ';
+        return $sAction === TransactionModel::ACTION_CREDIT;
     }
 }
