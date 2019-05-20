@@ -84,18 +84,45 @@ class PaymentMain extends PaymentMain_parent
 
         $bCredentialsValid = $this->_validateRequestParameters($aParams);
 
+        return $bCredentialsValid && $this->_isCountryCodeValid($aParams) && $this->_isCreditorIdValid($aParams);
+    }
+
+    /**
+     * Checks if country code is valid
+     *
+     * @param array $aParams
+     *
+     * @return bool
+     *
+     * @since 1.0.1
+     */
+    private function _isCountryCodeValid($aParams)
+    {
         // for Sofort it is required that a country code is settable
         // the country code must be of the format two characters, underscore, two characters: "en_gb"
         // this format is checked by the regular expression below
         $sCountryCode = $aParams['oxpayments__wdoxidee_countrycode'];
-        $bCountryCodeValid = $aParams['oxpayments__oxid'] !== SofortPaymentMethod::getName(true)
+        return $aParams['oxpayments__oxid'] !== SofortPaymentMethod::getName(true)
             || (preg_match('/^[a-z]{2}_[a-z]{2}$/', $sCountryCode) === 1);
-        $sCreditorId = $aParams['oxpayments__wdoxidee_creditorid'];
-        $bCreditorIdValid = $aParams['oxpayments__oxid'] !== SepaDirectDebitPaymentMethod::getName(true)
-            || $this->_creditorIdValidation($sCreditorId);
-
-        return $this->_isInputValid($bCredentialsValid, $bCountryCodeValid, $bCreditorIdValid);
     }
+
+    /**
+     * Checks if creditor id is valid
+     *
+     * @param array $aParams
+     *
+     * @return bool
+     *
+     * @since 1.0.1
+     */
+    private function _isCreditorIdValid($aParams)
+    {
+        $sCreditorId = $aParams['oxpayments__wdoxidee_creditorid'];
+        return $aParams['oxpayments__oxid'] !== SepaDirectDebitPaymentMethod::getName(true)
+            || $this->_creditorIdValidation($sCreditorId);
+    }
+
+
 
     /**
      * Checks if it is possible to save the config
