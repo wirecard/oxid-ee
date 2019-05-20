@@ -24,6 +24,8 @@ class SofortCheckoutTest extends CheckoutTestCase
     public function testCheckout()
     {
         $this->goThroughCheckout();
+        $this->goThroughExternalFlow();
+        $this->waitForRedirectConfirmation();
 
         $this->assertPaymentSuccessful();
     }
@@ -46,8 +48,11 @@ class SofortCheckoutTest extends CheckoutTestCase
 
         // Step 4
         $this->continueToNextStep();
+    }
 
-        // Sofort. flow
+    private function goThroughExternalFlow()
+    {
+        $this->waitForElement($this->getLocator('external.sofort.country'), 30);
         $this->select(
             $this->getLocator('external.sofort.country'),
             $this->getConfigValue('payments.sofort.country')
@@ -74,8 +79,5 @@ class SofortCheckoutTest extends CheckoutTestCase
             $this->getConfigValue('payments.sofort.tan')
         );
         $this->clickAndWait($this->getLocator('external.sofort.nextStep'));
-
-        // Redirect
-        $this->waitForRedirectConfirmation();
     }
 }
