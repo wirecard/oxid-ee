@@ -25,6 +25,8 @@ class PaypalCheckoutTest extends CheckoutTestCase
     {
         $this->setPaymentActionPurchase();
         $this->goThroughCheckout();
+        $this->goThroughExternalFlow();
+        $this->waitForRedirectConfirmation();
 
         $this->assertPaymentSuccessful();
     }
@@ -33,6 +35,8 @@ class PaypalCheckoutTest extends CheckoutTestCase
     {
         $this->setPaymentActionAuthorize();
         $this->goThroughCheckout();
+        $this->goThroughExternalFlow();
+        $this->waitForRedirectConfirmation();
 
         $this->assertPaymentSuccessful();
     }
@@ -55,8 +59,10 @@ class PaypalCheckoutTest extends CheckoutTestCase
 
         // Step 4
         $this->continueToNextStep();
+    }
 
-        // PayPal flow
+    private function goThroughExternalFlow()
+    {
         $this->waitForElement($this->getLocator('external.paypal.loginEmail'), 30);
         $this->type(
             $this->getLocator('external.paypal.loginEmail'),
@@ -68,8 +74,5 @@ class PaypalCheckoutTest extends CheckoutTestCase
         );
         $this->clickAndWait($this->getLocator('external.paypal.loginButton'), 30);
         $this->clickAndWait($this->getLocator('external.paypal.buyNowButton'), 30);
-
-        // Redirect
-        $this->waitForRedirectConfirmation();
     }
 }
