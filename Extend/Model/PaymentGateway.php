@@ -139,8 +139,6 @@ class PaymentGateway extends BaseModel
         $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
         $oTransaction = $oPaymentMethod->getTransaction();
 
-        $this->_addMandatoryTransactionData($oTransaction, $oSession, $oBasket, $oPaymentMethod, $oOrder);
-
         if ($oPaymentMethod->getPayment()->oxpayments__wdoxidee_additional_info->value) {
             self::_addAdditionalInfo($oTransaction, $oOrder, $oPaymentMethod->getPayment(), $oSession->getId());
         }
@@ -153,6 +151,7 @@ class PaymentGateway extends BaseModel
             self::_addBasketInfo($oTransaction, $oBasket);
         }
 
+        $this->_addMandatoryTransactionData($oTransaction, $oSession, $oBasket, $oPaymentMethod, $oOrder);
         return $oTransaction;
     }
 
@@ -305,9 +304,7 @@ class PaymentGateway extends BaseModel
 
         $oTransaction->setIpAddress($sRemoteAddress);
         $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
-        if (!$oTransaction instanceof SepaDirectDebitTransaction) {
-            $oTransaction->setAccountHolder($oOrder->getAccountHolder());
-        }
+        $oTransaction->setAccountHolder($oOrder->getAccountHolder());
         $oTransaction->setShipping($oOrder->getShippingAccountHolder());
 
         $oDevice = new Device($_SERVER['HTTP_USER_AGENT']);
