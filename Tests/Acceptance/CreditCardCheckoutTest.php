@@ -74,7 +74,9 @@ class CreditCardCheckoutTest extends CheckoutTestCase
 
         // Step 4: Order
         $rootFrame = $this->getSelectedFrame();
-        $this->selectFrame($this->getLocator('external.creditcard.frame'));
+
+        $this->waitForElement($this->getLocator('external.creditcard.frame'));
+        $this->selectFrame($this->getLocator('external.creditcard.frameId'));
 
         $this->type(
             $this->getLocator('external.creditcard.firstName'),

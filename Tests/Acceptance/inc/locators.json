@@ -11,7 +11,8 @@
       "nextStep": "//*[contains(@class, 'continueButton')]"
     },
     "creditcard": {
-      "frame": "2",
+      "frame": "//iframe[@class='wirecard-seamless-frame']",
+      "frameId": "2",
       "firstName": "first_name",
       "lastName": "last_name",
       "cardNumber": "account_number",
