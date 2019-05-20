@@ -57,11 +57,12 @@ class SofortCheckoutTest extends CheckoutTestCase
             $this->getLocator('external.sofort.country'),
             $this->getConfigValue('payments.sofort.country')
         );
+        $this->waitForPageToLoad();
         $this->type(
             $this->getLocator('external.sofort.bank'),
             $this->getConfigValue('payments.sofort.bank')
         );
-        $this->keyUp($this->getLocator('external.sofort.bank'), ' '); // forces validation
+        $this->fireEvent($this->getLocator('external.sofort.bank'), 'input');
         $this->clickAndWait($this->getLocator('external.sofort.nextStep'));
         $this->type(
             $this->getLocator('external.sofort.userId'),
