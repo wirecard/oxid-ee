@@ -223,10 +223,7 @@ class OrderController extends OrderController_parent
         }
 
         if ($oBasket->getProductsCount()) {
-            $sSepaMandate = '';
-            if ($oBasket->getPaymentId() === SepaDirectDebitPaymentMethod::getName(true)) {
-                $sSepaMandate = PaymentMethodHelper::getSepaMandateHtml($oBasket, $oUser);
-            }
+            $sSepaMandate = $this->_prepareSepaMandate($oBasket, $oUser);
             $oOrder = OrderHelper::createOrder(
                 $oBasket,
                 $oUser,
@@ -243,6 +240,25 @@ class OrderController extends OrderController_parent
 
         $iSuccess = $oOrder->oxorder__wdoxidee_finalizeorderstate->value;
         return $this->_getNextStep($iSuccess);
+    }
+
+    /**
+     * Prepares sepa mandate text
+     *
+     * @param Basket $oBasket
+     * @param User   $oUser
+     *
+     * @return null|string
+     *
+     * @since 1.0.1
+     */
+    private function _prepareSepaMandate($oBasket, $oUser)
+    {
+        $sSepaMandate = null;
+        if ($oBasket->getPaymentId() === SepaDirectDebitPaymentMethod::getName(true)) {
+            $sSepaMandate = PaymentMethodHelper::getSepaMandateHtml($oBasket, $oUser);
+        }
+        return $sSepaMandate;
     }
 
     /**

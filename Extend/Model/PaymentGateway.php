@@ -72,6 +72,8 @@ class PaymentGateway extends BaseModel
      * Returns a descriptor
      *
      * If you want to customize the descriptor, override this function.
+     * Paypal, Credit Card and Sofort have descriptor with maximum of 27 characters.
+     * SEPA Direct Debit has descriptor with maximum of 100 characters.
      *
      * @param Transaction $oTransaction the transaction to fill
      * @param string      $sOrderId     the order ID to get the descriptor from
@@ -83,7 +85,14 @@ class PaymentGateway extends BaseModel
         $sShopId = Registry::getConfig()->getShopId();
         $oShop = oxNew(Shop::class);
         $oShop->load($sShopId);
-        $oTransaction->setDescriptor(substr(substr($oShop->oxshops__oxname->value, 0, 9) . " " . $sOrderId, 0, 27));
+
+        $iDescriptorLength = 27;
+        if ($oTransaction instanceof SepaDirectDebitTransaction) {
+            $iDescriptorLength = 100;
+        }
+        $oTransaction->setDescriptor(
+            substr(substr($oShop->oxshops__oxname->value, 0, 9) . " " . $sOrderId, 0, $iDescriptorLength)
+        );
     }
 
     /**
