@@ -84,7 +84,7 @@ class OrderHelper
     }
 
     /**
-     * Adds Sepa Mandate to order
+     * Adds SEPA Mandate to order
      *
      * @param object $oOrder
      * @param string $sSepaMandate
