@@ -21,6 +21,17 @@
             <label for="payment_[{$sPaymentID}]"><b>[{$paymentmethod->oxpayments__oxdesc->value}]</b></label>
         </dt>
         <dd class="[{if $oView->getCheckedPaymentId() == $paymentmethod->oxpayments__oxid->value}]activePayment[{/if}]">
+            [{if $paymentmethod->getPrice()}]
+                [{assign var="oPaymentPrice" value=$paymentmethod->getPrice()}]
+                    [{if $oViewConf->isFunctionalityEnabled('blShowVATForPayCharge')}]
+                        ( [{oxprice price=$oPaymentPrice->getNettoPrice() currency=$currency}]
+                        [{if $oPaymentPrice->getVatValue() > 0}]
+                            [{oxmultilang ident="PLUS_VAT"}] [{oxprice price=$oPaymentPrice->getVatValue() currency=$currency}]
+                        [{/if}])
+                    [{else}]
+                        ([{oxprice price=$oPaymentPrice->getBruttoPrice() currency=$currency}])
+                    [{/if}]
+            [{/if}]
             [{foreach from=$checkoutFields key=fieldKey item=checkoutField}]
                 <div class="form-group">
                     <label class="req control-label col-lg-3">[{$checkoutField.title}] [{if $checkoutField.required}]*[{/if}]</label>
