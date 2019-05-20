@@ -213,11 +213,10 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      * Adds all needed data to the post-processing transaction
      *
      * @param SepaDirectDebitTransaction $oTransaction
-     * @param Transaction                $oParentTransaction
      *
      * @since 1.0.1
      */
-    public function addMandatoryTransactionData(&$oTransaction, $oParentTransaction = null)
+    public function addMandatoryTransactionData(&$oTransaction)
     {
         $oAccountHolder = new AccountHolder();
         $oAccountHolder->setLastName(PaymentMethodHelper::getAccountHolder());

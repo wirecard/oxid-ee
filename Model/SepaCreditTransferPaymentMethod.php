@@ -78,7 +78,7 @@ class SepaCreditTransferPaymentMethod extends PaymentMethod
      *
      * @since 1.0.1
      */
-    public function addMandatoryTransactionData(&$oTransaction, $oParentTransaction = null)
+    public function addPostProcessingTransactionData(&$oTransaction, $oParentTransaction = null)
     {
         $oMandate = PaymentMethodHelper::getMandate(
             $oParentTransaction->wdoxidee_ordertransactions__orderid->value

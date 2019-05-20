@@ -260,11 +260,22 @@ abstract class PaymentMethod
      * Adds all needed data to the post-processing transaction
      *
      * @param Transaction $oTransaction
+     *
+     * @since 1.0.1
+     */
+    public function addMandatoryTransactionData(&$oTransaction)
+    {
+    }
+
+    /**
+     * Adds all needed data to the post-processing transaction
+     *
+     * @param Transaction $oTransaction
      * @param Transaction $oParentTransaction
      *
      * @since 1.0.1
      */
-    public function addMandatoryTransactionData(&$oTransaction, $oParentTransaction = null)
+    public function addPostProcessingTransactionData(&$oTransaction, $oParentTransaction = null)
     {
     }
 
