@@ -39,6 +39,28 @@ class CreditCardCheckoutTest extends CheckoutTestCase
         $this->assertPaymentSuccessful();
     }
 
+    public function testCheckoutForPurchaseThreeD()
+    {
+        $this->setPaymentActionPurchase();
+        $this->forceThreeD();
+        $this->goThroughCheckout();
+        $this->goThroughExternalFlow();
+        $this->waitForRedirectConfirmation();
+
+        $this->assertPaymentSuccessful();
+    }
+
+    public function testCheckoutForAuthorizeThreeD()
+    {
+        $this->setPaymentActionAuthorize();
+        $this->forceThreeD();
+        $this->goThroughCheckout();
+        $this->goThroughExternalFlow();
+        $this->waitForRedirectConfirmation();
+
+        $this->assertPaymentSuccessful();
+    }
+
     private function forceThreeD()
     {
         $this->executeSql("UPDATE `oxpayments`
@@ -106,5 +128,15 @@ class CreditCardCheckoutTest extends CheckoutTestCase
 
         $this->selectFrame($rootFrame);
         $this->continueToNextStep();
+    }
+
+    private function goThroughExternalFlow()
+    {
+        $this->waitForElement($this->getLocator('external.creditcard.password'), 30);
+        $this->type(
+            $this->getLocator('external.creditcard.password'),
+            $this->getConfigValue('payments.creditcard.password')
+        );
+        $this->click($this->getLocator('external.creditcard.continueButton'));
     }
 }
