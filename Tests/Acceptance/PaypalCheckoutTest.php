@@ -63,16 +63,20 @@ class PaypalCheckoutTest extends CheckoutTestCase
 
     private function goThroughExternalFlow()
     {
-        $this->waitForElement($this->getLocator('external.paypal.loginEmail'), 30);
+        $this->waitForElement($this->getLocator('external.paypal.email'), 30);
         $this->type(
-            $this->getLocator('external.paypal.loginEmail'),
+            $this->getLocator('external.paypal.email'),
             $this->getConfigValue('payments.paypal.email')
         );
         $this->type(
-            $this->getLocator('external.paypal.loginPassword'),
+            $this->getLocator('external.paypal.password'),
             $this->getConfigValue('payments.paypal.password')
         );
-        $this->clickAndWait($this->getLocator('external.paypal.loginButton'), 30);
-        $this->clickAndWait($this->getLocator('external.paypal.buyNowButton'), 30);
+        $this->clickAndWait($this->getLocator('external.paypal.login'), 30);
+        $this->click($this->getLocator('external.paypal.nextStep'));
+
+        if ($this->isElementPresent($this->getLocator('external.paypal.nextStep'))) {
+            $this->click($this->getLocator('external.paypal.nextStep'));
+        }
     }
 }

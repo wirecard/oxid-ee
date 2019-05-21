@@ -20,10 +20,10 @@ return [
     ],
     'external' => [
         'paypal' => [
-            'loginEmail' => 'email',
-            'loginPassword' => 'password',
-            'loginButton' => 'btnLogin',
-            'buyNowButton' => 'confirmButtonTop',
+            'email' => 'email',
+            'password' => 'password',
+            'login' => 'btnLogin',
+            'nextStep' => '//*[contains(@class, "continueButton")]',
         ],
     ],
 ];
