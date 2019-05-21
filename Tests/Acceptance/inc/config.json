@@ -1,0 +1,8 @@
+{
+  "payments": {
+    "paypal": {
+      "email": "paypal.buyer2@wirecard.com",
+      "password": "Wirecardbuyer"
+    }
+  }
+}

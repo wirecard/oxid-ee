@@ -54,7 +54,6 @@ end
 desc 'Reset shop (restore demo data & delete tmp files)'
 task :reset_shop do
   sh "docker exec #{OXID_CONTAINER} reset-shop.sh"
-  Rake::Task['views'].invoke
 end
 
 desc 'Run PHP Mess Detector'

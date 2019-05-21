@@ -21,16 +21,26 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       OXID_HOSTNAME: web
-      OXID_SERVICE: web # should be same as the service name
+      OXID_SERVICE: localhost.dev # should be same as the service name
     depends_on:
       - db
+    networks:
+      global:
+        aliases:
+          - localhost.dev
   db:
     image: mysql:5.7
     container_name: oxid_ee_db
     environment:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+    networks:
+      - global
   selenium:
     image: selenium/standalone-firefox:2.53.1
     container_name: oxid_ee_selenium
     shm_size: 2g
+    networks:
+      - global
+networks:
+  global:
