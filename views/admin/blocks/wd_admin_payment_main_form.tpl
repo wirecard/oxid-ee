@@ -179,6 +179,11 @@
           </select>
         [{/if}]
 
+        [{if $configField.type === 'textarea'}]
+          <textarea id="[{$configKey}]" class="editinput" rows="5" cols="37" name="editval[[{$fieldName}]]"
+            value="[{$edit->$fieldName->value}]">[{$edit->$fieldName->value}]</textarea>
+        [{/if}]
+
         [{if $configField.type === 'link'}]
           <a target="_blank" href="[{$configField.link}]">[{$configField.text}]</a>
         [{/if}]

@@ -217,6 +217,18 @@ abstract class PaymentMethod
     }
 
     /**
+     * Returns an array of fields to be displayed in the checkout flow.
+     *
+     * @return array
+     *
+     * @since 1.0.1
+     */
+    public function getCheckoutFields()
+    {
+        return [];
+    }
+
+    /**
      * Returns array of setting names which should be part of output debug infos
      *
      * @return array
@@ -245,6 +257,17 @@ abstract class PaymentMethod
     }
 
     /**
+     * Adds all mandatory transaction data
+     *
+     * @param Transaction $oTransaction
+     *
+     * @since 1.0.1
+     */
+    public function addMandatoryTransactionData(&$oTransaction)
+    {
+    }
+
+    /**
      * Adds all needed data to the post-processing transaction
      *
      * @param Transaction $oTransaction
@@ -259,11 +282,13 @@ abstract class PaymentMethod
     /**
      * Returns the post-processing payment method for this payment method
      *
+     * @param string $sAction
+     *
      * @return PaymentMethod
      *
      * @since 1.0.1
      */
-    public function getPostProcessingPaymentMethod()
+    public function getPostProcessingPaymentMethod($sAction)
     {
         return $this;
     }

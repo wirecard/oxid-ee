@@ -333,7 +333,8 @@ class TransactionTabPostProcessing extends TransactionTab
     private function _filterPostProcessingActions($aPossibleOperations, $oPaymentMethod)
     {
         if ($oPaymentMethod->getName(true) === SofortPaymentMethod::getName(true)
-            && !$oPaymentMethod->getPostProcessingPaymentMethod()->getPayment()->oxpayments__oxactive->value) {
+            && !$oPaymentMethod->getPostProcessingPaymentMethod(Transaction::ACTION_CREDIT)
+                ->getPayment()->oxpayments__oxactive->value) {
             return [];
         }
 

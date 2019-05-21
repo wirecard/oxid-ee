@@ -21,6 +21,7 @@ use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Extend\Model\PaymentGateway;
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -38,6 +39,8 @@ use Wirecard\PaymentSdk\TransactionService;
 class OrderController extends OrderController_parent
 {
     const FORM_POST_VARIABLE = 'formPost';
+    const SEPA_MANDATE_KEY = 'sepamandate';
+
     /**
      * @var TransactionService
      *
@@ -101,6 +104,33 @@ class OrderController extends OrderController_parent
             $sNewUrl = $sShopBaseUrl . 'index.php?' . $sParamStr;
             Registry::getUtils()->redirect($sNewUrl, false);
         }
+    }
+
+    /**
+     * Extends the parent render function
+     *
+     * @return string
+     *
+     * @since 1.0.1
+     */
+    public function render()
+    {
+        // after calling parent::render() we are sure we will have order id stored in the session
+        // order id is needed in sepa mandate
+        $sTemplateName = parent::render();
+
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+
+        if ($oBasket->getPaymentId() === SepaDirectDebitPaymentMethod::getName(true)) {
+            $sSepaMandate = PaymentMethodHelper::getSepaMandateHtml($oBasket, $this->getUser());
+
+            Helper::addToViewData($this, [
+                self::SEPA_MANDATE_KEY => $sSepaMandate,
+            ]);
+        }
+
+        return $sTemplateName;
     }
 
     /**
@@ -183,6 +213,8 @@ class OrderController extends OrderController_parent
      *
      * @return mixed integer/string
      *
+     * @throws Exception
+     *
      * @since 1.0.0
      */
     private function _processOrderTransaction($oOrder, $oBasket, $oUser)
@@ -193,7 +225,12 @@ class OrderController extends OrderController_parent
         }
 
         if ($oBasket->getProductsCount()) {
-            $oOrder = OrderHelper::createOrder($oBasket, $oUser);
+            $sSepaMandate = $this->_prepareSepaMandate($oBasket, $oUser);
+            $oOrder = OrderHelper::createOrder(
+                $oBasket,
+                $oUser,
+                $sSepaMandate
+            );
 
             if (!$oOrder) {
                 $iSuccess = $oOrder->oxorder__wdoxidee_finalizeorderstate->value;
@@ -205,6 +242,25 @@ class OrderController extends OrderController_parent
 
         $iSuccess = $oOrder->oxorder__wdoxidee_finalizeorderstate->value;
         return $this->_getNextStep($iSuccess);
+    }
+
+    /**
+     * Prepares SEPA mandate text
+     *
+     * @param Basket $oBasket
+     * @param User   $oUser
+     *
+     * @return null|string
+     *
+     * @since 1.0.1
+     */
+    private function _prepareSepaMandate($oBasket, $oUser)
+    {
+        $sSepaMandate = null;
+        if ($oBasket->getPaymentId() === SepaDirectDebitPaymentMethod::getName(true)) {
+            $sSepaMandate = PaymentMethodHelper::getSepaMandateHtml($oBasket, $oUser);
+        }
+        return $sSepaMandate;
     }
 
     /**

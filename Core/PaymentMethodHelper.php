@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Core;
 
 use OxidEsales\Eshop\Core\Model\ListModel;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\PaymentSdk\Entity\Mandate;
 
@@ -80,7 +81,81 @@ class PaymentMethodHelper
      */
     public static function getMandate($iOrderNumber)
     {
-        $iLength = self::MAX_MANDATE_ID_LENGTH - 1 - strlen((string) time());
-        return new Mandate(substr($iOrderNumber, 0, $iLength) . '-' . time());
+        $sTime = (string) time();
+        $iLength = self::MAX_MANDATE_ID_LENGTH - 1 - strlen($sTime);
+        return new Mandate(substr($iOrderNumber, 0, $iLength) . '-' . $sTime);
+    }
+
+    /**
+     * Returns account holder for SEPA Direct Debit
+     *
+     * @return string
+     *
+     * @since 1.0.1
+     */
+    public static function getAccountHolder()
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+        return $aDynvalues['accountHolder'];
+    }
+
+
+    /**
+     * Returns IBAN
+     *
+     * @return string
+     *
+     * @since 1.0.1
+     */
+    public static function getIban()
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+        return $aDynvalues['iban'];
+    }
+
+    /**
+     * Returns BIC
+     *
+     * @return string
+     *
+     * @since 1.0.1
+     */
+    public function getBic()
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+        return $aDynvalues['bic'];
+    }
+
+    /**
+     * Generates SEPA mandate html body
+     *
+     * @param Basket $oBasket
+     * @param User   $oUser
+     *
+     * @return string
+     *
+     * @since 1.0.1
+     */
+    public static function getSepaMandateHtml($oBasket, $oUser)
+    {
+        $iOrderNumber = Helper::getSessionChallenge();
+        $oPayment = oxNew(Payment::class);
+        $oPayment->load($oBasket->getPaymentId());
+
+        $oSmarty = Registry::getUtilsView()->getSmarty();
+
+        $oSmarty->assign('sAccountHolder', self::getAccountHolder());
+        $oSmarty->assign('oShop', Helper::getShop());
+        $oSmarty->assign('oPayment', $oPayment);
+        $oSmarty->assign('sMandateId', self::getMandate($iOrderNumber)->mappedProperties()['mandate-id']);
+        $oSmarty->assign('sIban', self::getIban());
+        $oSmarty->assign('sBic', self::getBic());
+        $oSmarty->assign('sConsumerCity', $oUser->oxuser__oxcity->value);
+        $oSmarty->assign('sDate', date('d.m.Y', time()));
+
+        return $oSmarty->fetch('sepa_mandate.tpl');
     }
 }

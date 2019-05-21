@@ -47,12 +47,13 @@ class OrderHelper
      *
      * @param Basket $oBasket
      * @param User   $oUser
+     * @param string $sSepaMandate
      *
      * @return Order
      *
      * @since 1.0.0
      */
-    public static function createOrder($oBasket, $oUser)
+    public static function createOrder($oBasket, $oUser, $sSepaMandate = null)
     {
         $oOrder = null;
 
@@ -62,6 +63,8 @@ class OrderHelper
             //finalizing ordering process (validating, storing order into DB, executing payment, setting status ...)
             $iSuccess = $oOrder->finalizeOrder($oBasket, $oUser);
             $oOrder->oxorder__wdoxidee_finalizeorderstate = new Field($iSuccess);
+            self::_addSepaMandateToOrder($oOrder, $sSepaMandate);
+
             $oOrder->save();
 
             // performing special actions after user finishes order (assignment to special user groups)
@@ -78,6 +81,23 @@ class OrderHelper
         }
 
         return $oOrder;
+    }
+
+    /**
+     * Adds SEPA Mandate to order
+     *
+     * @param object $oOrder
+     * @param string $sSepaMandate
+     *
+     * @since 1.0.0
+     *
+     * @throws Exception
+     */
+    private static function _addSepaMandateToOrder(&$oOrder, $sSepaMandate)
+    {
+        if ($sSepaMandate) {
+            $oOrder->oxorder__wdoxidee_sepamandate = new Field($sSepaMandate);
+        }
     }
 
     /**

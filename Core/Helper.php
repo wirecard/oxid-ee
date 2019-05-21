@@ -351,4 +351,19 @@ class Helper
 
         $oObject->setViewData($aViewData);
     }
+
+    /**
+     * Returns shop
+     *
+     * @return Shop
+     *
+     * @since 1.0.1
+     */
+    public static function getShop()
+    {
+        $sShopId = Registry::getConfig()->getShopId();
+        $oShop = oxNew(Shop::class);
+        $oShop->load($sShopId);
+        return $oShop;
+    }
 }

@@ -10,6 +10,8 @@
 
 namespace Wirecard\Oxid\Extend;
 
+use OxidEsales\Eshop\Application\Model\Shop;
+
 use Wirecard\Oxid\Core\Helper;
 
 /**

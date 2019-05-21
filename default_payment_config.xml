@@ -49,12 +49,31 @@
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
     </payment>
     <payment>
+        <oxid>wdsepadd</oxid>
+        <oxactive>0</oxactive>
+        <oxtoamount>1000000</oxtoamount>
+        <oxdesc>Wirecard SEPA-Lastschrift</oxdesc>
+        <oxdesc_1>Wirecard SEPA Direct Debit</oxdesc_1>
+        <oxsort>30</oxsort>
+        <wdoxidee_logo>sepa.png</wdoxidee_logo>
+        <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
+        <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
+        <wdoxidee_maid>933ad170-88f0-4c3d-a862-cff315ecfbc0</wdoxidee_maid>
+        <wdoxidee_secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</wdoxidee_secret>
+        <wdoxidee_httpuser>16390-testing</wdoxidee_httpuser>
+        <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
+        <wdoxidee_descriptor>1</wdoxidee_descriptor>
+        <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <wdoxidee_bic>0</wdoxidee_bic>
+        <wdoxidee_creditorid>DE98ZZZ09999999999</wdoxidee_creditorid>
+    </payment>
+    <payment>
         <oxid>wdsofortbanking</oxid>
         <oxactive>0</oxactive>
         <oxtoamount>1000000</oxtoamount>
         <oxdesc>Wirecard Sofort.</oxdesc>
         <oxdesc_1>Wirecard Sofort.</oxdesc_1>
-        <oxsort>30</oxsort>
+        <oxsort>40</oxsort>
         <wdoxidee_logo>https://cdn.klarna.com/1.0/shared/image/generic/badge/%s/pay_now/%s/pink.svg</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
         <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>

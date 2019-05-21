@@ -10,12 +10,13 @@
 namespace Wirecard\Oxid\Model;
 
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 
 /**
- * Payment method implementation for Sepa Credit Transfer.
+ * Payment method implementation for SEPA Credit Transfer.
  *
  * @since 1.0.1
  */
