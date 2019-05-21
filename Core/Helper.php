@@ -38,7 +38,7 @@ class Helper
 
     const FLOATING_POINT_EPSILON = 0.000001;
     const BCSUB_SCALE = 12;
-    const ROUND_PRECISION = 3;
+    const ROUND_PRECISION_FALLBACK = 3;
 
     /**
      * Gets the translation for a given key.
@@ -69,6 +69,28 @@ class Helper
     public static function createDeviceFingerprint($sMaid, $sSessionId = null)
     {
         return $sMaid . '_' . $sSessionId;
+    }
+
+    /**
+     * Gets the currency round precision for a given currency.
+     * If the merchant has set the precision in the admin area this value will be returned,
+     * otherwise the fallback value set in this helper class.
+     *
+     * @param string $sCurrencyName
+     *
+     * @return integer round precision
+     *
+     * @since 1.0.1
+     */
+    public static function getCurrencyRoundPrecision($sCurrencyName)
+    {
+        $oCurrency = Registry::getConfig()->getCurrencyObject($sCurrencyName);
+
+        if ($oCurrency && isset($oCurrency->decimal)) {
+            return $oCurrency->decimal;
+        }
+
+        return self::ROUND_PRECISION_FALLBACK;
     }
 
     /**

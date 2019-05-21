@@ -237,7 +237,11 @@ class TransactionHandler
             $fChildAmount = (float) $aResult->fields['childTransactionsTotalAmount'];
         }
 
-        return round(bcsub($fBaseAmount, $fChildAmount, Helper::BCSUB_SCALE), Helper::ROUND_PRECISION);
+        // for the rounding precision use either the value the merchant set for currency
+        // decimal precision or a fallback value
+        $iRoundPrecision = Helper::getCurrencyRoundPrecision($oTransaction->wdoxidee_ordertransactions__currency);
+
+        return round(bcsub($fBaseAmount, $fChildAmount, Helper::BCSUB_SCALE), $iRoundPrecision);
     }
 
     /**
