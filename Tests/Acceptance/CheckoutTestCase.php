@@ -130,9 +130,10 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
      */
     public function isThankYouPage($url)
     {
-        return strpos($url, $this->_getShopUrl([
-            'cl' => 'thankyou',
-        ])) === 0;
+        $queryString = parse_url($url, PHP_URL_QUERY);
+
+        return strpos($url, $this->_getShopUrl()) === 0 &&
+            (!$queryString || strpos($queryString, 'cl=thankyou') !== false);
     }
 
     /**
