@@ -198,7 +198,7 @@ class OxidEeEvents
     /**
      * Adds SEPA Direct Debit related fields to payment table
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private static function _addSepaDDFields()
     {
@@ -446,7 +446,7 @@ class OxidEeEvents
     /**
      * Migration steps from version 1.0.0 to 1.0.1
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private static function _migrateFrom100To101()
     {

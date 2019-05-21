@@ -185,7 +185,7 @@ class OrderHelper
      * @param Response       $oResponse
      * @param BackendService $oBackendService
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public static function updateOrderState($oOrder, $oResponse, $oBackendService)
     {

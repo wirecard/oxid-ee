@@ -111,7 +111,7 @@ class OrderController extends OrderController_parent
      *
      * @return string
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function render()
     {
@@ -252,7 +252,7 @@ class OrderController extends OrderController_parent
      *
      * @return null|string
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _prepareSepaMandate($oBasket, $oUser)
     {

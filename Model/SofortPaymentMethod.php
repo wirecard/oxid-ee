@@ -179,7 +179,7 @@ class SofortPaymentMethod extends PaymentMethod
      *
      * @return SepaCreditTransferPaymentMethod
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getPostProcessingPaymentMethod($sAction)
     {

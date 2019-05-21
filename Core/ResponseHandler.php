@@ -102,7 +102,7 @@ class ResponseHandler
      *
      * @return boolean
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private static function _isPostProcessingAction($oResponse)
     {

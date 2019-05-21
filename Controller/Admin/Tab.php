@@ -27,14 +27,14 @@ class Tab extends AdminDetailsController
     /**
      * @var Transaction
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     protected $oTransaction;
 
     /**
      * @var Order
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     protected $oOrder;
 
@@ -91,7 +91,7 @@ class Tab extends AdminDetailsController
      *
      * @return boolean
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function shouldDisplayLiveChat()
     {

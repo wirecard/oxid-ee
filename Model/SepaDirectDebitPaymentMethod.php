@@ -23,14 +23,14 @@ use Wirecard\PaymentSdk\Entity\AccountHolder;
 /**
  * Payment method implementation for SEPA Direct Debit
  *
- * @since 1.0.1
+ * @since 1.1.0
  */
 class SepaDirectDebitPaymentMethod extends PaymentMethod
 {
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     protected static $_sName = "sepadd";
 
@@ -39,7 +39,7 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      *
      * @return Config
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getConfig()
     {
@@ -62,7 +62,7 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      *
      * @return Transaction
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getTransaction()
     {
@@ -74,7 +74,7 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getConfigFields()
     {
@@ -156,7 +156,7 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getPublicFieldNames()
     {
@@ -171,7 +171,7 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getCheckoutFields()
     {
@@ -206,7 +206,7 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      *
      * @param SepaDirectDebitTransaction $oTransaction
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function addMandatoryTransactionData(&$oTransaction)
     {
@@ -233,7 +233,7 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      *
      * @return PaymentMethod
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getPostProcessingPaymentMethod($sAction)
     {
@@ -251,7 +251,7 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      *
      * @return boolean
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _isRefundAction($sAction)
     {

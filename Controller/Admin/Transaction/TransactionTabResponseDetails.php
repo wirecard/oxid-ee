@@ -12,7 +12,7 @@ namespace Wirecard\Oxid\Controller\Admin\Transaction;
 /**
  * Controls the view for the order details tab.
  *
- * @since 1.0.1
+ * @since 1.1.0
  */
 class TransactionTabResponseDetails extends TransactionTab
 {
@@ -21,7 +21,7 @@ class TransactionTabResponseDetails extends TransactionTab
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     protected function _getData()
     {

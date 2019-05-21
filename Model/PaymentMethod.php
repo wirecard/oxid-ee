@@ -38,7 +38,7 @@ abstract class PaymentMethod
     /**
      * @var bool
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     protected static $_bMerchantOnly = false;
 
@@ -52,7 +52,7 @@ abstract class PaymentMethod
     /**
      * @var Payment
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     protected $_oPayment;
 
@@ -111,7 +111,7 @@ abstract class PaymentMethod
      *
      * @return Payment
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getPayment()
     {
@@ -221,7 +221,7 @@ abstract class PaymentMethod
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getCheckoutFields()
     {
@@ -261,7 +261,7 @@ abstract class PaymentMethod
      *
      * @param Transaction $oTransaction
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function addMandatoryTransactionData(&$oTransaction)
     {
@@ -273,7 +273,7 @@ abstract class PaymentMethod
      * @param Transaction $oTransaction
      * @param Transaction $oParentTransaction
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function addPostProcessingTransactionData(&$oTransaction, $oParentTransaction)
     {
@@ -286,7 +286,7 @@ abstract class PaymentMethod
      *
      * @return PaymentMethod
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getPostProcessingPaymentMethod($sAction)
     {
@@ -298,7 +298,7 @@ abstract class PaymentMethod
      *
      * @return bool
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function isMerchantOnly()
     {

@@ -3,7 +3,7 @@
 /**
  * Ensures that variable names are written in Hungarian notation (e.g. $sMyString, $iMyInt, $aMyArray, …)
  *
- * @since 1.0.1
+ * @since 1.1.0
  */
 class Custom_Sniffs_NamingConventions_HungarianNotationVariableNameSniff implements PHP_CodeSniffer_Sniff
 {
@@ -22,7 +22,7 @@ class Custom_Sniffs_NamingConventions_HungarianNotationVariableNameSniff impleme
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function register()
     {
@@ -32,7 +32,7 @@ class Custom_Sniffs_NamingConventions_HungarianNotationVariableNameSniff impleme
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
@@ -60,7 +60,7 @@ class Custom_Sniffs_NamingConventions_HungarianNotationVariableNameSniff impleme
      * @param string $variableName
      * @return bool
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function variableNameIsHungarianNotation(string $variableName)
     {

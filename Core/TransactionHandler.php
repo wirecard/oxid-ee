@@ -28,21 +28,21 @@ use Exception;
  * Class TransactionHandler
  * @mixin Wirecard\Oxid\Core
  *
- * @since 1.0.1
+ * @since 1.1.0
  */
 class TransactionHandler
 {
     /**
      * @var \Psr\Log\LoggerInterface
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private $_oLogger;
 
     /**
      * @var BackendService
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private $_oBackendService;
 
@@ -51,7 +51,7 @@ class TransactionHandler
      *
      * @param BackendService $oBackendService
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function __construct($oBackendService)
     {
@@ -68,7 +68,7 @@ class TransactionHandler
      *
      * @return array either [status => success] or [status => error, message => errorMessage]
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function processAction($oParentTransaction, $sActionTitle, $fAmount = null)
     {
@@ -104,7 +104,7 @@ class TransactionHandler
      *
      * @return array either [status => success] or [status => error, message => errorMessage]
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _onActionResponse($oResponse)
     {
@@ -126,7 +126,7 @@ class TransactionHandler
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _onActionSuccess($oResponse)
     {
@@ -153,7 +153,7 @@ class TransactionHandler
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _onActionFailure($oResponse)
     {
@@ -168,7 +168,7 @@ class TransactionHandler
      *
      * @return string
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _getErrorString($oResponse)
     {
@@ -188,7 +188,7 @@ class TransactionHandler
      *
      * @param SuccessResponse $oResponse
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _updateParentTransactionStateIfNecessary($oResponse)
     {
@@ -212,7 +212,7 @@ class TransactionHandler
      *
      * @return float
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getTransactionMaxAmount($sTransactionId)
     {
@@ -248,7 +248,7 @@ class TransactionHandler
      *
      * @return string root transaction ID
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _getRootTransactionId($sTransactionId)
     {
@@ -274,7 +274,7 @@ class TransactionHandler
      *
      * @return array|PaymentMethod
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _getPaymentMethod($oTransaction, $sActionTitle)
     {
@@ -292,7 +292,7 @@ class TransactionHandler
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _getSuccessMessage()
     {
@@ -306,7 +306,7 @@ class TransactionHandler
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _getErrorMessage($sMessage)
     {

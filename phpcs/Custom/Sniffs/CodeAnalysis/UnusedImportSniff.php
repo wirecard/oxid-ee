@@ -3,14 +3,14 @@
 /**
  * Ensures that all imports are being used.
  *
- * @since 1.0.1
+ * @since 1.1.0
  */
 class Custom_Sniffs_CodeAnalysis_UnusedImportSniff implements PHP_CodeSniffer_Sniff
 {
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function register()
     {
@@ -20,7 +20,7 @@ class Custom_Sniffs_CodeAnalysis_UnusedImportSniff implements PHP_CodeSniffer_Sn
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
