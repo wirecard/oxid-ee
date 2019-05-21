@@ -1,0 +1,16 @@
+{
+  "checkout": {
+    "nextStep": "//button[contains(@class, 'nextStep')]",
+    "paymentMethods": {
+      "paypal": "payment_wdpaypal"
+    }
+  },
+  "external": {
+    "paypal": {
+      "email": "email",
+      "password": "password",
+      "login": "btnLogin",
+      "nextStep": "//*[contains(@class, 'continueButton')]"
+    }
+  }
+}

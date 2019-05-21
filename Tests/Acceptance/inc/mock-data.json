@@ -1,0 +1,28 @@
+{
+  "oxuser": [
+    {
+      "OXID": "wdcheckoutuser",
+      "OXRIGHTS": "user",
+      "OXUSERNAME": "payment@test.com",
+      "OXPASSWORD": "1865c182a7d7acdc146f374a3c614e851bcc074dcf79600b146f7f738b5e62fc8efc400a8e7aceacbeaa172dcad9be2721f519bd5a53747866fc7f5b26cf42ee",
+      "OXPASSSALT": "f9b5cb1daaafbc28309dc019899cd832",
+      "OXFNAME": "Payment",
+      "OXLNAME": "Test",
+      "OXSTREET": "Tester Street",
+      "OXSTREETNR": "1",
+      "OXCITY": "Berlin",
+      "OXCOUNTRYID": "a7c40f631fc920687.20179984",
+      "OXZIP": "10115",
+      "OXSAL": "MR"
+    }
+  ],
+  "oxarticles": [
+    {
+      "OXID": "wdcheckoutarticle",
+      "OXARTNUM": "1337",
+      "OXTITLE_1": "Test Article",
+      "OXPRICE": 100.99,
+      "OXSTOCK": 10
+    }
+  ]
+}

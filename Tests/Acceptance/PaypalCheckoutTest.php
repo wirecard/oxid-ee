@@ -66,11 +66,11 @@ class PaypalCheckoutTest extends CheckoutTestCase
         $this->waitForElement($this->getLocator('external.paypal.email'), 30);
         $this->type(
             $this->getLocator('external.paypal.email'),
-            $this->getConfigValue('payments.paypal.email')
+            $this->getConfig('payments.paypal.email')
         );
         $this->type(
             $this->getLocator('external.paypal.password'),
-            $this->getConfigValue('payments.paypal.password')
+            $this->getConfig('payments.paypal.password')
         );
         $this->clickAndWait($this->getLocator('external.paypal.login'), 30);
         $this->click($this->getLocator('external.paypal.nextStep'));

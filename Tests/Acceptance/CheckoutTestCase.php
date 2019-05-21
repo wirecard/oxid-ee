@@ -30,9 +30,8 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
 
         $this->paymentMethod = $this->getPaymentMethod();
 
+        $this->insertMockData();
         $this->activatePaymentMethod();
-        $this->addMockUser();
-        $this->addMockArticle();
     }
 
     /**
@@ -68,40 +67,37 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     }
 
     /**
-     * Adds a demo user to the database.
+     * Inserts mock data to the database.
      */
-    public function addMockUser()
+    public function insertMockData()
     {
-        $this->executeSql("INSERT INTO `oxuser`
-            (`OXID`, `OXRIGHTS`, `OXUSERNAME`, `OXPASSWORD`, `OXPASSSALT`, `OXFNAME`, `OXLNAME`, `OXSTREET`, `OXSTREETNR`, `OXCITY`, `OXCOUNTRYID`, `OXZIP`, `OXSAL`)
-            VALUES ('wdcheckoutuser', 'user', 'payment@test.com', 'd04c7c05808811484a38486479ebecd5776bdf76966db23b6a7469d6f0724af5fcb7bb3f77de6372435567951dbc1b8eda29521bcc6b5ccbe778af60847c7825', 'a022994047f11859e9430ec3b37d977d', 'Payment', 'Test', 'Tester Street', '1', 'Berlin', 'a7c40f631fc920687.20179984', '10115', 'MR')");
+        foreach ($this->getMockData() as $table => $entries) {
+            foreach ($entries as $fields) {
+                $columns = '`' . implode('`, `', array_keys($fields)) . '`';
+                $values = '\'' . implode('\', \'', array_values($fields)) . '\'';
 
+                $this->executeSql("INSERT INTO `{$table}` ({$columns}) VALUES ({$values})");
+            }
+        }
     }
 
     /**
-     * Adds a demo article to the database.
-     */
-    public function addMockArticle()
-    {
-        $this->executeSql("INSERT INTO `oxarticles`
-            (`OXID`, `OXARTNUM`, `OXTITLE_1`, `OXPRICE`, `OXSTOCK`)
-            VALUES ('wdcheckoutarticle', '1337', 'Test Article', '100.99', '10')");
-    }
-
-    /**
-     * Logs the mock user into the frontend.
+     * Logs a mock user into the frontend.
      */
     public function loginMockUserToFrontend()
     {
-        $this->loginInFrontend('payment@test.com', 'payment');
+        $this->loginInFrontend(
+            $this->getMockData('oxuser.0.OXUSERNAME'),
+            $this->getMockData('oxuser.0.OXUSERNAME')
+        );
     }
 
     /**
-     * Adds the mock article to the basket.
+     * Adds a mock article to the basket.
      */
     public function addMockArticleToBasket()
     {
-        $this->addToBasket('wdcheckoutarticle');
+        $this->addToBasket($this->getMockData('oxarticles.0.OXID'));
     }
 
     /**

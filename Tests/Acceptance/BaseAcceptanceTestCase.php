@@ -18,13 +18,23 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
 {
     private $config;
     private $locators;
+    private $mockData;
 
     public function __construct($name = null, $data = [], $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
 
-        $this->config = require __DIR__ . '/inc/config.php';
-        $this->locators = require __DIR__ . '/inc/locators.php';
+        $this->config = $this->getJsonFromFile(__DIR__ . '/inc/config.json');
+        $this->locators = $this->getJsonFromFile(__DIR__ . '/inc/locators.json');
+        $this->mockData = $this->getJsonFromFile(__DIR__ . '/inc/mock-data.json');
+    }
+
+    /**
+     * Parses JSON from a file and returns it if it is valid.
+     */
+    private function getJsonFromFile($path)
+    {
+        return json_decode(file_get_contents($path), true);
     }
 
     /**
@@ -82,9 +92,19 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
      * @param string $path
      * @return mixed
      */
-    public function getConfigValue($path)
+    public function getConfig($path = null)
     {
-        return $this->getArrayValueByPath($this->config, $path);
+        return $path ? $this->getArrayValueByPath($this->config, $path) : $this->config;
+    }
+
+    /**
+     * Returns a mock data value by path.
+     * @param string $path
+     * @return mixed
+     */
+    public function getMockData($path = null)
+    {
+        return $path ? $this->getArrayValueByPath($this->mockData, $path) : $this->mockData;
     }
 
     /**
@@ -92,9 +112,9 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
      * @param string $path
      * @return mixed
      */
-    public function getLocator($path)
+    public function getLocator($path = null)
     {
-        return $this->getArrayValueByPath($this->locators, $path);
+        return $path ? $this->getArrayValueByPath($this->locators, $path) : $this->locators;
     }
 
     /**
