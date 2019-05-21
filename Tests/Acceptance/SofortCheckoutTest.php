@@ -30,54 +30,34 @@ class SofortCheckoutTest extends CheckoutTestCase
         $this->assertPaymentSuccessful();
     }
 
-    private function goThroughCheckout()
-    {
-        $this->openShop();
-        $this->loginMockUserToFrontend();
-        $this->addMockArticleToBasket();
-
-        // Step 1
-        $this->continueToNextStep();
-
-        // Step 2
-        $this->continueToNextStep();
-
-        // Step 3
-        $this->click($this->getLocator('checkout.paymentMethods.sofort'));
-        $this->continueToNextStep();
-
-        // Step 4
-        $this->continueToNextStep();
-    }
-
     private function goThroughExternalFlow()
     {
         $this->waitForElement($this->getLocator('external.sofort.country'), 30);
         $this->select(
             $this->getLocator('external.sofort.country'),
-            $this->getConfigValue('payments.sofort.country')
+            $this->getConfig('payments.sofort.country')
         );
         $this->waitForPageToLoad();
         $this->type(
             $this->getLocator('external.sofort.bank'),
-            $this->getConfigValue('payments.sofort.bank')
+            $this->getConfig('payments.sofort.bank')
         );
         $this->fireEvent($this->getLocator('external.sofort.bank'), 'input');
         $this->clickAndWait($this->getLocator('external.sofort.nextStep'));
         $this->type(
             $this->getLocator('external.sofort.userId'),
-            $this->getConfigValue('payments.sofort.userId')
+            $this->getConfig('payments.sofort.userId')
         );
         $this->type(
             $this->getLocator('external.sofort.password'),
-            $this->getConfigValue('payments.sofort.password')
+            $this->getConfig('payments.sofort.password')
         );
         $this->clickAndWait($this->getLocator('external.sofort.nextStep'));
         $this->click($this->getLocator('external.sofort.account'));
         $this->clickAndWait($this->getLocator('external.sofort.nextStep'));
         $this->type(
             $this->getLocator('external.sofort.tan'),
-            $this->getConfigValue('payments.sofort.tan')
+            $this->getConfig('payments.sofort.tan')
         );
         $this->clickAndWait($this->getLocator('external.sofort.nextStep'));
     }
