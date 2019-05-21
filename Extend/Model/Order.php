@@ -192,6 +192,22 @@ class Order extends Order_parent
     }
 
     /**
+     * Checks if the payment failed
+     *
+     * @return bool
+     *
+     * @since 1.1.0
+     */
+    public function isPaymentFailed()
+    {
+        $oTransaction = $this->getOrderLastTransaction();
+
+        return $oTransaction->wdoxidee_ordertransactions__type->value === self::STATE_FAILED
+            || $this->oxorder__wdoxidee_orderstate->value === BackendService::TYPE_CANCELLED
+            || $this->oxorder__wdoxidee_orderstate->value === BackendService::TYPE_REFUNDED;
+    }
+
+    /**
      * Returns true if it is the last article in the order
      *
      * @param OrderArticle $oOrderItem

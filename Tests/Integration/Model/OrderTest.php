@@ -34,6 +34,7 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
                     ['1', 'wdpaypal', BackendService::TYPE_AUTHORIZED, '1'],
                     ['2', 'oxidinvoice', BackendService::TYPE_PROCESSING, '2'],
                     ['3', 'wdcreditcard', BackendService::TYPE_CANCELLED, '3'],
+                    ['4', 'wdcreditcard', BackendService::TYPE_REFUNDED, '4'],
                 ],
             ],
             [
@@ -155,6 +156,27 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
             'authorized order' => ['1', true],
             'processing order' => ['2', true],
             'canceled order' => ['3', false],
+        ];
+    }
+
+    /**
+     * @dataProvider testIsPaymentFailedProvider
+     */
+    public function testIsPaymentFailed($orderId, $isPaymentPending)
+    {
+        $oOrder = oxNew(Order::class);
+        $oOrder->load($orderId);
+
+        $this->assertEquals($oOrder->isPaymentFailed(), $isPaymentPending);
+    }
+
+    public function testIsPaymentFailedProvider()
+    {
+        return [
+            'order with authorized transaction' => ['1', false],
+            'order with processing transaction' => ['2', false],
+            'order with cancelled transaction' => ['3', true],
+            'order with refunded transaction' => ['4', true],
         ];
     }
 
