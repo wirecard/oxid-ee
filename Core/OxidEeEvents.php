@@ -401,7 +401,7 @@ class OxidEeEvents
         self::_createOrderTransactionTable();
 
         // needs to be executed before _addPaymentMethods()
-        self::_migrateFrom100To101();
+        self::_migrateFrom100To110();
 
         self::_addPaymentMethods();
 
@@ -444,11 +444,11 @@ class OxidEeEvents
     }
 
     /**
-     * Migration steps from version 1.0.0 to 1.0.1
+     * Migration steps from version 1.0.0 to 1.1.0
      *
      * @since 1.1.0
      */
-    private static function _migrateFrom100To101()
+    private static function _migrateFrom100To110()
     {
         $oDbMetaDataHandler = oxNew(DbMetaDataHandler::class);
 
