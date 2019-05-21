@@ -141,7 +141,7 @@ class PaymentMethodHelper
      */
     public static function getSepaMandateHtml($oBasket, $oUser)
     {
-        $iOrderNumber = Helper::getSessionChallenge();
+        $sSessionChallenge = Helper::getSessionChallenge();
         $oPayment = oxNew(Payment::class);
         $oPayment->load($oBasket->getPaymentId());
 
@@ -150,7 +150,7 @@ class PaymentMethodHelper
         $oSmarty->assign('sAccountHolder', self::getAccountHolder());
         $oSmarty->assign('oShop', Helper::getShop());
         $oSmarty->assign('oPayment', $oPayment);
-        $oSmarty->assign('sMandateId', self::getMandate($iOrderNumber)->mappedProperties()['mandate-id']);
+        $oSmarty->assign('sMandateId', self::getMandate($sSessionChallenge)->mappedProperties()['mandate-id']);
         $oSmarty->assign('sIban', self::getIban());
         $oSmarty->assign('sBic', self::getBic());
         $oSmarty->assign('sConsumerCity', $oUser->oxuser__oxcity->value);

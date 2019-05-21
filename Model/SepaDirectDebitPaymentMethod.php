@@ -193,6 +193,7 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
                 'bic' => [
                     'type' => 'text',
                     'title' => Helper::translate('wd_bic'),
+                    'required' => true,
                 ],
             ]);
         }

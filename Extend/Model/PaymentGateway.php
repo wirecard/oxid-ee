@@ -72,7 +72,7 @@ class PaymentGateway extends BaseModel
      * Returns a descriptor
      *
      * If you want to customize the descriptor, override this function.
-     * Paypal, Credit Card and Sofort have descriptor with maximum of 27 characters.
+     * Paypal, Credit Card and Sofort. have descriptor with maximum of 27 characters.
      * SEPA Direct Debit has descriptor with maximum of 100 characters.
      *
      * @param Transaction $oTransaction the transaction to fill
