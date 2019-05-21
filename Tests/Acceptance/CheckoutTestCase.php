@@ -86,10 +86,10 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
      */
     public function loginMockUserToFrontend()
     {
-        $this->loginInFrontend(
-            $this->getMockData('oxuser.0.OXUSERNAME'),
-            $this->getMockData('oxuser.0.OXUSERNAME')
-        );
+        $userName = $this->getMockData('oxuser.0.OXUSERNAME');
+        $password = $userName; // username and password are equal for mock users
+
+        $this->loginInFrontend($userName, $password);
     }
 
     /**
@@ -106,6 +106,32 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     public function continueToNextStep($seconds = 10)
     {
         $this->clickAndWait($this->getLocator('checkout.nextStep'), $seconds);
+    }
+
+    /**
+     * Navigates through the checkout process.
+     */
+    public function goThroughCheckout()
+    {
+        $this->openShop();
+        $this->loginMockUserToFrontend();
+        $this->addMockArticleToBasket();
+
+        // Step 1: Cart
+        $this->continueToNextStep();
+
+        // Step 2: Address
+        $this->continueToNextStep();
+
+        // Step 3: Pay
+        $this->click(sprintf(
+            $this->getLocator('checkout.paymentMethod'),
+            $this->paymentMethod::getName(true)
+        ));
+        $this->continueToNextStep();
+
+        // Step 4: Order
+        $this->continueToNextStep();
     }
 
     /**

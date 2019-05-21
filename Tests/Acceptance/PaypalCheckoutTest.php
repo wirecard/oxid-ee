@@ -41,26 +41,6 @@ class PaypalCheckoutTest extends CheckoutTestCase
         $this->assertPaymentSuccessful();
     }
 
-    private function goThroughCheckout()
-    {
-        $this->openShop();
-        $this->loginMockUserToFrontend();
-        $this->addMockArticleToBasket();
-
-        // Step 1: Cart
-        $this->continueToNextStep();
-
-        // Step 2: Address
-        $this->continueToNextStep();
-
-        // Step 3: Pay
-        $this->click($this->getLocator('checkout.paymentMethods.paypal'));
-        $this->continueToNextStep();
-
-        // Step 4: Order
-        $this->continueToNextStep();
-    }
-
     private function goThroughExternalFlow()
     {
         $this->waitForElement($this->getLocator('external.paypal.email'), 30);

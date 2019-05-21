@@ -1,9 +1,7 @@
 {
   "checkout": {
     "nextStep": "//button[contains(@class, 'nextStep')]",
-    "paymentMethods": {
-      "paypal": "payment_wdpaypal"
-    }
+    "paymentMethod": "payment_%s"
   },
   "external": {
     "paypal": {
