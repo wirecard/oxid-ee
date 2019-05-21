@@ -47,17 +47,17 @@ class PaypalCheckoutTest extends CheckoutTestCase
         $this->loginMockUserToFrontend();
         $this->addMockArticleToBasket();
 
-        // Step 1
+        // Step 1: Cart
         $this->continueToNextStep();
 
-        // Step 2
+        // Step 2: Address
         $this->continueToNextStep();
 
-        // Step 3
+        // Step 3: Pay
         $this->click($this->getLocator('checkout.paymentMethods.paypal'));
         $this->continueToNextStep();
 
-        // Step 4
+        // Step 4: Order
         $this->continueToNextStep();
     }
 
