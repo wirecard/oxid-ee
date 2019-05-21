@@ -469,5 +469,11 @@ class OxidEeEvents
                 " MODIFY COLUMN `WDOXIDEE_TRANSACTIONACTION` enum('{$sTransactionActions}')";
             self::$oDb->Execute($sQuery);
         }
+
+        // adds a unique index on the transaction ID to preemptively prevent multiple entries of the same transaction
+        if (!$oDbMetaDataHandler->hasIndex('TRANSACTIONID', self::TRANSACTION_TABLE)) {
+            $sQuery = "ALTER TABLE " . self::TRANSACTION_TABLE . " ADD UNIQUE INDEX (`TRANSACTIONID`)";
+            self::$oDb->Execute($sQuery);
+        }
     }
 }
