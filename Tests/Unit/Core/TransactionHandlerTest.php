@@ -48,6 +48,8 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
                 'columns' => ['oxid', 'oxordernr', 'oxpaymenttype', 'wdoxidee_transactionid'],
                 'rows' => [
                     ['oxid 1', 2, 'wdpaypal', 'transaction 1'],
+                    ['oxid 2', 3, 'wdpaypal', 'transaction 5'],
+                    ['oxid 3', 4, 'wdpaypal', 'transaction 8'],
                 ]
             ],
             [
@@ -58,6 +60,13 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
                     ['transaction 2', 'oxid 1', 2, 'transaction 2', 'transaction 1', 'reserve', 'capture-authorization', 'success', 40, 'EUR'],
                     ['transaction 3', 'oxid 1', 2, 'transaction 3', 'transaction 1', 'reserve', 'capture-authorization', 'closed', 40, 'EUR'],
                     ['transaction 4', 'oxid 1', 2, 'transaction 4', 'transaction 3', 'reserve', 'refund-capture', 'closed', 40, 'EUR'],
+                    ['transaction 5', 'oxid 2', 3, 'transaction 5', null, 'pay', 'debit', 'success', 33.8, 'EUR'],
+                    ['transaction 6', 'oxid 2', 3, 'transaction 6', 'transaction 5', 'pay', 'refund-debit', 'closed', 20, 'EUR'],
+                    ['transaction 7', 'oxid 2', 3, 'transaction 7', 'transaction 5', 'pay', 'refund-debit', 'closed', 13.7, 'EUR'],
+                    ['transaction 8', 'oxid 3', 4, 'transaction 8', null, 'pay', 'debit', 'success', 33.8, 'EUR'],
+                    ['transaction 9', 'oxid 3', 4, 'transaction 9', 'transaction 8', 'pay', 'refund-debit', 'closed', 20, 'EUR'],
+                    ['transaction 10', 'oxid 3', 4, 'transaction 10', 'transaction 8', 'pay', 'refund-debit', 'closed', 13.7, 'EUR'],
+                    ['transaction 11', 'oxid 3', 4, 'transaction 11', 'transaction 8', 'pay', 'refund-debit', 'closed', 0.1, 'EUR'],
                 ]
             ],
         ];
@@ -131,6 +140,8 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
             'transaction 2' => ['transaction 2', 40],
             'transaction 3' => ['transaction 3', 0],
             'transaction 4' => ['transaction 4', 40],
+            'transaction 5' => ['transaction 5', 0.1],
+            'transaction 8' => ['transaction 8', 0],
         ];
     }
 }
