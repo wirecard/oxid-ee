@@ -11,6 +11,7 @@
 <html>
 <head>
   <title>[{oxmultilang ident="wd_redirect_text"}]</title>
+  [{oxstyle}]
 </head>
 <body>
 <div>
@@ -25,6 +26,5 @@
 <input type="hidden" name="[{$key}]" value="[{$value}]">
   [{/foreach}]
 </form>
-[{oxstyle}]
 <script type="text/javascript">document.getElementById("credit-card-form").submit();</script>
 </html>
