@@ -39,6 +39,33 @@ class SepaDirectDebitCheckoutTest extends CheckoutTestCase
         $this->assertPaymentSuccessful();
     }
 
+    public function testCheckoutForPurchaseWithBic()
+    {
+        $this->setPaymentActionPurchase();
+        $this->enableBic();
+        $this->goThroughCheckout();
+        $this->waitForRedirectConfirmation();
+
+        $this->assertPaymentSuccessful();
+    }
+
+    public function testCheckoutForAuthorizeWithBic()
+    {
+        $this->setPaymentActionAuthorize();
+        $this->enableBic();
+        $this->goThroughCheckout();
+        $this->waitForRedirectConfirmation();
+
+        $this->assertPaymentSuccessful();
+    }
+
+    private function enableBic()
+    {
+        $this->executeSql("UPDATE `oxpayments`
+            SET `WDOXIDEE_BIC` = '1'
+            WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
+    }
+
     public function goThroughCheckout()
     {
         $this->openShop();
@@ -64,6 +91,14 @@ class SepaDirectDebitCheckoutTest extends CheckoutTestCase
             $this->getLocator('external.sepadd.iban'),
             $this->getConfig('payments.sepadd.iban')
         );
+
+        if ($this->isElementPresent($this->getLocator('external.sepadd.bic'))) {
+            $this->type(
+                $this->getLocator('external.sepadd.bic'),
+                $this->getConfig('payments.sepadd.bic')
+            );
+        }
+
         $this->continueToNextStep();
 
         // Step 4: Order
