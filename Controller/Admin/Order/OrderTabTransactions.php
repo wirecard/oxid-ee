@@ -56,9 +56,6 @@ class OrderTabTransactions extends OrderTab
                             'text' => $oTransaction->wdoxidee_ordertransactions__requestid->value,
                         ],
                         [
-                            'text' => $oTransaction->wdoxidee_ordertransactions__action->value,
-                        ],
-                        [
                             'text' => $oTransaction->wdoxidee_ordertransactions__type->value,
                         ],
                         [
@@ -106,10 +103,6 @@ class OrderTabTransactions extends OrderTab
                 ],
                 [
                     'text' => Helper::translate('wd_requestId'),
-                    'nowrap' => true,
-                ],
-                [
-                    'text' => Helper::translate('wd_panel_action'),
                     'nowrap' => true,
                 ],
                 [
