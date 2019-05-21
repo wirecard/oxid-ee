@@ -10,6 +10,11 @@
       "userId": "1234",
       "password": "1234",
       "tan": "1234"
+    },
+    "sepadd": {
+      "accountHolder": "First Last",
+      "iban": "DE42512308000000060004",
+      "bic": "WIREDEMMXXX"
     }
   }
 }

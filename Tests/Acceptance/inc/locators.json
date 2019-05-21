@@ -18,6 +18,13 @@
       "tan": "BackendFormTAN",
       "account": "account-1",
       "nextStep": "//button[contains(@class, 'button-right')]"
+    },
+    "sepadd": {
+      "accountHolder": "accountHolder",
+      "iban": "iban",
+      "bic": "bic",
+      "terms": "sepadd-checkbox",
+      "nextStep": "//form/button[contains(@class, 'nextStep')]"
     }
   }
 }
