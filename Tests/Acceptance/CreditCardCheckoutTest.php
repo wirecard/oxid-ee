@@ -103,28 +103,28 @@ class CreditCardCheckoutTest extends CheckoutTestCase
         $this->waitForElement($this->getLocator('external.creditcard.firstName'));
         $this->type(
             $this->getLocator('external.creditcard.firstName'),
-            $this->getConfigValue('payments.creditcard.firstName')
+            $this->getConfig('payments.creditcard.firstName')
         );
         $this->type(
             $this->getLocator('external.creditcard.lastName'),
-            $this->getConfigValue('payments.creditcard.lastName')
+            $this->getConfig('payments.creditcard.lastName')
         );
         $this->type(
             $this->getLocator('external.creditcard.cardNumber'),
-            $this->getConfigValue('payments.creditcard.cardNumber')
+            $this->getConfig('payments.creditcard.cardNumber')
         );
         $this->fireEvent($this->getLocator('external.creditcard.cardNumber'), 'keyup');
         $this->type(
             $this->getLocator('external.creditcard.cvv'),
-            $this->getConfigValue('payments.creditcard.cvv')
+            $this->getConfig('payments.creditcard.cvv')
         );
         $this->select(
             $this->getLocator('external.creditcard.expiryMonth'),
-            $this->getConfigValue('payments.creditcard.expiryMonth')
+            $this->getConfig('payments.creditcard.expiryMonth')
         );
         $this->select(
             $this->getLocator('external.creditcard.expiryYear'),
-            $this->getConfigValue('payments.creditcard.expiryYear')
+            $this->getConfig('payments.creditcard.expiryYear')
         );
 
         $this->selectFrame($rootFrame);
@@ -136,7 +136,7 @@ class CreditCardCheckoutTest extends CheckoutTestCase
         $this->waitForElement($this->getLocator('external.creditcard.password'), 30);
         $this->type(
             $this->getLocator('external.creditcard.password'),
-            $this->getConfigValue('payments.creditcard.password')
+            $this->getConfig('payments.creditcard.password')
         );
         $this->click($this->getLocator('external.creditcard.continueButton'));
     }
