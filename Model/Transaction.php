@@ -148,7 +148,7 @@ class Transaction extends MultiLanguageModel
         };
 
         $aArgValues = array_map($fQuoteString, array_values($aArgs));
-        $sValues = implode(",", array_values($aArgValues));
+        $sValues = implode(',', array_values($aArgValues));
 
         $sQuery = "INSERT INTO " . OxidEeEvents::TRANSACTION_TABLE . "
                         (`" . $sColumnNames . "`)
