@@ -16,7 +16,7 @@ class PaymentTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
 
     /**
-     * @dataProvider testIsCustomPaymentMethodProvider
+     * @dataProvider isCustomPaymentMethodProvider
      */
     public function testIsCustomPaymentMethod($fieldValue, $expected)
     {
@@ -26,7 +26,7 @@ class PaymentTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals($oPayment->isCustomPaymentMethod(), $expected);
     }
 
-    public function testIsCustomPaymentMethodProvider()
+    public function isCustomPaymentMethodProvider()
     {
         return [
             'true field' => [true, true],
@@ -37,7 +37,7 @@ class PaymentTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testGetPaymentMethodProvider
+     * @dataProvider getPaymentMethodProvider
      */
     public function testGetPaymentMethod($paymentMethodType, $expected)
     {
@@ -51,7 +51,7 @@ class PaymentTest extends OxidEsales\TestingLibrary\UnitTestCase
         }
     }
 
-    public function testGetPaymentMethodProvider()
+    public function getPaymentMethodProvider()
     {
         return [
             'valid Paypal payment method' => ['wdpaypal', PaypalPaymentMethod::class],
@@ -62,7 +62,7 @@ class PaymentTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testGetLogoUrlProvider
+     * @dataProvider getLogoUrlProvider
      */
     public function testGetLogoUrl($paymentMethodType, $sExpected)
     {
@@ -78,7 +78,7 @@ class PaymentTest extends OxidEsales\TestingLibrary\UnitTestCase
         }
     }
 
-    public function testGetLogoUrlProvider()
+    public function getLogoUrlProvider()
     {
         return [
             'Paypal logo url' => ['wdpaypal', 'paypal.png'],

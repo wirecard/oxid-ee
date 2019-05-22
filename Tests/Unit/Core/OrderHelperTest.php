@@ -97,14 +97,14 @@ class OrderHelperTest extends WdUnitTestCase
     }
 
     /**
-     * @dataProvider testIsPaymentFinishedProvider
+     * @dataProvider isPaymentFinishedProvider
      */
     public function testIsPaymentFinished($sSessionToken, $sPaymentRedirect, $bExpected)
     {
         $this->assertEquals($bExpected, OrderHelper::isPaymentFinished($sSessionToken, $sPaymentRedirect));
     }
 
-    public function testIsPaymentFinishedProvider()
+    public function isPaymentFinishedProvider()
     {
         return [
             'is finished' => ['test', 'test', true],
@@ -113,14 +113,14 @@ class OrderHelperTest extends WdUnitTestCase
     }
 
     /**
-     * @dataProvider testIsFinalizeOrderSuccessfulProvider
+     * @dataProvider isFinalizeOrderSuccessfulProvider
      */
     public function testIsFinalizeOrderSuccessful($iSuccess, $bExpected)
     {
         $this->assertEquals($bExpected, OrderHelper::isFinalizeOrderSuccessful($iSuccess));
     }
 
-    public function testIsFinalizeOrderSuccessfulProvider()
+    public function isFinalizeOrderSuccessfulProvider()
     {
         return [
             'order state mailing error' => [Order::ORDER_STATE_MAILINGERROR, true],
@@ -131,7 +131,7 @@ class OrderHelperTest extends WdUnitTestCase
 
     /**
      *
-     * @dataProvider testHandleFormResponseProvider
+     * @dataProvider handleFormResponseProvider
      */
     public function testHandleFormResponse($formPost)
     {
@@ -147,7 +147,7 @@ class OrderHelperTest extends WdUnitTestCase
         OrderHelper::handleFormResponse($oSession, $oPayment, $oOrderStub, 'formPost');
     }
 
-    public function testHandleFormResponseProvider()
+    public function handleFormResponseProvider()
     {
         $successResponse = file_get_contents(__DIR__ . '/../../resources/success_response.xml');
         return [
@@ -157,7 +157,7 @@ class OrderHelperTest extends WdUnitTestCase
     }
 
     /**
-     * @dataProvider testHandleResponseProvider
+     * @dataProvider handleResponseProvider
      */
     public function testHandleResponse($oResponse, $oResultRedirect)
     {
@@ -180,7 +180,7 @@ class OrderHelperTest extends WdUnitTestCase
         $this->assertContains($oResultRedirect, $sRedirectUrl);
     }
 
-    public function testHandleResponseProvider()
+    public function handleResponseProvider()
     {
 
         $oFailureResponseStub = $this->getMockBuilder(FailureResponse::class)

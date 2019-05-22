@@ -37,7 +37,7 @@ class ViewConfigTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testIsThisModuleProvider
+     * @dataProvider isThisModuleProvider
      */
     public function testIsThisModule($sModuleName, $bExpected)
     {
@@ -45,7 +45,7 @@ class ViewConfigTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals($bExpected, $bResult);
     }
 
-    public function testIsThisModuleProvider()
+    public function isThisModuleProvider()
     {
         return [
             'is our module' => ['wdoxidee', true],

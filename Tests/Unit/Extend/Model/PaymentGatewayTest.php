@@ -27,7 +27,7 @@ class PaymentGatewayTest extends \Wirecard\Test\WdUnitTestCase
 
     /**
      *
-     * @dataProvider testCreateTransactionProvider
+     * @dataProvider createTransactionProvider
      */
     public function testCreateTransaction($sPaymentId, $sTransactionClass)
     {
@@ -55,7 +55,7 @@ class PaymentGatewayTest extends \Wirecard\Test\WdUnitTestCase
         $this->assertInstanceOf($sTransactionClass, $oTransaction);
     }
 
-    public function testCreateTransactionProvider()
+    public function createTransactionProvider()
     {
         return [
             'Credit card transaction' => ['wdcreditcard', \Wirecard\PaymentSdk\Transaction\CreditCardTransaction::class],

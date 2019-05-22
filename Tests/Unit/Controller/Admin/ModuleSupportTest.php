@@ -42,7 +42,7 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testSendSupportEmailActionWithoutParamsProvider
+     * @dataProvider sendSupportEmailActionWithoutParamsProvider
      */
     public function testSendSupportEmailActionWithoutParams($sContaninsKey)
     {
@@ -50,7 +50,7 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
         $this->assertArrayHasKey($sContaninsKey, $this->_moduleSupport->getViewData());
     }
 
-    public function testSendSupportEmailActionWithoutParamsProvider()
+    public function sendSupportEmailActionWithoutParamsProvider()
     {
         return [
             "contains alertMessage" => ['alertMessage'],
@@ -59,7 +59,7 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testSendSupportEmailActionWithParamsProvider
+     * @dataProvider sendSupportEmailActionWithParamsProvider
      */
     public function testSendSupportEmailActionWithParams($sText, $sFromEmail, $sReplyEmail, $sErrorText)
     {
@@ -73,7 +73,7 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
         $this->assertEquals($sErrorText, $this->_moduleSupport->getViewData()['alertMessage']);
     }
 
-    public function testSendSupportEmailActionWithParamsProvider()
+    public function sendSupportEmailActionWithParamsProvider()
     {
         return [
             // this will end up in a flaky test depending on the email settings of the test server

@@ -130,7 +130,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testInvalidAmountInputProvider
+     * @dataProvider invalidAmountInputProvider
      */
     public function testAmountInput($input, $expected)
     {
@@ -156,7 +156,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
         $this->assertEquals($aViewData['message']['type'], $expected);
     }
 
-    public function testInvalidAmountInputProvider()
+    public function invalidAmountInputProvider()
     {
         return [
             'text' => ['abcd', 'error'],
@@ -168,9 +168,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testRequestActionProvider
-     *
-     * @param array $aResponseStub
+     * @dataProvider requestActionProvider
      */
     public function testRequestAction($aResponseStub)
     {
@@ -204,7 +202,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
         }
     }
 
-    public function testRequestActionProvider()
+    public function requestActionProvider()
     {
         $aSuccessResponseStub = ['status' => Transaction::STATE_SUCCESS];
         $aFailureResponseStub = ['status' => Transaction::STATE_ERROR];

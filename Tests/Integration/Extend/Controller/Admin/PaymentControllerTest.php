@@ -21,7 +21,7 @@ class PaymentControllerTest extends \Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testUnsetPaymentErrorsProvider
+     * @dataProvider unsetPaymentErrorsProvider
      */
     public function testUnsetPaymentErrors($iErrorCode, $bShouldDeleteOnFail, $bShouldDeleteOnCancel, $sExpected)
     {
@@ -43,7 +43,7 @@ class PaymentControllerTest extends \Wirecard\Test\WdUnitTestCase
         $this->assertEquals($sExpected, $sResult);
     }
 
-    public function testUnsetPaymentErrorsProvider()
+    public function unsetPaymentErrorsProvider()
     {
         return [
             'state CANCELLED not deleted' => [PaymentController::ERROR_CODE_CANCELED, false, false, '1'],

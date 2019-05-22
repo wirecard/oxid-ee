@@ -26,7 +26,7 @@ class PaymentMainTest extends \Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testRenderProvider
+     * @dataProvider renderProvider
      */
     public function testRender($bValidationResult, $bExpected)
     {
@@ -54,7 +54,7 @@ class PaymentMainTest extends \Wirecard\Test\WdUnitTestCase
         $this->assertEquals($bExpected, $this->_controller->getViewData()['bConfigNotValid']);
     }
 
-    public function testRenderProvider()
+    public function renderProvider()
     {
         return [
             'validation successful' => [true, false],

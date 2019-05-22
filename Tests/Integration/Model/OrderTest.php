@@ -116,7 +116,7 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testIsCustomPaymentMethodProvider
+     * @dataProvider isCustomPaymentMethodProvider
      */
     public function testIsCustomPaymentMethod($orderId, $isCustomPaymentMethod)
     {
@@ -126,7 +126,7 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
         $this->assertEquals($oOrder->isCustomPaymentMethod(), $isCustomPaymentMethod);
     }
 
-    public function testIsCustomPaymentMethodProvider()
+    public function isCustomPaymentMethodProvider()
     {
         return [
             'order with custom payment method' => ['1', true],
@@ -135,7 +135,7 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testIsPaymentPendingProvider
+     * @dataProvider isPaymentPendingProvider
      */
     public function testIsPaymentPending($orderId, $isPaymentPending)
     {
@@ -145,7 +145,7 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
         $this->assertEquals($oOrder->isPaymentPending(), $isPaymentPending);
     }
 
-    public function testIsPaymentPendingProvider()
+    public function isPaymentPendingProvider()
     {
         return [
             'order with pending transaction' => ['1', true],
@@ -154,7 +154,7 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testIsPaymentSuccessProvider
+     * @dataProvider isPaymentSuccessProvider
      */
     public function testIsPaymentSuccess($orderId, $isPaymentSuccess)
     {
@@ -164,7 +164,7 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
         $this->assertEquals($oOrder->isPaymentSuccess(), $isPaymentSuccess);
     }
 
-    public function testIsPaymentSuccessProvider()
+    public function isPaymentSuccessProvider()
     {
         return [
             'authorized order' => ['1', true],
@@ -254,7 +254,7 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testHandleOrderStateProvider
+     * @dataProvider handleOrderStateProvider
      */
     public function testHandleOrderState($orderId, $state, $shouldBeDeleted)
     {
@@ -264,7 +264,7 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
         $this->assertEquals(!$oOrder->load($orderId), $shouldBeDeleted);
     }
 
-    public function testHandleOrderStateProvider()
+    public function handleOrderStateProvider()
     {
         return [
             'order with foreign payment method: canceled' => ['2', WdOrder::STATE_CANCELLED, false],
@@ -277,7 +277,7 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testIsLastArticleProvider
+     * @dataProvider isLastArticleProvider
      */
     public function testIsLastArticle($sArticleId, $bExpected)
     {
@@ -291,7 +291,7 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
         $this->assertEquals($bExpected, $isLastArticle);
     }
 
-    public function testIsLastArticleProvider()
+    public function isLastArticleProvider()
     {
         return [
             'correct last article' => ['oxid2', true],

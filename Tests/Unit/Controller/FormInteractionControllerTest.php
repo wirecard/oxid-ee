@@ -27,7 +27,7 @@ class FormInteractionControllerTest extends \Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testResponseFieldsProvider
+     * @dataProvider responseFieldsProvider
      */
     public function testInit($responseFields)
     {
@@ -53,7 +53,7 @@ class FormInteractionControllerTest extends \Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testResponseFieldsProvider
+     * @dataProvider responseFieldsProvider
      */
     public function testGetUrl($responseFields)
     {
@@ -64,7 +64,7 @@ class FormInteractionControllerTest extends \Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testResponseFieldsProvider
+     * @dataProvider responseFieldsProvider
      */
     public function testGetMethod($responseFields)
     {
@@ -75,7 +75,7 @@ class FormInteractionControllerTest extends \Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testResponseFieldsProvider
+     * @dataProvider responseFieldsProvider
      */
     public function testGetForm($responseFields)
     {
@@ -89,7 +89,7 @@ class FormInteractionControllerTest extends \Wirecard\Test\WdUnitTestCase
         $this->assertArraySubset(["KEY1" => "VALUE1","KEY2" => "VALUE2" ], $aFormFields);
     }
 
-    public function testResponseFieldsProvider()
+    public function responseFieldsProvider()
     {
         $oFormFields = new \Wirecard\PaymentSdk\Entity\FormFieldMap();
         $oFormFields->add("KEY1", "VALUE1");

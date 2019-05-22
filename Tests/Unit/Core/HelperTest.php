@@ -20,14 +20,14 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
 
     /**
-     * @dataProvider testTranslateProvider
+     * @dataProvider translateProvider
      */
     public function testTranslate($input, $expected)
     {
         $this->assertEquals(Helper::translate($input), $expected);
     }
 
-    public function testTranslateProvider()
+    public function translateProvider()
     {
         return [
             'OXID key' => ['WRAPPING', 'Verpackung'],
@@ -61,14 +61,14 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testGetFloatFromStringProvider
+     * @dataProvider getFloatFromStringProvider
      */
     public function testGetFloatFromString($input, $expected)
     {
         $this->assertEquals(Helper::getFloatFromString($input), $expected);
     }
 
-    public function testGetFloatFromStringProvider()
+    public function getFloatFromStringProvider()
     {
         return [
             'decimals English' => ['1.234', 1.234],
@@ -83,14 +83,14 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testGetGenderCodeForSalutationProvider
+     * @dataProvider getGenderCodeForSalutationProvider
      */
     public function testGetGenderCodeForSalutation($input, $expected)
     {
         $this->assertEquals(Helper::getGenderCodeForSalutation($input), $expected);
     }
 
-    public function testGetGenderCodeForSalutationProvider()
+    public function getGenderCodeForSalutationProvider()
     {
         return [
             'male' => ['MR', 'm'],
@@ -100,14 +100,14 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testGetDateTimeFromStringProvider
+     * @dataProvider getDateTimeFromStringProvider
      */
     public function testGetDateTimeFromString($input, $expected)
     {
         $this->assertEquals(Helper::getDateTimeFromString($input), $expected);
     }
 
-    public function testGetDateTimeFromStringProvider()
+    public function getDateTimeFromStringProvider()
     {
         return [
             'date' => ['2010-10-10', new DateTime('2010-10-10')],
@@ -119,14 +119,14 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testGetFormattedDbDateProvider
+     * @dataProvider getFormattedDbDateProvider
      */
     public function testGetFormattedDbDate($input, $expected)
     {
         $this->assertContains($expected, Helper::getFormattedDbDate($input));
     }
 
-    public function testGetFormattedDbDateProvider()
+    public function getFormattedDbDateProvider()
     {
         return [
             'date time format' => [
@@ -171,7 +171,7 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testAddToViewDataProvider
+     * @dataProvider addToViewDataProvider
      */
     public function testAddToViewData($oldViewData, $array, $override, $newViewData)
     {
@@ -183,7 +183,7 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals($object->getViewData(), $newViewData);
     }
 
-    public function testAddToViewDataProvider()
+    public function addToViewDataProvider()
     {
         return [
             'associative (override)' => [
@@ -232,14 +232,14 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testGetCurrencyRoundPrecisionProvider
+     * @dataProvider getCurrencyRoundPrecisionProvider
      */
     public function testGetCurrencyRoundPrecision($sCurrencyName, $iExpectedPrecision)
     {
         $this->assertEquals(Helper::getCurrencyRoundPrecision($sCurrencyName), $iExpectedPrecision);
     }
 
-    public function testGetCurrencyRoundPrecisionProvider()
+    public function getCurrencyRoundPrecisionProvider()
     {
         return [
             'EUR' => ['EUR', 2],

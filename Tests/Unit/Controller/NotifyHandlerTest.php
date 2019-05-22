@@ -73,7 +73,7 @@ class NotifyHandlerTest extends \Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testHandleRequestProvider
+     * @dataProvider handleRequestProvider
      *
      * @param Response|MockObject $oResponseStub
      */
@@ -91,7 +91,7 @@ class NotifyHandlerTest extends \Wirecard\Test\WdUnitTestCase
         }
     }
 
-    public function testHandleRequestProvider()
+    public function handleRequestProvider()
     {
         $oSuccessResponseStub = $this->getMockBuilder(SuccessResponse::class)
             ->disableOriginalConstructor()
@@ -120,7 +120,7 @@ class NotifyHandlerTest extends \Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testGetNotificationUrlProvider
+     * @dataProvider getNotificationUrlProvider
      */
     public function testGetNotificationUrl($oPaymentMethod, $oPaymentId) {
         $result = NotifyHandler::getNotificationUrl($oPaymentMethod);
@@ -128,7 +128,7 @@ class NotifyHandlerTest extends \Wirecard\Test\WdUnitTestCase
         $this->assertContains("cl=wcpg_notifyhandler&fnc=handleRequest&pmt=$oPaymentId", $result);
     }
 
-    public function testGetNotificationUrlProvider() {
+    public function getNotificationUrlProvider() {
         return [
             "Paypal notification Url" => [new PaypalPaymentMethod(), 'wdpaypal'],
             "Credit card notification Url" => [new CreditCardPaymentMethod(), 'wdcreditcard'],

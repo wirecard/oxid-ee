@@ -25,7 +25,7 @@ class LanguageTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testTranslateStringProvider
+     * @dataProvider translateStringProvider
      */
     public function testTranslateString($sKey, $sTranslation, $iLanguageId)
     {
@@ -33,7 +33,7 @@ class LanguageTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals($sTranslation, $this->oLanguage->translateString($sKey, $iLanguageId));
     }
 
-    public function testTranslateStringProvider()
+    public function translateStringProvider()
     {
         return [
             'default translation' => ['wd_yes', 'Yes', null],

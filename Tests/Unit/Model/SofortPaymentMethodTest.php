@@ -44,7 +44,7 @@ class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testGetNameProvider
+     * @dataProvider getNameProvider
      */
     public function testGetName($bforOxid, $sExpected)
     {
@@ -52,7 +52,7 @@ class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals($sExpected, $sName);
     }
 
-    public function testGetNameProvider()
+    public function getNameProvider()
     {
         return [
             'for oxid' => [true, 'wdsofortbanking'],
@@ -67,7 +67,7 @@ class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider getConfigFieldsProvider
+     * @dataProvider configFieldsProvider
      */
     public function testGetConfigFields($sContainsKey)
     {
@@ -75,7 +75,7 @@ class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertArrayHasKey($sContainsKey, $aConfigFields);
     }
 
-    public function getConfigFieldsProvider()
+    public function configFieldsProvider()
     {
         return [
             "contains additionalInfo" => ['additionalInfo'],

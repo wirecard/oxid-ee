@@ -40,7 +40,7 @@ class EmailTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testSendSupportEmailProvider
+     * @dataProvider sendSupportEmailProvider
      */
     public function testSendSupportEmail($aEmailData)
     {
@@ -77,7 +77,7 @@ class EmailTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     }
 
-    public function testSendSupportEmailProvider()
+    public function sendSupportEmailProvider()
     {
         $aEmailDataWithoutReplyTo = [
             'body' => 'body test',
