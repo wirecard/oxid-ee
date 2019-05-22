@@ -50,7 +50,7 @@ class NotifyHandler extends FrontendController
     /**
      * @var BackendService
      *
-     * @since 1.0.1
+     * @@since 1.1.0
      */
     private $_oBackendService;
 
@@ -75,7 +75,7 @@ class NotifyHandler extends FrontendController
      *
      * @return BackendService
      *
-     * @since 1.0.1
+     * @@since 1.1.0
      */
     private function _getBackendService($oConfig)
     {
@@ -93,7 +93,7 @@ class NotifyHandler extends FrontendController
      *
      * @param BackendService $oBackendService
      *
-     * @since 1.0.1
+     * @@since 1.1.0
      */
     public function setBackendService($oBackendService)
     {
