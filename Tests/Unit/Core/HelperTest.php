@@ -11,7 +11,6 @@
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\Controller\BaseController;
 use OxidEsales\Eshop\Core\Module\Module;
-use OxidEsales\EshopCommunity\Core\Controller\BaseController;
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
