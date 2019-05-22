@@ -18,11 +18,11 @@ class ThankYouControllerTest extends \Wirecard\Test\WdUnitTestCase
     /**
      * @var ThankYouController|MockObject
      */
-    private $_controller;
+    private $_thankYouController;
 
     protected function setUp()
     {
-        $this->_controller = oxNew(ThankYouController::class);
+        $this->_thankYouController = oxNew(ThankYouController::class);
         parent::setUp();
     }
 
@@ -51,10 +51,9 @@ class ThankYouControllerTest extends \Wirecard\Test\WdUnitTestCase
 
         Registry::getSession()->setBasket($oBasketStub);
 
-        $this->_controller->init();
+        $this->_thankYouController->init();
 
         $this->assertNull(\OxidEsales\Eshop\Core\Registry::getSession()->getVariable('wdtoken'));
-        $this->assertArrayHasKey('sendPendingEmailsSettings', $this->_controller->getViewData());
+        $this->assertArrayHasKey('sendPendingEmailsSettings', $this->_thankYouController->getViewData());
     }
-
 }

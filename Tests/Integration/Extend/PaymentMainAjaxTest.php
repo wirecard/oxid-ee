@@ -7,12 +7,25 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Extend\PaymentMainAjax;
 
 use Wirecard\Test\WdUnitTestCase;
 
 class PaymentMainAjaxTest extends WdUnitTestCase
 {
+    /**
+     * @var Payment
+     */
+    private $_payment;
+
+    protected function setUp()
+    {
+        $this->_payment = oxNew(Payment::class);
+        $this->_payment->load("wdpaypal");
+
+        parent::setUp();
+    }
 
     public function testCheckMerchantCredentials()
     {
@@ -20,9 +33,11 @@ class PaymentMainAjaxTest extends WdUnitTestCase
             'oxUtils',
             'showMessageAndExit',
             '{ return $aA; }');
-        $this->setRequestParameter('apiUrl', 'https://api-test.wirecard.com');
-        $this->setRequestParameter('httpUser', '70000-APITEST-AP');
-        $this->setRequestParameter('httpPass', 'qD2wzQ_hrc!8');
+
+
+        $this->setRequestParameter('apiUrl', $this->_payment->oxpayments__wdoxidee_apiurl);
+        $this->setRequestParameter('httpUser', $this->_payment->oxpayments__wdoxidee_httpuser);
+        $this->setRequestParameter('httpPass', $this->_payment->oxpayments__wdoxidee_httppass);
 
         $oPaymentMainAjax = oxNew(PaymentMainAjax::class);
         $result = $oPaymentMainAjax->checkPaymentMethodCredentials();
@@ -36,7 +51,7 @@ class PaymentMainAjaxTest extends WdUnitTestCase
             'oxUtils',
             'showMessageAndExit',
             '{ return $aA; }');
-        $this->setRequestParameter('apiUrl', 'https://api-test.wirecard.com');
+        $this->setRequestParameter('apiUrl', $this->_payment->oxpayments__wdoxidee_apiurl);
         $this->setRequestParameter('httpUser', 'invalid');
         $this->setRequestParameter('httpPass', 'invalid');
 
