@@ -13,36 +13,42 @@ use OxidEsales\Eshop\Application\Model\BasketItem;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Price;
 
+use PHPUnit\Framework\MockObject\MockObject;
+
 use Wirecard\Oxid\Core\BasketHelper;
 use Wirecard\Oxid\Core\Helper;
-
 use Wirecard\PaymentSdk\Entity\Basket as TransactionBasket;
 
 class BasketHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
+    /**
+     * @var Price|MockObject
+     */
+    private $_oPriceStub;
 
-    private $priceStub;
-    private $basketStub;
-    private $currency;
+    /**
+     * @var Basket|MockObject
+     */
+    private $_oBasketStub;
 
     public function setUp()
     {
         parent::setUp();
 
-        $this->priceStub = $this->getMockBuilder(Price::class)
+        $this->_oPriceStub = $this->getMockBuilder(Price::class)
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->priceStub->method('getPrice')
+        $this->_oPriceStub->method('getPrice')
             ->willReturn(100.0);
-        $this->priceStub->method('getBruttoPrice')
+        $this->_oPriceStub->method('getBruttoPrice')
             ->willReturn(100.9999);
-        $this->priceStub->method('getVat')
+        $this->_oPriceStub->method('getVat')
             ->willReturn(20);
-        $this->priceStub->method('getVatValue')
+        $this->_oPriceStub->method('getVatValue')
             ->willReturn(20);
 
-        $this->basketStub = $this->getMockBuilder(Basket::class)
+        $this->_oBasketStub = $this->getMockBuilder(Basket::class)
             ->disableOriginalConstructor()
             ->getMock();
     }
@@ -67,7 +73,7 @@ class BasketHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
             ->willReturn($product1Stub);
         $basketItem1Stub->expects($this->any())
             ->method('getUnitPrice')
-            ->willReturn($this->priceStub);
+            ->willReturn($this->_oPriceStub);
         $basketItem1Stub->expects($this->any())
             ->method('getAmount')
             ->willReturn(1);
@@ -77,90 +83,106 @@ class BasketHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         BasketHelper::addArticleToBasket($wdBasket, $basketItem1Stub, "EUR");
 
         $wdBasketIterator = $wdBasket->getIterator();
-        $this->assertTrue($wdBasketIterator->count() == 1);
-
         $wdBasketIterator->seek(0);
-        $currentItem = $wdBasketIterator->current()->mappedProperties();
+        $aCurrentItem = $wdBasketIterator->current()->mappedProperties();
 
-        $this->assertEquals('Article name', $currentItem['name']);
-        $this->assertEquals(1, $currentItem['quantity']);
-        $this->assertEquals('EUR', $currentItem['amount']['currency']);
-        $this->assertEquals(101.0, $currentItem['amount']['value']);
-        $this->assertEquals('Article desc', $currentItem['description']);
-        $this->assertEquals('Article number', $currentItem['article-number']);
-        $this->assertEquals(20, $currentItem['tax-rate']);
+        $aExpected = [
+            'name' => 'Article name',
+            'quantity' => 1,
+            'amount' => [
+                'currency' => 'EUR',
+                'value' => 101.0,
+            ],
+            'description' => 'Article desc',
+            'article-number' => 'Article number',
+            'tax-rate' => 20,
+        ];
+
+        $this->assertEquals($aExpected, $aCurrentItem);
     }
 
     public function testPaymentCostForTheCurrentBasket()
     {
-        $this->basketStub->expects($this->once())
+        $this->_oBasketStub->expects($this->once())
             ->method('getPaymentCost')
-            ->willReturn($this->priceStub);
+            ->willReturn($this->_oPriceStub);
 
         $wdBasket = new TransactionBasket();
-        BasketHelper::addPaymentCostsToBasket($wdBasket, $this->basketStub, "EUR");
+        BasketHelper::addPaymentCostsToBasket($wdBasket, $this->_oBasketStub, "EUR");
 
         $wdBasketIterator = $wdBasket->getIterator();
-        $this->assertEquals(1, $wdBasketIterator->count());
-
         $wdBasketIterator->seek(0);
-        $currentItem = $wdBasketIterator->current()->mappedProperties();
+        $aCurrentItem = $wdBasketIterator->current()->mappedProperties();
 
-        $this->assertEquals(Helper::translate('wd_payment_cost'), $currentItem['name']);
-        $this->assertEquals(1, $currentItem['quantity']);
-        $this->assertEquals('EUR', $currentItem['amount']['currency']);
-        $this->assertEquals(101.0, $currentItem['amount']['value']);
-        $this->assertEquals(Helper::translate('wd_payment_cost'), $currentItem['description']);
-        $this->assertEquals(Helper::translate('wd_payment_cost'), $currentItem['article-number']);
-        $this->assertEquals(20, $currentItem['tax-rate']);
+        $aExpected = [
+            'name' => Helper::translate('wd_payment_cost'),
+            'quantity' => 1,
+            'amount' => [
+                'currency' => 'EUR',
+                'value' => 101.0,
+            ],
+            'description' => Helper::translate('wd_payment_cost'),
+            'article-number' => Helper::translate('wd_payment_cost'),
+            'tax-rate' => 20,
+        ];
+
+        $this->assertEquals($aExpected, $aCurrentItem);
     }
 
     public function testGiftCardCostAddedToTheBasket()
     {
-        $this->basketStub->expects($this->any())
+        $this->_oBasketStub->expects($this->any())
             ->method('getGiftCardCost')
-            ->willReturn($this->priceStub);
+            ->willReturn($this->_oPriceStub);
 
         $wdBasket = new TransactionBasket();
-        BasketHelper::addGiftCardCostsToBasket($wdBasket, $this->basketStub, "EUR");
+        BasketHelper::addGiftCardCostsToBasket($wdBasket, $this->_oBasketStub, "EUR");
 
         $wdBasketIterator = $wdBasket->getIterator();
-        $this->assertEquals(1, $wdBasketIterator->count());
-
         $wdBasketIterator->seek(0);
-        $currentItem = $wdBasketIterator->current()->mappedProperties();
+        $aCurrentItem = $wdBasketIterator->current()->mappedProperties();
 
-        $this->assertEquals(Helper::translate('GREETING_CARD'), $currentItem['name']);
-        $this->assertEquals(1, $currentItem['quantity']);
-        $this->assertEquals('EUR', $currentItem['amount']['currency']);
-        $this->assertEquals(101.0, $currentItem['amount']['value']);
-        $this->assertEquals(Helper::translate('GREETING_CARD'), $currentItem['description']);
-        $this->assertEquals(Helper::translate('GREETING_CARD'), $currentItem['article-number']);
-        $this->assertEquals(20, $currentItem['tax-rate']);
+        $aExpected = [
+            'name' => Helper::translate('GREETING_CARD'),
+            'quantity' => 1,
+            'amount' => [
+                'currency' => 'EUR',
+                'value' => 101.0,
+            ],
+            'description' => Helper::translate('GREETING_CARD'),
+            'article-number' => Helper::translate('GREETING_CARD'),
+            'tax-rate' => 20,
+        ];
+
+        $this->assertEquals($aExpected, $aCurrentItem);
     }
 
     public function testWrappingCostAddedToTheBasket()
     {
-        $this->basketStub->expects($this->once())
+        $this->_oBasketStub->expects($this->once())
             ->method('getWrappingCost')
-            ->willReturn($this->priceStub);
+            ->willReturn($this->_oPriceStub);
 
         $wdBasket = new TransactionBasket();
-        BasketHelper::addWrappingCostsToBasket($wdBasket, $this->basketStub, "EUR");
+        BasketHelper::addWrappingCostsToBasket($wdBasket, $this->_oBasketStub, "EUR");
 
         $wdBasketIterator = $wdBasket->getIterator();
-        $this->assertEquals(1, $wdBasketIterator->count());
-
         $wdBasketIterator->seek(0);
-        $currentItem = $wdBasketIterator->current()->mappedProperties();
+        $aCurrentItem = $wdBasketIterator->current()->mappedProperties();
 
-        $this->assertEquals(Helper::translate('WRAPPING'), $currentItem['name']);
-        $this->assertEquals(1, $currentItem['quantity']);
-        $this->assertEquals('EUR', $currentItem['amount']['currency']);
-        $this->assertEquals(101.0, $currentItem['amount']['value']);
-        $this->assertEquals(Helper::translate('WRAPPING'), $currentItem['description']);
-        $this->assertEquals(Helper::translate('WRAPPING'), $currentItem['article-number']);
-        $this->assertEquals(20, $currentItem['tax-rate']);
+        $aExpected = [
+            'name' => Helper::translate('WRAPPING'),
+            'quantity' => 1,
+            'amount' => [
+                'currency' => 'EUR',
+                'value' => 101.0,
+            ],
+            'description' => Helper::translate('WRAPPING'),
+            'article-number' => Helper::translate('WRAPPING'),
+            'tax-rate' => 20,
+        ];
+
+        $this->assertEquals($aExpected, $aCurrentItem);
     }
 
     public function testVoucherDiscountsCostAddedToTheBasket()
@@ -168,74 +190,86 @@ class BasketHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $voucher = new stdClass();
         $voucher->dVoucherdiscount = 25.0;
 
-        $this->basketStub->expects($this->once())
+        $this->_oBasketStub->expects($this->once())
             ->method('getVouchers')
             ->willReturn(array($voucher));
 
         $wdBasket = new TransactionBasket();
-        BasketHelper::addVoucherDiscountsToBasket($wdBasket, $this->basketStub, "EUR");
+        BasketHelper::addVoucherDiscountsToBasket($wdBasket, $this->_oBasketStub, "EUR");
 
         $wdBasketIterator = $wdBasket->getIterator();
-        $this->assertEquals(1, $wdBasketIterator->count());
-
         $wdBasketIterator->seek(0);
-        $currentItem = $wdBasketIterator->current()->mappedProperties();
+        $aCurrentItem = $wdBasketIterator->current()->mappedProperties();
 
-        $this->assertEquals(Helper::translate('COUPON'), $currentItem['name']);
-        $this->assertEquals(1, $currentItem['quantity']);
-        $this->assertEquals('EUR', $currentItem['amount']['currency']);
-        $this->assertEquals(-25.0, $currentItem['amount']['value']);
-        $this->assertEquals(Helper::translate('COUPON'), $currentItem['description']);
-        $this->assertEquals(Helper::translate('COUPON'), $currentItem['article-number']);
-        $this->assertNull($currentItem['tax-rate']);
+        $aExpected = [
+            'name' => Helper::translate('COUPON'),
+            'quantity' => 1,
+            'amount' => [
+                'currency' => 'EUR',
+                'value' => -25,
+            ],
+            'description' => Helper::translate('COUPON'),
+            'article-number' => Helper::translate('COUPON'),
+        ];
+
+        $this->assertEquals($aExpected, $aCurrentItem);
     }
 
     public function testShippingCostAddedToTheBasket()
     {
-        $this->basketStub->expects($this->once())
+        $this->_oBasketStub->expects($this->once())
             ->method('getDeliveryCost')
-            ->willReturn($this->priceStub);
+            ->willReturn($this->_oPriceStub);
 
         $wdBasket = new TransactionBasket();
-        BasketHelper::addShippingCostsToBasket($wdBasket, $this->basketStub, "USD");
+        BasketHelper::addShippingCostsToBasket($wdBasket, $this->_oBasketStub, "USD");
 
         $wdBasketIterator = $wdBasket->getIterator();
-        $this->assertEquals(1, $wdBasketIterator->count());
-
         $wdBasketIterator->seek(0);
-        $currentItem = $wdBasketIterator->current()->mappedProperties();
+        $aCurrentItem = $wdBasketIterator->current()->mappedProperties();
 
-        $this->assertEquals(Helper::translate('wd_shipping_title'), $currentItem['name']);
-        $this->assertEquals(1, $currentItem['quantity']);
-        $this->assertEquals('USD', $currentItem['amount']['currency']);
-        $this->assertEquals(101.0, $currentItem['amount']['value']);
-        $this->assertEquals(Helper::translate('wd_shipping_title'), $currentItem['description']);
-        $this->assertEquals(Helper::translate('wd_shipping_title'), $currentItem['article-number']);
-        $this->assertEquals(20, $currentItem['tax-rate']);
+        $aExpected = [
+            'name' => Helper::translate('wd_shipping_title'),
+            'quantity' => 1,
+            'amount' => [
+                'currency' => 'USD',
+                'value' => 101.0,
+            ],
+            'description' => Helper::translate('wd_shipping_title'),
+            'article-number' => Helper::translate('wd_shipping_title'),
+            'tax-rate' => 20,
+        ];
+
+        $this->assertEquals($aExpected, $aCurrentItem);
     }
 
     public function testNoShippingCostForTheBasket()
     {
-        $this->basketStub->expects($this->once())
+        $this->_oBasketStub->expects($this->once())
             ->method('getDeliveryCost')
             ->willReturn(false);
 
         $wdBasket = new TransactionBasket();
-        BasketHelper::addShippingCostsToBasket($wdBasket, $this->basketStub, $this->currency);
+        BasketHelper::addShippingCostsToBasket($wdBasket, $this->_oBasketStub, $this->_oCurrency);
 
         $wdBasketIterator = $wdBasket->getIterator();
-        $this->assertEquals(1, $wdBasketIterator->count());
 
         $wdBasketIterator->seek(0);
-        $currentItem = $wdBasketIterator->current()->mappedProperties();
+        $aCurrentItem = $wdBasketIterator->current()->mappedProperties();
 
-        $this->assertEquals(Helper::translate('wd_shipping_title'), $currentItem['name']);
-        $this->assertEquals(1, $currentItem['quantity']);
-        $this->assertNull($currentItem['amount']['currency']);
-        $this->assertEquals(0, $currentItem['amount']['value']);
-        $this->assertEquals(Helper::translate('wd_shipping_title'), $currentItem['description']);
-        $this->assertEquals(Helper::translate('wd_shipping_title'), $currentItem['article-number']);
-        $this->assertEquals(0, $currentItem['tax-rate']);
+        $aExpected = [
+            'name' => Helper::translate('wd_shipping_title'),
+            'quantity' => 1,
+            'amount' => [
+                'value' => 0.0,
+                'currency' => null,
+            ],
+            'description' => Helper::translate('wd_shipping_title'),
+            'article-number' => Helper::translate('wd_shipping_title'),
+            'tax-rate' => 0,
+        ];
+
+        $this->assertEquals($aExpected, $aCurrentItem);
     }
 
     public function testDiscountsAddedToTheBasket()
@@ -245,25 +279,28 @@ class BasketHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $discount->dDiscount = 10;
         $discount->sOXID = 'Discount ID';
 
-        $this->basketStub->expects($this->once())
+        $this->_oBasketStub->expects($this->once())
             ->method('getDiscounts')
             ->willReturn(array($discount));
 
         $wdBasket = new TransactionBasket();
-        BasketHelper::addDiscountsToBasket($wdBasket, $this->basketStub, "EUR");
+        BasketHelper::addDiscountsToBasket($wdBasket, $this->_oBasketStub, "EUR");
 
         $wdBasketIterator = $wdBasket->getIterator();
-        $this->assertEquals(1, $wdBasketIterator->count());
-
         $wdBasketIterator->seek(0);
-        $currentItem = $wdBasketIterator->current()->mappedProperties();
+        $aCurrentItem = $wdBasketIterator->current()->mappedProperties();
 
-        $this->assertEquals('Title', $currentItem['name']);
-        $this->assertEquals(1, $currentItem['quantity']);
-        $this->assertEquals('EUR', $currentItem['amount']['currency']);
-        $this->assertEquals(-10.0, $currentItem['amount']['value']);
-        $this->assertEquals('Title', $currentItem['description']);
-        $this->assertEquals('Discount ID', $currentItem['article-number']);
-        $this->assertNull($currentItem['tax-rate']);
+        $aExpected = [
+            'name' => 'Title',
+            'quantity' => 1,
+            'amount' => [
+                'value' => -10.0,
+                'currency' => 'EUR'
+            ],
+            'description' => 'Title',
+            'article-number' => 'Discount ID',
+        ];
+
+        $this->assertEquals($aExpected, $aCurrentItem);
     }
 }
