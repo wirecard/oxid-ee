@@ -9,7 +9,6 @@
 
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Registry;
-
 use Wirecard\Oxid\Extend\Controller\PaymentController;
 
 class PaymentControllerTest extends \Wirecard\Test\WdUnitTestCase
@@ -36,13 +35,7 @@ class PaymentControllerTest extends \Wirecard\Test\WdUnitTestCase
         Registry::getSession()->setVariable('sess_challenge', 'oxid1');
         $_POST['payerror'] = $iErrorCode;
 
-        $paymentController = new class() extends PaymentController
-        {
-            public function publicUnsetPaymentErrors()
-            {
-                parent::_unsetPaymentErrors();
-            }
-        };
+        $paymentController = self::_createControllerWrapper();
         $paymentController->publicUnsetPaymentErrors();
 
         $sResult = $oDb->getOne("SELECT count(*) from oxorder WHERE `oxid`='oxid1'");
@@ -57,5 +50,20 @@ class PaymentControllerTest extends \Wirecard\Test\WdUnitTestCase
             'state FAILED not deleted' => [PaymentController::ERROR_CODE_FAILED, false, false, '1'],
             'state FAILED deleted' => [PaymentController::ERROR_CODE_FAILED, true, false, '0'],
         ];
+    }
+
+    /**
+     * To be able to test the `protected` function, create an anonymous class
+     * with an `public` available wrapper function.
+     */
+    private static function _createControllerWrapper()
+    {
+        return new class() extends PaymentController
+        {
+            public function publicUnsetPaymentErrors()
+            {
+                parent::_unsetPaymentErrors();
+            }
+        };
     }
 }
