@@ -8,9 +8,7 @@
  */
 
 use OxidEsales\Eshop\Application\Model\Order;
-
 use Wirecard\Oxid\Core\ResponseHandler;
-
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
@@ -23,13 +21,20 @@ class ResponseHandlerTest extends \Wirecard\Test\WdUnitTestCase
 
         $oResponseStub = $this->getMockBuilder(SuccessResponse::class)
             ->disableOriginalConstructor()
+            ->setMethods(['getParentTransactionId', 'getRequestedAmount', 'getRawData', 'getData'])
             ->getMock();
 
         $oResponseStub->method('getParentTransactionId')
-            ->willReturn('');
+            ->willReturn('id');
 
         $oResponseStub->method('getRequestedAmount')
             ->willReturn(new Amount(30, "EUR"));
+
+        $oResponseStub->method('getRawData')
+            ->willReturn('<?xml version="1.0" encoding="UTF-8"?>');
+
+        $oResponseStub->method('getData')
+            ->willReturn([]);
 
         $oBackendService = $this->getMockBuilder(BackendService::class)
             ->disableOriginalConstructor()
