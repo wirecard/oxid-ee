@@ -130,7 +130,6 @@ class OrderHelperTest extends WdUnitTestCase
     }
 
     /**
-     *
      * @dataProvider handleFormResponseProvider
      */
     public function testHandleFormResponse($formPost)
@@ -144,7 +143,11 @@ class OrderHelperTest extends WdUnitTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        OrderHelper::handleFormResponse($oSession, $oPayment, $oOrderStub, 'formPost');
+        try {
+            OrderHelper::handleFormResponse($oSession, $oPayment, $oOrderStub, 'formPost');
+        } catch (\Exception $exc) {
+            $this->fail("Test failed with exception" . get_class($exc));
+        }
     }
 
     public function handleFormResponseProvider()
