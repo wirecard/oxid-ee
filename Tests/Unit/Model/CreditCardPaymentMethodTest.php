@@ -108,31 +108,26 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertNotEmpty($oCreditCardConfig->getNonThreeDMaxLimit("EUR"));
     }
 
-    public function testGetConfigFields()
+    /**
+     * @dataProvider getConfigFieldsProvider
+     */
+    public function testGetConfigFields($sContainsKey)
     {
         $aConfigFields = $this->_oPaymentMethod->getConfigFields();
-        $this->assertArrayHasKey("threeDMaid", $aConfigFields);
-        $this->assertArrayHasKey("threeDSecret", $aConfigFields);
-        $this->assertArrayHasKey("nonThreeDMaxLimit", $aConfigFields);
-        $this->assertArrayHasKey("threeDMinLimit", $aConfigFields);
-        $this->assertArrayHasKey("limitsCurrency", $aConfigFields);
-        $oTransaction = $this->_oPaymentMethod->getTransaction();
-        $this->assertInstanceOf(CreditCardTransaction::class, $oTransaction);
+        $this->assertArrayHasKey($sContainsKey, $aConfigFields);
     }
 
-    public function testGetAdditionalConfigFieldsPaypal()
-    {
-        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
-        $this->assertCount(17, $aConfigFields);
-        $this->assertArrayHasKey('threeDMaid', $aConfigFields);
-        $this->assertArrayHasKey('threeDSecret', $aConfigFields);
-        $this->assertArrayHasKey('nonThreeDMaxLimit', $aConfigFields);
-        $this->assertArrayHasKey('threeDMinLimit', $aConfigFields);
-        $this->assertArrayHasKey('limitsCurrency', $aConfigFields);
+    public function getConfigFieldsProvider() {
+        return [
+            "contains threeDMaid" => ['threeDMaid'],
+            "contains threeDSecret" => ['threeDSecret'],
+            "contains nonThreeDMaxLimit" => ['nonThreeDMaxLimit'],
+            "contains limitsCurrency" => ['limitsCurrency'],
+        ];
     }
 
     /**
-     * @dataProvider testGetNameProvider
+     * @dataProvider getNameProvider
      */
     public function testGetName($bforOxid, $sExpected)
     {
@@ -140,7 +135,7 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals($sExpected, $sName);
     }
 
-    public function testGetNameProvider()
+    public function getNameProvider()
     {
         return [
             'for oxid' => [true, 'wdcreditcard'],

@@ -7,11 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use OxidEsales\Eshop\Application\Model\Payment;
-
-use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
-
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 class PaypalPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
@@ -41,11 +37,16 @@ class PaypalPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertInstanceOf(PayPalTransaction::class, $oTransaction);
     }
 
-    public function testGetAdditionalConfigFieldsPaypal()
+    public function testGetAdditionalConfigFields()
+    {
+        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
+        $this->assertArrayHasKey('basket', $aConfigFields);
+    }
+
+    public function testGetAdditionalConfigFieldsCount()
     {
         $aConfigFields = $this->_oPaymentMethod->getConfigFields();
         $this->assertCount(12, $aConfigFields);
-        $this->assertArrayHasKey('basket', $aConfigFields);
     }
 
     /**
@@ -68,7 +69,6 @@ class PaypalPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     public function testGetPublicFieldNames()
     {
         $aPublicFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
-        $this->assertCount(8, $aPublicFieldNames);
         $aExpected = [
             "apiUrl",
             "maid",

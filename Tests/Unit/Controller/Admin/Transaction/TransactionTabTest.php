@@ -22,7 +22,10 @@ class TransactionTabTest extends Wirecard\Test\WdUnitTestCase
         return TestDataHelper::getDemoData();
     }
 
-    public function testGetListData()
+    /**
+     * @dataProvider getListDataProvider
+     */
+    public function testGetListData($sContainsKey)
     {
         $_GET['oxid'] = 'transaction 1';
 
@@ -44,11 +47,15 @@ class TransactionTabTest extends Wirecard\Test\WdUnitTestCase
 
         $aListData = $this->_transactionTab->publicGetListDataFromArray($aArray, 'awaiting');
 
-        $this->assertEquals(count($aArray), count($aListData));
-
         foreach ($aListData as $aListItem) {
-            $this->assertArrayHasKey('title', $aListItem);
-            $this->assertArrayHasKey('value', $aListItem);
+            $this->assertArrayHasKey($sContainsKey, $aListItem);
         }
+    }
+
+    public function getListDataProvider() {
+        return [
+            'contains title' => ['title'],
+            'contains value' => ['value'],
+        ];
     }
 }

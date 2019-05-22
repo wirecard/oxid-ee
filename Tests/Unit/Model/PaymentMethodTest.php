@@ -36,16 +36,31 @@ class PaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals('wdpaypal', $sResult);
     }
 
-    public function testGetDefaultConfigFields()
+    /**
+     * @dataProvider getDefaultConfigFieldsProvider
+     */
+    public function testGetDefaultConfigFields($sContainsKey)
+    {
+        $aResult = $this->_oPaymentMethodsStub->getConfigFields();
+        $this->assertArrayHasKey($sContainsKey, $aResult);
+    }
+
+    public function getDefaultConfigFieldsProvider()
+    {
+        return [
+            "contains apiUrl"=> ['apiUrl'],
+            "contains httpUser"=> ['httpUser'],
+            "contains httpPassword"=> ['httpPassword'],
+            "contains maid"=> ['maid'],
+            "contains secret"=> ['secret'],
+            "contains testCredentials"=> ['testCredentials'],
+        ];
+    }
+
+    public function testGetDefaultConfigFieldsCount()
     {
         $aResult = $this->_oPaymentMethodsStub->getConfigFields();
         $this->assertCount(6, $aResult);
-        $this->assertArrayHasKey('apiUrl', $aResult);
-        $this->assertArrayHasKey('httpUser', $aResult);
-        $this->assertArrayHasKey('httpPassword', $aResult);
-        $this->assertArrayHasKey('maid', $aResult);
-        $this->assertArrayHasKey('secret', $aResult);
-        $this->assertArrayHasKey('testCredentials', $aResult);
     }
 
     public function testGetLogoPath()

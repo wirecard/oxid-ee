@@ -32,17 +32,30 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
     public function testRender()
     {
         $this->_moduleSupport->render();
-        $this->assertArrayHasKey('oxid', $this->_moduleSupport->getViewData());
-        $this->assertArrayHasKey('contactEmail', $this->_moduleSupport->getViewData());
-        $this->assertArrayHasKey('defaultEmail', $this->_moduleSupport->getViewData());
-        $this->assertArrayHasKey('isOurModule', $this->_moduleSupport->getViewData());
+
+        $this->assertArraySubset([
+            'oxid' => -1,
+            'contactEmail' => null,
+            'defaultEmail' => 'info@myoxideshop.com',
+            'isOurModule' => false,
+        ], $this->_moduleSupport->getViewData());
     }
 
-    public function testSendSupportEmailActionWithoutParams()
+    /**
+     * @dataProvider testSendSupportEmailActionWithoutParamsProvider
+     */
+    public function testSendSupportEmailActionWithoutParams($sContaninsKey)
     {
         $this->_moduleSupport->sendSupportEmailAction();
-        $this->assertArrayHasKey('alertMessage', $this->_moduleSupport->getViewData());
-        $this->assertArrayHasKey('alertType', $this->_moduleSupport->getViewData());
+        $this->assertArrayHasKey($sContaninsKey, $this->_moduleSupport->getViewData());
+    }
+
+    public function testSendSupportEmailActionWithoutParamsProvider()
+    {
+        return [
+            "contains alertMessage" => ['alertMessage'],
+            "contains alertType" => ['alertType'],
+        ];
     }
 
     /**

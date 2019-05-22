@@ -22,7 +22,10 @@ class TransactionListControllerTest extends Wirecard\Test\WdUnitTestCase
         return TestDataHelper::getDemoData();
     }
 
-    public function testRender()
+    /**
+     * @dataProvider renderProvider
+     */
+    public function testRender($sContainsKey)
     {
         $_GET['oxid'] = 'oxid 1';
         $this->_transactionList = new TransactionList();
@@ -30,8 +33,14 @@ class TransactionListControllerTest extends Wirecard\Test\WdUnitTestCase
 
         $aViewData = $this->_transactionList->getViewData();
 
-        $this->assertGreaterThan(0, count($aViewData));
-        $this->assertArrayHasKey('payments', $aViewData);
-        $this->assertArrayHasKey('states', $aViewData);
+        $this->assertArrayHasKey($sContainsKey, $aViewData);
+    }
+
+    public function renderProvider()
+    {
+        return [
+            'contains payments' => ['payments'],
+            'contains states' => ['states'],
+        ];
     }
 }

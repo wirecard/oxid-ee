@@ -85,10 +85,8 @@ class FormInteractionControllerTest extends \Wirecard\Test\WdUnitTestCase
         $this->_controller->init();
 
         $oFormFieldMap = $this->_controller->getFormFields();
-        $this->assertNotNull($oFormFieldMap);
         $aFormFields = $oFormFieldMap->getIterator()->getArrayCopy();
-        $this->assertArrayHasKey('KEY1', $aFormFields);
-        $this->assertArrayHasKey('KEY2', $aFormFields);
+        $this->assertArraySubset(["KEY1" => "VALUE1","KEY2" => "VALUE2" ], $aFormFields);
     }
 
     public function testResponseFieldsProvider()

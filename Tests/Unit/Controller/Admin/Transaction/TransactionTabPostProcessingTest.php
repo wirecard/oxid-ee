@@ -72,16 +72,26 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
         ];
     }
 
-    public function testRenderBasic()
+    /**
+     * @dataProvider renderBasicProvider
+     */
+    public function testRenderBasic($sContainsKey)
     {
         $_GET['oxid'] = 'transaction 1';
         $this->_transactionTabPostProcessing = new TransactionTabPostProcessing();
         $this->_transactionTabPostProcessing->render();
-        $this->assertArrayHasKey('actions', $this->_transactionTabPostProcessing->getViewData());
-        $this->assertArrayHasKey('requestParameters', $this->_transactionTabPostProcessing->getViewData());
-        $this->assertArrayHasKey('message', $this->_transactionTabPostProcessing->getViewData());
-        $this->assertArrayHasKey('currency', $this->_transactionTabPostProcessing->getViewData());
-        $this->assertArrayHasKey('emptyText', $this->_transactionTabPostProcessing->getViewData());
+        $this->assertArrayHasKey($sContainsKey, $this->_transactionTabPostProcessing->getViewData());
+    }
+
+    public function renderBasicProvider()
+    {
+        return [
+            'contains actions' => ['actions'],
+            'contains requestParameters' => ['requestParameters'],
+            'contains alert' => ['alert'],
+            'contains currency' => ['currency'],
+            'contains emptyText' => ['emptyText'],
+        ];
     }
 
     public function testRenderSepaCredit()

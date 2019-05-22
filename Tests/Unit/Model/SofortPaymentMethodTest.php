@@ -7,11 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use OxidEsales\Eshop\Application\Model\Payment;
-use OxidEsales\Eshop\Core\Field;
-
 use Wirecard\Oxid\Model\SofortPaymentMethod;
-
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 
 class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
@@ -70,21 +66,36 @@ class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertContains('en_gb/pay_now/standard', $sLogoUrl);
     }
 
-    public function testGetConfigFields()
+    /**
+     * @dataProvider getConfigFieldsProvider
+     */
+    public function testGetConfigFields($sContainsKey)
+    {
+        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
+        $this->assertArrayHasKey($sContainsKey, $aConfigFields);
+    }
+
+    public function getConfigFieldsProvider()
+    {
+        return [
+            "contains additionalInfo" => ['additionalInfo'],
+            "contains deleteCanceledOrder" => ['deleteCanceledOrder'],
+            "contains deleteFailedOrder" => ['deleteFailedOrder'],
+            "contains countryCode" => ['countryCode'],
+            "contains logoType" => ['logoType'],
+        ];
+    }
+
+    public function testGetConfigFieldsCount()
     {
         $aConfigFields = $this->_oPaymentMethod->getConfigFields();
         $this->assertCount(11, $aConfigFields);
-        $this->assertArrayHasKey('additionalInfo', $aConfigFields);
-        $this->assertArrayHasKey('deleteCanceledOrder', $aConfigFields);
-        $this->assertArrayHasKey('deleteFailedOrder', $aConfigFields);
-        $this->assertArrayHasKey('countryCode', $aConfigFields);
-        $this->assertArrayHasKey('logoType', $aConfigFields);
+
     }
 
     public function testGetPublicFieldNames()
     {
         $aPublicFields = $this->_oPaymentMethod->getPublicFieldNames();
-        $this->assertCount(7, $aPublicFields);
         $aExpected = [
             'apiUrl',
             'maid',
