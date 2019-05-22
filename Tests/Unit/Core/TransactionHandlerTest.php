@@ -48,6 +48,11 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
                 'columns' => ['oxid', 'oxordernr', 'oxpaymenttype', 'wdoxidee_transactionid'],
                 'rows' => [
                     ['oxid 1', 2, 'wdpaypal', 'transaction 1'],
+                    ['oxid 2', 3, 'wdpaypal', 'transaction 5'],
+                    ['oxid 3', 4, 'wdpaypal', 'transaction 8'],
+                    ['oxid 4', 5, 'wdpaypal', 'transaction 12'],
+                    ['oxid 5', 6, 'wdpaypal', 'transaction 17'],
+                    ['oxid 6', 7, 'wdpaypal', 'transaction 19'],
                 ]
             ],
             [
@@ -58,6 +63,25 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
                     ['transaction 2', 'oxid 1', 2, 'transaction 2', 'transaction 1', 'reserve', 'capture-authorization', 'success', 40, 'EUR'],
                     ['transaction 3', 'oxid 1', 2, 'transaction 3', 'transaction 1', 'reserve', 'capture-authorization', 'closed', 40, 'EUR'],
                     ['transaction 4', 'oxid 1', 2, 'transaction 4', 'transaction 3', 'reserve', 'refund-capture', 'closed', 40, 'EUR'],
+                    ['transaction 5', 'oxid 2', 3, 'transaction 5', null, 'pay', 'debit', 'success', 33.8, 'EUR'],
+                    ['transaction 6', 'oxid 2', 3, 'transaction 6', 'transaction 5', 'pay', 'refund-debit', 'closed', 20, 'EUR'],
+                    ['transaction 7', 'oxid 2', 3, 'transaction 7', 'transaction 5', 'pay', 'refund-debit', 'closed', 13.7, 'EUR'],
+                    ['transaction 8', 'oxid 3', 4, 'transaction 8', null, 'pay', 'debit', 'success', 33.8, 'EUR'],
+                    ['transaction 9', 'oxid 3', 4, 'transaction 9', 'transaction 8', 'pay', 'refund-debit', 'closed', 20, 'EUR'],
+                    ['transaction 10', 'oxid 3', 4, 'transaction 10', 'transaction 8', 'pay', 'refund-debit', 'closed', 13.7, 'EUR'],
+                    ['transaction 11', 'oxid 3', 4, 'transaction 11', 'transaction 8', 'pay', 'refund-debit', 'closed', 0.1, 'EUR'],
+                    ['transaction 12', 'oxid 4', 5, 'transaction 12', null, 'pay', 'debit', 'success', 9999.99, 'EUR'],
+                    ['transaction 13', 'oxid 4', 5, 'transaction 13', 'transaction 12', 'pay', 'refund-debit', 'closed', 0.4, 'EUR'],
+                    ['transaction 14', 'oxid 4', 5, 'transaction 14', 'transaction 12', 'pay', 'refund-debit', 'closed', 0.5, 'EUR'],
+                    ['transaction 15', 'oxid 4', 5, 'transaction 15', 'transaction 12', 'pay', 'refund-debit', 'closed', 0.6, 'EUR'],
+                    ['transaction 16', 'oxid 4', 5, 'transaction 16', 'transaction 12', 'pay', 'refund-debit', 'closed', 0.78, 'EUR'],
+                    ['transaction 17', 'oxid 5', 6, 'transaction 17', null, 'pay', 'debit', 'success', 100, 'EUR'],
+                    ['transaction 18', 'oxid 5', 6, 'transaction 18', 'transaction 17', 'pay', 'refund-debit', 'closed', 0.999, 'EUR'],
+                    ['transaction 19', 'oxid 6', 7, 'transaction 19', null, 'pay', 'debit', 'success', 212000000.49, 'HUF'],
+                    ['transaction 20', 'oxid 6', 7, 'transaction 20', 'transaction 19', 'pay', 'refund-debit', 'closed', 45555.65, 'HUF'],
+                    ['transaction 21', 'oxid 6', 7, 'transaction 21', 'transaction 19', 'pay', 'refund-debit', 'closed', 97855.69, 'HUF'],
+                    ['transaction 22', 'oxid 6', 7, 'transaction 22', 'transaction 19', 'pay', 'refund-debit', 'closed', 7855.28, 'HUF'],
+                    ['transaction 23', 'oxid 6', 7, 'transaction 23', 'transaction 19', 'pay', 'refund-debit', 'closed', 85256.47, 'HUF'],
                 ]
             ],
         ];
@@ -131,6 +155,11 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
             'transaction 2' => ['transaction 2', 40],
             'transaction 3' => ['transaction 3', 0],
             'transaction 4' => ['transaction 4', 40],
+            'transaction 5' => ['transaction 5', 0.1],
+            'transaction 8' => ['transaction 8', 0],
+            'transaction 12' => ['transaction 12', 9997.71],
+            'transaction 17' => ['transaction 17', 99.0],
+            'transaction 19' => ['transaction 19', 211763477.4],
         ];
     }
 }

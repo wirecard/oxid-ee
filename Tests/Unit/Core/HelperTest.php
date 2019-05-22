@@ -228,4 +228,23 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     {
         Helper::addToViewData(new DateTime(), []);
     }
+
+    /**
+     * @dataProvider testGetCurrencyRoundPrecisionProvider
+     */
+    public function testGetCurrencyRoundPrecision($sCurrencyName, $iExpectedPrecision)
+    {
+        $this->assertEquals(Helper::getCurrencyRoundPrecision($sCurrencyName), $iExpectedPrecision);
+    }
+
+    public function testGetCurrencyRoundPrecisionProvider()
+    {
+        return [
+            'EUR' => ['EUR', 2],
+            'CHF' => ['CHF', 2],
+            'USD' => ['USD', 2],
+            'non existing currency' => ['XXXXX', Helper::ROUND_PRECISION_FALLBACK],
+            'null' => [null, Helper::ROUND_PRECISION_FALLBACK],
+        ];
+    }
 }

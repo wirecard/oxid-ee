@@ -234,10 +234,14 @@ class TransactionHandler
         $aResult = $oDb->select($sDbQuery, $aQueryArgs);
 
         if ($aResult !== false && $aResult->count() > 0) {
-            $fChildAmount = $aResult->fields['childTransactionsTotalAmount'];
+            $fChildAmount = (float) $aResult->fields['childTransactionsTotalAmount'];
         }
 
-        return $fBaseAmount - $fChildAmount;
+        // for the rounding precision use either the value the merchant set for currency
+        // decimal precision or a fallback value
+        $iRoundPrecision = Helper::getCurrencyRoundPrecision($oTransaction->wdoxidee_ordertransactions__currency);
+
+        return round(bcsub($fBaseAmount, $fChildAmount, Helper::BCSUB_SCALE), $iRoundPrecision);
     }
 
     /**
