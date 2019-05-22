@@ -43,7 +43,7 @@
 </p>
 
 [{if $sCustom}]
-  [{$sCustom|html_entity_decode}]
+  [{$sCustom|nl2br}]
 [{else}]
   <p>[{oxmultilang ident="wd_sepa_text_1"}] [{$oShop->oxshops__oxfname}]
       [{$oShop->oxshops__oxlname}] [{oxmultilang ident="wd_sepa_text_2"}]

@@ -13,9 +13,10 @@ use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\DbMetaDataHandler;
 
-use Wirecard\Oxid\Extend\Language;
+use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Transaction;
+use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 
 /**
  * Class handles module behaviour on shop installation events
@@ -29,7 +30,6 @@ class OxidEeEvents
     const ORDER_TABLE = "oxorder";
     const PAYMENT_TABLE = "oxpayments";
     const TRANSACTION_TABLE = "wdoxidee_ordertransactions";
-    const SEPA_DD_PAYMENT_ID = "wdsepadd";
 
     private static $oDb;
 
@@ -94,9 +94,6 @@ class OxidEeEvents
         $sExisting = self::$oDb->getOne($sCheckQuery);
         if (!$sExisting) {
             self::$oDb->Execute($sQuery);
-            if (self::_isSepaDirectDebit($aKeyValue)) {
-                self::_insertSepaMandate();
-            }
             return true;
         }
         return false;
@@ -113,8 +110,9 @@ class OxidEeEvents
      */
     private static function _isSepaDirectDebit($aKeyValue)
     {
+        $sPaymentId = SepaDirectDebitPaymentMethod::getName(true);
         foreach ($aKeyValue as $sKey => $sValue) {
-            if ((string) $sValue === self::SEPA_DD_PAYMENT_ID) {
+            if ((string) $sValue === $sPaymentId) {
                 return true;
             }
         }
@@ -386,7 +384,10 @@ class OxidEeEvents
         );";
 
         // insert payment method
-        self::_insertRowIfNotExists(self::PAYMENT_TABLE, $aKeyValue, $sQuery);
+        $bIsInserted = self::_insertRowIfNotExists(self::PAYMENT_TABLE, $aKeyValue, $sQuery);
+        if (self::_isSepaDirectDebit($aKeyValue) && $bIsInserted) {
+            self::_insertSepaMandate();
+        }
 
         $sRandomOxidId = substr(str_shuffle(md5(time())), 0, 15);
 
@@ -412,8 +413,9 @@ class OxidEeEvents
     {
         $sSepaMandate = self::_prepareSepaMandate(0);
         $sSepaMandate1 = self::_prepareSepaMandate(1);
+        $sPaymentId = SepaDirectDebitPaymentMethod::getName(true);
         $sQuery = "UPDATE oxpayments SET `WDOXIDEE_SEPAMANDATECUSTOM` = '$sSepaMandate', `WDOXIDEE_SEPAMANDATECUSTOM_1`
-            = '$sSepaMandate1' WHERE `OXID` LIKE " . "'" . self::SEPA_DD_PAYMENT_ID . "'";
+            = '$sSepaMandate1' WHERE `OXID` LIKE " . "'" . $sPaymentId . "'";
         self::$oDb->execute($sQuery);
     }
 
@@ -428,13 +430,12 @@ class OxidEeEvents
      */
     private static function _prepareSepaMandate($iLanguageId)
     {
-        $oLanguage = oxNew(Language::class);
-        return $oLanguage->translateString('wd_sepa_text_1', $iLanguageId) . ' ' . '%creditorName%' .
-             ' ' . $oLanguage->translateString('wd_sepa_text_2', $iLanguageId) . ' ' . '%creditorName%' .
-             ' ' . $oLanguage->translateString('wd_sepa_text_2b', $iLanguageId) . '\n\n' .
-             $oLanguage->translateString('wd_sepa_text_3', $iLanguageId) . '\n\n' .
-             $oLanguage->translateString('wd_sepa_text_4', $iLanguageId) . ' ' . '%creditorName%' .
-             ' ' . $oLanguage->translateString('wd_sepa_text_5', $iLanguageId);
+        return Helper::translate('wd_sepa_text_1', $iLanguageId) . ' ' . '%creditorName%' .
+             ' ' . Helper::translate('wd_sepa_text_2', $iLanguageId) . ' ' . '%creditorName%' .
+             ' ' . Helper::translate('wd_sepa_text_2b', $iLanguageId) . '\n\n' .
+             Helper::translate('wd_sepa_text_3', $iLanguageId) . '\n\n' .
+             Helper::translate('wd_sepa_text_4', $iLanguageId) . ' ' . '%creditorName%' .
+             ' ' . Helper::translate('wd_sepa_text_5', $iLanguageId);
     }
 
     /**

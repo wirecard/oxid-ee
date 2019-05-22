@@ -162,7 +162,6 @@ class PaymentMethodHelper
             $oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname,
             $oPayment->oxpayments__wdoxidee_sepamandatecustom
         );
-        $sCustom = str_replace("\n", '<br>', $sCustom);
 
         $oSmarty->assign('sCustom', $sCustom);
 
