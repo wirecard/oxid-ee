@@ -140,7 +140,7 @@ class Transaction extends MultiLanguageModel
      */
     public static function createDbEntryFromArray($aArgs)
     {
-        $sColumnNames = implode('`,`', array_keys($aArgs));
+        $sColumnNames = '`' . implode('`,`', array_keys($aArgs)) . '`';
 
         // quote the values to be safe
         $fQuoteString = function ($sValue) {
@@ -151,7 +151,7 @@ class Transaction extends MultiLanguageModel
         $sValues = implode(',', array_values($aArgValues));
 
         $sQuery = "INSERT INTO " . OxidEeEvents::TRANSACTION_TABLE . "
-                        (`" . $sColumnNames . "`)
+                        (" . $sColumnNames . ")
                     VALUES
                         (" . $sValues . ")
                     ON DUPLICATE KEY
