@@ -157,13 +157,13 @@ class PaymentMethodHelper
         $oSmarty->assign('sConsumerCity', $oUser->oxuser__oxcity->value);
         $oSmarty->assign('sDate', date('d.m.Y', time()));
 
-        $sCustom = str_replace(
+        $sCustomSepaMandate = str_replace(
             '%creditorName%',
             $oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname,
             $oPayment->oxpayments__wdoxidee_sepamandatecustom
         );
 
-        $oSmarty->assign('sCustom', $sCustom);
+        $oSmarty->assign('sCustomSepaMandate', $sCustomSepaMandate);
 
         return $oSmarty->fetch('sepa_mandate.tpl');
     }

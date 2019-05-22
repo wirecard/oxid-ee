@@ -42,19 +42,6 @@
   [{/if}]
 </p>
 
-[{if $sCustom}]
-  [{$sCustom|nl2br}]
-[{else}]
-  <p>[{oxmultilang ident="wd_sepa_text_1"}] [{$oShop->oxshops__oxfname}]
-      [{$oShop->oxshops__oxlname}] [{oxmultilang ident="wd_sepa_text_2"}]
-      [{$oShop->oxshops__oxfname}] [{$oShop->oxshops__oxlname}]
-      [{oxmultilang ident="wd_sepa_text_2b"}]
-  </p>
-  <p>[{oxmultilang ident="wd_sepa_text_3"}]</p>
-  <p class="mb-30">
-    [{oxmultilang ident="wd_sepa_text_4"}] [{$oShop->oxshops__oxfname}] [{$oShop->oxshops__oxlname}]
-    [{oxmultilang ident="wd_sepa_text_5"}]
-  </p>
-[{/if}]
+[{$sCustomSepaMandate|nl2br}]
 
 <p class="mt-30">[{$sConsumerCity}], [{$sDate}] [{$sAccountHolder}]</p>

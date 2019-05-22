@@ -100,26 +100,6 @@ class OxidEeEvents
     }
 
     /**
-     * Checks if the current payment is SEPA Direct Debit
-     *
-     * @param array $aKeyValue
-     *
-     * @return boolean true or false if aKeyValue contains ID for SEPA Direct Debit
-     *
-     * @since 1.1.0
-     */
-    private static function _isSepaDirectDebit($aKeyValue)
-    {
-        $sPaymentId = SepaDirectDebitPaymentMethod::getName(true);
-        foreach ($aKeyValue as $sKey => $sValue) {
-            if ((string) $sValue === $sPaymentId) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
      * Extends OXID's internal payment methods table with the fields required by the module
      *
      * @since 1.0.0
@@ -385,7 +365,7 @@ class OxidEeEvents
 
         // insert payment method
         $bIsInserted = self::_insertRowIfNotExists(self::PAYMENT_TABLE, $aKeyValue, $sQuery);
-        if (self::_isSepaDirectDebit($aKeyValue) && $bIsInserted) {
+        if ((string) $oPayment->oxid === SepaDirectDebitPaymentMethod::getName(true) && $bIsInserted) {
             self::_insertSepaMandate();
         }
 
@@ -430,12 +410,12 @@ class OxidEeEvents
      */
     private static function _prepareSepaMandate($iLanguageId)
     {
-        return Helper::translate('wd_sepa_text_1', $iLanguageId) . ' ' . '%creditorName%' .
-             ' ' . Helper::translate('wd_sepa_text_2', $iLanguageId) . ' ' . '%creditorName%' .
-             ' ' . Helper::translate('wd_sepa_text_2b', $iLanguageId) . '\n\n' .
-             Helper::translate('wd_sepa_text_3', $iLanguageId) . '\n\n' .
-             Helper::translate('wd_sepa_text_4', $iLanguageId) . ' ' . '%creditorName%' .
-             ' ' . Helper::translate('wd_sepa_text_5', $iLanguageId);
+        return Helper::translate('wd_sepa_text_1', $iLanguageId) . ' %creditorName% ' .
+            Helper::translate('wd_sepa_text_2', $iLanguageId) . ' %creditorName% ' .
+            Helper::translate('wd_sepa_text_2b', $iLanguageId) . '\n\n' .
+            Helper::translate('wd_sepa_text_3', $iLanguageId) . '\n\n' .
+            Helper::translate('wd_sepa_text_4', $iLanguageId) . ' %creditorName% ' .
+            Helper::translate('wd_sepa_text_5', $iLanguageId);
     }
 
     /**
