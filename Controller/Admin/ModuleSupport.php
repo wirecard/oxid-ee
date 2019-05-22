@@ -229,7 +229,7 @@ class ModuleSupport extends AdminController
      *
      * @return boolean
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _isFromEmailValid($sFromEmail)
     {
@@ -243,7 +243,7 @@ class ModuleSupport extends AdminController
      *
      * @return boolean
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _isReplyToEmailValid($sReplyToEmail)
     {
@@ -258,7 +258,7 @@ class ModuleSupport extends AdminController
      *
      * @return boolean
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _isBodyValid($sBody)
     {

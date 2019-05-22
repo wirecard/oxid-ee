@@ -3,7 +3,7 @@
 /**
  * Ensures that variable names are no longer than a specified limit.
  *
- * @since 1.0.1
+ * @since 1.1.0
  */
 class Custom_Sniffs_NamingConventions_VariableNameLengthSniff implements PHP_CodeSniffer_Sniff
 {
@@ -12,7 +12,7 @@ class Custom_Sniffs_NamingConventions_VariableNameLengthSniff implements PHP_Cod
      *
      * @var int
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public $charactersLimit = 20;
 
@@ -21,14 +21,14 @@ class Custom_Sniffs_NamingConventions_VariableNameLengthSniff implements PHP_Cod
      *
      * @var int
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public $absoluteCharactersLimit = 30;
 
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function register()
     {
@@ -38,7 +38,7 @@ class Custom_Sniffs_NamingConventions_VariableNameLengthSniff implements PHP_Cod
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {

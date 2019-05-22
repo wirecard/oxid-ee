@@ -5,7 +5,7 @@
  *
  * @see https://docs.oxid-esales.com/developer/en/6.0/modules/certification/software_quality.html#maximum-length-of-methods-80-lines
  *
- * @since 1.0.1
+ * @since 1.1.0
  */
 class Custom_Sniffs_Functions_FunctionLinesOfCodeSniff implements PHP_CodeSniffer_Sniff
 {
@@ -14,7 +14,7 @@ class Custom_Sniffs_Functions_FunctionLinesOfCodeSniff implements PHP_CodeSniffe
      *
      * @var int
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public $linesLimit = 80;
 
@@ -23,14 +23,14 @@ class Custom_Sniffs_Functions_FunctionLinesOfCodeSniff implements PHP_CodeSniffe
      *
      * @var int
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public $absoluteLinesLimit = 120;
 
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function register()
     {
@@ -40,7 +40,7 @@ class Custom_Sniffs_Functions_FunctionLinesOfCodeSniff implements PHP_CodeSniffe
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {

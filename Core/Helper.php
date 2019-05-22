@@ -335,7 +335,7 @@ class Helper
      * @param bool   $bOverride Whether or not keys of the passed array should
      * override present keys
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public static function addToViewData($oObject, $aArray = [], $bOverride = true)
     {
@@ -357,7 +357,7 @@ class Helper
      *
      * @return Shop
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public static function getShop()
     {

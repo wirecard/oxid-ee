@@ -134,7 +134,7 @@ class Transaction extends MultiLanguageModel
      *
      * @return string|bool indicating whether the creation of the database entry was successful
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public static function createDbEntryFromArray($aArgs)
     {
@@ -194,7 +194,7 @@ class Transaction extends MultiLanguageModel
     /**
      * @return string
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getPaymentType()
     {

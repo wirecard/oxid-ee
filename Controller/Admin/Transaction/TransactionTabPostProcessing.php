@@ -35,7 +35,7 @@ class TransactionTabPostProcessing extends TransactionTab
     /**
      * @var \Psr\Log\LoggerInterface
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private $_oLogger;
 
@@ -50,7 +50,7 @@ class TransactionTabPostProcessing extends TransactionTab
      * NOTE: for testing use the setter to inject the {@link TransactionHandler}
      * @var TransactionHandler
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private $_oTransactionHandler;
 
@@ -58,14 +58,14 @@ class TransactionTabPostProcessing extends TransactionTab
      * NOTE: for testing use the setter to inject the {@link BackendService}
      * @var BackendService
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private $_oBackendService;
 
     /**
      * array containing all possible post-processing actions for a transaction
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private $_aActions;
 
@@ -94,7 +94,7 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @return BackendService
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _getBackendService($oConfig)
     {
@@ -113,7 +113,7 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @param BackendService $oBackendService
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function setBackendService($oBackendService)
     {
@@ -127,7 +127,7 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @param TransactionHandler $oTransactionHandler
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function setTransactionHandler($oTransactionHandler)
     {
@@ -179,7 +179,7 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _getRequestParameters()
     {
@@ -207,7 +207,7 @@ class TransactionTabPostProcessing extends TransactionTab
      * @param array $aRequestParameters
      * @throws StandardException
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _validateRequest($aRequestParameters)
     {
@@ -232,7 +232,7 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @return boolean true if $fAmount is a numeric value
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _isAmountNumeric($fAmount)
     {
@@ -247,7 +247,7 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @return boolean true if $fAmount is in the specified range
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _isPositiveBelowMax($fAmount, $fMaxAmount)
     {
@@ -260,7 +260,7 @@ class TransactionTabPostProcessing extends TransactionTab
      * @param array $aRequestParameters
      * @return array|null
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _processRequest($aRequestParameters)
     {
@@ -294,7 +294,7 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     protected function _getPostProcessingActions()
     {
@@ -328,7 +328,7 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _filterPostProcessingActions($aPossibleOperations, $oPaymentMethod)
     {
@@ -348,7 +348,7 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _getTranslatedPostProcessingActions($aSupportedOperations)
     {
@@ -380,7 +380,7 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @return string
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _handleRequestAction($sActionTitle, $fAmount)
     {
@@ -396,7 +396,7 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @return TransactionHandler
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _getTransactionHandler()
     {
@@ -414,7 +414,7 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @return Config | null
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _getPaymentMethodConfig()
     {

@@ -50,7 +50,7 @@ class Order extends Order_parent
     /**
      * Order constructor.
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function __construct()
     {

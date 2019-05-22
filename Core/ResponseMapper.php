@@ -47,7 +47,7 @@ class ResponseMapper
      *
      * @return SuccessResponse
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getResponse()
     {

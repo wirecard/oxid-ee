@@ -77,7 +77,7 @@ class PaymentMethodHelper
      *
      * @return Mandate
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public static function getMandate($iOrderNumber)
     {
@@ -91,7 +91,7 @@ class PaymentMethodHelper
      *
      * @return string
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public static function getAccountHolder()
     {
@@ -106,7 +106,7 @@ class PaymentMethodHelper
      *
      * @return string
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public static function getIban()
     {
@@ -120,7 +120,7 @@ class PaymentMethodHelper
      *
      * @return string
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getBic()
     {
@@ -137,7 +137,7 @@ class PaymentMethodHelper
      *
      * @return string
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public static function getSepaMandateHtml($oBasket, $oUser)
     {

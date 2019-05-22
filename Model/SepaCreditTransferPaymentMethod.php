@@ -18,21 +18,21 @@ use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 /**
  * Payment method implementation for SEPA Credit Transfer.
  *
- * @since 1.0.1
+ * @since 1.1.0
  */
 class SepaCreditTransferPaymentMethod extends PaymentMethod
 {
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     protected static $_sName = "sepacredit";
 
     /**
      * @var bool
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     protected static $_bMerchantOnly = true;
 
@@ -41,7 +41,7 @@ class SepaCreditTransferPaymentMethod extends PaymentMethod
      *
      * @return Config
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getConfig()
     {
@@ -63,7 +63,7 @@ class SepaCreditTransferPaymentMethod extends PaymentMethod
      *
      * @return SepaCreditTransferTransaction
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function getTransaction()
     {
@@ -76,7 +76,7 @@ class SepaCreditTransferPaymentMethod extends PaymentMethod
      * @param SepaCreditTransferTransaction $oTransaction
      * @param Transaction                   $oParentTransaction
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function addPostProcessingTransactionData(&$oTransaction, $oParentTransaction)
     {

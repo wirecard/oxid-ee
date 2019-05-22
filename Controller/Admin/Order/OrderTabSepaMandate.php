@@ -14,14 +14,14 @@ use Wirecard\Oxid\Core\Helper;
 /**
  * Controls the view for the order SEPA mandate tab.
  *
- * @since 1.0.1
+ * @since 1.1.0
  */
 class OrderTabSepaMandate extends OrderTab
 {
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     protected $_sThisTemplate = 'tab_sepa_mandate.tpl';
 
@@ -30,7 +30,7 @@ class OrderTabSepaMandate extends OrderTab
      *
      * @return string
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function render()
     {
@@ -48,7 +48,7 @@ class OrderTabSepaMandate extends OrderTab
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     protected function _getData()
     {

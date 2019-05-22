@@ -3,7 +3,7 @@
 /**
  * Ensures that classes do not exceed a certain amount of lines of code.
  *
- * @since 1.0.1
+ * @since 1.1.0
  */
 class Custom_Sniffs_Classes_ClassLinesOfCodeSniff implements PHP_CodeSniffer_Sniff
 {
@@ -12,7 +12,7 @@ class Custom_Sniffs_Classes_ClassLinesOfCodeSniff implements PHP_CodeSniffer_Sni
      *
      * @var int
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public $linesLimit = 400;
 
@@ -21,14 +21,14 @@ class Custom_Sniffs_Classes_ClassLinesOfCodeSniff implements PHP_CodeSniffer_Sni
      *
      * @var int
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public $absoluteLinesLimit = 500;
 
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function register()
     {
@@ -41,7 +41,7 @@ class Custom_Sniffs_Classes_ClassLinesOfCodeSniff implements PHP_CodeSniffer_Sni
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {

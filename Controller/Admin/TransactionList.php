@@ -48,7 +48,7 @@ class TransactionList extends AdminListController
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     protected $_blDesc = true;
 

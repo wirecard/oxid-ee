@@ -15,7 +15,7 @@ namespace Wirecard\Oxid\Extend;
  *
  * @mixin \OxidEsales\Eshop\Core\Language
  *
- * @since 1.0.1
+ * @since 1.1.0
  */
 class Language extends Language_parent
 {
@@ -25,7 +25,7 @@ class Language extends Language_parent
     /**
      * @var int
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private $_iFallbackId = null;
 
@@ -40,7 +40,7 @@ class Language extends Language_parent
      *
      * @return string
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public function translateString($sStringToTranslate, $iLanguageId = null, $bAdminMode = null)
     {
@@ -64,7 +64,7 @@ class Language extends Language_parent
      *
      * @return string
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _getFallbackString($sStringToTranslate, $bAdminMode = null)
     {

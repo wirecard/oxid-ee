@@ -94,7 +94,7 @@ class PaymentMain extends PaymentMain_parent
      *
      * @return bool
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _isCountryCodeValid($aParams)
     {
@@ -113,7 +113,7 @@ class PaymentMain extends PaymentMain_parent
      *
      * @return bool
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _isCreditorIdValid($aParams)
     {
@@ -129,7 +129,7 @@ class PaymentMain extends PaymentMain_parent
      *
      * @return bool
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _creditorIdValidation($sCreditorId)
     {
@@ -160,7 +160,7 @@ class PaymentMain extends PaymentMain_parent
      *
      * @return string
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     private function _convertCreditorId($sCreditorId)
     {
