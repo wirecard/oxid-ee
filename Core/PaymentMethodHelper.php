@@ -145,6 +145,7 @@ class PaymentMethodHelper
         $oPayment = oxNew(Payment::class);
         $oPayment->load($oBasket->getPaymentId());
         $oShop = Helper::getShop();
+        $sCreditorName = self::prepareCreditorName();
 
         $oSmarty = Registry::getUtilsView()->getSmarty();
 
@@ -156,15 +157,31 @@ class PaymentMethodHelper
         $oSmarty->assign('sBic', self::getBic());
         $oSmarty->assign('sConsumerCity', $oUser->oxuser__oxcity->value);
         $oSmarty->assign('sDate', date('d.m.Y', time()));
+        $oSmarty->assign('sCreditorName', $sCreditorName);
 
         $sCustomSepaMandate = str_replace(
             '%creditorName%',
-            $oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname,
+            $sCreditorName,
             $oPayment->oxpayments__wdoxidee_sepamandatecustom
         );
 
         $oSmarty->assign('sCustomSepaMandate', $sCustomSepaMandate);
 
         return $oSmarty->fetch('sepa_mandate.tpl');
+    }
+
+    /**
+     * Prepares creditor name depending on information available in the shop settings
+     *
+     * @return string
+     *
+     * @since 1.1.0
+     */
+    public function prepareCreditorName()
+    {
+        $oShop = Helper::getShop();
+        $sCreditorName = trim($oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname);
+
+        return $sCreditorName ? $sCreditorName : $oShop->oxshops__oxcompany;
     }
 }

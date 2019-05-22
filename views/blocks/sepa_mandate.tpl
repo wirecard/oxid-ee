@@ -23,7 +23,7 @@
 <i>[{oxmultilang ident="wd_creditor"}]</i>
 
 <p class="mb-30">
-  [{$oShop->oxshops__oxfname}] [{$oShop->oxshops__oxlname}]<br>
+  [{$sCreditorName}]<br>
   [{$oShop->oxshops__oxstreet}]<br>
   [{$oShop->oxshops__oxzip}] [{$oShop->oxshops__oxcity}]<br>
   [{$oShop->oxshops__oxcountry}]<br>
