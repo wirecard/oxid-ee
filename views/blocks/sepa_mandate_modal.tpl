@@ -14,10 +14,6 @@
 
     [{$sepamandate}]
 
-    <input type="checkbox" id="sepadd-checkbox" style="margin-right: 5px"/><label for="sepadd-checkbox">[{oxmultilang ident="wd_sepa_text_6"}]</label>
-
-    <hr>
-
     <form action="[{$oViewConf->getSslSelfLink()}]" method="post" id="orderConfirmAgbBottom" class="form-horizontal">
         <div class="hidden">
             [{$oViewConf->getHiddenSid()}]
@@ -35,6 +31,10 @@
             <input type="hidden" name="oxdownloadableproductsagreement" value="0">
             <input type="hidden" name="oxserviceproductsagreement" value="0">
         </div>
+
+        <input type="checkbox" name="wdsepadd_checkbox" id="sepadd-checkbox" style="margin-right: 5px"/><label for="sepadd-checkbox">[{oxmultilang ident="wd_sepa_text_6"}]</label>
+
+        <hr>
 
         [{block name="checkout_order_btn_submit_bottom"}]
           <button type="submit" disabled class="btn btn-primary submitButton nextStep">

@@ -9,6 +9,9 @@
 
 namespace Wirecard\Oxid\Model;
 
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Exception\StandardException;
+
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Extend\Model\Payment;
@@ -256,5 +259,20 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
     private function _isRefundAction($sAction)
     {
         return $sAction === TransactionModel::ACTION_CREDIT;
+    }
+
+    /**
+     * @inheritdoc
+     * @throws StandardException
+     *
+     * @since 1.1.0
+     */
+    public function onBeforeTransactionCreation()
+    {
+        $oConfig = Registry::getConfig();
+
+        if (!$oConfig->getRequestParameter('wdsepadd_checkbox')) {
+            throw new StandardException('Mandate information was not accepted.');
+        }
     }
 }
