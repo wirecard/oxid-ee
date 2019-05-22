@@ -17,11 +17,11 @@ class FormInteractionControllerTest extends \Wirecard\Test\WdUnitTestCase
     /**
      * @var FormInteractionController
      */
-    private $_controller;
+    private $_formInteractionController;
 
     protected function setUp()
     {
-        $this->_controller = oxNew(FormInteractionController::class);
+        $this->_formInteractionController = oxNew(FormInteractionController::class);
 
         parent::setUp();
     }
@@ -33,10 +33,10 @@ class FormInteractionControllerTest extends \Wirecard\Test\WdUnitTestCase
     {
         Registry::getSession()->setVariable('wdFormInteractionResponse', $responseFields);
 
-        $this->_controller->init();
-        $this->assertNotNull($this->_controller->getUrl());
-        $this->assertNotNull($this->_controller->getMethod());
-        $this->assertNotNull($this->_controller->getFormFields());
+        $this->_formInteractionController->init();
+        $this->assertNotNull($this->_formInteractionController->getUrl());
+        $this->assertNotNull($this->_formInteractionController->getMethod());
+        $this->assertNotNull($this->_formInteractionController->getFormFields());
     }
 
     public function testInitWithoutResponse()
@@ -46,10 +46,10 @@ class FormInteractionControllerTest extends \Wirecard\Test\WdUnitTestCase
             'redirect',
             '{ return; }');
 
-        $this->_controller->init();
-        $this->assertNull($this->_controller->getUrl());
-        $this->assertNull($this->_controller->getMethod());
-        $this->assertNull($this->_controller->getFormFields());
+        $this->_formInteractionController->init();
+        $this->assertNull($this->_formInteractionController->getUrl());
+        $this->assertNull($this->_formInteractionController->getMethod());
+        $this->assertNull($this->_formInteractionController->getFormFields());
     }
 
     /**
@@ -59,8 +59,8 @@ class FormInteractionControllerTest extends \Wirecard\Test\WdUnitTestCase
     {
         Registry::getSession()->setVariable('wdFormInteractionResponse', $responseFields);
 
-        $this->_controller->init();
-        $this->assertEquals('my url', $this->_controller->getUrl());
+        $this->_formInteractionController->init();
+        $this->assertEquals('my url', $this->_formInteractionController->getUrl());
     }
 
     /**
@@ -70,8 +70,8 @@ class FormInteractionControllerTest extends \Wirecard\Test\WdUnitTestCase
     {
         Registry::getSession()->setVariable('wdFormInteractionResponse', $responseFields);
 
-        $this->_controller->init();
-        $this->assertEquals('test method', $this->_controller->getMethod());
+        $this->_formInteractionController->init();
+        $this->assertEquals('test method', $this->_formInteractionController->getMethod());
     }
 
     /**
@@ -82,9 +82,9 @@ class FormInteractionControllerTest extends \Wirecard\Test\WdUnitTestCase
 
         Registry::getSession()->setVariable('wdFormInteractionResponse', $responseFields);
 
-        $this->_controller->init();
+        $this->_formInteractionController->init();
 
-        $oFormFieldMap = $this->_controller->getFormFields();
+        $oFormFieldMap = $this->_formInteractionController->getFormFields();
         $aFormFields = $oFormFieldMap->getIterator()->getArrayCopy();
         $this->assertArraySubset(["KEY1" => "VALUE1","KEY2" => "VALUE2" ], $aFormFields);
     }
