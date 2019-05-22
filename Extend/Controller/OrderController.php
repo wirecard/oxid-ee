@@ -14,7 +14,6 @@ use Exception;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Core\Exception\StandardException;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
@@ -242,17 +241,6 @@ class OrderController extends OrderController_parent
                 return $this->_getNextStep($iSuccess);
             }
 
-            $oPayment = $oOrder->getOrderPayment();
-            $oPaymentMethod = $oPayment->getPaymentMethod();
-
-            try {
-                $oPaymentMethod->onBeforeTransactionCreation();
-            } catch (Exception $oException) {
-                OrderHelper::setSessionPaymentError($oException->getMessage());
-
-                return 'payment';
-            }
-
             return $this->_handleTransaction($oBasket, $oOrder);
         }
 
@@ -325,7 +313,17 @@ class OrderController extends OrderController_parent
          * @var $oPaymentGateway PaymentGateway
          */
         $oPaymentGateway = oxNew(PaymentGateway::class);
+        $oPayment = $oOrder->getOrderPayment();
+        $oPaymentMethod = $oPayment->getPaymentMethod();
         $oResponse = null;
+
+        try {
+            $oPaymentMethod->onBeforeTransactionCreation();
+        } catch (Exception $oException) {
+            OrderHelper::setSessionPaymentError($oException->getMessage());
+
+            return 'payment';
+        }
 
         try {
             $oTransaction = $oPaymentGateway->createTransaction($oBasket, $oOrder);
