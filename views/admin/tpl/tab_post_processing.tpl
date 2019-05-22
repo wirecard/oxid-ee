@@ -20,7 +20,7 @@
         [{if $message}]
         <tr>
             <td colspan="2">
-                <div class="wdoxidee-messagebox wdoxidee-[{$message.type}]">
+                <div class="wdoxidee-messagebox wdoxidee-messagebox--[{$message.type}]">
                     [{$message.message}]
                 </div>
             </td>
@@ -39,7 +39,7 @@
             </td>
         </tr>
         [{else}]
-            <div class="wdoxidee-messagebox wdoxidee-info">
+            <div class="wdoxidee-messagebox wdoxidee-messagebox--info">
                 [{$emptyText}]
             </div>
         [{/if}]

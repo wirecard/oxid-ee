@@ -4,14 +4,14 @@
   padding: 15px;
 }
 
-.wdoxidee-info,
-.wdoxidee-success {
+.wdoxidee-messagebox--info,
+.wdoxidee-messagebox--success {
   background-color: #d9edf7;
   border-color: #bce8f1;
   color: #31708f;
 }
 
-.wdoxidee-error {
+.wdoxidee-messagebox--error {
   background-color: #f2dede;
   border-color: #ebccd1;
   color: #c94442;

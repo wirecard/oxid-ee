@@ -116,7 +116,7 @@
   [{if $bConfigNotValid}]
     <tr>
       <td colspan="2">
-        <div class="wdoxidee-messagebox wdoxidee-error">
+        <div class="wdoxidee-messagebox wdoxidee-messagebox--error">
           [{oxmultilang ident="wd_error_save_failed"}]
         </div>
       </td>
