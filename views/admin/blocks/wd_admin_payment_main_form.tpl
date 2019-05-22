@@ -7,6 +7,8 @@
 *
 *}]
 
+[{oxstyle include=$oViewConf->getPaymentGatewayUrl("out/css/wirecard_wdoxidee_common.css")}]
+
 [{if $edit && $edit->isCustomPaymentMethod()}]
   [{assign var="paymentMethod" value=$edit->getPaymentMethod()}]
   [{assign var="configFields" value=$paymentMethod->getConfigFields()}]
@@ -114,8 +116,8 @@
   [{if $bConfigNotValid}]
     <tr>
       <td colspan="2">
-        <div class="messagebox">
-          <div class="warning">[{oxmultilang ident="wd_error_save_failed"}]</div>
+        <div class="wdoxidee-messagebox wdoxidee-error">
+          [{oxmultilang ident="wd_error_save_failed"}]
         </div>
       </td>
     </tr>
