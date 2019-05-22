@@ -247,7 +247,7 @@ class OrderController extends OrderController_parent
 
             try {
                 $oPaymentMethod->onBeforeTransactionCreation();
-            } catch (StandardException $oException) {
+            } catch (Exception $oException) {
                 OrderHelper::setSessionPaymentError($oException->getMessage());
 
                 return 'payment';
