@@ -50,11 +50,7 @@ class Helper
      */
     public static function translate($sKey, $iLanguageId = null)
     {
-        if ($iLanguageId !== null) {
-            $oLanguage = oxNew(Language::class);
-            return $oLanguage->translateString($sKey, $iLanguageId);
-        }
-        return Registry::getLang()->translateString($sKey);
+        return Registry::getLang()->translateString($sKey, $iLanguageId);
     }
 
     /**
