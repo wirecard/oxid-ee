@@ -33,8 +33,9 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
                 'rows' => [
                     ['1', 'wdpaypal', BackendService::TYPE_AUTHORIZED, '1'],
                     ['2', 'oxidinvoice', BackendService::TYPE_PROCESSING, '2'],
-                    ['3', 'wdcreditcard', BackendService::TYPE_CANCELLED, '3'],
-                    ['4', 'wdcreditcard', BackendService::TYPE_REFUNDED, '4'],
+                    ['3', 'wdcreditcard', BackendService::TYPE_CANCELLED, '1'],
+                    ['4', 'wdcreditcard', BackendService::TYPE_REFUNDED, '2'],
+                    ['5', 'wdpaypal', BackendService::TYPE_PROCESSING, '3'],
                 ],
             ],
             [
@@ -47,6 +48,7 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
                 'rows' => [
                     ['1', '1', 'pending'],
                     ['2', '2', null],
+                    ['3', '3', 'failed'],
                 ],
             ],
             [
@@ -160,6 +162,50 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
+     * @dataProvider testIsPaymentRefundedProvider
+     */
+    public function testIsPaymentRefunded($sOrderId, $bIsPaymentRefunded)
+    {
+        $oOrder = oxNew(Order::class);
+        $oOrder->load($sOrderId);
+
+        $this->assertEquals($oOrder->isPaymentRefunded(), $bIsPaymentRefunded);
+    }
+
+    public function testIsPaymentRefundedProvider()
+    {
+        return [
+            'order with authorized transaction' => ['1', false],
+            'order with processing transaction' => ['2', false],
+            'order with cancelled transaction' => ['3', false],
+            'order with refunded transaction' => ['4', true],
+            'order with failed transaction' => ['5', false],
+        ];
+    }
+
+    /**
+     * @dataProvider testIsPaymentCancelledProvider
+     */
+    public function testIsPaymentCancelled($sOrderId, $bIsPaymentCancelled)
+    {
+        $oOrder = oxNew(Order::class);
+        $oOrder->load($sOrderId);
+
+        $this->assertEquals($oOrder->isPaymentCancelled(), $bIsPaymentCancelled);
+    }
+
+    public function testIsPaymentCancelledProvider()
+    {
+        return [
+            'order with authorized transaction' => ['1', false],
+            'order with processing transaction' => ['2', false],
+            'order with cancelled transaction' => ['3', true],
+            'order with refunded transaction' => ['4', false],
+            'order with failed transaction' => ['5', false],
+        ];
+    }
+
+    /**
      * @dataProvider testIsPaymentFailedProvider
      */
     public function testIsPaymentFailed($sOrderId, $bIsPaymentFailed)
@@ -175,8 +221,9 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
         return [
             'order with authorized transaction' => ['1', false],
             'order with processing transaction' => ['2', false],
-            'order with cancelled transaction' => ['3', true],
-            'order with refunded transaction' => ['4', true],
+            'order with cancelled transaction' => ['3', false],
+            'order with refunded transaction' => ['4', false],
+            'order with failed transaction' => ['5', true],
         ];
     }
 

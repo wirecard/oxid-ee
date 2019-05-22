@@ -202,9 +202,31 @@ class Order extends Order_parent
     {
         $oTransaction = $this->getOrderLastTransaction();
 
-        return $oTransaction->wdoxidee_ordertransactions__type->value === self::STATE_FAILED
-            || $this->oxorder__wdoxidee_orderstate->value === BackendService::TYPE_CANCELLED
-            || $this->oxorder__wdoxidee_orderstate->value === BackendService::TYPE_REFUNDED;
+        return $oTransaction->wdoxidee_ordertransactions__type->value === self::STATE_FAILED;
+    }
+
+    /**
+     * Checks if the payment was refunded
+     *
+     * @return bool
+     *
+     * @since 1.1.0
+     */
+    public function isPaymentRefunded()
+    {
+        return $this->oxorder__wdoxidee_orderstate->value === BackendService::TYPE_REFUNDED;
+    }
+
+    /**
+     * Checks if the payment was cancelled
+     *
+     * @return bool
+     *
+     * @since 1.1.0
+     */
+    public function isPaymentCancelled()
+    {
+        return $this->oxorder__wdoxidee_orderstate->value === BackendService::TYPE_CANCELLED;
     }
 
     /**
