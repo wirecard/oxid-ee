@@ -396,15 +396,27 @@ class TransactionTabPostProcessing extends TransactionTab
         $bSuccess = $aResult[self::KEY_STATUS] === Transaction::STATE_SUCCESS;
 
         if (!$bSuccess) {
-            return [
-                self::KEY_MESSAGE => $aResult[self::KEY_MESSAGE],
-                self::KEY_TYPE => self::KEY_ERROR,
-            ];
+            return self::_getResultMessageArray(self::KEY_ERROR, $aResult[self::KEY_MESSAGE]);
         }
 
+        return self::_getResultMessageArray(self::KEY_SUCCESS, Helper::translate('wd_text_generic_success'));
+    }
+
+    /**
+     * Returns the result array containg a message type and text.
+     *
+     * @param string $sType    message type
+     * @param string $sMessage message content
+     *
+     * @return array
+     *
+     * @since 1.1.0
+     */
+    private static function _getResultMessageArray($sType, $sMessage)
+    {
         return [
-            self::KEY_MESSAGE => Helper::translate('wd_text_generic_success'),
-            self::KEY_TYPE => self::KEY_SUCCESS,
+            self::KEY_TYPE => $sType,
+            self::KEY_MESSAGE => $sMessage,
         ];
     }
 
