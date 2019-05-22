@@ -134,6 +134,7 @@ class ResponseHandler
 
         // create an array with the properties to be saved in the transaction database entry
         $aTransactionProps = [
+            'oxid' => Registry::getUtilsObject()->generateUID(),
             'ordernumber' => $oOrder->oxorder__oxordernr->value,
             'orderid' => $oOrder->oxorder__oxid->value,
             'transactionid' => $oResponse->getTransactionId(),

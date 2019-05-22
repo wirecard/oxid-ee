@@ -10,8 +10,10 @@
 namespace Wirecard\Oxid\Model;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\OxidEeEvents;
 use Wirecard\Oxid\Model\TransactionList;
 
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Model\MultiLanguageModel;
 use OxidEsales\Eshop\Application\Model\Order;
 
@@ -132,15 +134,32 @@ class Transaction extends MultiLanguageModel
      *
      * @param array $aArgs associative array containing the fields to be set on the transaction object
      *
-     * @return string|bool indicating whether the creation of the database entry was successful
+     * @return bool indicating whether the creation of the database entry was successful
      *
      * @since 1.1.0
      */
     public static function createDbEntryFromArray($aArgs)
     {
-        $oTransaction = oxNew(Transaction::class);
-        $oTransaction->assign($aArgs);
-        return $oTransaction->save();
+        $sColumnNames = '`' . implode('`,`', array_keys($aArgs)) . '`';
+
+        // quote the values to be safe
+        $fQuoteString = function ($sValue) {
+            return DatabaseProvider::getDb()->quote($sValue);
+        };
+
+        $aArgValues = array_map($fQuoteString, array_values($aArgs));
+        $sValues = implode(',', array_values($aArgValues));
+
+        $sQuery = "INSERT INTO " . OxidEeEvents::TRANSACTION_TABLE . "
+                        (" . $sColumnNames . ")
+                    VALUES
+                        (" . $sValues . ")
+                    ON DUPLICATE KEY
+                        UPDATE transactionid = transactionid";
+
+        $iResult = DatabaseProvider::getDb()->execute($sQuery);
+
+        return $iResult > 0;
     }
 
     /**
