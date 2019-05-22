@@ -36,7 +36,7 @@
         <oxtoamount>1000000</oxtoamount>
         <oxdesc>Wirecard PayPal</oxdesc>
         <oxdesc_1>Wirecard PayPal</oxdesc_1>
-        <oxsort>20</oxsort>
+        <oxsort>230</oxsort>
         <wdoxidee_logo>paypal.png</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
         <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
@@ -54,7 +54,7 @@
         <oxtoamount>1000000</oxtoamount>
         <oxdesc>Wirecard SEPA-Lastschrift</oxdesc>
         <oxdesc_1>Wirecard SEPA Direct Debit</oxdesc_1>
-        <oxsort>30</oxsort>
+        <oxsort>280</oxsort>
         <wdoxidee_logo>sepa.png</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
         <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
@@ -73,7 +73,7 @@
         <oxtoamount>1000000</oxtoamount>
         <oxdesc>Wirecard Sofort.</oxdesc>
         <oxdesc_1>Wirecard Sofort.</oxdesc_1>
-        <oxsort>40</oxsort>
+        <oxsort>300</oxsort>
         <wdoxidee_logo>https://cdn.klarna.com/1.0/shared/image/generic/badge/%s/pay_now/%s/pink.svg</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
         <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
