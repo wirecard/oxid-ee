@@ -13,6 +13,7 @@ use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\DbMetaDataHandler;
 
+use Wirecard\Oxid\Extend\Language;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Transaction;
 
@@ -28,6 +29,7 @@ class OxidEeEvents
     const ORDER_TABLE = "oxorder";
     const PAYMENT_TABLE = "oxpayments";
     const TRANSACTION_TABLE = "wdoxidee_ordertransactions";
+    const SEPA_DD_PAYMENT_ID = "wdsepadd";
 
     private static $oDb;
 
@@ -94,9 +96,30 @@ class OxidEeEvents
 
         if (!$sExisting) {
             self::$oDb->Execute($sQuery);
+            if (self::_isSepaDirectDebit($aKeyValue)) {
+                self::_insertSepaMandate();
+            }
             return true;
         }
+        return false;
+    }
 
+    /**
+     * Checks if the current payment is SEPA Direct Debit
+     *
+     * @param array $aKeyValue
+     *
+     * @return boolean true or false if aKeyValue contains ID for SEPA Direct Debit
+     *
+     * @since 1.1.0
+     */
+    private static function _isSepaDirectDebit($aKeyValue)
+    {
+        foreach ($aKeyValue as $sKey => $sValue) {
+            if ((string) $sValue === self::SEPA_DD_PAYMENT_ID) {
+                return true;
+            }
+        }
         return false;
     }
 
@@ -380,6 +403,40 @@ class OxidEeEvents
                 'oxdelset'
             );"
         );
+    }
+
+    /**
+     * Adds initial SEPA mandate text to SEPA Direct Debit payment method
+     *
+     * @since 1.1.0
+     */
+    private static function _insertSepaMandate()
+    {
+        $sSepaMandate = self::_prepareSepaMandate(0);
+        $sSepaMandate1 = self::_prepareSepaMandate(1);
+        $sQuery = "UPDATE oxpayments SET `WDOXIDEE_SEPAMANDATECUSTOM` = '$sSepaMandate', `WDOXIDEE_SEPAMANDATECUSTOM_1`
+            = '$sSepaMandate1' WHERE `OXID` LIKE " . "'" . self::SEPA_DD_PAYMENT_ID . "'";
+        self::$oDb->execute($sQuery);
+    }
+
+    /**
+     * Prepares SEPA mandate text for the given language id
+     *
+     * @param integer $iLanguageId
+     *
+     * @return string
+     *
+     * @since 1.1.0
+     */
+    private static function _prepareSepaMandate($iLanguageId)
+    {
+        $oLanguage = oxNew(Language::class);
+        return $oLanguage->translateString('wd_sepa_text_1', $iLanguageId) . ' ' . '%creditorName%' .
+             ' ' . $oLanguage->translateString('wd_sepa_text_2', $iLanguageId) . ' ' . '%creditorName%' .
+             ' ' . $oLanguage->translateString('wd_sepa_text_2b', $iLanguageId) . '\n\n' .
+             $oLanguage->translateString('wd_sepa_text_3', $iLanguageId) . '\n\n' .
+             $oLanguage->translateString('wd_sepa_text_4', $iLanguageId) . ' ' . '%creditorName%' .
+             ' ' . $oLanguage->translateString('wd_sepa_text_5', $iLanguageId);
     }
 
     /**

@@ -144,17 +144,27 @@ class PaymentMethodHelper
         $iOrderNumber = Helper::getSessionChallenge();
         $oPayment = oxNew(Payment::class);
         $oPayment->load($oBasket->getPaymentId());
+        $oShop = Helper::getShop();
 
         $oSmarty = Registry::getUtilsView()->getSmarty();
 
         $oSmarty->assign('sAccountHolder', self::getAccountHolder());
-        $oSmarty->assign('oShop', Helper::getShop());
+        $oSmarty->assign('oShop', $oShop);
         $oSmarty->assign('oPayment', $oPayment);
         $oSmarty->assign('sMandateId', self::getMandate($iOrderNumber)->mappedProperties()['mandate-id']);
         $oSmarty->assign('sIban', self::getIban());
         $oSmarty->assign('sBic', self::getBic());
         $oSmarty->assign('sConsumerCity', $oUser->oxuser__oxcity->value);
         $oSmarty->assign('sDate', date('d.m.Y', time()));
+
+        $sCustom = str_replace(
+            '%creditorName%',
+            $oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname,
+            $oPayment->oxpayments__wdoxidee_sepamandatecustom
+        );
+        $sCustom = str_replace("\n", '<br>', $sCustom);
+
+        $oSmarty->assign('sCustom', $sCustom);
 
         return $oSmarty->fetch('sepa_mandate.tpl');
     }

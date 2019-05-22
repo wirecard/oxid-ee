@@ -42,8 +42,8 @@
   [{/if}]
 </p>
 
-[{if $oPayment->oxpayments__wdoxidee_sepamandatecustom->value}]
-  [{$oPayment->oxpayments__wdoxidee_sepamandatecustom->value}]
+[{if $sCustom}]
+  [{$sCustom|html_entity_decode}]
 [{else}]
   <p>[{oxmultilang ident="wd_sepa_text_1"}] [{$oShop->oxshops__oxfname}]
       [{$oShop->oxshops__oxlname}] [{oxmultilang ident="wd_sepa_text_2"}]
