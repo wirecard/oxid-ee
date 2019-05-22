@@ -90,10 +90,8 @@ class OxidEeEvents
         foreach ($aKeyValue as $sKey => $sValue) {
             $sWhere .= " AND $sKey = '$sValue'";
         }
-
         $sCheckQuery = "SELECT * FROM {$sTableName} WHERE 1" . $sWhere;
         $sExisting = self::$oDb->getOne($sCheckQuery);
-
         if (!$sExisting) {
             self::$oDb->Execute($sQuery);
             if (self::_isSepaDirectDebit($aKeyValue)) {
