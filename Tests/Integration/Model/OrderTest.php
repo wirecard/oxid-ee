@@ -162,12 +162,12 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
     /**
      * @dataProvider testIsPaymentFailedProvider
      */
-    public function testIsPaymentFailed($orderId, $isPaymentPending)
+    public function testIsPaymentFailed($sOrderId, $bIsPaymentFailed)
     {
         $oOrder = oxNew(Order::class);
-        $oOrder->load($orderId);
+        $oOrder->load($sOrderId);
 
-        $this->assertEquals($oOrder->isPaymentFailed(), $isPaymentPending);
+        $this->assertEquals($oOrder->isPaymentFailed(), $bIsPaymentFailed);
     }
 
     public function testIsPaymentFailedProvider()
