@@ -12,6 +12,7 @@ use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
 
 use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 
@@ -63,7 +64,16 @@ class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTes
     public function testAddMandatoryTransactionData()
     {
         $oTransaction = $this->_oPaymentMethod->getTransaction();
-        $this->assertNotNull($oTransaction->getIban);
+        $aDynArray = Registry::getSession()->getVariable("dynvalue");
+        if (!$aDynArray) {
+            $aDynArray = [];
+        }
+        $aDynArray['bic'] = 'WIREDEMMXXX';
+        Registry::getSession()->setVariable('dynvalue', $aDynArray);
+        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction);
+        $this->assertAttributeEquals('', 'iban', $oTransaction);
+        $this->assertAttributeNotEmpty('mandate', $oTransaction);
+        $this->assertAttributeNotEmpty('accountHolder', $oTransaction);
     }
 
     public function testGetPublicFieldNames()
@@ -83,7 +93,7 @@ class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTes
     }
 
     /**
-     * @dataProvider testGetPostProcessingPaymentMethodProvider
+     * @dataProvider getPostProcessingPaymentMethodProvider
      */
     public function testGetPostProcessingPaymentMethod($sAction, $sMethodName)
     {
@@ -91,7 +101,7 @@ class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTes
         $this->assertInstanceOf($sMethodName, $sResult);
     }
 
-    public function testGetPostProcessingPaymentMethodProvider()
+    public function getPostProcessingPaymentMethodProvider()
     {
         return [
             'credit action' => [Transaction::ACTION_CREDIT, SepaCreditTransferPaymentMethod::class],
