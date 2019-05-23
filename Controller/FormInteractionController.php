@@ -22,6 +22,8 @@ use Wirecard\PaymentSdk\Entity\FormFieldMap;
  */
 class FormInteractionController extends FrontendController
 {
+
+    const WD_RESPONSE_VARIABLE = 'wdFormInteractionResponse';
     /**
      * @inheritdoc
      *
@@ -45,7 +47,9 @@ class FormInteractionController extends FrontendController
     {
         parent::init();
 
-        $this->_oResponse = Registry::getSession()->getVariable('wdFormInteractionResponse');
+        $oSession = Registry::getSession();
+        $this->_oResponse = $oSession->getVariable(self::WD_RESPONSE_VARIABLE);
+        $oSession->deleteVariable(self::WD_RESPONSE_VARIABLE);
         if (empty($this->_oResponse)) {
             //redirect home
             Registry::getUtils()->redirect(Registry::getConfig()->getShopHomeUrl());

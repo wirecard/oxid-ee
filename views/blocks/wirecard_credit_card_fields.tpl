@@ -19,7 +19,7 @@
 
   <div id="wirecard-cc-error"></div>
 
-  <div id="cc-spinner" class="cc-spinner"></div>
+  <div class="loader"></div>
 
   <div>
     <form id="wirecard-cc-form" method="post" action="[{$oViewConf->getSslSelfLink()}]">

@@ -16,11 +16,12 @@ var ModuleCreditCardForm = (function($) {
   }
 
   function callback(response) {
-    $("#cc-spinner").fadeOut();
-    $("#creditcard-form-div")
-      .height(350)
-      .fadeIn();
-    getOrderButton().prop("disabled", false);
+    $(".loader").fadeOut(200,function() {
+      $("#creditcard-form-div")
+        .height(350)
+        .fadeIn(200);
+      getOrderButton().prop("disabled", false);
+    });
 
     if (debug) {
       // eslint-disable-next-line no-console
