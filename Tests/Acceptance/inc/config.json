@@ -24,6 +24,11 @@
       "accountHolder": "First Last",
       "iban": "DE42512308000000060004",
       "bic": "WIREDEMMXXX"
+    },
+    "giropay": {
+      "bic": "GENODETT488",
+      "sc": "10",
+      "extensionSc": "4000"
     }
   }
 }
