@@ -86,8 +86,8 @@ class PaymentMainTest extends \Wirecard\Test\WdUnitTestCase
     public function creditorIdValidationProvider()
     {
         return [
-            'creditor id valid' => [1, 'DE98ZZZ09999999999'],
-            'creditor id invalid' => [0, 'DE98ZZZ09995999290'],
+            'creditor id valid' => [1, 'DE08700901001234567890'],
+            'creditor id invalid' => [0, 'DE08700914123054890'],
             'creditor id too long' => [0, 'DE98ZZZ09995999290000000000000000000'],
         ];
     }
