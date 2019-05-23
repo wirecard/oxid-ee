@@ -31,7 +31,7 @@ class PaymentMain extends PaymentMain_parent
     /**
      * @var TransactionService
      *
-     * @@since 1.1.0
+     * @since 1.1.0
      */
     private $_oTransactionService;
 
@@ -237,7 +237,7 @@ class PaymentMain extends PaymentMain_parent
      *
      * @param TransactionService $oTransactionService
      *
-     * @@since 1.1.0
+     * @since 1.1.0
      */
     public function setTransactionService($oTransactionService)
     {
@@ -250,7 +250,7 @@ class PaymentMain extends PaymentMain_parent
      *
      * @return TransactionService
      *
-     * @@since 1.1.0
+     * @since 1.1.0
      */
     private function _getTransactionService($oConfig)
     {

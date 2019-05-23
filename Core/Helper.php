@@ -82,7 +82,7 @@ class Helper
      *
      * @return integer round precision
      *
-     * @@since 1.1.0
+     * @since 1.1.0
      */
     public static function getCurrencyRoundPrecision($sCurrencyName)
     {

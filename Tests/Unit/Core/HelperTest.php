@@ -252,7 +252,9 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetInputHelpHtml()
     {
-        $this->markTestSkipped("Smarty cannot load 'inputhelp.tpl'");
+        $sReason = "Testing the `?` help button rendering in the admin panel.\n" .
+            "Test fails because Smarty cannot load the template file";
+        $this->markTestSkipped($sReason);
 
         $this->assertNotNull(Helper::getInputHelpHtml("Test String"));
     }
