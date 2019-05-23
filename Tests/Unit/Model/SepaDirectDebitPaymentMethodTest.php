@@ -44,15 +44,32 @@ class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTes
         $this->assertArrayHasKey("bic", $aConfigFields);
     }
 
+    public function getDefaultConfigFieldsProvider()
+    {
+        return [
+            "contains apiUrl"=> ['apiUrl'],
+            "contains httpUser"=> ['httpUser'],
+            "contains httpPassword"=> ['httpPassword'],
+            "contains maid"=> ['maid'],
+            "contains secret"=> ['secret'],
+            "contains testCredentials"=> ['testCredentials'],
+        ];
+    }
+
     public function testGetCheckoutFields()
     {
         $oPayment = $this->_oPaymentMethod->getPayment();
         $oPayment->oxpayments__wdoxidee_bic->value = new Field(1);
         $oPayment->save();
-        $aCheckoutFields = $this->_oPaymentMethod->getCheckoutFields();
-        $this->assertArrayHasKey("accountHolder", $aCheckoutFields);
-        $this->assertArrayHasKey("iban", $aCheckoutFields);
-        $this->assertArrayHasKey("bic", $aCheckoutFields);
+
+        $aPublicFieldNames = $this->_oPaymentMethod->getCheckoutFields();
+        $aExpected = [
+            "accountHolder",
+            "iban",
+            "bic",
+        ];
+
+        $this->assertEquals($aExpected, $aPublicFieldNames, '', 0.0, 1, true);
     }
 
     public function testGetTransaction()
