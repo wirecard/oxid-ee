@@ -34,7 +34,7 @@ class PaymentMethodFactory
      *
      * @return array
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public static function getPaymentMethodClasses()
     {

@@ -22,14 +22,14 @@ use Wirecard\Oxid\Core\Helper;
 /**
  * Payment method implementation for Giropay.
  *
- * @since 1.1.0
+ * @since 1.2.0
  */
 class GiropayPaymentMethod extends PaymentMethod
 {
     /**
      * @inheritdoc
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     protected static $_sName = 'giropay';
 
@@ -38,7 +38,7 @@ class GiropayPaymentMethod extends PaymentMethod
      *
      * @return Config
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getConfig()
     {
@@ -59,7 +59,7 @@ class GiropayPaymentMethod extends PaymentMethod
      *
      * @return Transaction
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getTransaction()
     {
@@ -79,7 +79,7 @@ class GiropayPaymentMethod extends PaymentMethod
      *
      * @return array
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getConfigFields()
     {
@@ -134,7 +134,7 @@ class GiropayPaymentMethod extends PaymentMethod
      *
      * @return array
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getCheckoutFields()
     {
@@ -152,7 +152,7 @@ class GiropayPaymentMethod extends PaymentMethod
      *
      * @return array
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getPublicFieldNames()
     {
@@ -170,7 +170,7 @@ class GiropayPaymentMethod extends PaymentMethod
      *
      * @return SepaCreditTransferPaymentMethod
      *
-     * @since 1.1.0
+     * @since 1.2.0
      */
     public function getPostProcessingPaymentMethod($sAction)
     {
