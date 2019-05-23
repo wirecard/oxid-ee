@@ -72,7 +72,7 @@ class SepaCreditTransferPaymentMethodTest extends OxidEsales\TestingLibrary\Unit
         try {
             $this->_oPaymentMethod->addPostProcessingTransactionData($oTransaction, $oParentTransaction);
         } catch (Exception $oException) {
-            $this->fail();
+            $this->fail($oException->getMessage());
         }
     }
 }
