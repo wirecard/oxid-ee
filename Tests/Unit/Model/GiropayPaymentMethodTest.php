@@ -55,6 +55,7 @@ class GiropayPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
             'testCredentials',
             'maid',
             'secret',
+            'descriptor',
             'additionalInfo',
             'deleteCanceledOrder',
             'deleteFailedOrder',
