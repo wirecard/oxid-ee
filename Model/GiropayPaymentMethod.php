@@ -84,6 +84,16 @@ class GiropayPaymentMethod extends PaymentMethod
     public function getConfigFields()
     {
         $aAdditionalFields = [
+            'descriptor' => [
+                'type'  => 'select',
+                'field' => 'oxpayments__wdoxidee_descriptor',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
+                ],
+                'title' => Helper::translate('wd_config_descriptor'),
+                'description' => Helper::translate('wd_config_descriptor_desc'),
+            ],
             'additionalInfo' => [
                 'type'  => 'select',
                 'field' => 'oxpayments__wdoxidee_additional_info',

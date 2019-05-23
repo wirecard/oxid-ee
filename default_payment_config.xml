@@ -130,6 +130,7 @@
         <wdoxidee_secret>0c8c6f3a-1534-4fa1-99d9-d1c644d43709</wdoxidee_secret>
         <wdoxidee_httpuser>16390-testing</wdoxidee_httpuser>
         <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
+        <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
         <wdoxidee_delete_canceled_order>0</wdoxidee_delete_canceled_order>
         <wdoxidee_delete_failed_order>0</wdoxidee_delete_failed_order>
