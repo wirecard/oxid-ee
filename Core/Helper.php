@@ -17,6 +17,8 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ShopVersion;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 
+use Wirecard\Oxid\Extend\Language;
+
 use Exception;
 use DateTime;
 
@@ -43,15 +45,16 @@ class Helper
     /**
      * Gets the translation for a given key.
      *
-     * @param string $sKey
+     * @param string  $sKey
+     * @param integer $iLanguageId
      *
      * @return string
      *
      * @since 1.0.0
      */
-    public static function translate($sKey)
+    public static function translate($sKey, $iLanguageId = null)
     {
-        return Registry::getLang()->translateString($sKey);
+        return Registry::getLang()->translateString($sKey, $iLanguageId);
     }
 
     /**

@@ -144,18 +144,44 @@ class PaymentMethodHelper
         $sSessionChallenge = Helper::getSessionChallenge();
         $oPayment = oxNew(Payment::class);
         $oPayment->load($oBasket->getPaymentId());
+        $oShop = Helper::getShop();
+        $sCreditorName = self::prepareCreditorName();
 
         $oSmarty = Registry::getUtilsView()->getSmarty();
 
         $oSmarty->assign('sAccountHolder', self::getAccountHolder());
-        $oSmarty->assign('oShop', Helper::getShop());
+        $oSmarty->assign('oShop', $oShop);
         $oSmarty->assign('oPayment', $oPayment);
         $oSmarty->assign('sMandateId', self::getMandate($sSessionChallenge)->mappedProperties()['mandate-id']);
         $oSmarty->assign('sIban', self::getIban());
         $oSmarty->assign('sBic', self::getBic());
         $oSmarty->assign('sConsumerCity', $oUser->oxuser__oxcity->value);
         $oSmarty->assign('sDate', date('d.m.Y', time()));
+        $oSmarty->assign('sCreditorName', $sCreditorName);
+
+        $sCustomSepaMandate = str_replace(
+            '%creditorName%',
+            $sCreditorName,
+            $oPayment->oxpayments__wdoxidee_sepamandatecustom
+        );
+
+        $oSmarty->assign('sCustomSepaMandate', $sCustomSepaMandate);
 
         return $oSmarty->fetch('sepa_mandate.tpl');
+    }
+
+    /**
+     * Prepares creditor name depending on information available in the shop settings
+     *
+     * @return string
+     *
+     * @since 1.1.0
+     */
+    public function prepareCreditorName()
+    {
+        $oShop = Helper::getShop();
+        $sCreditorName = trim($oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname);
+
+        return $sCreditorName ? $sCreditorName : $oShop->oxshops__oxcompany;
     }
 }

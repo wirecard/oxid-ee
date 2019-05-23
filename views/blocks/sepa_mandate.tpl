@@ -23,7 +23,7 @@
 <i>[{oxmultilang ident="wd_creditor"}]</i>
 
 <p class="mb-30">
-  [{$oShop->oxshops__oxfname}] [{$oShop->oxshops__oxlname}]<br>
+  [{$sCreditorName}]<br>
   [{$oShop->oxshops__oxstreet}]<br>
   [{$oShop->oxshops__oxzip}] [{$oShop->oxshops__oxcity}]<br>
   [{$oShop->oxshops__oxcountry}]<br>
@@ -42,19 +42,6 @@
   [{/if}]
 </p>
 
-[{if $oPayment->oxpayments__wdoxidee_sepamandatecustom->value}]
-  [{$oPayment->oxpayments__wdoxidee_sepamandatecustom->value}]
-[{else}]
-  <p>[{oxmultilang ident="wd_sepa_text_1"}] [{$oShop->oxshops__oxfname}]
-      [{$oShop->oxshops__oxlname}] [{oxmultilang ident="wd_sepa_text_2"}]
-      [{$oShop->oxshops__oxfname}] [{$oShop->oxshops__oxlname}]
-      [{oxmultilang ident="wd_sepa_text_2b"}]
-  </p>
-  <p>[{oxmultilang ident="wd_sepa_text_3"}]</p>
-  <p class="mb-30">
-    [{oxmultilang ident="wd_sepa_text_4"}] [{$oShop->oxshops__oxfname}] [{$oShop->oxshops__oxlname}]
-    [{oxmultilang ident="wd_sepa_text_5"}]
-  </p>
-[{/if}]
+[{$sCustomSepaMandate|nl2br}]
 
 <p class="mt-30">[{$sConsumerCity}], [{$sDate}] [{$sAccountHolder}]</p>
