@@ -88,7 +88,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
         return [
             'contains actions' => ['actions'],
             'contains requestParameters' => ['requestParameters'],
-            'contains alert' => ['alert'],
+            'contains alert' => ['message'],
             'contains currency' => ['currency'],
             'contains emptyText' => ['emptyText'],
         ];
