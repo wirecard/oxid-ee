@@ -1,0 +1,18 @@
+.wdoxidee-messagebox {
+  border-radius: 4px;
+  margin-bottom: 20px;
+  padding: 15px;
+}
+
+.wdoxidee-messagebox--info,
+.wdoxidee-messagebox--success {
+  background-color: #d9edf7;
+  border-color: #bce8f1;
+  color: #31708f;
+}
+
+.wdoxidee-messagebox--error {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  color: #c94442;
+}

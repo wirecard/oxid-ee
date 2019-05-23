@@ -31,6 +31,12 @@ class TransactionTabPostProcessing extends TransactionTab
 {
     const KEY_ACTION = 'action';
     const KEY_AMOUNT = 'amount';
+    const KEY_STATUS = 'status';
+    const KEY_TYPE = 'type';
+    const KEY_MESSAGE = 'message';
+    const KEY_INFO = 'info';
+    const KEY_SUCCESS = 'success';
+    const KEY_ERROR = 'error';
 
     /**
      * @var \Psr\Log\LoggerInterface
@@ -166,7 +172,7 @@ class TransactionTabPostProcessing extends TransactionTab
         Helper::addToViewData($this, [
             'actions' => $this->_aActions,
             'requestParameters' => $aRequestParameters,
-            'alert' => $this->_processRequest($aRequestParameters),
+            'message' => $this->_processRequest($aRequestParameters),
             'currency' => $this->oTransaction->wdoxidee_ordertransactions__currency->value,
             'emptyText' => Helper::translate('wd_text_no_further_operations_possible'),
         ]);
@@ -278,11 +284,10 @@ class TransactionTabPostProcessing extends TransactionTab
             $sTransactionAmount = $aRequestParameters[self::KEY_AMOUNT];
 
             // execute the callback method defined in the "action" request parameter
-            $aState['message'] = $this->_handleRequestAction($sActionTitle, $sTransactionAmount);
-            $aState['type'] = 'success';
+            $aState = $this->_handleRequestAction($sActionTitle, $sTransactionAmount);
         } catch (StandardException $oException) {
-            $aState['message'] = $oException->getMessage();
-            $aState['type'] = 'error';
+            $aState[self::KEY_MESSAGE] = $oException->getMessage();
+            $aState[self::KEY_TYPE] = self::KEY_ERROR;
         }
 
         return $aState;
@@ -379,7 +384,7 @@ class TransactionTabPostProcessing extends TransactionTab
      * @param string $sActionTitle
      * @param float  $fAmount
      *
-     * @return string
+     * @return array
      *
      * @since 1.1.0
      */
@@ -388,8 +393,31 @@ class TransactionTabPostProcessing extends TransactionTab
         $oTransactionHandler = $this->_getTransactionHandler();
         $aResult = $oTransactionHandler->processAction($this->oTransaction, $sActionTitle, $fAmount);
 
-        return $aResult["status"] === Transaction::STATE_SUCCESS ?
-            Helper::translate('wd_text_generic_success') : $aResult['message'];
+        $bSuccess = $aResult[self::KEY_STATUS] === Transaction::STATE_SUCCESS;
+
+        if (!$bSuccess) {
+            return self::_getResultMessageArray(self::KEY_ERROR, $aResult[self::KEY_MESSAGE]);
+        }
+
+        return self::_getResultMessageArray(self::KEY_SUCCESS, Helper::translate('wd_text_generic_success'));
+    }
+
+    /**
+     * Returns the result array containg a message type and text.
+     *
+     * @param string $sType    message type
+     * @param string $sMessage message content
+     *
+     * @return array
+     *
+     * @since 1.1.0
+     */
+    private static function _getResultMessageArray($sType, $sMessage)
+    {
+        return [
+            self::KEY_TYPE => $sType,
+            self::KEY_MESSAGE => $sMessage,
+        ];
     }
 
     /**

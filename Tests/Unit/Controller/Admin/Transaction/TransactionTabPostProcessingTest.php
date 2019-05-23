@@ -42,6 +42,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
 
         $this->_oTransactionHandlerStub = $this->getMockBuilder(TransactionHandler::class)
             ->disableOriginalConstructor()
+            ->setMethods(['processAction'])
             ->getMock();
 
         parent::setUp();
@@ -78,7 +79,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
         $this->_transactionTabPostProcessing->render();
         $this->assertArrayHasKey('actions', $this->_transactionTabPostProcessing->getViewData());
         $this->assertArrayHasKey('requestParameters', $this->_transactionTabPostProcessing->getViewData());
-        $this->assertArrayHasKey('alert', $this->_transactionTabPostProcessing->getViewData());
+        $this->assertArrayHasKey('message', $this->_transactionTabPostProcessing->getViewData());
         $this->assertArrayHasKey('currency', $this->_transactionTabPostProcessing->getViewData());
         $this->assertArrayHasKey('emptyText', $this->_transactionTabPostProcessing->getViewData());
     }
@@ -126,19 +127,23 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
         $this->_oBackendServiceStub->method('retrieveBackendOperations')
             ->willReturn(['pay' => 'Pay']);
 
+        $this->_oTransactionHandlerStub->method('processAction')
+            ->willReturn(['status' => Transaction::STATE_SUCCESS]);
+
         $_GET['oxid'] = 'transaction 1';
         $_GET['0'] = 'pay';
         $_GET[TransactionTabPostProcessing::KEY_AMOUNT] = $input;
 
         $this->_transactionTabPostProcessing = new TransactionTabPostProcessing();
         $this->_transactionTabPostProcessing->setBackendService($this->_oBackendServiceStub);
+        $this->_transactionTabPostProcessing->setTransactionHandler($this->_oTransactionHandlerStub);
         $this->_transactionTabPostProcessing->render();
 
         $aViewData = $this->_transactionTabPostProcessing->getViewData();
-        $this->assertArrayHasKey('alert', $aViewData);
+        $this->assertArrayHasKey('message', $aViewData);
 
-        $this->assertArrayHasKey('type', $aViewData['alert']);
-        $this->assertEquals($aViewData['alert']['type'], $expected);
+        $this->assertArrayHasKey('type', $aViewData['message']);
+        $this->assertEquals($aViewData['message']['type'], $expected);
     }
 
     public function testInvalidAmountInputProvider()
@@ -181,11 +186,11 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
 
 
         if ($aResponseStub['status'] === Transaction::STATE_SUCCESS) {
-            $this->assertEquals($aViewData['alert']['message'], Helper::translate('wd_text_generic_success'));
+            $this->assertEquals($aViewData['message']['message'], Helper::translate('wd_text_generic_success'));
         }
 
         if ($aResponseStub['status'] === Transaction::STATE_ERROR) {
-            $this->assertNotEquals($aViewData['alert']['message'], Helper::translate('wd_text_generic_success'));
+            $this->assertNotEquals($aViewData['message']['message'], Helper::translate('wd_text_generic_success'));
         }
     }
 

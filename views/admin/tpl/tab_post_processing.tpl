@@ -9,17 +9,19 @@
 
 [{include file="headitem.tpl" title="GENERAL_ADMIN_TITLE"|oxmultilangassign}]
 
+[{oxstyle include=$oViewConf->getPaymentGatewayUrl("out/css/wirecard_wdoxidee_common.css")}]
+
 <form name="transfer" id="transfer" action="[{$oViewConf->getSelfLink()}]" method="post">
     [{$oViewConf->getHiddenSid()}]
     <input type="hidden" name="oxid" value="[{$oxid}]">
     <input type="hidden" name="cl" value="[{$controller}]">
 
     <table cellspacing="0" cellpadding="0" border="0" width="600">
-        [{if $alert}]
+        [{if $message}]
         <tr>
             <td colspan="2">
-                <div class="messagebox">
-                    <div [{if $alert.type === 'error'}]class="warning"[{/if}]>[{$alert.message}]</div>
+                <div class="wdoxidee-messagebox wdoxidee-messagebox--[{$message.type}]">
+                    [{$message.message}]
                 </div>
             </td>
         </tr>
@@ -37,14 +39,14 @@
             </td>
         </tr>
         [{else}]
-            <div class="messagebox">
+            <div class="wdoxidee-messagebox wdoxidee-messagebox--info">
                 [{$emptyText}]
             </div>
         [{/if}]
     </table>
 </form>
 
-[{if $alert.type === 'success'}]
+[{if $message.type === 'success'}]
     <script type="text/javascript">
         top.oxid.admin.updateList();
     </script>
