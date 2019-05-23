@@ -44,13 +44,7 @@ class OrderTabSepaMandateTest extends Wirecard\Test\WdUnitTestCase
         $_GET['oxid'] = $sOrderId;
 
         // use an anonymous class to get access to protected methods and variables
-        $cOrderTabSepaMandate = new class() extends OrderTabSepaMandate
-        {
-            public function publicGetData()
-            {
-                return parent::_getData();
-            }
-        };
+        $cOrderTabSepaMandate = $this->_createOrderTabSepaMandateClassInstance();
 
         $this->_orderTabSepaMandate = $cOrderTabSepaMandate;
         $aData = $this->_orderTabSepaMandate->publicGetData();
@@ -64,5 +58,17 @@ class OrderTabSepaMandateTest extends Wirecard\Test\WdUnitTestCase
             'with sepa mandate' => ['oxid 1', ["SEPA mandate test text"]],
             'without sepa mandate' => ['oxid 2', []],
         ];
+    }
+
+    private function _createOrderTabSepaMandateClassInstance()
+    {
+        $cOrderTabSepaMandate = new class() extends OrderTabSepaMandate
+        {
+            public function publicGetData()
+            {
+                return parent::_getData();
+            }
+        };
+        return $cOrderTabSepaMandate;
     }
 }
