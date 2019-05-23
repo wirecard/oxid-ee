@@ -43,7 +43,7 @@ class GiropayPaymentMethod extends PaymentMethod
      *
      * @since 1.1.0
      */
-    public function getConfig($oPayment): Config
+    public function getConfig($oPayment)
     {
         $oConfig = parent::getConfig($oPayment);
 
@@ -65,7 +65,7 @@ class GiropayPaymentMethod extends PaymentMethod
      *
      * @since 1.1.0
      */
-    public function getTransaction(): Transaction
+    public function getTransaction()
     {
         $oTransaction = new GiropayTransaction();
         $oBankAccount = new BankAccount();
@@ -85,7 +85,7 @@ class GiropayPaymentMethod extends PaymentMethod
      *
      * @since 1.1.0
      */
-    public function getConfigFields(): array
+    public function getConfigFields()
     {
         $aAdditionalFields = [
             'additionalInfo' => [
