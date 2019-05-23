@@ -13,7 +13,7 @@
     </a>
 </td>
 <td class="listheader" height="15">
-    <a href="Javascript:top.oxid.admin.setSorting(document.search, 'oxorder', 'wdoxidee_oxpaymenttype', 'asc');document.search.submit();" class="listheader">
+    <a href="Javascript:top.oxid.admin.setSorting(document.search, 'oxorder', 'oxpaymenttype', 'asc');document.search.submit();" class="listheader">
         [{oxmultilang ident="wd_panel_payment_method"}]
     </a>
 </td>
