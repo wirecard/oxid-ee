@@ -107,7 +107,6 @@ class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTes
     public function testGetPublicFieldNames()
     {
         $aPublicFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
-        $this->assertCount(7, $aPublicFieldNames);
         $aExpected = [
             "apiUrl",
             "maid",
@@ -117,7 +116,7 @@ class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTes
             "deleteCanceledOrder",
             "deleteFailedOrder",
         ];
-        $this->assertEquals($aExpected, $aPublicFieldNames, '', 0.0, 1, true);
+        $this->assertEquals($aExpected, $aPublicFieldNames);
     }
 
     /**

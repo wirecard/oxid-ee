@@ -32,7 +32,6 @@ class OrderTabSepaMandateTest extends Wirecard\Test\WdUnitTestCase
 
         $aViewData = $this->_orderTabSepaMandate->getViewData();
 
-        $this->assertGreaterThan(0, count($aViewData));
         $this->assertArrayHasKey('emptyText', $aViewData);
     }
 
@@ -44,7 +43,7 @@ class OrderTabSepaMandateTest extends Wirecard\Test\WdUnitTestCase
         $_GET['oxid'] = $sOrderId;
 
         // use an anonymous class to get access to protected methods and variables
-        $cOrderTabSepaMandate = $this->_createOrderTabSepaMandateClassInstance();
+        $cOrderTabSepaMandate = $this->_getAnonymousOrderTabSepaMandate();
 
         $this->_orderTabSepaMandate = $cOrderTabSepaMandate;
         $aData = $this->_orderTabSepaMandate->publicGetData();
@@ -55,12 +54,12 @@ class OrderTabSepaMandateTest extends Wirecard\Test\WdUnitTestCase
     public function getDataProvider()
     {
         return [
-            'with sepa mandate' => ['oxid 1', ["SEPA mandate test text"]],
+            'with sepa mandate' => ['oxid 1', ['SEPA mandate test text']],
             'without sepa mandate' => ['oxid 2', []],
         ];
     }
 
-    private function _createOrderTabSepaMandateClassInstance()
+    private function _getAnonymousOrderTabSepaMandate()
     {
         $cOrderTabSepaMandate = new class() extends OrderTabSepaMandate
         {

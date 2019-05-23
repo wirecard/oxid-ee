@@ -88,17 +88,17 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
     public function testAddDataFromForm()
     {
         $_POST['module_support_text'] = 'abcd';
-        $_POST['module_support_email_from'] = 'test@test.com';
-        $_POST['module_support_email_reply'] = 'test@test.com';
+        $_POST['module_support_email_reply'] = 'reply@test.com';
+        $_POST['module_support_email_from'] = 'from@test.com';
 
-        $this->_moduleSupport = $this->_getAnonymousModuleSupportClass();
+        $this->_moduleSupport = $this->_getAnonymousModuleSupport();
 
         $aInput = [];
 
         $aExpected = [
             'body' => 'abcd',
-            'replyTo' => 'test@test.com',
-            'from' => 'test@test.com',
+            'replyTo' => 'reply@test.com',
+            'from' => 'from@test.com',
         ];
 
         $this->_moduleSupport->publicAddDataFromForm($aInput);
@@ -108,7 +108,7 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
 
     public function testAddShopData()
     {
-        $this->_moduleSupport = $this->_getAnonymousModuleSupportClass();
+        $this->_moduleSupport = $this->_getAnonymousModuleSupport();
 
         $aInput = [];
 
@@ -129,7 +129,7 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
         $this->assertEquals($aExpectedKeys, array_keys($aInput));
     }
 
-    private function _getAnonymousModuleSupportClass()
+    private function _getAnonymousModuleSupport()
     {
         $cModuleSupport = new class() extends ModuleSupport
         {
