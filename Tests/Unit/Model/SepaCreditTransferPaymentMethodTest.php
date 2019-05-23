@@ -8,8 +8,13 @@
  */
 
 use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
+use Wirecard\Oxid\Tests\Unit\Controller\Admin\TestDataHelper;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use OxidEsales\Eshop\Core\Field;
+
+use Wirecard\Oxid\Model\Transaction;
+
+use Exception;
 
 class SepaCreditTransferPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
@@ -17,6 +22,11 @@ class SepaCreditTransferPaymentMethodTest extends OxidEsales\TestingLibrary\Unit
      * @var SepaCreditTransferPaymentMethod
      */
     private $_oPaymentMethod;
+
+    protected function dbData()
+    {
+        return TestDataHelper::getDemoData();
+    }
 
     protected function setUp()
     {
@@ -55,13 +65,14 @@ class SepaCreditTransferPaymentMethodTest extends OxidEsales\TestingLibrary\Unit
 
     public function testAddPostProcessingTransactionData()
     {
+        $oTransaction = new SepaCreditTransferTransaction();
+        $oParentTransaction = oxNew(Transaction::class);
+        $oParentTransaction->loadWithTransactionId('transaction 1');
+
         try {
-            $oTransaction = $this->_oPaymentMethod->getTransaction();
-            $oParentTransaction = $this->_oPaymentMethod->getTransaction();
-            $oParentTransaction->wdoxidee_ordertransactions__orderid = new Field('testid');
             $this->_oPaymentMethod->addPostProcessingTransactionData($oTransaction, $oParentTransaction);
-        } catch (Exception $exception) {
-            assert('Exception catched in testAddPostProcessingTransactionData');
+        } catch (Exception $oException) {
+            $this->fail();
         }
     }
 }
