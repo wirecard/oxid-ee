@@ -122,7 +122,7 @@ class PaymentMethodHelper
      *
      * @since 1.1.0
      */
-    public function getBic()
+    public static function getBic()
     {
         $oSession = Registry::getConfig()->getSession();
         $aDynvalues = $oSession->getVariable('dynvalue');
