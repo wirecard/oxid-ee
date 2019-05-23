@@ -10,11 +10,8 @@
 use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 use Wirecard\Oxid\Tests\Unit\Controller\Admin\TestDataHelper;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
-use OxidEsales\Eshop\Core\Field;
 
 use Wirecard\Oxid\Model\Transaction;
-
-use Exception;
 
 class SepaCreditTransferPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 {

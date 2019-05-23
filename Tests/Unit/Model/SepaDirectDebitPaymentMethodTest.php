@@ -7,13 +7,11 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
 use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
-
-use OxidEsales\Eshop\Core\Field;
-use OxidEsales\Eshop\Core\Registry;
-
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 
 class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
@@ -35,41 +33,44 @@ class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTes
         $this->assertNotNull($oConfig);
     }
 
-    public function testGetConfigFields()
+    /**
+     * @dataProvider getConfigFieldsProvider
+     */
+    public function testGetConfigFields($sContainsKey)
     {
         $aConfigFields = $this->_oPaymentMethod->getConfigFields();
-        $this->assertArrayHasKey("sepaMandateCustom", $aConfigFields);
-        $this->assertArrayHasKey("creditorId", $aConfigFields);
-        $this->assertArrayHasKey("additionalInfo", $aConfigFields);
-        $this->assertArrayHasKey("bic", $aConfigFields);
+        $this->assertArrayHasKey($sContainsKey, $aConfigFields);
     }
 
-    public function getDefaultConfigFieldsProvider()
+    public function getConfigFieldsProvider()
     {
         return [
-            "contains apiUrl"=> ['apiUrl'],
-            "contains httpUser"=> ['httpUser'],
-            "contains httpPassword"=> ['httpPassword'],
-            "contains maid"=> ['maid'],
-            "contains secret"=> ['secret'],
-            "contains testCredentials"=> ['testCredentials'],
+            'contains sepaMandateCustom' => ['sepaMandateCustom'],
+            'contains creditorId' => ['creditorId'],
+            'contains additionalInfo' => ['additionalInfo'],
+            'contains bic' => ['bic'],
         ];
     }
 
-    public function testGetCheckoutFields()
+    /**
+     * @dataProvider getCheckoutFieldsProvider
+     */
+    public function testGetCheckoutFields($sContainsKey)
     {
         $oPayment = $this->_oPaymentMethod->getPayment();
         $oPayment->oxpayments__wdoxidee_bic->value = new Field(1);
         $oPayment->save();
+        $aCheckoutFields = $this->_oPaymentMethod->getCheckoutFields();
+        $this->assertArrayHasKey($sContainsKey, $aCheckoutFields);
+    }
 
-        $aPublicFieldNames = $this->_oPaymentMethod->getCheckoutFields();
-        $aExpected = [
-            "accountHolder",
-            "iban",
-            "bic",
+    public function getCheckoutFieldsProvider()
+    {
+        return [
+            'contains accountHolder' => ['accountHolder'],
+            'contains iban' => ['iban'],
+            'contains bic' => ['bic'],
         ];
-
-        $this->assertEquals($aExpected, $aPublicFieldNames, '', 0.0, 1, true);
     }
 
     public function testGetTransaction()
@@ -78,19 +79,29 @@ class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTes
         $this->assertInstanceOf(SepaDirectDebitTransaction::class, $oTransaction);
     }
 
-    public function testAddMandatoryTransactionData()
+    /**
+     * @dataProvider addMandatoryTransactionDataProvider
+     */
+    public function testAddMandatoryTransactionData($sAttribute)
     {
         $oTransaction = $this->_oPaymentMethod->getTransaction();
-        $aDynArray = Registry::getSession()->getVariable("dynvalue");
-        if (!$aDynArray) {
-            $aDynArray = [];
-        }
-        $aDynArray['bic'] = 'WIREDEMMXXX';
+
+        $aDynArray = [
+            'bic' => 'WIREDEMMXXX',
+            'iban' => "IBAN"];
         Registry::getSession()->setVariable('dynvalue', $aDynArray);
         $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction);
-        $this->assertAttributeEquals('', 'iban', $oTransaction);
-        $this->assertAttributeNotEmpty('mandate', $oTransaction);
-        $this->assertAttributeNotEmpty('accountHolder', $oTransaction);
+
+        $this->assertAttributeNotEmpty($sAttribute, $oTransaction);
+    }
+
+    public function addMandatoryTransactionDataProvider()
+    {
+        return [
+            'contains iban' => ['iban'],
+            'contains mandate' => ['mandate'],
+            'contains accountHolder' => ['accountHolder'],
+        ];
     }
 
     public function testGetPublicFieldNames()
