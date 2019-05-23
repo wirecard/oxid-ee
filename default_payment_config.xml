@@ -122,6 +122,7 @@
         <oxtoamount>10000</oxtoamount>
         <oxdesc>Wirecard Giropay</oxdesc>
         <oxdesc_1>Wirecard Giropay</oxdesc_1>
+        <oxsort>90</oxsort>
         <wdoxidee_logo>giropay.png</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
         <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>

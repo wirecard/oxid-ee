@@ -7,8 +7,6 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use OxidEsales\Eshop\Application\Model\Payment;
-
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\GiropayPaymentMethod;
 
@@ -32,11 +30,7 @@ class GiropayPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetConfig()
     {
-        /**
-         * @var Payment $oPayment
-         */
-        $oPayment = PaymentMethodHelper::getPaymentById(GiropayPaymentMethod::getName(true));
-        $oConfig = $this->_oPaymentMethod->getConfig($oPayment);
+        $oConfig = $this->_oPaymentMethod->getConfig();
 
         $this->assertInstanceOf(Config::class, $oConfig);
         $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get(GiropayPaymentMethod::getName()));
@@ -52,9 +46,9 @@ class GiropayPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetConfigFields()
     {
-        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
+        $aFields = $this->_oPaymentMethod->getConfigFields();
 
-        $this->assertEquals(array_keys($aConfigFields), [
+        $this->assertEquals(array_keys($aFields), [
             'apiUrl',
             'httpUser',
             'httpPassword',
@@ -69,10 +63,23 @@ class GiropayPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetCheckoutFields()
     {
-        $aCheckoutFields = $this->_oPaymentMethod->getCheckoutFields();
+        $aFields = $this->_oPaymentMethod->getCheckoutFields();
 
-        $this->assertEquals(array_keys($aCheckoutFields), [
+        $this->assertEquals(array_keys($aFields), [
             'bic',
+        ]);
+    }
+
+    public function testGetPublicFieldNames()
+    {
+        $aFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
+
+        $this->assertEquals($aFieldNames, [
+            'apiUrl',
+            'maid',
+            'additionalInfo',
+            'deleteCanceledOrder',
+            'deleteFailedOrder',
         ]);
     }
 }
