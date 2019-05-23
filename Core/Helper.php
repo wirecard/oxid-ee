@@ -29,7 +29,6 @@ use DateTime;
  */
 class Helper
 {
-
     const MODULE_ID = 'wdoxidee';
     const SHOP_SYSTEM_KEY = 'shopSystem';
     const SHOP_NAME_KEY = 'shopName';
@@ -83,7 +82,7 @@ class Helper
      *
      * @return integer round precision
      *
-     * @since 1.0.1
+     * @since 1.1.0
      */
     public static function getCurrencyRoundPrecision($sCurrencyName)
     {
@@ -94,35 +93,6 @@ class Helper
         }
 
         return self::ROUND_PRECISION_FALLBACK;
-    }
-
-    /**
-     * Returns a list of available payments.
-     *
-     * @return array
-     *
-     * @since 1.0.0
-     */
-    public static function getPayments()
-    {
-        $oPaymentList = oxNew(ListModel::class);
-        $oPaymentList->init(Payment::class);
-
-        return $oPaymentList->getList()->getArray();
-    }
-
-    /**
-     * Returns a list of available payments added by the module.
-     *
-     * @return array
-     *
-     * @since 1.0.0
-     */
-    public static function getModulePayments()
-    {
-        return array_filter(self::getPayments(), function ($oPayment) {
-            return $oPayment->isCustomPaymentMethod();
-        });
     }
 
     /**
@@ -307,7 +277,7 @@ class Helper
     /**
      * Returns list of modules
      *
-     * @return array;
+     * @return Module[];
      *
      * @since 1.0.0
      */
@@ -334,6 +304,32 @@ class Helper
     }
 
     /**
+     * Adds all keys of a given array to an object's viewData array.
+     *
+     * @param object $oObject   Object to modify viewData
+     * @param array  $aArray    Array to merge
+     * @param bool   $bOverride Whether or not keys of the passed array should override present keys
+     *
+     * @throws StandardException
+     *
+     * @since 1.1.0
+     */
+    public static function addToViewData($oObject, $aArray = [], $bOverride = true)
+    {
+        if (!method_exists($oObject, 'getViewData') || !method_exists($oObject, 'setViewData')) {
+            $sObjectType = get_class($oObject);
+
+            throw new StandardException("Object of type {$sObjectType} doesn't support modifying view data");
+        }
+
+        $aViewData = $bOverride ?
+            array_merge($oObject->getViewData(), $aArray) :
+            array_merge($aArray, $oObject->getViewData());
+
+        $oObject->setViewData($aViewData);
+    }
+
+    /**
      * @return array
      *
      * @since 1.0.0
@@ -354,31 +350,6 @@ class Helper
             self::PLUGIN_NAME_KEY => $oModule->getTitle(),
             self::PLUGIN_VERSION_KEY => $oModule->getInfo('version'),
         ];
-    }
-
-    /**
-     * Adds all keys of a given array to an object's viewData array.
-     *
-     * @param object $oObject   Object to modify viewData
-     * @param array  $aArray    Array to merge
-     * @param bool   $bOverride Whether or not keys of the passed array should
-     * override present keys
-     *
-     * @since 1.1.0
-     */
-    public static function addToViewData($oObject, $aArray = [], $bOverride = true)
-    {
-        if (!method_exists($oObject, 'getViewData') || !method_exists($oObject, 'setViewData')) {
-            $sObjectType = get_class($oObject);
-
-            throw new StandardException("Object of type {$sObjectType} doesn't support modifying view data");
-        }
-
-        $aViewData = $bOverride ?
-            array_merge($oObject->getViewData(), $aArray) :
-            array_merge($aArray, $oObject->getViewData());
-
-        $oObject->setViewData($aViewData);
     }
 
     /**

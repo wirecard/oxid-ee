@@ -29,6 +29,7 @@ class PaymentController extends PaymentController_parent
      * @inheritdoc
      *
      * @since 1.0.0
+     *
      */
     protected function _unsetPaymentErrors()
     {
@@ -36,7 +37,7 @@ class PaymentController extends PaymentController_parent
         $sOrderId = Registry::getSession()->getVariable('sess_challenge');
 
         if ($oOrder->load($sOrderId)) {
-            switch (Registry::getConfig()->getRequestParameter('payerror')) {
+            switch (Registry::getRequest()->getRequestParameter('payerror')) {
                 case self::ERROR_CODE_CANCELED:
                     $oOrder->handleOrderState(Order::STATE_CANCELLED);
                     break;

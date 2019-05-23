@@ -28,7 +28,7 @@ class ResponseMapper
      *
      * @since 1.0.0
      */
-    private $oResponse;
+    private $_oResponse;
 
     /**
      * ResponseMapper constructor.
@@ -39,7 +39,7 @@ class ResponseMapper
      */
     public function __construct($sXml)
     {
-        $this->oResponse = new SuccessResponse(simplexml_load_string($sXml));
+        $this->_oResponse = new SuccessResponse(simplexml_load_string($sXml));
     }
 
     /**
@@ -63,7 +63,7 @@ class ResponseMapper
      */
     public function getPaymentDetails()
     {
-        return $this->_getObjectDataArray($this->oResponse->getPaymentDetails());
+        return $this->_getObjectDataArray($this->_oResponse->getPaymentDetails());
     }
 
     /**
@@ -75,7 +75,7 @@ class ResponseMapper
      */
     public function getTransactionDetails()
     {
-        return $this->_getObjectDataArray($this->oResponse->getTransactionDetails());
+        return $this->_getObjectDataArray($this->_oResponse->getTransactionDetails());
     }
 
     /**
@@ -87,7 +87,7 @@ class ResponseMapper
      */
     public function getAccountHolder()
     {
-        return $this->_getObjectDataArray($this->oResponse->getAccountHolder());
+        return $this->_getObjectDataArray($this->_oResponse->getAccountHolder());
     }
 
     /**
@@ -99,7 +99,7 @@ class ResponseMapper
      */
     public function getShipping()
     {
-        return $this->_getObjectDataArray($this->oResponse->getShipping());
+        return $this->_getObjectDataArray($this->_oResponse->getShipping());
     }
 
     /**
@@ -111,7 +111,7 @@ class ResponseMapper
      */
     public function getBasket()
     {
-        return $this->_getObjectDataArray($this->oResponse->getBasket());
+        return $this->_getObjectDataArray($this->_oResponse->getBasket());
     }
 
     /**
@@ -123,7 +123,7 @@ class ResponseMapper
      */
     public function getCard()
     {
-        return $this->_getObjectDataArray($this->oResponse->getCard());
+        return $this->_getObjectDataArray($this->_oResponse->getCard());
     }
 
     /**
@@ -135,7 +135,7 @@ class ResponseMapper
      */
     public function getData()
     {
-        return $this->oResponse->getData();
+        return $this->_oResponse->getData();
     }
 
     /**
@@ -147,7 +147,7 @@ class ResponseMapper
      */
     public function getDataReadable()
     {
-        $aResponseData = $this->oResponse->getData();
+        $aResponseData = $this->_oResponse->getData();
 
         $aSortKeys = [
             'payment-methods.0.name',
@@ -177,6 +177,7 @@ class ResponseMapper
      * Returns an array with the given object's data
      *
      * @param PaymentDetails|TransactionDetails|AccountHolder|Basket|Card $oResponseObject
+     *
      * @return array
      *
      * @since 1.0.0
@@ -190,6 +191,7 @@ class ResponseMapper
      * Converts HTML returned by the SDK to an associative array.
      *
      * @param string $sHtml
+     *
      * @return array
      *
      * @since 1.0.0

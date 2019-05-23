@@ -11,7 +11,6 @@ namespace Wirecard\Oxid\Model;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OxidEeEvents;
-use Wirecard\Oxid\Model\TransactionList;
 
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Model\MultiLanguageModel;

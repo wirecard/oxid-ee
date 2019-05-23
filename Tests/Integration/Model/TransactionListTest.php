@@ -35,7 +35,7 @@ class TransactionListTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testGetListByConditionsProvider
+     * @dataProvider getListByConditionsProvider
      */
     public function testGetListByConditions($input, $expected)
     {
@@ -44,7 +44,7 @@ class TransactionListTest extends Wirecard\Test\WdUnitTestCase
         $this->assertCount($expected, $oTransactionList->getListByConditions($input)->getArray());
     }
 
-    public function testGetListByConditionsProvider()
+    public function getListByConditionsProvider()
     {
         return [
             'get by orderid' => [
@@ -66,7 +66,7 @@ class TransactionListTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testGetListByConditionsOrderProvider
+     * @dataProvider getListByConditionsOrderProvider
      */
     public function testGetListByConditionsOrder($input, $expected)
     {
@@ -76,7 +76,7 @@ class TransactionListTest extends Wirecard\Test\WdUnitTestCase
         $this->assertEquals($resultIds, $expected);
     }
 
-    public function testGetListByConditionsOrderProvider()
+    public function getListByConditionsOrderProvider()
     {
         return [
             'order by oxid' => [

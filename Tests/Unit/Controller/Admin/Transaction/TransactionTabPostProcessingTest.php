@@ -72,16 +72,26 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
         ];
     }
 
-    public function testRenderBasic()
+    /**
+     * @dataProvider renderBasicProvider
+     */
+    public function testRenderBasic($sContainsKey)
     {
         $_GET['oxid'] = 'transaction 1';
         $this->_transactionTabPostProcessing = new TransactionTabPostProcessing();
         $this->_transactionTabPostProcessing->render();
-        $this->assertArrayHasKey('actions', $this->_transactionTabPostProcessing->getViewData());
-        $this->assertArrayHasKey('requestParameters', $this->_transactionTabPostProcessing->getViewData());
-        $this->assertArrayHasKey('message', $this->_transactionTabPostProcessing->getViewData());
-        $this->assertArrayHasKey('currency', $this->_transactionTabPostProcessing->getViewData());
-        $this->assertArrayHasKey('emptyText', $this->_transactionTabPostProcessing->getViewData());
+        $this->assertArrayHasKey($sContainsKey, $this->_transactionTabPostProcessing->getViewData());
+    }
+
+    public function renderBasicProvider()
+    {
+        return [
+            'contains actions' => ['actions'],
+            'contains requestParameters' => ['requestParameters'],
+            'contains alert' => ['message'],
+            'contains currency' => ['currency'],
+            'contains emptyText' => ['emptyText'],
+        ];
     }
 
     public function testRenderSepaCredit()
@@ -120,7 +130,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testInvalidAmountInputProvider
+     * @dataProvider invalidAmountInputProvider
      */
     public function testAmountInput($input, $expected)
     {
@@ -146,7 +156,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
         $this->assertEquals($aViewData['message']['type'], $expected);
     }
 
-    public function testInvalidAmountInputProvider()
+    public function invalidAmountInputProvider()
     {
         return [
             'text' => ['abcd', 'error'],
@@ -158,9 +168,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testRequestActionProvider
-     *
-     * @param array $aResponseStub
+     * @dataProvider requestActionProvider
      */
     public function testRequestAction($aResponseStub)
     {
@@ -194,7 +202,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
         }
     }
 
-    public function testRequestActionProvider()
+    public function requestActionProvider()
     {
         $aSuccessResponseStub = ['status' => Transaction::STATE_SUCCESS];
         $aFailureResponseStub = ['status' => Transaction::STATE_ERROR];

@@ -8,24 +8,26 @@
  *
  */
 
+use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Core\Controller\BaseController;
+use OxidEsales\Eshop\Core\Module\Module;
+use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 
-use OxidEsales\Eshop\Application\Model\Payment;
-use OxidEsales\Eshop\Core\Module\Module;
-use OxidEsales\EshopCommunity\Core\Controller\BaseController;
-
 class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
+
     /**
-     * @dataProvider testTranslateProvider
+     * @dataProvider translateProvider
      */
     public function testTranslate($input, $expected)
     {
         $this->assertEquals(Helper::translate($input), $expected);
     }
 
-    public function testTranslateProvider()
+    public function translateProvider()
     {
         return [
             'OXID key' => ['WRAPPING', 'Verpackung'],
@@ -53,20 +55,20 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetModulePayments()
     {
-        foreach (PaymentMethodHelper::getModulePayments() as $key => $payment) {
+        foreach (PaymentMethodHelper::getModulePayments() as $payment) {
             $this->assertTrue($payment->isCustomPaymentMethod());
         }
     }
 
     /**
-     * @dataProvider testGetFloatFromStringProvider
+     * @dataProvider getFloatFromStringProvider
      */
     public function testGetFloatFromString($input, $expected)
     {
         $this->assertEquals(Helper::getFloatFromString($input), $expected);
     }
 
-    public function testGetFloatFromStringProvider()
+    public function getFloatFromStringProvider()
     {
         return [
             'decimals English' => ['1.234', 1.234],
@@ -81,14 +83,14 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testGetGenderCodeForSalutationProvider
+     * @dataProvider getGenderCodeForSalutationProvider
      */
     public function testGetGenderCodeForSalutation($input, $expected)
     {
         $this->assertEquals(Helper::getGenderCodeForSalutation($input), $expected);
     }
 
-    public function testGetGenderCodeForSalutationProvider()
+    public function getGenderCodeForSalutationProvider()
     {
         return [
             'male' => ['MR', 'm'],
@@ -98,14 +100,14 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testGetDateTimeFromStringProvider
+     * @dataProvider getDateTimeFromStringProvider
      */
     public function testGetDateTimeFromString($input, $expected)
     {
         $this->assertEquals(Helper::getDateTimeFromString($input), $expected);
     }
 
-    public function testGetDateTimeFromStringProvider()
+    public function getDateTimeFromStringProvider()
     {
         return [
             'date' => ['2010-10-10', new DateTime('2010-10-10')],
@@ -117,14 +119,14 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testGetFormattedDbDateProvider
+     * @dataProvider getFormattedDbDateProvider
      */
     public function testGetFormattedDbDate($input, $expected)
     {
         $this->assertContains($expected, Helper::getFormattedDbDate($input));
     }
 
-    public function testGetFormattedDbDateProvider()
+    public function getFormattedDbDateProvider()
     {
         return [
             'date time format' => [
@@ -169,7 +171,7 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testAddToViewDataProvider
+     * @dataProvider addToViewDataProvider
      */
     public function testAddToViewData($oldViewData, $array, $override, $newViewData)
     {
@@ -181,7 +183,7 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals($object->getViewData(), $newViewData);
     }
 
-    public function testAddToViewDataProvider()
+    public function addToViewDataProvider()
     {
         return [
             'associative (override)' => [
@@ -230,14 +232,14 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testGetCurrencyRoundPrecisionProvider
+     * @dataProvider getCurrencyRoundPrecisionProvider
      */
     public function testGetCurrencyRoundPrecision($sCurrencyName, $iExpectedPrecision)
     {
         $this->assertEquals(Helper::getCurrencyRoundPrecision($sCurrencyName), $iExpectedPrecision);
     }
 
-    public function testGetCurrencyRoundPrecisionProvider()
+    public function getCurrencyRoundPrecisionProvider()
     {
         return [
             'EUR' => ['EUR', 2],
@@ -246,5 +248,28 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
             'non existing currency' => ['XXXXX', Helper::ROUND_PRECISION_FALLBACK],
             'null' => [null, Helper::ROUND_PRECISION_FALLBACK],
         ];
+    }
+
+    public function testGetInputHelpHtml()
+    {
+        $sReason = "Testing the `?` help button rendering in the admin panel.\n" .
+            "Test fails because Smarty cannot load the template file";
+        $this->markTestSkipped($sReason);
+
+        $this->assertNotNull(Helper::getInputHelpHtml("Test String"));
+    }
+
+    public function testGetSessionChallenge()
+    {
+        Registry::getSession()->setVariable('sess_challenge', 'my session challenge');
+        $sResult = Helper::getSessionChallenge();
+        $this->assertEquals('my session challenge', $sResult);
+    }
+
+    public function testGetSidQueryString()
+    {
+        Registry::getSession()->setId("sessionID");
+        $sResult = Helper::getSidQueryString();
+        $this->assertEquals('&force_sid=sessionID', $sResult);
     }
 }

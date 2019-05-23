@@ -1,3 +1,8 @@
+engines:
+  duplication:
+    enabled: true
+    exclude_paths:
+      - Tests/**
 exclude_paths:
   - '.bin/**'
   - 'phpmd/**'

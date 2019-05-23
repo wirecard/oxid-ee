@@ -17,6 +17,7 @@ use Psr\Log\LoggerInterface;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Extend\Model\Payment;
+
 use Wirecard\PaymentSdk\Config\Config;
 
 /**
@@ -101,6 +102,8 @@ abstract class PaymentMethod
 
     /**
      * Get the payments method transaction configuration
+     *
+     * @return \Wirecard\PaymentSdk\Transaction\Transaction
      *
      * @since 1.0.0
      */

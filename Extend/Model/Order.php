@@ -13,8 +13,8 @@ use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\OrderArticle;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Application\Model\Basket;
-use OxidEsales\EshopCommunity\Core\Field;
-use OxidEsales\EshopCommunity\Core\Registry;
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
@@ -480,6 +480,7 @@ class Order extends Order_parent
      * Handles the order after a certain order state is set.
      *
      * @param string $sState
+     *
      * @return void
      *
      * @since 1.0.0
@@ -505,6 +506,7 @@ class Order extends Order_parent
      * Checks if the order should be deleted if a certain order state is set.
      *
      * @param string $sState
+     *
      * @return bool
      *
      * @since 1.0.0

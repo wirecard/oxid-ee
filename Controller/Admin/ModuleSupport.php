@@ -9,9 +9,12 @@
 
 namespace Wirecard\Oxid\Controller\Admin;
 
+use Exception;
+
 use OxidEsales\Eshop\Application\Controller\Admin\AdminController;
 use OxidEsales\Eshop\Core\Module\Module;
 use OxidEsales\Eshop\Core\Exception\StandardException;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Extend\Core\Email;
@@ -33,7 +36,7 @@ class ModuleSupport extends AdminController
     /**
      * current module
      *
-     * @var OxidEsales\Eshop\Core\Module\Module
+     * @var \OxidEsales\Eshop\Core\Module\Module
      *
      * @since 1.0.0
      */
@@ -49,7 +52,7 @@ class ModuleSupport extends AdminController
     public function render()
     {
         $sModuleId = $this->getEditObjectId();
-        $sDefaultEmail = $this->getConfig()->getActiveShop()->oxshops__oxinfoemail->value;
+        $sDefaultEmail = Registry::getConfig()->getActiveShop()->oxshops__oxinfoemail->value;
 
         Helper::addToViewData($this, [
             'oxid' => $sModuleId,
@@ -64,7 +67,7 @@ class ModuleSupport extends AdminController
             ]);
         }
 
-        return $this->_sThisTemplate;
+        return parent::render();
     }
 
     /**
@@ -162,7 +165,7 @@ class ModuleSupport extends AdminController
     /**
      * Loads the payment gateway module from database and returns it
      *
-     * @return OxidEsales\Eshop\Core\Module\Module
+     * @return \OxidEsales\Eshop\Core\Module\Module
      *
      * @since 1.0.0
      */
@@ -181,13 +184,16 @@ class ModuleSupport extends AdminController
 
     /**
      * Returns the list of other modules (without the current one)
-     * @return array
+     * @return Module[]
      *
      * @since 1.0.0
      */
     protected function _getOtherModules()
     {
         return array_filter(Helper::getModulesList(), function ($oModule) {
+            /**
+             * @var $module Module
+             */
             return $oModule->getId() !== $this->_getModule()->getId();
         });
     }
@@ -195,7 +201,7 @@ class ModuleSupport extends AdminController
     /**
      * Validates the current request.
      *
-     * @throws Exception Throws exception if some request params are invalid
+     * @throws StandardException  Throws exception if some request params are invalid
      *
      * @since 1.0.0
      */

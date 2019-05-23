@@ -43,7 +43,7 @@ class TransactionTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testGetChildTransactionsProvider
+     * @dataProvider getChildTransactionsProvider
      */
     public function testGetChildTransactions($input, $expected)
     {
@@ -53,7 +53,7 @@ class TransactionTest extends Wirecard\Test\WdUnitTestCase
         $this->assertCount($expected, $oTransaction->getChildTransactions());
     }
 
-    public function testGetChildTransactionsProvider()
+    public function getChildTransactionsProvider()
     {
         return [
             'transaction with children' => ['1', 2],

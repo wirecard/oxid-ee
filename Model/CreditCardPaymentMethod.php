@@ -130,7 +130,12 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     private function _convertAmountCurrency($fAmount, $fFromFactor, $oToCurrency)
     {
-        return Registry::getUtils()->fround($fAmount / $fFromFactor * $oToCurrency->rate, $oToCurrency);
+        $fDivisor = $fFromFactor * $oToCurrency->rate;
+        if ($fDivisor === 0.0) {
+            return 0.0;
+        }
+
+        return Registry::getUtils()->fround($fAmount / $fDivisor, $oToCurrency);
     }
 
     /**

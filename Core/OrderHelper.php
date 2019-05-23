@@ -10,7 +10,6 @@
 namespace Wirecard\Oxid\Core;
 
 use Exception;
-use Psr\Log\LoggerInterface;
 
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
@@ -18,6 +17,8 @@ use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Session;
+
+use Psr\Log\LoggerInterface;
 
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
@@ -108,6 +109,8 @@ class OrderHelper
      * @param Order               $oOrder
      * @param BackendService|null $oBackendService
      *
+     * @return string|null
+     *
      * @since 1.0.0
      *
      * @throws Exception
@@ -115,7 +118,7 @@ class OrderHelper
     public static function handleResponse($oResponse, $oLogger, $oOrder, $oBackendService = null)
     {
         if ($oResponse instanceof FailureResponse) {
-            self::_handleFailureResponse($oResponse, $oLogger, $oOrder);
+            return self::_handleFailureResponse($oResponse, $oLogger, $oOrder);
         }
 
         // set the transaction ID on the order
@@ -123,11 +126,11 @@ class OrderHelper
         $oOrder->save();
 
         if ($oResponse instanceof FormInteractionResponse) {
-            self::_handleFormInteractionResponse($oResponse);
+            return self::_handleFormInteractionResponse($oResponse);
         }
 
         if ($oResponse instanceof InteractionResponse) {
-            self::_handleInteractionResponse($oResponse);
+            return self::_handleInteractionResponse($oResponse);
         }
 
         self::_onSuccessResponse($oResponse, $oBackendService, $oOrder);
@@ -201,6 +204,8 @@ class OrderHelper
      * @param LoggerInterface $oLogger
      * @param Order           $oOrder
      *
+     * @return null
+     *
      * @since 1.0.0
      */
     private static function _handleFailureResponse($oResponse, $oLogger, $oOrder)
@@ -230,7 +235,7 @@ class OrderHelper
 
         $oOrder->handleOrderState(Order::STATE_FAILED);
 
-        Registry::getUtils()->redirect($sRedirectUrl);
+        return Registry::getUtils()->redirect($sRedirectUrl);
     }
 
     /**
@@ -270,7 +275,9 @@ class OrderHelper
     /**
      * Handle transaction form interaction response
      *
-     * @param Response $oResponse
+     * @param FormInteractionResponse $oResponse
+     *
+     * @return null
      *
      * @since 1.0.0
      */
@@ -291,7 +298,7 @@ class OrderHelper
 
         $sSid = Helper::getSidQueryString();
 
-        Registry::getUtils()->redirect(
+        return Registry::getUtils()->redirect(
             Registry::getConfig()->getShopUrl() . "index.php?cl=wcpg_form_interaction" . $sSid
         );
     }
@@ -299,13 +306,15 @@ class OrderHelper
     /**
      * Handle transaction interaction response
      *
-     * @param Response $oResponse
+     * @param InteractionResponse $oResponse
+     *
+     * @return null
      *
      * @since 1.0.0
      */
     private static function _handleInteractionResponse($oResponse)
     {
         $sPageUrl = $oResponse->getRedirectUrl();
-        Registry::getUtils()->redirect($sPageUrl);
+        return Registry::getUtils()->redirect($sPageUrl);
     }
 }

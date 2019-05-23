@@ -9,14 +9,14 @@
 
 namespace Wirecard\Oxid\Core;
 
+use OxidEsales\Eshop\Core\Exception\StandardException;
+
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
 use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
-
-use OxidEsales\Eshop\Core\Exception\StandardException;
 
 /**
  * Class PaymentMethodFactory

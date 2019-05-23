@@ -27,6 +27,8 @@ class OrderList extends OrderList_parent
      *
      * @return string
      *
+     * @throws \OxidEsales\Eshop\Core\Exception\StandardException
+     *
      * @since 1.0.0
      */
     public function render()

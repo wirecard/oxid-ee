@@ -7,40 +7,104 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 
-use OxidEsales\Eshop\Application\Model\Payment;
-
 class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
+
     /**
      * @var SofortPaymentMethod
      */
-    private $oPaymentMethod;
+    private $_oPaymentMethod;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->oPaymentMethod = new SofortPaymentMethod();
+        $this->_oPaymentMethod = new SofortPaymentMethod();
     }
 
     public function testGetConfig()
     {
-        $oConfig = $this->oPaymentMethod->getConfig();
+        $oConfig = $this->_oPaymentMethod->getConfig();
+
         $this->assertNotNull($oConfig);
         $this->assertNotNull($oConfig->get('sofortbanking'));
     }
 
     public function testGetTransaction()
     {
-        $oTransaction = $this->oPaymentMethod->getTransaction();
+        $oTransaction = $this->_oPaymentMethod->getTransaction();
         $this->assertInstanceOf(SofortTransaction::class, $oTransaction);
     }
 
     public function testIsMerchantOnly()
     {
-        $this->assertFalse($this->oPaymentMethod->isMerchantOnly());
+        $this->assertFalse($this->_oPaymentMethod->isMerchantOnly());
+    }
+
+    /**
+     * @dataProvider getNameProvider
+     */
+    public function testGetName($bforOxid, $sExpected)
+    {
+        $sName = SofortPaymentMethod::getName($bforOxid);
+        $this->assertEquals($sExpected, $sName);
+    }
+
+    public function getNameProvider()
+    {
+        return [
+            'for oxid' => [true, 'wdsofortbanking'],
+            'not for oxid' => [false, 'sofortbanking'],
+        ];
+    }
+
+    public function testGetLogoPath()
+    {
+        $sLogoUrl = $this->_oPaymentMethod->getLogoPath();
+        $this->assertContains('en_gb/pay_now/standard', $sLogoUrl);
+    }
+
+    /**
+     * @dataProvider configFieldsProvider
+     */
+    public function testGetConfigFields($sContainsKey)
+    {
+        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
+        $this->assertArrayHasKey($sContainsKey, $aConfigFields);
+    }
+
+    public function configFieldsProvider()
+    {
+        return [
+            "contains additionalInfo" => ['additionalInfo'],
+            "contains deleteCanceledOrder" => ['deleteCanceledOrder'],
+            "contains deleteFailedOrder" => ['deleteFailedOrder'],
+            "contains countryCode" => ['countryCode'],
+            "contains logoType" => ['logoType'],
+        ];
+    }
+
+    public function testGetConfigFieldsCount()
+    {
+        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
+        $this->assertCount(11, $aConfigFields);
+
+    }
+
+    public function testGetPublicFieldNames()
+    {
+        $aPublicFields = $this->_oPaymentMethod->getPublicFieldNames();
+        $aExpected = [
+            'apiUrl',
+            'maid',
+            'additionalInfo',
+            'countryCode',
+            'logoType',
+            'deleteCanceledOrder',
+            'deleteFailedOrder',
+        ];
+        $this->assertEquals($aExpected, $aPublicFields, '', 0.0, 1, true);
     }
 }

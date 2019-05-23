@@ -29,9 +29,18 @@ use Wirecard\PaymentSdk\TransactionService;
 class PaymentMain extends PaymentMain_parent
 {
     /**
+     * @var TransactionService
+     *
+     * @since 1.1.0
+     */
+    private $_oTransactionService;
+
+    /**
      * @inheritdoc
      *
      * @return string
+     *
+     * @throws \Http\Client\Exception
      *
      * @since 1.0.0
      */
@@ -75,6 +84,8 @@ class PaymentMain extends PaymentMain_parent
      * Validates credentials, country code and creditor id
      *
      * @return bool
+     *
+     * @throws \Http\Client\Exception
      *
      * @since 1.0.0
      */
@@ -188,6 +199,8 @@ class PaymentMain extends PaymentMain_parent
      *
      * @return bool
      *
+     * @throws \Http\Client\Exception
+     *
      * @since 1.0.0
      */
     private function _validateRequestParameters($aParams)
@@ -198,7 +211,7 @@ class PaymentMain extends PaymentMain_parent
 
         if ($sUrl && $sUser && $sPass) {
             $oConfig = new Config($sUrl, $sUser, $sPass);
-            $oTransactionService = new TransactionService($oConfig, Registry::getLogger());
+            $oTransactionService = $this->_getTransactionService($oConfig);
             return $oTransactionService->checkCredentials();
         }
 
@@ -217,5 +230,34 @@ class PaymentMain extends PaymentMain_parent
         $sOxId = $this->getEditObjectId();
         $oPayment = PaymentMethodHelper::getPaymentById($sOxId);
         return $oPayment->isCustomPaymentMethod();
+    }
+
+    /**
+     * Used in tests to mock the transaction service
+     *
+     * @param TransactionService $oTransactionService
+     *
+     * @since 1.1.0
+     */
+    public function setTransactionService($oTransactionService)
+    {
+        $this->_oTransactionService = $oTransactionService;
+    }
+
+    /**
+     *
+     * @param Config $oConfig
+     *
+     * @return TransactionService
+     *
+     * @since 1.1.0
+     */
+    private function _getTransactionService($oConfig)
+    {
+        if (is_null($this->_oTransactionService)) {
+            $this->_oTransactionService = new TransactionService($oConfig, Registry::getLogger());
+        }
+
+        return $this->_oTransactionService;
     }
 }

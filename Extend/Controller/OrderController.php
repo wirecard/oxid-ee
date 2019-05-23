@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Extend\Controller;
 
 use Exception;
+
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Registry;
@@ -65,19 +66,20 @@ class OrderController extends OrderController_parent
     /**
      * Extends the parent init function and finalizes the order in case it was a Wirecard payment method
      *
+     * @return mixed
+     *
      * @since 1.0.0
      */
     public function init()
     {
         parent::init();
 
-        $oConfig = Registry::getConfig();
-        $sWdPaymentRedirect = $oConfig->getRequestParameter('wdpayment');
+        $sWdPaymentRedirect = Registry::getRequest()->getRequestParameter('wdpayment');
         $oSession = Registry::getSession();
         $sWdSessionToken = $oSession->getVariable('wdtoken');
 
         if (OrderHelper::isPaymentFinished($sWdSessionToken, $sWdPaymentRedirect)) {
-            $sShopBaseUrl = $oConfig->getShopUrl();
+            $sShopBaseUrl = Registry::getConfig()->getShopUrl();
             $sLanguageCode = Registry::getLang()->getBaseLanguage();
 
             $aParams = [
@@ -95,15 +97,17 @@ class OrderController extends OrderController_parent
                 'wdtoken' => $sWdSessionToken,
             ];
 
-            if ($oConfig->getRequestParameter('redirectFromForm')) {
+            if (Registry::getRequest()->getRequestParameter('redirectFromForm')) {
                 $oSession->setVariable(self::FORM_POST_VARIABLE, $_POST);
             }
 
             $sParamStr = http_build_query($aParams);
 
             $sNewUrl = $sShopBaseUrl . 'index.php?' . $sParamStr;
-            Registry::getUtils()->redirect($sNewUrl, false);
+            return Registry::getUtils()->redirect($sNewUrl, false);
         }
+
+        return true;
     }
 
     /**
@@ -365,6 +369,24 @@ class OrderController extends OrderController_parent
     }
 
     /**
+     * Makes the request data for rendering the seamless credit card form accessible via an AJAX call.
+     *
+     * @return null
+     *
+     * @throws Exception
+     *
+     * @since 1.0.0
+     */
+    public function getCreditCardFormRequestDataAjax()
+    {
+        $aResponse = [
+            'requestData' => $this->_getCreditCardFormRequestData(),
+        ];
+
+        return Registry::getUtils()->showMessageAndExit(json_encode($aResponse));
+    }
+
+    /**
      * Returns the URL for loading the payment page script
      *
      * @return string
@@ -379,27 +401,14 @@ class OrderController extends OrderController_parent
     }
 
     /**
-     * Makes the request data for rendering the seamless credit card form accessible via an AJAX call.
-     *
-     * @since 1.0.0
-     */
-    public function getCreditCardFormRequestDataAjax()
-    {
-        $aResponse = [
-            'requestData' => $this->_getCreditCardFormRequestData(),
-        ];
-
-        Registry::getUtils()->showMessageAndExit(json_encode($aResponse));
-    }
-
-    /**
      * Creates a new transaction object from the current session's basket
      *
      * @param Basket $oBasket
      *
-     * @return Transaction
+     * @return CreditCardTransaction
      *
      * @since 1.0.0
+     * @throws Exception
      */
     public function createCreditCardTransactionFromBasket($oBasket)
     {

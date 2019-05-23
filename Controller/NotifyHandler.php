@@ -9,22 +9,27 @@
 
 namespace Wirecard\Oxid\Controller;
 
-use Wirecard\Oxid\Core\PaymentMethodFactory;
-use Wirecard\Oxid\Core\ResponseHandler;
-use Wirecard\Oxid\Extend\Model\Order;
-use Wirecard\Oxid\Model\Transaction;
-use Wirecard\PaymentSdk\BackendService;
-use Wirecard\PaymentSdk\Entity\Status;
-use Wirecard\PaymentSdk\Response\Response;
-use Wirecard\PaymentSdk\Exception\MalformedResponseException;
-use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Exception;
+use InvalidArgumentException;
 
 use OxidEsales\Eshop\Application\Controller\FrontendController;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
 
 use Psr\Log\LoggerInterface;
-use InvalidArgumentException;
-use Exception;
+
+use Wirecard\Oxid\Core\PaymentMethodFactory;
+use Wirecard\Oxid\Core\ResponseHandler;
+use Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Model\PaymentMethod;
+use Wirecard\Oxid\Model\Transaction;
+
+use Wirecard\PaymentSdk\BackendService;
+use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Entity\Status;
+use Wirecard\PaymentSdk\Exception\MalformedResponseException;
+use Wirecard\PaymentSdk\Response\FailureResponse;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
  * Notify handler class.
@@ -43,6 +48,13 @@ class NotifyHandler extends FrontendController
     private $_oLogger;
 
     /**
+     * @var BackendService
+     *
+     * @since 1.1.0
+     */
+    private $_oBackendService;
+
+    /**
      * NotifyHandler constructor.
      *
      * @since 1.0.0
@@ -55,10 +67,44 @@ class NotifyHandler extends FrontendController
     }
 
     /**
+     * Return the Backend service
+     *
+     * NOTE: for testing use the setter to inject the {@link BackendService}
+     *
+     * @param Config $oConfig
+     *
+     * @return BackendService
+     *
+     * @since 1.1.0
+     */
+    private function _getBackendService($oConfig)
+    {
+        if (is_null($this->_oBackendService)) {
+            $this->_oBackendService = new BackendService($oConfig, $this->_oLogger);
+        }
+
+        return $this->_oBackendService;
+    }
+
+    /**
+     * Used in tests to mock the backend service
+     *
+     * @internal
+     *
+     * @param BackendService $oBackendService
+     *
+     * @since 1.1.0
+     */
+    public function setBackendService($oBackendService)
+    {
+        $this->_oBackendService = $oBackendService;
+    }
+
+    /**
      * Request handling function.
      *
      * @return void
-     * @throws Exception if $sPaymentName does not exist
+     * @throws StandardException if $sPaymentName does not exist
      *
      * @since 1.0.0
      */
@@ -72,8 +118,8 @@ class NotifyHandler extends FrontendController
         $sPostData = file_get_contents('php://input');
 
         try {
-            $oBackendService = new BackendService($oConfig, $this->_oLogger);
-            $oNotificationResp = $oBackendService->handleNotification($sPostData);
+            $oService = $this->_getBackendService($oConfig);
+            $oNotificationResp = $oService->handleNotification($sPostData);
         } catch (InvalidArgumentException $oException) {
             $this->_oLogger->error(__METHOD__ . ': Invalid argument set: ' . $oException->getMessage(), [$oException]);
             return;
@@ -82,7 +128,7 @@ class NotifyHandler extends FrontendController
             return;
         }
 
-        $this->_handleNotificationResponse($oNotificationResp, $oBackendService);
+        $this->_handleNotificationResponse($oNotificationResp, $oService);
     }
 
     /**
@@ -94,6 +140,7 @@ class NotifyHandler extends FrontendController
      * @return null
      *
      * @since 1.0.0
+     * @throws Exception
      */
     private function _handleNotificationResponse($oNotificationResp, $oBackendService)
     {
@@ -105,7 +152,6 @@ class NotifyHandler extends FrontendController
                 // if a transaction with this ID already exists, we do not need to handle it again
                 return;
             }
-
             $this->_onNotificationSuccess($oNotificationResp, $oBackendService);
 
             return;
@@ -147,7 +193,7 @@ class NotifyHandler extends FrontendController
     /**
      * Handles error notifications
      *
-     * @param Response $oResponse
+     * @param FailureResponse $oResponse
      *
      * @since 1.0.0
      */
@@ -165,15 +211,19 @@ class NotifyHandler extends FrontendController
             $this->_oLogger->error("\t$sSeverity with code $sCode and message '$sDescription' occurred.");
         }
 
-        $oOrder = oxNew(Order::class);
-        $oOrder->loadWithTransactionId($oResponse->getParentTransactionId());
-        $oOrder->handleOrderState(Order::STATE_FAILED);
+        $sParentTransactionId = $oResponse->getData()['parent-transaction-id'];
+
+        if (!is_null($sParentTransactionId)) {
+            $oOrder = oxNew(Order::class);
+            $oOrder->loadWithTransactionId($sParentTransactionId);
+            $oOrder->handleOrderState(Order::STATE_FAILED);
+        }
     }
 
     /**
      * Returns the URL of the notification handler
      *
-     * @param Payment_Method $oPaymentMethod
+     * @param PaymentMethod $oPaymentMethod
      *
      * @return string
      *
@@ -184,7 +234,7 @@ class NotifyHandler extends FrontendController
         $sShopUrl = Registry::getConfig()->getCurrentShopUrl();
 
         return $sShopUrl
-                . 'index.php?cl=wcpg_notifyhandler&fnc=handleRequest&pmt='
-                . Payment_Method::getOxidFromSDKName($oPaymentMethod->getTransaction()->getConfigKey());
+            . 'index.php?cl=wcpg_notifyhandler&fnc=handleRequest&pmt='
+            . PaymentMethod::getOxidFromSDKName($oPaymentMethod->getTransaction()->getConfigKey());
     }
 }

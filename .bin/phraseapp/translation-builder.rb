@@ -99,6 +99,7 @@ class TranslationBuilder
       'vendor',
       'translations',
       'metadata.php',
+      'Tests',
       File.join('views', 'admin'),
     ]
 

@@ -30,7 +30,6 @@ class OrderTabTest extends Wirecard\Test\WdUnitTestCase
 
         $aViewData = $this->_orderTab->getViewData();
 
-        $this->assertGreaterThan(0, count($aViewData));
         $this->assertArrayHasKey('emptyText', $aViewData);
     }
 }

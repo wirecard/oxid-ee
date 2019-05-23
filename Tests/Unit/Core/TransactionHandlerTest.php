@@ -93,7 +93,7 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testProcessActionProvider
+     * @dataProvider processActionProvider
      */
     public function testProcessAction($oResponseStub)
     {
@@ -115,7 +115,7 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
         }
     }
 
-    public function testProcessActionProvider()
+    public function processActionProvider()
     {
         $successXml = simplexml_load_string(file_get_contents(dirname(__FILE__) . '/../../resources/success_response_transaction_handler.xml'));
         $oSuccessResponse = new SuccessResponse($successXml);
@@ -140,7 +140,7 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
     }
 
     /**
-     * @dataProvider testGetTransactionMaxAmountProvider
+     * @dataProvider getTransactionMaxAmountProvider
      */
     public function testGetTransactionMaxAmount($sTransactionId, $fExpectedAmount)
     {
@@ -148,7 +148,7 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
         $this->assertEquals($fAmount, $fExpectedAmount);
     }
 
-    public function testGetTransactionMaxAmountProvider()
+    public function getTransactionMaxAmountProvider()
     {
         return [
             'transaction 1' => ['transaction 1', 20],

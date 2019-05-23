@@ -9,7 +9,10 @@
 
 namespace Wirecard\Oxid\Core;
 
+use Exception;
+
 use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\DbMetaDataHandler;
 
@@ -21,7 +24,6 @@ use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 /**
  * Class handles module behaviour on shop installation events
  *
- *
  * @since 1.0.0
  */
 class OxidEeEvents
@@ -31,6 +33,11 @@ class OxidEeEvents
     const PAYMENT_TABLE = "oxpayments";
     const TRANSACTION_TABLE = "wdoxidee_ordertransactions";
 
+    /**
+     * @var DatabaseInterface
+     *
+     * @since 1.0.0
+     */
     private static $oDb;
 
     /**
@@ -42,6 +49,8 @@ class OxidEeEvents
      * @param string $sQuery      SQL query to execute if column does not exist in the table
      *
      * @return boolean true or false if query was executed
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
      *
      * @since 1.0.0
      */
@@ -104,7 +113,7 @@ class OxidEeEvents
      *
      * @since 1.0.0
      */
-    private static function _extendPaymentMethodTable()
+    public static function extendPaymentMethodTable()
     {
         $sQueryAddLabel = "ALTER TABLE " . self::PAYMENT_TABLE .
             " ADD COLUMN `WDOXIDEE_LABEL` varchar(128) default '' NOT NULL";
@@ -119,6 +128,7 @@ class OxidEeEvents
         $sQueryAddTransAction = "ALTER TABLE " . self::PAYMENT_TABLE .
             " ADD COLUMN `WDOXIDEE_TRANSACTIONACTION` enum('{$sTransactionActions}') NOT NULL";
         self::_addColumnIfNotExists('oxpayments', 'WDOXIDEE_TRANSACTIONACTION', $sQueryAddTransAction);
+
         $sQueryAddApiUrl = "ALTER TABLE " . self::PAYMENT_TABLE .
             " ADD COLUMN `WDOXIDEE_APIURL` varchar(128) default '' NOT NULL";
         self::_addColumnIfNotExists(self::PAYMENT_TABLE, 'WDOXIDEE_APIURL', $sQueryAddApiUrl);
@@ -223,22 +233,13 @@ class OxidEeEvents
      *
      * @since 1.0.0
      */
-    private static function _extendOrderTable()
+    public static function extendOrderTable()
     {
         $aOrderStates = Order::getStates();
         $sOrderStates = implode("','", $aOrderStates);
         $sAddOrderState = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_ORDERSTATE`
             enum('{$sOrderStates}') default '{$aOrderStates[0]}' NOT NULL";
         self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_ORDERSTATE', $sAddOrderState);
-
-        $sAddCaptureAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_CAPTUREAMOUNT` decimal(9,2) NOT NULL";
-        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_CAPTUREAMOUNT', $sAddCaptureAmount);
-
-        $sAddRefundedAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_REFUNDEDAMOUNT` decimal(9,2) NOT NULL";
-        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_REFUNDEDAMOUNT', $sAddRefundedAmount);
-
-        $sAddVoidedAmount = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_VOIDEDAMOUNT` decimal(9,2) NOT NULL";
-        self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_VOIDEDAMOUNT', $sAddVoidedAmount);
 
         $sAddFinal = "ALTER TABLE oxorder ADD COLUMN `WDOXIDEE_FINAL` tinyint(1) default 0 NOT NULL";
         self::_addColumnIfNotExists('oxorder', 'WDOXIDEE_FINAL', $sAddFinal);
@@ -265,7 +266,7 @@ class OxidEeEvents
      *
      * @since 1.0.0
      */
-    private static function _createOrderTransactionTable()
+    public static function createOrderTransactionTable()
     {
         $sTransactionActions = implode("','", Transaction::getActions());
         $sTransactionStates = implode("','", Transaction::getStates());
@@ -299,7 +300,7 @@ class OxidEeEvents
      *
      * @since 1.0.0
      */
-    private static function _addPaymentMethods()
+    public static function addPaymentMethods()
     {
         $oLogger = Registry::getLogger();
         $oConfig = Registry::getConfig();
@@ -428,18 +429,18 @@ class OxidEeEvents
         self::$oDb = DatabaseProvider::getDb();
 
         // extend OXID's payment method table
-        self::_extendPaymentMethodTable();
+        self::extendPaymentMethodTable();
 
         // extend OXID's order table
-        self::_extendOrderTable();
+        self::extendOrderTable();
 
         // create the module's own order transaction table
-        self::_createOrderTransactionTable();
+        self::createOrderTransactionTable();
 
         // needs to be executed before _addPaymentMethods()
         self::_migrateFrom100To110();
 
-        self::_addPaymentMethods();
+        self::addPaymentMethods();
 
         // view tables must be regenerated after modifying database table structure
         self::_regenerateViews();
@@ -463,7 +464,6 @@ class OxidEeEvents
     public static function onDeactivate()
     {
         self::$oDb = DatabaseProvider::getDb();
-
         self::_disablePaymentMethods();
     }
 
