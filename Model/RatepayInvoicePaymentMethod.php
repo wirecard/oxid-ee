@@ -39,17 +39,24 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
         return new RatepayInvoiceTransaction();
     }
 
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
     public function getConfigFields()
     {
         $aAdditionalFields = [
             'descriptor' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_descriptor',
-                'options'     => [
-                    '1'       => Helper::translate('wd_yes'),
-                    '0'       => Helper::translate('wd_no'),
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_descriptor',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
                 ],
-                'title'       => Helper::translate('wd_config_descriptor'),
+                'title' => Helper::translate('wd_config_descriptor'),
                 'description' => Helper::translate('wd_config_descriptor_desc'),
             ],
             'additionalInfo' => [
