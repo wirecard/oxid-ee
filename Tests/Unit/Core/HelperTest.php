@@ -9,6 +9,7 @@
  */
 
 use OxidEsales\Eshop\Application\Model\Payment;
+use OxidEsales\Eshop\Application\Model\Shop;
 use OxidEsales\Eshop\Core\Controller\BaseController;
 use OxidEsales\Eshop\Core\Module\Module;
 use OxidEsales\Eshop\Core\Registry;
@@ -271,5 +272,11 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         Registry::getSession()->setId("sessionID");
         $sResult = Helper::getSidQueryString();
         $this->assertEquals('&force_sid=sessionID', $sResult);
+    }
+
+    public function testGetShop()
+    {
+        $oShop = Helper::getShop();
+        $this->assertInstanceOf(Shop::class, $oShop);
     }
 }
