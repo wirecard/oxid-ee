@@ -15,6 +15,7 @@ use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Entity\StatusCollection;
 use Wirecard\PaymentSdk\Response\FailureResponse;
+use Wirecard\PaymentSdk\Response\FormInteractionResponse;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
@@ -113,6 +114,15 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
         if ($oResponseStub instanceof FailureResponse) {
             $this->assertArrayHasKey('message', $oResponse);
         }
+
+        if ($oResponseStub instanceof FormInteractionResponse) {
+            $aExpected = [
+                'message' => 'No handler for this response type implemented',
+                'status' => Transaction::STATE_ERROR,
+            ];
+
+            $this->assertEquals($aExpected, $oResponse);
+        }
     }
 
     public function processActionProvider()
@@ -133,9 +143,14 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
         $oFailureResponseStub->method('getParentTransactionId')
             ->willReturn('transaction1');
 
+        $oFormInteractionResponseStub = $this->getMockBuilder(FormInteractionResponse::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         return [
             'success response' => [$oSuccessResponse],
             'failure response' => [$oFailureResponseStub],
+            'form interaction response' => [$oUnknownResponseStub],
         ];
     }
 
