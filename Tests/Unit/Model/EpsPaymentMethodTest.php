@@ -76,7 +76,7 @@ class EpsPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetPostProcessingPaymentMethod()
     {
-        $oTransaction = $this->oPaymentMethod->getPostProcessingPaymentMethod();
+        $oTransaction = $this->oPaymentMethod->getPostProcessingPaymentMethod('');
         $this->assertInstanceOf(SepaCreditTransferPaymentMethod::class, $oTransaction);
     }
 }

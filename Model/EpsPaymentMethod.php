@@ -144,7 +144,7 @@ class EpsPaymentMethod extends PaymentMethod
      *
      * @since 1.2.0
      */
-    public function getPostProcessingPaymentMethod($sAction = '')
+    public function getPostProcessingPaymentMethod($sAction)
     {
         return new SepaCreditTransferPaymentMethod();
     }
