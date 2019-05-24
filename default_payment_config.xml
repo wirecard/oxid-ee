@@ -93,7 +93,7 @@
     <payment>
       <oxid>wdratepay-invoice</oxid>
       <oxactive>0</oxactive>
-      <oxfromamount>25</oxfromamount>
+      <oxfromamount>20</oxfromamount>
       <oxtoamount>3500</oxtoamount>
       <oxdesc>Wirecard Garantierter Kauf auf Rechnung</oxdesc>
       <oxdesc_1>Wirecard Guaranteed Invoice by Wirecard</oxdesc_1>
