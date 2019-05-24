@@ -18,9 +18,10 @@ class TestDataHelper
         return [
             [
                 'table' => 'oxorder',
-                'columns' => ['oxid', 'oxordernr', 'oxpaymenttype', 'wdoxidee_transactionid'],
+                'columns' => ['oxid', 'oxordernr', 'oxpaymenttype', 'wdoxidee_transactionid', 'wdoxidee_sepamandate'],
                 'rows' => [
-                    ['oxid 1', 2, 'wdpaypal', 'transaction 1'],
+                    ['oxid 1', 2, 'wdpaypal', 'transaction 1', 'SEPA mandate test text'],
+                    ['oxid 2', 3, 'wdpaypal', 'transaction 1', null],
                 ]
             ],
             [

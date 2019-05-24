@@ -71,4 +71,37 @@ class PaymentMainTest extends \Wirecard\Test\WdUnitTestCase
         }
     }
 
+    /**
+     * @dataProvider creditorIdValidationProvider
+     */
+    public function testCreditorIdValidation($bResult, $sCreditorId)
+    {
+        // use an anonymous class to get access to protected methods and variables
+        $cPaymentMain = $this->_createPaymentMainClassInstance();
+
+        $bCreditorIdValid = $cPaymentMain->creditorIdValidation($sCreditorId);
+        $this->assertEquals($bCreditorIdValid, $bResult);
+    }
+
+    public function creditorIdValidationProvider()
+    {
+        return [
+            'creditor id valid' => [1, 'DE08700901001234567890'],
+            'creditor id invalid' => [0, 'DE08700914123054890'],
+            'creditor id too long' => [0, 'DE98ZZZ09995999290000000000000000000'],
+        ];
+    }
+
+    private function _createPaymentMainClassInstance()
+    {
+        $cPaymentMain = new class() extends PaymentMain
+        {
+            public function creditorIdValidation($sCreditorId)
+            {
+                return parent::_creditorIdValidation($sCreditorId);
+            }
+        };
+        return $cPaymentMain;
+    }
+
 }

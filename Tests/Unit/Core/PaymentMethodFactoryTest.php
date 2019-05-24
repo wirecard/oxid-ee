@@ -22,4 +22,16 @@ class PaymentMethodFactoryTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oPaymentMethod = PaymentMethodFactory::create("wdcreditcard");
         $this->assertInstanceOf(\Wirecard\Oxid\Model\CreditCardPaymentMethod::class, $oPaymentMethod);
     }
+
+    public function testCreateSepaCreditTransfer()
+    {
+        $oPaymentMethod = PaymentMethodFactory::create("wdsepacredit");
+        $this->assertInstanceOf(\Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod::class, $oPaymentMethod);
+    }
+
+    public function testCreateSepaDirectDebit()
+    {
+        $oPaymentMethod = PaymentMethodFactory::create("wdsepadd");
+        $this->assertInstanceOf(\Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod::class, $oPaymentMethod);
+    }
 }

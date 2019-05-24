@@ -122,7 +122,7 @@ class PaymentMethodHelper
      *
      * @since 1.1.0
      */
-    public function getBic()
+    public static function getBic()
     {
         $oSession = Registry::getConfig()->getSession();
         $aDynvalues = $oSession->getVariable('dynvalue');
@@ -177,7 +177,7 @@ class PaymentMethodHelper
      *
      * @since 1.1.0
      */
-    public function prepareCreditorName()
+    public static function prepareCreditorName()
     {
         $oShop = Helper::getShop();
         $sCreditorName = trim($oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname);

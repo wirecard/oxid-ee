@@ -15,6 +15,7 @@ use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Entity\StatusCollection;
 use Wirecard\PaymentSdk\Response\FailureResponse;
+use Wirecard\PaymentSdk\Response\FormInteractionResponse;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
@@ -53,6 +54,7 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
                     ['oxid 4', 5, 'wdpaypal', 'transaction 12'],
                     ['oxid 5', 6, 'wdpaypal', 'transaction 17'],
                     ['oxid 6', 7, 'wdpaypal', 'transaction 19'],
+                    ['oxid 7', 8, 'invalid', 'transaction 24'],
                 ]
             ],
             [
@@ -82,6 +84,8 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
                     ['transaction 21', 'oxid 6', 7, 'transaction 21', 'transaction 19', 'pay', 'refund-debit', 'closed', 97855.69, 'HUF'],
                     ['transaction 22', 'oxid 6', 7, 'transaction 22', 'transaction 19', 'pay', 'refund-debit', 'closed', 7855.28, 'HUF'],
                     ['transaction 23', 'oxid 6', 7, 'transaction 23', 'transaction 19', 'pay', 'refund-debit', 'closed', 85256.47, 'HUF'],
+                    ['transaction 24', 'oxid 7', 8, 'transaction 24', null, 'pay', 'refund-debit', 'closed', 85256.47, 'HUF'],
+                    ['transaction 25', 'oxid 7', 8, 'transaction 25', 'transaction 24', 'pay', 'refund-debit', 'closed', 85256.47, 'HUF'],
                 ]
             ],
         ];
@@ -113,12 +117,24 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
         if ($oResponseStub instanceof FailureResponse) {
             $this->assertArrayHasKey('message', $oResponse);
         }
+
+        if ($oResponseStub instanceof FormInteractionResponse) {
+            $aExpected = [
+                'message' => 'No handler for this response type implemented',
+                'status' => Transaction::STATE_ERROR,
+            ];
+
+            $this->assertEquals($aExpected, $oResponse);
+        }
     }
 
     public function processActionProvider()
     {
-        $successXml = simplexml_load_string(file_get_contents(dirname(__FILE__) . '/../../resources/success_response_transaction_handler.xml'));
-        $oSuccessResponse = new SuccessResponse($successXml);
+        $sResponseXml = file_get_contents(dirname(__FILE__) . '/../../resources/success_response_transaction_handler.xml');
+
+        $oSuccessResponse = new SuccessResponse(simplexml_load_string($sResponseXml));
+        $oSuccessResponseNoOrder = new SuccessResponse(simplexml_load_string(str_replace('transaction 1', 'transaction xxx', $sResponseXml)));
+        $oSuccessResponseNoPaymentType = new SuccessResponse(simplexml_load_string(str_replace('transaction 1', 'transaction 25', $sResponseXml)));
 
         $oFailureResponseStub = $this->getMockBuilder(FailureResponse::class)
             ->disableOriginalConstructor()
@@ -133,9 +149,16 @@ class TransactionHandlerTest extends Wirecard\Test\WdUnitTestCase
         $oFailureResponseStub->method('getParentTransactionId')
             ->willReturn('transaction1');
 
+        $oFormInteractionResponseStub = $this->getMockBuilder(FormInteractionResponse::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         return [
-            'success response' => [$oSuccessResponse],
+            'success response with valid order' => [$oSuccessResponse],
+            'success response with invalid order' => [$oSuccessResponseNoOrder],
+            'success response with invalid payment type' => [$oSuccessResponseNoPaymentType],
             'failure response' => [$oFailureResponseStub],
+            'form interaction response' => [$oUnknownResponseStub],
         ];
     }
 

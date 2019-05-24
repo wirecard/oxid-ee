@@ -142,7 +142,7 @@ class PaymentMain extends PaymentMain_parent
      *
      * @since 1.1.0
      */
-    private function _creditorIdValidation($sCreditorId)
+    protected function _creditorIdValidation($sCreditorId)
     {
         //explanation for creditor id validation: https://www.iban.de/iban-pruefsumme.html
 

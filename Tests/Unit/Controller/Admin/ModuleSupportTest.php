@@ -84,4 +84,66 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
             'no body failure' => [null, 'from@email.com', 'reply@email.com', Helper::translate('wd_message_empty_error')],
         ];
     }
+
+    public function testAddDataFromForm()
+    {
+        $_POST['module_support_text'] = 'abcd';
+        $_POST['module_support_email_reply'] = 'reply@test.com';
+        $_POST['module_support_email_from'] = 'from@test.com';
+
+        $this->_moduleSupport = $this->_getAnonymousModuleSupport();
+
+        $aInput = [];
+
+        $aExpected = [
+            'body' => 'abcd',
+            'replyTo' => 'reply@test.com',
+            'from' => 'from@test.com',
+        ];
+
+        $this->_moduleSupport->publicAddDataFromForm($aInput);
+
+        $this->assertEquals($aExpected, $aInput);
+    }
+
+    public function testAddShopData()
+    {
+        $this->_moduleSupport = $this->_getAnonymousModuleSupport();
+
+        $aInput = [];
+
+        $aExpectedKeys = [
+            'modules',
+            'module',
+            'shopVersion',
+            'shopEdition',
+            'phpVersion',
+            'system',
+            'subject',
+            'recipient',
+            'payments',
+        ];
+
+        $this->_moduleSupport->publicAddShopData($aInput);
+
+        $this->assertEquals($aExpectedKeys, array_keys($aInput));
+    }
+
+    private function _getAnonymousModuleSupport()
+    {
+        $cModuleSupport = new class() extends ModuleSupport
+        {
+            public function publicAddDataFromForm(&$aEmailData)
+            {
+                return parent::_addDataFromForm($aEmailData);
+            }
+
+            public function publicAddShopData(&$aEmailData)
+            {
+                return parent::_addShopData($aEmailData);
+            }
+        };
+
+        return $cModuleSupport;
+    }
 }
