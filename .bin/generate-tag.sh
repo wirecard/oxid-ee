@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -o errexit
+
 if [[ $TRAVIS_BRANCH == 'master' ]]; then
     if [[ $TRAVIS_PULL_REQUEST == 'false' ]]; then
         VERSION=`cat SHOPVERSIONS | jq -r '.[0] | .release'`
