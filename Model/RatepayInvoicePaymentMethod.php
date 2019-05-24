@@ -30,6 +30,27 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     /**
      * @inheritdoc
      *
+     * @return Config
+     *
+     * @since 1.2.0
+     */
+    public function getConfig()
+    {
+        $oConfig = parent::getConfig();
+
+        $oPaymentMethodConfig = new PaymentMethodConfig(
+            RatepayInvoiceTransaction::NAME,
+            $this->_oPayment->oxpayments__wdoxidee_maid->value,
+            $this->_oPayment->oxpayments__wdoxidee_secret->value
+        );
+
+        $oConfig->add($oPaymentMethodConfig);
+        return $oConfig;
+    }
+
+    /**
+     * @inheritdoc
+     *
      * @return RatepayInvoiceTransaction
      *
      * @since 1.2.0
