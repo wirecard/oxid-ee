@@ -47,7 +47,7 @@ class EpsPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @dataProvider testGetNameProvider
+     * @dataProvider getNameProvider
      */
     public function testGetName($sExpected)
     {
@@ -55,7 +55,7 @@ class EpsPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals($sExpected, $sName);
     }
 
-    public function testGetNameProvider()
+    public function getNameProvider()
     {
         return [
             'correct payment name' => ['eps'],
