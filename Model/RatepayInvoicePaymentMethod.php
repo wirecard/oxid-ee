@@ -125,7 +125,7 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     {
         return array_merge(
             parent::getPublicFieldNames(),
-            ['additionalInfo', 'deleteCanceledOrder', 'deleteFailedOrder']
+            ['descriptor', 'additionalInfo', 'deleteCanceledOrder', 'deleteFailedOrder']
         );
     }
 }

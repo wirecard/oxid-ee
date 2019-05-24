@@ -91,6 +91,7 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
         $aExpected = [
             'apiUrl',
             'maid',
+            'descriptor',
             'additionalInfo',
             'deleteCanceledOrder',
             'deleteFailedOrder',
