@@ -29,6 +29,9 @@
       "bic": "GENODETT488",
       "sc": "10",
       "extensionSc": "4000"
+    },
+    "ideal": {
+      "bank": "ING"
     }
   }
 }
