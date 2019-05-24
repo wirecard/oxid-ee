@@ -16,16 +16,3 @@
   border-color: #ebccd1;
   color: #c94442;
 }
-
-input[type='number'] {
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-  color: #555;
-  min-height: 15px;
-  line-height: 1.42857;
-  padding: 3px;
-  font-size: 12px;
-  transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-  background: #fff;
-}
