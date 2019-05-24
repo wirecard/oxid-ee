@@ -17,6 +17,10 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 
 use Wirecard\Oxid\Core\Helper;
 
+use OxidEsales\Eshop\Core\Registry;
+
+use ReflectionClass;
+
 /**
  * Payment method implementation for iDEAL
  *
@@ -62,7 +66,12 @@ class IdealPaymentMethod extends PaymentMethod
      */
     public function getTransaction()
     {
-        return new IdealTransaction();
+        $oTransaction = new IdealTransaction();
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+        $oTransaction->setBic($aDynvalues['bank'] ?? '');
+
+        return $oTransaction;
     }
 
     /**
@@ -118,6 +127,44 @@ class IdealPaymentMethod extends PaymentMethod
         ];
 
         return array_merge(parent::getConfigFields(), $aAdditionalFields);
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public function getCheckoutFields()
+    {
+        return [
+            'bank' => [
+                'type' => 'select',
+                'options' => $this->_getBanks(),
+                'title' => Helper::translate('wd_ideal_legend'),
+            ],
+        ];
+    }
+
+    /**
+     * Returns array for bank select options
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    private function _getBanks()
+    {
+        $cReflectionClass = new ReflectionClass(IdealBic::class);
+        $aBanks = $cReflectionClass->getConstants();
+        $aOptions = [];
+
+        foreach ($aBanks as $sKey => $sValue) {
+            $aOptions[$sKey] = $sValue;
+        }
+
+        return $aOptions;
     }
 
     /**
