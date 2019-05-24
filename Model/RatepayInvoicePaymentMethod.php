@@ -10,7 +10,7 @@
 namespace Wirecard\Oxid\Model;
 
 use Wirecard\Oxid\Core\Helper;
-
+use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 
 /**
@@ -112,5 +112,20 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
             ],
         ];
         return parent::getConfigFields() + $aAdditionalFields;
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public function getPublicFieldNames()
+    {
+        return array_merge(
+            parent::getPublicFieldNames(),
+            ['additionalInfo', 'deleteCanceledOrder', 'deleteFailedOrder']
+        );
     }
 }
