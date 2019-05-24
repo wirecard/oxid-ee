@@ -9,6 +9,10 @@
 
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\EpsPaymentMethod;
+use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
+
+use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\EpsTransaction;
 
 use OxidEsales\Eshop\Application\Model\Payment;
@@ -28,14 +32,12 @@ class EpsPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetConfig()
     {
-        /**
-         * @var Payment $oPayment
-         */
         $oPayment = PaymentMethodHelper::getPaymentById(EpsPaymentMethod::getName(true));
 
-        $oConfig = $this->oPaymentMethod->getConfig($oPayment);
-        $this->assertNotNull($oConfig);
-        $this->assertNotNull($oConfig->get('eps'));
+        $oConfig = $this->oPaymentMethod->getConfig();
+
+        $this->assertInstanceOf(Config::class, $oConfig);
+        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get(EpsPaymentMethod::getName()));
     }
 
     public function testGetTransaction()
@@ -47,17 +49,16 @@ class EpsPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     /**
      * @dataProvider testGetNameProvider
      */
-    public function testGetName($bforOxid, $sExpected)
+    public function testGetName($sExpected)
     {
-        $sName = EpsPaymentMethod::getName($bforOxid);
+        $sName = EpsPaymentMethod::getName();
         $this->assertEquals($sExpected, $sName);
     }
 
     public function testGetNameProvider()
     {
         return [
-            'for oxid' => [true, 'wdeps'],
-            'not for oxid' => [false, 'eps'],
+            'correct payment name' => ['eps'],
         ];
     }
 
@@ -65,5 +66,17 @@ class EpsPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     {
         $aConfigFields = $this->oPaymentMethod->getConfigFields();
         $this->assertArrayHasKey('additionalInfo', $aConfigFields);
+    }
+
+    public function testGetPublicFieldNames()
+    {
+        $aFieldNames = $this->oPaymentMethod->getPublicFieldNames();
+        $this->assertNotNull($aFieldNames);
+    }
+
+    public function testGetPostProcessingPaymentMethod()
+    {
+        $oTransaction = $this->oPaymentMethod->getPostProcessingPaymentMethod();
+        $this->assertInstanceOf(SepaCreditTransferPaymentMethod::class, $oTransaction);
     }
 }
