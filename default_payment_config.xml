@@ -11,6 +11,7 @@
     <payment>
         <oxid>wdcreditcard</oxid>
         <oxactive>0</oxactive>
+        <oxfromamount>0</oxfromamount>
         <oxtoamount>1000000</oxtoamount>
         <oxdesc>Wirecard Kreditkarte</oxdesc>
         <oxdesc_1>Wirecard Credit Card</oxdesc_1>
@@ -33,6 +34,7 @@
     <payment>
         <oxid>wdpaypal</oxid>
         <oxactive>0</oxactive>
+        <oxfromamount>0</oxfromamount>
         <oxtoamount>1000000</oxtoamount>
         <oxdesc>Wirecard PayPal</oxdesc>
         <oxdesc_1>Wirecard PayPal</oxdesc_1>
@@ -51,6 +53,7 @@
     <payment>
         <oxid>wdsepadd</oxid>
         <oxactive>0</oxactive>
+        <oxfromamount>0</oxfromamount>
         <oxtoamount>1000000</oxtoamount>
         <oxdesc>Wirecard SEPA-Lastschrift</oxdesc>
         <oxdesc_1>Wirecard SEPA Direct Debit</oxdesc_1>
@@ -70,6 +73,7 @@
     <payment>
         <oxid>wdsofortbanking</oxid>
         <oxactive>0</oxactive>
+        <oxfromamount>0</oxfromamount>
         <oxtoamount>1000000</oxtoamount>
         <oxdesc>Wirecard Sofort.</oxdesc>
         <oxdesc_1>Wirecard Sofort.</oxdesc_1>
@@ -89,7 +93,8 @@
     <payment>
       <oxid>wdratepay-invoice</oxid>
       <oxactive>0</oxactive>
-      <oxtoamount>1000000</oxtoamount>
+      <oxfromamount>20</oxfromamount>
+      <oxtoamount>3500</oxtoamount>
       <oxdesc>Wirecard Garantierter Kauf auf Rechnung</oxdesc>
       <oxdesc_1>Wirecard Guaranteed Invoice by Wirecard</oxdesc_1>
       <oxsort>100</oxsort>
@@ -108,6 +113,7 @@
     <payment>
         <oxid>wdsepacredit</oxid>
         <oxactive>0</oxactive>
+        <oxfromamount>0</oxfromamount>
         <oxtoamount>0</oxtoamount>
         <oxdesc>Wirecard SEPA Credit Transfer</oxdesc>
         <oxdesc_1>Wirecard SEPA Credit Transfer</oxdesc_1>
