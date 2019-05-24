@@ -9,8 +9,6 @@
 
 namespace Wirecard\Oxid\Model;
 
-use OxidEsales\Eshop\Application\Model\Payment;
-
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\EpsTransaction;
@@ -21,34 +19,32 @@ use Wirecard\Oxid\Core\Helper;
 /**
  * Payment method implementation for eps
  *
- * @since 1.0.1
+ * @since 1.2.0
  */
 class EpsPaymentMethod extends PaymentMethod
 {
     /**
      * @inheritdoc
      *
-     * @since 1.0.1
+     * @since 1.2.0
      */
     protected static $_sName = "eps";
 
     /**
      * @inheritdoc
      *
-     * @param Payment $oPayment
-     *
      * @return Config
      *
-     * @since 1.0.1
+     * @since 1.2.0
      */
-    public function getConfig($oPayment): Config
+    public function getConfig()
     {
-        $oConfig = parent::getConfig($oPayment);
+        $oConfig = parent::getConfig();
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
             EpsTransaction::NAME,
-            $oPayment->oxpayments__wdoxidee_maid->value,
-            $oPayment->oxpayments__wdoxidee_secret->value
+            $this->_oPayment->oxpayments__wdoxidee_maid->value,
+            $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
 
         $oConfig->add($oPaymentMethodConfig);
@@ -61,9 +57,9 @@ class EpsPaymentMethod extends PaymentMethod
      *
      * @return Transaction
      *
-     * @since 1.0.1
+     * @since 1.2.0
      */
-    public function getTransaction(): Transaction
+    public function getTransaction()
     {
         return new EpsTransaction();
     }
@@ -73,23 +69,83 @@ class EpsPaymentMethod extends PaymentMethod
      *
      * @return array
      *
-     * @since 1.0.1
+     * @since 1.2.0
      */
-    public function getConfigFields(): array
+    public function getConfigFields()
     {
         $aAdditionalFields = [
-            'additionalInfo' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_additional_info',
-                'options'     => [
-                    '1'       => Helper::translate('yes'),
-                    '0'       => Helper::translate('no'),
+            'descriptor' => [
+                'type'  => 'select',
+                'field' => 'oxpayments__wdoxidee_descriptor',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
                 ],
-                'title'       => Helper::translate('config_additional_info'),
-                'description' => Helper::translate('config_additional_info_desc'),
-            ]
+                'title' => Helper::translate('wd_config_descriptor'),
+                'description' => Helper::translate('wd_config_descriptor_desc'),
+            ],
+            'additionalInfo' => [
+                'type'  => 'select',
+                'field' => 'oxpayments__wdoxidee_additional_info',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
+                ],
+                'title' => Helper::translate('wd_config_additional_info'),
+                'description' => Helper::translate('wd_config_additional_info_desc'),
+            ],
+            'deleteCanceledOrder' => [
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_delete_canceled_order',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
+                ],
+                'title' => Helper::translate('wd_config_delete_cancel_order'),
+                'description' => Helper::translate('wd_config_delete_cancel_order_desc'),
+            ],
+            'deleteFailedOrder' => [
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_delete_failed_order',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
+                ],
+                'title' => Helper::translate('wd_config_delete_failure_order'),
+                'description' => Helper::translate('wd_config_delete_failure_order_desc'),
+            ],
         ];
 
         return array_merge(parent::getConfigFields(), $aAdditionalFields);
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public function getPublicFieldNames()
+    {
+        return array_merge(parent::getPublicFieldNames(), [
+            'additionalInfo',
+            'deleteCanceledOrder',
+            'deleteFailedOrder',
+        ]);
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @param string $sAction
+     *
+     * @return SepaCreditTransferPaymentMethod
+     *
+     * @since 1.2.0
+     */
+    public function getPostProcessingPaymentMethod($sAction = '')
+    {
+        return new SepaCreditTransferPaymentMethod();
     }
 }
