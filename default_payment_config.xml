@@ -86,7 +86,7 @@
         <oxtoamount>1000000</oxtoamount>
         <oxdesc>Wirecard eps-Überweisung</oxdesc>
         <oxdesc_1>Wirecard eps-Überweisung</oxdesc_1>
-        <oxsort>80</oxsort>
+        <oxsort>30</oxsort>
         <wdoxidee_logo>eps.png</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
         <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
