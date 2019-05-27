@@ -14,6 +14,7 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\GiropayPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod;
+use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
 use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
@@ -44,6 +45,7 @@ class PaymentMethodFactory
             CreditCardPaymentMethod::class,
             GiropayPaymentMethod::class,
             PaypalPaymentMethod::class,
+            PayolutionInvoicePaymentMethod::class,
             RatepayInvoicePaymentMethod::class,
             SepaCreditTransferPaymentMethod::class,
             SepaDirectDebitPaymentMethod::class,
