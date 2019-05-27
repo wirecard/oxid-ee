@@ -12,7 +12,7 @@ namespace Wirecard\Oxid\Tests\Acceptance;
 use Wirecard\Oxid\Model\IdealPaymentMethod;
 
 /**
- * Acceptance tests for the Ideal checkout flow.
+ * Acceptance tests for the iDEAL checkout flow.
  */
 class IdealCheckoutTest extends CheckoutTestCase
 {
