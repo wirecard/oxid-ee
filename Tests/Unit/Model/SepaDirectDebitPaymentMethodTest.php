@@ -8,7 +8,7 @@
  */
 
 use OxidEsales\Eshop\Core\Field;
-use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
@@ -24,6 +24,7 @@ class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTes
     protected function setUp()
     {
         parent::setUp();
+
         $this->_oPaymentMethod = new SepaDirectDebitPaymentMethod();
     }
 
@@ -33,23 +34,26 @@ class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTes
         $this->assertNotNull($oConfig);
     }
 
-    /**
-     * @dataProvider getConfigFieldsProvider
-     */
-    public function testGetConfigFields($sContainsKey)
+    public function testGetConfigFields()
     {
-        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
-        $this->assertArrayHasKey($sContainsKey, $aConfigFields);
-    }
+        $aFieldKeys = array_keys($this->_oPaymentMethod->getConfigFields());
 
-    public function getConfigFieldsProvider()
-    {
-        return [
-            'contains sepaMandateCustom' => ['sepaMandateCustom'],
-            'contains creditorId' => ['creditorId'],
-            'contains additionalInfo' => ['additionalInfo'],
-            'contains bic' => ['bic'],
-        ];
+        $this->assertEquals([
+            'apiUrl',
+            'httpUser',
+            'httpPassword',
+            'testCredentials',
+            'maid',
+            'secret',
+            'descriptor',
+            'additionalInfo',
+            'deleteCanceledOrder',
+            'deleteFailedOrder',
+            'bic',
+            'paymentAction',
+            'creditorId',
+            'sepaMandateCustom',
+        ], $aFieldKeys);
     }
 
     /**
@@ -79,61 +83,88 @@ class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTes
         $this->assertInstanceOf(SepaDirectDebitTransaction::class, $oTransaction);
     }
 
-    /**
-     * @dataProvider addMandatoryTransactionDataProvider
-     */
-    public function testAddMandatoryTransactionData($sAttribute)
+    public function testAddMandatoryTransactionData()
     {
         $oTransaction = $this->_oPaymentMethod->getTransaction();
-
-        $aDynArray = [
-            'bic' => 'WIREDEMMXXX',
-            'iban' => "IBAN"];
-        Registry::getSession()->setVariable('dynvalue', $aDynArray);
         $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction);
 
-        $this->assertAttributeNotEmpty($sAttribute, $oTransaction);
-    }
-
-    public function addMandatoryTransactionDataProvider()
-    {
-        return [
-            'contains iban' => ['iban'],
-            'contains mandate' => ['mandate'],
-            'contains accountHolder' => ['accountHolder'],
-        ];
+        $this->assertAttributeEquals('', 'iban', $oTransaction);
+        $this->assertAttributeNotEmpty('mandate', $oTransaction);
+        $this->assertAttributeNotEmpty('accountHolder', $oTransaction);
     }
 
     public function testGetPublicFieldNames()
     {
-        $aPublicFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
-        $aExpected = [
-            "apiUrl",
-            "maid",
-            "descriptor",
-            "additionalInfo",
-            "paymentAction",
-            "deleteCanceledOrder",
-            "deleteFailedOrder",
-        ];
-        $this->assertEquals($aExpected, $aPublicFieldNames);
+        $this->assertEquals([
+            'apiUrl',
+            'maid',
+            'descriptor',
+            'additionalInfo',
+            'paymentAction',
+            'deleteCanceledOrder',
+            'deleteFailedOrder',
+        ], $this->_oPaymentMethod->getPublicFieldNames());
+    }
+
+    public function testGetCheckoutFieldsWithoutBic()
+    {
+        $aFieldKeys = array_keys($this->_oPaymentMethod->getCheckoutFields());
+
+        $this->assertEquals([
+            'accountHolder',
+            'iban',
+        ], $aFieldKeys);
+    }
+
+    public function testGetCheckoutFieldsWithBic()
+    {
+        $oPayment = $this->_oPaymentMethod->getPayment();
+        $oPayment->oxpayments__wdoxidee_bic->value = '1';
+        $aFieldKeys = array_keys($this->_oPaymentMethod->getCheckoutFields());
+
+        $this->assertEquals([
+            'accountHolder',
+            'iban',
+            'bic',
+        ], $aFieldKeys);
     }
 
     /**
      * @dataProvider getPostProcessingPaymentMethodProvider
      */
-    public function testGetPostProcessingPaymentMethod($sAction, $sMethodName)
+    public function testGetPostProcessingPaymentMethod($sAction, $sClassName)
     {
         $sResult = $this->_oPaymentMethod->getPostProcessingPaymentMethod($sAction);
-        $this->assertInstanceOf($sMethodName, $sResult);
+
+        $this->assertInstanceOf($sClassName, $sResult);
     }
 
     public function getPostProcessingPaymentMethodProvider()
     {
         return [
-            'credit action' => [Transaction::ACTION_CREDIT, SepaCreditTransferPaymentMethod::class],
-            'debit action' => [Transaction::ACTION_PAY, SepaDirectDebitPaymentMethod::class],
+            'refund action' => [
+                Transaction::ACTION_CREDIT,
+                SepaCreditTransferPaymentMethod::class,
+            ],
+            'non-refund action' => [
+                Transaction::ACTION_RESERVE,
+                SepaDirectDebitPaymentMethod::class,
+            ],
         ];
+    }
+
+    public function testOnBeforeTransactionCreationWithRequestParameter()
+    {
+        $_POST['wdsepadd_checkbox'] = true;
+
+        $this->assertNull($this->_oPaymentMethod->onBeforeTransactionCreation());
+    }
+    /**
+     * @expectedException OxidEsales\Eshop\Core\Exception\InputException
+     */
+    public function testOnBeforeTransactionCreationWithoutRequestParameter()
+    {
+        $this->_oPaymentMethod->onBeforeTransactionCreation();
     }
 
 }

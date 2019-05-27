@@ -313,7 +313,17 @@ class OrderController extends OrderController_parent
          * @var $oPaymentGateway PaymentGateway
          */
         $oPaymentGateway = oxNew(PaymentGateway::class);
+        $oPayment = $oOrder->getOrderPayment();
+        $oPaymentMethod = $oPayment->getPaymentMethod();
         $oResponse = null;
+
+        try {
+            $oPaymentMethod->onBeforeTransactionCreation();
+        } catch (Exception $oException) {
+            OrderHelper::setSessionPaymentError($oException->getMessage());
+
+            return 'payment';
+        }
 
         try {
             $oTransaction = $oPaymentGateway->createTransaction($oBasket, $oOrder);

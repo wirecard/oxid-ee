@@ -229,8 +229,7 @@ class OrderHelper
         }
 
         // set the custom payment error code and text and redirect back to the payment step of the checkout process
-        Registry::getSession()->setVariable(self::PAY_ERROR_VARIABLE, self::PAY_ERROR_ID);
-        Registry::getSession()->setVariable(self::PAY_ERROR_TEXT_VARIABLE, join('<br/>', $aErrorDescriptions));
+        self::setSessionPaymentError(join('<br/>', $aErrorDescriptions));
         $sRedirectUrl = Registry::getConfig()->getShopHomeUrl() . 'cl=payment';
 
         $oOrder->handleOrderState(Order::STATE_FAILED);
@@ -316,5 +315,19 @@ class OrderHelper
     {
         $sPageUrl = $oResponse->getRedirectUrl();
         return Registry::getUtils()->redirect($sPageUrl);
+    }
+
+    /**
+     * Sets a payment error text to the session.
+     * @param string $sText
+     *
+     * @since 1.1.0
+     */
+    public static function setSessionPaymentError($sText)
+    {
+        $oSession = Registry::getSession();
+
+        $oSession->setVariable(self::PAY_ERROR_VARIABLE, self::PAY_ERROR_ID);
+        $oSession->setVariable(self::PAY_ERROR_TEXT_VARIABLE, $sText);
     }
 }

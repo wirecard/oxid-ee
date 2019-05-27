@@ -308,4 +308,13 @@ abstract class PaymentMethod
         $oChildClass = get_called_class();
         return $oChildClass::$_bMerchantOnly;
     }
+
+    /**
+     * Function to be run before a transaction is generated for the payment method.
+     *
+     * @since 1.1.0
+     */
+    public function onBeforeTransactionCreation()
+    {
+    }
 }

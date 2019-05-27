@@ -214,4 +214,14 @@ class OrderHelperTest extends WdUnitTestCase
             'handle InteractionResponse' => [$oInteractionResponseStub, $sInteractionRedirect],
         ];
     }
+
+    public function testSetSessionPaymentError()
+    {
+        OrderHelper::setSessionPaymentError('foo');
+
+        $oSession = Registry::getSession();
+
+        $this->assertEquals($oSession->getVariable(OrderHelper::PAY_ERROR_VARIABLE), OrderHelper::PAY_ERROR_ID);
+        $this->assertEquals($oSession->getVariable(OrderHelper::PAY_ERROR_TEXT_VARIABLE), 'foo');
+    }
 }
