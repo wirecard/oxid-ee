@@ -13,6 +13,7 @@ use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
 use Wirecard\PaymentSdk\Config\Config as PaymentSdkConfig;
@@ -175,7 +176,7 @@ class CreditCardPaymentMethod extends PaymentMethod
             'limitsCurrency' => [
                 'type' => 'select',
                 'field' => 'oxpayments__wdoxidee_limits_currency',
-                'options' => $this->_getCurrencyOptions(),
+                'options' => PaymentMethodHelper::getCurrencyOptions(),
                 'title' => Helper::translate('wd_default_currency'),
             ],
             'moreInfo' => [
@@ -234,25 +235,6 @@ class CreditCardPaymentMethod extends PaymentMethod
         ];
 
         return parent::getConfigFields() + $aAdditionalFields;
-    }
-
-    /**
-     * Return array for currency select options
-     *
-     * @return array
-     *
-     * @since 1.0.0
-     */
-    private function _getCurrencyOptions()
-    {
-        $aCurrencies = Registry::getConfig()->getCurrencyArray();
-        $aOptions = [];
-
-        foreach ($aCurrencies as $oCurrency) {
-            $aOptions[$oCurrency->name] = $oCurrency->name;
-        }
-
-        return $aOptions;
     }
 
     /**

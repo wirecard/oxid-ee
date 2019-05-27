@@ -9,7 +9,9 @@
 
 namespace Wirecard\Oxid\Extend\Model;
 
+use Wirecard\Oxid\Core\OxidEeEvents;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
+use Wirecard\Oxid\Model\MetaDataModel;
 use Wirecard\Oxid\Model\PaymentMethod;
 
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -21,6 +23,19 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
  */
 class Payment extends Payment_parent
 {
+    use MetaDataModel;
+
+    /**
+     * @inheritdoc
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    public function getTableName()
+    {
+        return OxidEeEvents::PAYMENT_METADATA_TABLE;
+    }
+
     /**
      * Checks if this is a current payment method.
      *

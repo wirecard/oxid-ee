@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Model;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 
@@ -110,7 +111,15 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
                 'title' => Helper::translate('wd_config_delete_failure_order'),
                 'description' => Helper::translate('wd_config_delete_failure_order_desc'),
             ],
+            'currencies' => [
+                'type' => 'multiselect',
+                'field' => 'oxpayments__currencies',
+                'options' => PaymentMethodHelper::getCurrencyOptions(),
+                'title' => Helper::translate('wd_config_allowed_currencies'),
+                'description' => Helper::translate('wd_config_allowed_currencies_desc'),
+            ],
         ];
+
         return parent::getConfigFields() + $aAdditionalFields;
     }
 
@@ -127,5 +136,17 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
             parent::getPublicFieldNames(),
             ['descriptor', 'additionalInfo', 'deleteCanceledOrder', 'deleteFailedOrder']
         );
+    }
+
+    /**
+     * Returns an array of all meta data fields for a payment method.
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public function getMetaDataFieldNames()
+    {
+        return ['currencies'];
     }
 }

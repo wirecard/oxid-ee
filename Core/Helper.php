@@ -366,4 +366,47 @@ class Helper
         $oShop->load($sShopId);
         return $oShop;
     }
+
+    /**
+     * Parses the contents of an XML node to either a string or an array of strings,
+     * depending whether there are chld nodes.
+     *
+     * Note: The current implementation only works with one child level!
+     *
+     * @param object $oNode XML node
+     *
+     * @return string|array
+     *
+     * @since 1.2.0
+     */
+    public static function parseXmlNode($oNode)
+    {
+        $aChildren = $oNode->children();
+
+        if (count($aChildren) === 0) {
+            return (string) $oNode;
+        }
+
+        $aChildValues = [];
+
+        foreach ($aChildren as $sNode) {
+            $aChildValues[] = (string) $sNode;
+        }
+
+        return $aChildValues;
+    }
+
+    /**
+     * Regenerates database view tables.
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    public static function regenerateViews()
+    {
+        $oShop = oxNew('oxShop');
+
+        return $oShop->generateViews();
+    }
 }
