@@ -29,7 +29,7 @@
         [{if $actions|@count > 0}]
         <tr>
             <td width="25%">[{oxmultilang ident="wd_amount"}] ([{$currency}])</td>
-            <td><input type="text" name="amount" value="[{$requestParameters.amount}]" size="25"></td>
+            <td><input type="text" name="amount" pattern="^[0-9]*[\.,]?[0-9]+$" value="[{$requestParameters.amount}]" size="25"></td>
         </tr>
         <tr>
             <td colspan="2" height="50">
