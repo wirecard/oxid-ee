@@ -9,6 +9,7 @@
 
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\GiropayPaymentMethod;
+use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
@@ -38,9 +39,14 @@ class GiropayPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetTransaction()
     {
-        $oTransaction = $this->_oPaymentMethod->getTransaction();
+        $this->assertInstanceOf(GiropayTransaction::class, $this->_oPaymentMethod->getTransaction());
+    }
 
-        $this->assertInstanceOf(GiropayTransaction::class, $oTransaction);
+    public function testAddMandatoryTransactionData()
+    {
+        $oTransaction = $this->_oPaymentMethod->getTransaction();
+        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction);
+
         $this->assertObjectHasAttribute('bankData', $oTransaction);
     }
 
@@ -48,7 +54,7 @@ class GiropayPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     {
         $aFields = $this->_oPaymentMethod->getConfigFields();
 
-        $this->assertEquals(array_keys($aFields), [
+        $this->assertEquals([
             'apiUrl',
             'httpUser',
             'httpPassword',
@@ -59,28 +65,36 @@ class GiropayPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
             'additionalInfo',
             'deleteCanceledOrder',
             'deleteFailedOrder',
-        ]);
+        ], array_keys($aFields));
     }
 
     public function testGetCheckoutFields()
     {
         $aFields = $this->_oPaymentMethod->getCheckoutFields();
 
-        $this->assertEquals(array_keys($aFields), [
+        $this->assertEquals([
             'bic',
-        ]);
+        ], array_keys($aFields));
     }
 
     public function testGetPublicFieldNames()
     {
         $aFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
 
-        $this->assertEquals($aFieldNames, [
+        $this->assertEquals([
             'apiUrl',
             'maid',
             'additionalInfo',
             'deleteCanceledOrder',
             'deleteFailedOrder',
-        ]);
+        ], $aFieldNames);
+    }
+
+    public function testGetPostProcessingPaymentMethod()
+    {
+        $this->assertInstanceOf(
+            SepaCreditTransferPaymentMethod::class,
+            $this->_oPaymentMethod->getPostProcessingPaymentMethod('')
+        );
     }
 }

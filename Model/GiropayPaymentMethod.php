@@ -63,15 +63,23 @@ class GiropayPaymentMethod extends PaymentMethod
      */
     public function getTransaction()
     {
-        $oTransaction = new GiropayTransaction();
+        return new GiropayTransaction();
+    }
+
+    /**
+     * @inheritdoc
+     * @param Transaction $oTransaction
+     *
+     * @since 1.2.0
+     */
+    public function addMandatoryTransactionData(&$oTransaction)
+    {
         $oBankAccount = new BankAccount();
         $oSession = Registry::getConfig()->getSession();
         $aDynvalues = $oSession->getVariable('dynvalue');
 
         $oBankAccount->setBic($aDynvalues['bic'] ?? '');
         $oTransaction->setBankAccount($oBankAccount);
-
-        return $oTransaction;
     }
 
     /**
