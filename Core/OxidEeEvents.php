@@ -331,14 +331,15 @@ class OxidEeEvents
             "OXID" => $oPayment->oxid,
         ];
 
-        $sQuery = "INSERT INTO " . self::PAYMENT_TABLE . "(`OXID`, `OXACTIVE`, `OXTOAMOUNT`, `OXDESC`, `OXDESC_1`,
-         `OXSORT`, `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONACTION`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`,
+        $sQuery = "INSERT INTO " . self::PAYMENT_TABLE . "(`OXID`, `OXACTIVE`, `OXFROMAMOUNT`, `OXTOAMOUNT`, `OXDESC`,
+         `OXDESC_1`,`OXSORT`, `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONACTION`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`,
          `WDOXIDEE_SECRET`, `WDOXIDEE_THREE_D_MAID`, `WDOXIDEE_THREE_D_SECRET`, `WDOXIDEE_NON_THREE_D_MAX_LIMIT`,
          `WDOXIDEE_THREE_D_MIN_LIMIT`, `WDOXIDEE_LIMITS_CURRENCY`, `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`,
          `WDOXIDEE_ISOURS`, `WDOXIDEE_BASKET`, `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`,
          `WDOXIDEE_COUNTRYCODE`, `WDOXIDEE_LOGOVARIANT`, `WDOXIDEE_CREDITORID`) VALUES (
              '{$oPayment->oxid}',
              '{$oPayment->oxactive}',
+             '{$oPayment->oxfromamount}',
              '{$oPayment->oxtoamount}',
              '{$oPayment->oxdesc}',
              '{$oPayment->oxdesc_1}',

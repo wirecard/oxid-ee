@@ -14,9 +14,10 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
+use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
-use Wirecard\Oxid\Model\SofortPaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\SofortPaymentMethod;
 
 /**
  * Class PaymentMethodFactory
@@ -54,6 +55,8 @@ class PaymentMethodFactory
                 return new SepaDirectDebitPaymentMethod();
             case SofortPaymentMethod::getName(true):
                 return new SofortPaymentMethod();
+            case RatepayInvoicePaymentMethod::getName(true);
+                return new RatepayInvoicePaymentMethod();
             default:
                 throw new StandardException("payment type not registered: $sPaymentMethodType");
         }
