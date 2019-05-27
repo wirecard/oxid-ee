@@ -39,13 +39,13 @@ class PaymentMethodFactory
     public static function getPaymentMethodClasses()
     {
         return [
-            PaypalPaymentMethod::class,
             CreditCardPaymentMethod::class,
+            GiropayPaymentMethod::class,
+            PaypalPaymentMethod::class,
+            RatepayInvoicePaymentMethod::class,
             SepaCreditTransferPaymentMethod::class,
             SepaDirectDebitPaymentMethod::class,
             SofortPaymentMethod::class,
-            RatepayInvoicePaymentMethod::class,
-            GiropayPaymentMethod::class,
         ];
     }
 
