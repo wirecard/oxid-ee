@@ -9,7 +9,6 @@
 
 namespace Wirecard\Oxid\Model;
 
-use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Entity\IdealBic;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
@@ -19,7 +18,7 @@ use Wirecard\Oxid\Core\Helper;
 
 use OxidEsales\Eshop\Core\Registry;
 
-use ReflectionClass;
+//use ReflectionClass;
 
 /**
  * Payment method implementation for iDEAL
@@ -34,6 +33,24 @@ class IdealPaymentMethod extends PaymentMethod
      * @since 1.2.0
      */
     protected static $_sName = "ideal";
+
+    /**
+     *
+     * @since 1.2.0
+     */
+    private static $_aBankOptions = [];
+
+    /**
+     * IdealPaymentMethod constructor.
+     *
+     * @since 1.2.0
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->_aBankOptions = $this->getBanks();
+    }
 
     /**
      * @inheritdoc
@@ -67,10 +84,11 @@ class IdealPaymentMethod extends PaymentMethod
     public function getTransaction()
     {
         $oTransaction = new IdealTransaction();
+
         $oSession = Registry::getConfig()->getSession();
         $aDynvalues = $oSession->getVariable('dynvalue');
-        $oTransaction->setBic($aDynvalues['bank'] ?? '');
 
+        $oTransaction->setBic($this->_aBankOptions[$aDynvalues['bank']]);
         return $oTransaction;
     }
 
@@ -141,7 +159,7 @@ class IdealPaymentMethod extends PaymentMethod
         return [
             'bank' => [
                 'type' => 'select',
-                'options' => $this->_getBanks(),
+                'options' => $this->_aBankOptions,
                 'title' => Helper::translate('wd_ideal_legend'),
             ],
         ];
@@ -154,17 +172,11 @@ class IdealPaymentMethod extends PaymentMethod
      *
      * @since 1.2.0
      */
-    private function _getBanks()
+    public function getBanks()
     {
-        $cReflectionClass = new ReflectionClass(IdealBic::class);
-        $aBanks = $cReflectionClass->getConstants();
-        $aOptions = [];
-
-        foreach ($aBanks as $sKey => $sValue) {
-            $aOptions[$sKey] = $sValue;
-        }
-
-        return $aOptions;
+        //IdealBic extends Enum class and contains const variables which represent bank options.
+        //toArray() combines all const variables from IdealBic and converts them to array.
+        return IdealBic::toArray();
     }
 
     /**
@@ -177,22 +189,11 @@ class IdealPaymentMethod extends PaymentMethod
     public function getPublicFieldNames()
     {
         return array_merge(parent::getPublicFieldNames(), [
+            'descriptor',
             'additionalInfo',
             'deleteCanceledOrder',
             'deleteFailedOrder',
         ]);
-    }
-
-    /**
-     * Adds all needed data to the post-processing transaction
-     *
-     * @param IdealTransaction $oTransaction
-     *
-     * @since 1.1.0
-     */
-    public function addMandatoryTransactionData(&$oTransaction)
-    {
-        $oTransaction->setBic(IdealBic::INGBNL2A);
     }
 
     /**
