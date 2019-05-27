@@ -97,7 +97,7 @@
       <oxtoamount>3500</oxtoamount>
       <oxdesc>Wirecard Garantierter Kauf auf Rechnung</oxdesc>
       <oxdesc_1>Wirecard Guaranteed Invoice by Wirecard</oxdesc_1>
-      <oxsort>55</oxsort>
+      <oxsort>40</oxsort>
       <wdoxidee_logo>ratepay-invoice.png</wdoxidee_logo>
       <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
       <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
