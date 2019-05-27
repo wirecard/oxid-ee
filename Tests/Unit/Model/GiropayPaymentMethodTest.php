@@ -84,6 +84,7 @@ class GiropayPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals([
             'apiUrl',
             'maid',
+            'descriptor',
             'additionalInfo',
             'deleteCanceledOrder',
             'deleteFailedOrder',
