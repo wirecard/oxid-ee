@@ -129,6 +129,7 @@ class EpsPaymentMethod extends PaymentMethod
     public function getPublicFieldNames()
     {
         return array_merge(parent::getPublicFieldNames(), [
+            'descriptor',
             'additionalInfo',
             'deleteCanceledOrder',
             'deleteFailedOrder',

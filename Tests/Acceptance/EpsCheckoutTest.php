@@ -30,29 +30,6 @@ class EpsCheckoutTest extends CheckoutTestCase
         $this->assertPaymentSuccessful();
     }
 
-    public function goThroughCheckout()
-    {
-        $this->openShop();
-        $this->loginMockUserToFrontend();
-        $this->addMockArticleToBasket();
-
-        // Step 1: Cart
-        $this->continueToNextStep();
-
-        // Step 2: Address
-        $this->continueToNextStep();
-
-        // Step 3: Pay
-        $this->click(sprintf(
-            $this->getLocator('checkout.paymentMethod'),
-            $this->paymentMethod::getName(true)
-        ));
-        $this->continueToNextStep();
-
-        // Step 4: Order
-        $this->continueToNextStep();
-    }
-
     private function goThroughExternalFlow()
     {
         $this->waitForElement($this->getLocator('external.eps.bic'), 30);
