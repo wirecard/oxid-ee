@@ -15,12 +15,15 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\TransactionHandler;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Model\PaymentMethod;
-use Wirecard\Oxid\Model\SofortPaymentMethod;
+use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Config\SepaConfig;
+use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 
 /**
  * Controls the view for the post-processing transaction tab.
@@ -105,11 +108,11 @@ class TransactionTabPostProcessing extends TransactionTab
     private function _getBackendService($oConfig)
     {
         // NOTE: if _oBackendService got injected for testing, use it
-        if (is_null($this->_oBackendService)) {
-            $this->_oBackendService = new BackendService($oConfig, $this->_oLogger);
+        if ($this->_oBackendService) {
+            return $this->_oBackendService;
         }
 
-        return $this->_oBackendService;
+        return new BackendService($oConfig, $this->_oLogger);
     }
 
     /**
@@ -338,10 +341,11 @@ class TransactionTabPostProcessing extends TransactionTab
      */
     private function _filterPostProcessingActions($aPossibleOperations, $oPaymentMethod)
     {
-        if ($oPaymentMethod->getName(true) === SofortPaymentMethod::getName(true)
-            && !$oPaymentMethod->getPostProcessingPaymentMethod(Transaction::ACTION_CREDIT)
-                ->getPayment()->oxpayments__oxactive->value) {
-            return [];
+        $oPostProcessPayment = $oPaymentMethod->getPostProcessingPaymentMethod(Transaction::ACTION_CREDIT);
+
+        if ($oPostProcessPayment instanceof SepaCreditTransferPaymentMethod
+            && !$oPostProcessPayment->getPayment()->oxpayments__oxactive->value) {
+                return [];
         }
 
         return $aPossibleOperations;
@@ -430,12 +434,22 @@ class TransactionTabPostProcessing extends TransactionTab
     private function _getTransactionHandler()
     {
         // NOTE: if _oTransactionHandler got injected for testing, use it
-        if (is_null($this->_oTransactionHandler)) {
-            $oConfig = $this->_getPaymentMethodConfig();
-            $this->_oTransactionHandler = new TransactionHandler($this->_getBackendService($oConfig));
+        if ($this->_oTransactionHandler) {
+            return $this->_oTransactionHandler;
         }
 
-        return $this->_oTransactionHandler;
+        $oConfig = $this->_getPaymentMethodConfig();
+
+        $oSepaCtPayment = PaymentMethodHelper::getPaymentById(SepaCreditTransferPaymentMethod::getName(true));
+        $oSepaCtConfig = new SepaConfig(
+            SepaCreditTransferTransaction::NAME,
+            $oSepaCtPayment->oxpayments__wdoxidee_maid->value,
+            $oSepaCtPayment->oxpayments__wdoxidee_secret->value
+        );
+
+        $oConfig->add($oSepaCtConfig);
+
+        return new TransactionHandler($this->_getBackendService($oConfig));
     }
 
     /**
