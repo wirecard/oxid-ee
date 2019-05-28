@@ -22,19 +22,19 @@ class IdealPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     /**
      * @var IdealPaymentMethod
      */
-    private $oPaymentMethod;
+    private $_oPaymentMethod;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->oPaymentMethod = new IdealPaymentMethod();
+        $this->_oPaymentMethod = new IdealPaymentMethod();
     }
 
     public function testGetConfig()
     {
         $oPayment = PaymentMethodHelper::getPaymentById(IdealPaymentMethod::getName(true));
 
-        $oConfig = $this->oPaymentMethod->getConfig();
+        $oConfig = $this->_oPaymentMethod->getConfig();
 
         $this->assertInstanceOf(Config::class, $oConfig);
         $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get(IdealPaymentMethod::getName()));
@@ -46,7 +46,7 @@ class IdealPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
             'bank' => 'INGBNL2A',
         ];
         Registry::getSession()->setVariable('dynvalue', $aDynArray);
-        $this->assertInstanceOf(IdealTransaction::class, $this->oPaymentMethod->getTransaction());
+        $this->assertInstanceOf(IdealTransaction::class, $this->_oPaymentMethod->getTransaction());
     }
 
     /**
@@ -67,13 +67,13 @@ class IdealPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetConfigFields()
     {
-        $aConfigFields = $this->oPaymentMethod->getConfigFields();
+        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
         $this->assertArrayHasKey('additionalInfo', $aConfigFields);
     }
 
     public function testGetCheckoutFields()
     {
-        $aFields = $this->oPaymentMethod->getCheckoutFields();
+        $aFields = $this->_oPaymentMethod->getCheckoutFields();
         $this->assertEquals(array_keys($aFields), [
             'bank',
         ]);
@@ -81,19 +81,19 @@ class IdealPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetBanks()
     {
-        $aBanks = $this->oPaymentMethod->getBanks();
+        $aBanks = $this->_oPaymentMethod->getBanks();
         $this->assertNotNull($aBanks);
     }
 
     public function testGetPublicFieldNames()
     {
-        $aFieldNames = $this->oPaymentMethod->getPublicFieldNames();
+        $aFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
         $this->assertNotNull($aFieldNames);
     }
 
     public function testGetPostProcessingPaymentMethod()
     {
-        $oTransaction = $this->oPaymentMethod->getPostProcessingPaymentMethod('');
+        $oTransaction = $this->_oPaymentMethod->getPostProcessingPaymentMethod('');
         $this->assertInstanceOf(SepaCreditTransferPaymentMethod::class, $oTransaction);
     }
 }

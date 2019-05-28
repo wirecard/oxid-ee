@@ -18,8 +18,6 @@ use Wirecard\Oxid\Core\Helper;
 
 use OxidEsales\Eshop\Core\Registry;
 
-//use ReflectionClass;
-
 /**
  * Payment method implementation for iDEAL
  *
@@ -38,7 +36,7 @@ class IdealPaymentMethod extends PaymentMethod
      *
      * @since 1.2.0
      */
-    private static $_aBankOptions = [];
+    private $_aBankOptions = [];
 
     /**
      * IdealPaymentMethod constructor.
@@ -205,7 +203,7 @@ class IdealPaymentMethod extends PaymentMethod
      *
      * @since 1.2.0
      */
-    public function getPostProcessingPaymentMethod($sAction = '')
+    public function getPostProcessingPaymentMethod($sAction)
     {
         return new SepaCreditTransferPaymentMethod();
     }
