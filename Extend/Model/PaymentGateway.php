@@ -314,7 +314,6 @@ class PaymentGateway extends BaseModel
 
         if ($oPayment->oxpayments__oxid->value === RatepayInvoicePaymentMethod::getName(true)) {
             $sDeviceId = Registry::getSession()->getVariable(RatepayInvoicePaymentMethod::UNIQUE_TOKEN_VARIABLE);
-            Registry::getLogger()->debug($sDeviceId);
         }
 
         $oDevice->setFingerprint($sDeviceId);

@@ -9,6 +9,8 @@
 
 namespace Wirecard\Oxid\Core;
 
+use DateTime;
+use Exception;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\Shop;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -16,9 +18,6 @@ use OxidEsales\Eshop\Core\Model\ListModel;
 use OxidEsales\Eshop\Core\Module\Module;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ShopVersion;
-
-use Exception;
-use DateTime;
 
 /**
  * Util functions
@@ -134,7 +133,7 @@ class Helper
      */
     public static function getFloatFromString($sNumber)
     {
-        return (float)preg_replace('/\.(?=.*\.)/', '', str_replace(',', '.', $sNumber));
+        return (float) preg_replace('/\.(?=.*\.)/', '', str_replace(',', '.', $sNumber));
     }
 
     /**
@@ -418,9 +417,9 @@ class Helper
      */
     public static function getUniqueToken()
     {
-        $timestamp = microtime();
-        $session = Registry::getSession();
-        $sessionId = $session->getId();
-        return md5($sessionId . '_' . $timestamp);
+        $iTimestamp = microtime();
+        $oSession = Registry::getSession();
+        $sSessionId = $oSession->getId();
+        return md5($sSessionId . '_' . $iTimestamp);
     }
 }
