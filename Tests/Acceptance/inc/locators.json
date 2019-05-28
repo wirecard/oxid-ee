@@ -37,6 +37,12 @@
       "bic": "bic",
       "terms": "sepadd-checkbox",
       "nextStep": "//form/button[contains(@class, 'nextStep')]"
+    },
+    "giropay": {
+      "bic": "bic",
+      "sc": "//input[@name='sc']",
+      "extensionSc": "//input[@name='extensionSc']",
+      "nextStep": "//input[@type='submit']"
     }
   }
 }

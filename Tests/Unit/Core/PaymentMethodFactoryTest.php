@@ -9,8 +9,17 @@
 
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 
+use Wirecard\Oxid\Model\PaymentMethod;
+
 class PaymentMethodFactoryTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
+    public function testGetPaymentMethodClasses()
+    {
+        foreach (PaymentMethodFactory::getPaymentMethodClasses() as $aClass) {
+            $this->assertInstanceOf(PaymentMethod::class, new $aClass());
+        }
+    }
+
     public function testCreatePaypal()
     {
         $oPaymentMethod = PaymentMethodFactory::create("wdpaypal");

@@ -12,6 +12,7 @@ namespace Wirecard\Oxid\Core;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\GiropayPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
 use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
@@ -29,6 +30,32 @@ use Wirecard\Oxid\Model\SofortPaymentMethod;
 class PaymentMethodFactory
 {
     /**
+     * Returns an array of payment method class names.
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public static function getPaymentMethodClasses()
+    {
+        $aClasses = [];
+
+        foreach ([
+            CreditCardPaymentMethod::class,
+            GiropayPaymentMethod::class,
+            PaypalPaymentMethod::class,
+            RatepayInvoicePaymentMethod::class,
+            SepaCreditTransferPaymentMethod::class,
+            SepaDirectDebitPaymentMethod::class,
+            SofortPaymentMethod::class,
+        ] as $sClassName) {
+            $aClasses[$sClassName::getName(true)] = $sClassName;
+        }
+
+        return $aClasses;
+    }
+
+    /**
      * Create a payment method
      *
      * @param string $sPaymentMethodType
@@ -36,30 +63,16 @@ class PaymentMethodFactory
      * @return PaymentMethod
      * @throws StandardException if $sPaymentMethodType is not registered
      *
-     * will grow as we add new payment methods
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @codingStandardsIgnoreStart Generic.Metrics.CyclomaticComplexity
-     *
      * @since 1.0.0
      */
     public static function create($sPaymentMethodType)
     {
-        switch ($sPaymentMethodType) {
-            case PaypalPaymentMethod::getName(true):
-                return new PaypalPaymentMethod();
-            case CreditCardPaymentMethod::getName(true):
-                return new CreditCardPaymentMethod();
-            case SepaCreditTransferPaymentMethod::getName(true):
-                return new SepaCreditTransferPaymentMethod();
-            case SepaDirectDebitPaymentMethod::getName(true):
-                return new SepaDirectDebitPaymentMethod();
-            case SofortPaymentMethod::getName(true):
-                return new SofortPaymentMethod();
-            case RatepayInvoicePaymentMethod::getName(true);
-                return new RatepayInvoicePaymentMethod();
-            default:
-                throw new StandardException("payment type not registered: $sPaymentMethodType");
+        $aClasses = self::getPaymentMethodClasses();
+
+        if (isset($aClasses[$sPaymentMethodType])) {
+            return new $aClasses[$sPaymentMethodType];
         }
+
+        throw new StandardException("payment type not registered: {$sPaymentMethodType}");
     }
-    // @codingStandardsIgnoreEnd Generic.Metrics.CyclomaticComplexity
 }
