@@ -33,7 +33,8 @@ class PaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
      */
     public function testConstructorException()
     {
-        $oPaymentMethod = new class extends PaymentMethod{
+        $oPaymentMethod = new class extends PaymentMethod
+        {
 
             public function getTransaction()
             {
