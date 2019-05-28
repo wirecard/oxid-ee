@@ -12,7 +12,7 @@ namespace Wirecard\Oxid\Tests\Acceptance;
 use Wirecard\Oxid\Model\EpsPaymentMethod;
 
 /**
- * Acceptance tests for the Eps checkout flow.
+ * Acceptance tests for the eps checkout flow.
  */
 class EpsCheckoutTest extends CheckoutTestCase
 {
