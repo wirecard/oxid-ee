@@ -133,12 +133,6 @@ class IdealPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertNotNull($aBanks);
     }
 
-    public function testGetPublicFieldNames()
-    {
-        $aFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
-        $this->assertNotNull($aFieldNames);
-    }
-
     public function testGetPostProcessingPaymentMethod()
     {
         $oTransaction = $this->_oPaymentMethod->getPostProcessingPaymentMethod('');
