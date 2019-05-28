@@ -10,9 +10,9 @@
 
 namespace Wirecard\Oxid\Extend;
 
-use OxidEsales\Eshop\Application\Model\Shop;
-
+use OxidEsales\Eshop\Core\Registry;
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 
 /**
  * Extends the OXID ViewConfig
@@ -36,6 +36,19 @@ class ViewConfig extends ViewConfig_parent
     public function getModuleDeviceId($sMaid)
     {
         return Helper::createDeviceFingerprint($sMaid, $this->getSessionId());
+    }
+
+    /**
+     * Returns the token for the RatePay fraud protection
+     *
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    public function getRatepayUniqueToken() {
+        $sUniqueToken = Helper::getUniqueToken();
+        Registry::getSession()->setVariable(RatepayInvoicePaymentMethod::UNIQUE_TOKEN_VARIABLE, $sUniqueToken);
+        return $sUniqueToken;
     }
 
     /**

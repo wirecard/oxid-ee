@@ -11,13 +11,11 @@ namespace Wirecard\Oxid\Core;
 
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\Shop;
+use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Model\ListModel;
 use OxidEsales\Eshop\Core\Module\Module;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\ShopVersion;
-use OxidEsales\Eshop\Core\Exception\StandardException;
-
-use Wirecard\Oxid\Extend\Language;
 
 use Exception;
 use DateTime;
@@ -136,7 +134,7 @@ class Helper
      */
     public static function getFloatFromString($sNumber)
     {
-        return (float) preg_replace('/\.(?=.*\.)/', '', str_replace(',', '.', $sNumber));
+        return (float)preg_replace('/\.(?=.*\.)/', '', str_replace(',', '.', $sNumber));
     }
 
     /**
@@ -368,6 +366,7 @@ class Helper
     }
 
     /**
+<<<<<<< HEAD
      * Parses the contents of an XML node to either a string or an array of strings,
      * depending whether there are chld nodes.
      *
@@ -408,5 +407,20 @@ class Helper
         $oShop = oxNew('oxShop');
 
         return $oShop->generateViews();
+    }
+
+    /**
+     * Generates a unique token
+     *
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    public static function getUniqueToken()
+    {
+        $timestamp = microtime();
+        $session = Registry::getSession();
+        $sessionId = $session->getId();
+        return md5($sessionId . '_' . $timestamp);
     }
 }
