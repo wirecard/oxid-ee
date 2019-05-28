@@ -22,19 +22,19 @@ class EpsPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     /**
      * @var EpsPaymentMethod
      */
-    private $oPaymentMethod;
+    private $_oPaymentMethod;
 
     protected function setUp()
     {
         parent::setUp();
-        $this->oPaymentMethod = new EpsPaymentMethod();
+        $this->_oPaymentMethod = new EpsPaymentMethod();
     }
 
     public function testGetConfig()
     {
         $oPayment = PaymentMethodHelper::getPaymentById(EpsPaymentMethod::getName(true));
 
-        $oConfig = $this->oPaymentMethod->getConfig();
+        $oConfig = $this->_oPaymentMethod->getConfig();
 
         $this->assertInstanceOf(Config::class, $oConfig);
         $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get(EpsPaymentMethod::getName()));
@@ -42,41 +42,50 @@ class EpsPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetTransaction()
     {
-        $oTransaction = $this->oPaymentMethod->getTransaction();
+        $oTransaction = $this->_oPaymentMethod->getTransaction();
         $this->assertInstanceOf(EpsTransaction::class, $oTransaction);
     }
 
-    /**
-     * @dataProvider getNameProvider
-     */
-    public function testGetName($sExpected)
+    public function testGetName()
     {
         $sName = EpsPaymentMethod::getName();
-        $this->assertEquals($sExpected, $sName);
-    }
-
-    public function getNameProvider()
-    {
-        return [
-            'correct payment name' => ['eps'],
-        ];
+        $this->assertEquals($this->_oPaymentMethod->getName(), $sName);
     }
 
     public function testGetConfigFields()
     {
-        $aConfigFields = $this->oPaymentMethod->getConfigFields();
-        $this->assertArrayHasKey('additionalInfo', $aConfigFields);
+        $aFields = $this->_oPaymentMethod->getConfigFields();
+        $this->assertEquals([
+            'apiUrl',
+            'httpUser',
+            'httpPassword',
+            'testCredentials',
+            'maid',
+            'secret',
+            'descriptor',
+            'additionalInfo',
+            'deleteCanceledOrder',
+            'deleteFailedOrder',
+        ], array_keys($aFields));
     }
 
     public function testGetPublicFieldNames()
     {
-        $aFieldNames = $this->oPaymentMethod->getPublicFieldNames();
-        $this->assertNotNull($aFieldNames);
+        $aPublicFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
+        $aExpected = [
+            "apiUrl",
+            "maid",
+            "descriptor",
+            "additionalInfo",
+            "deleteCanceledOrder",
+            "deleteFailedOrder",
+        ];
+        $this->assertEquals($aExpected, $aPublicFieldNames, '', 0.0, 1, true);
     }
 
     public function testGetPostProcessingPaymentMethod()
     {
-        $oTransaction = $this->oPaymentMethod->getPostProcessingPaymentMethod('');
+        $oTransaction = $this->_oPaymentMethod->getPostProcessingPaymentMethod('');
         $this->assertInstanceOf(SepaCreditTransferPaymentMethod::class, $oTransaction);
     }
 }
