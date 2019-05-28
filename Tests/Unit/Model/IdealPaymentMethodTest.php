@@ -13,6 +13,7 @@ use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Entity\IdealBic;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 
 use OxidEsales\Eshop\Core\Registry;
@@ -48,36 +49,6 @@ class IdealPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         Registry::getSession()->setVariable('dynvalue', $aDynArray);
         $this->assertInstanceOf(IdealTransaction::class, $this->_oPaymentMethod->getTransaction());
     }
-
-    /**
-     * @dataProvider getNameProvider
-     */
-    /*public function testGetName($sExpected)
-    {
-        $sName = IdealPaymentMethod::getName();
-        $this->assertEquals($sExpected, $sName);
-    }
-
-    public function getNameProvider()
-    {
-        return [
-            'correct payment name' => ['ideal'],
-        ];
-    }
-
-    public function testGetConfigFields()
-    {
-        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
-        $this->assertArrayHasKey('additionalInfo', $aConfigFields);
-    }
-
-    public function testGetCheckoutFields()
-    {
-        $aFields = $this->_oPaymentMethod->getCheckoutFields();
-        $this->assertEquals(array_keys($aFields), [
-            'bank',
-        ]);
-    }*/
 
     /**
      * @dataProvider getNameProvider
@@ -125,6 +96,26 @@ class IdealPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
             "deleteFailedOrder",
         ];
         $this->assertEquals($aExpected, $aPublicFieldNames, '', 0.0, 1, true);
+    }
+
+    public function testGetCheckoutFields()
+    {
+        $aFields = $this->_oPaymentMethod->getCheckoutFields();
+        $this->assertEquals(array_keys($aFields), [
+            'bank',
+        ]);
+    }
+
+    public function testAddMandatoryTransactionData()
+    {
+        $aDynArray = [
+            'bank' => 'INGBNL2A',
+        ];
+        Registry::getSession()->setVariable('dynvalue', $aDynArray);
+        $oTransaction = $this->_oPaymentMethod->getTransaction();
+        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction);
+
+        $this->assertAttributeNotEmpty('bic', $oTransaction);
     }
 
     public function testGetBanks()
