@@ -81,13 +81,7 @@ class IdealPaymentMethod extends PaymentMethod
      */
     public function getTransaction()
     {
-        $oTransaction = new IdealTransaction();
-
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
-
-        $oTransaction->setBic($this->_aBankOptions[$aDynvalues['bank']]);
-        return $oTransaction;
+        return new IdealTransaction();
     }
 
     /**
@@ -192,6 +186,21 @@ class IdealPaymentMethod extends PaymentMethod
             'deleteCanceledOrder',
             'deleteFailedOrder',
         ]);
+    }
+
+    /**
+     * Adds all needed data to the post-processing transaction
+     *
+     * @param IdealTransaction $oTransaction
+     *
+     * @since 1.2.0
+     */
+    public function addMandatoryTransactionData(&$oTransaction)
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+
+        $oTransaction->setBic($this->_aBankOptions[$aDynvalues['bank']]);
     }
 
     /**
