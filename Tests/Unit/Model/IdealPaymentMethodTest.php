@@ -52,7 +52,7 @@ class IdealPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     /**
      * @dataProvider getNameProvider
      */
-    public function testGetName($sExpected)
+    /*public function testGetName($sExpected)
     {
         $sName = IdealPaymentMethod::getName();
         $this->assertEquals($sExpected, $sName);
@@ -77,6 +77,54 @@ class IdealPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertEquals(array_keys($aFields), [
             'bank',
         ]);
+    }*/
+
+    /**
+     * @dataProvider getNameProvider
+     */
+    public function testGetName($bForOxid, $sExpected)
+    {
+        $sName = IdealPaymentMethod::getName($bForOxid);
+        $this->assertEquals($sExpected, $sName);
+    }
+
+    public function getNameProvider()
+    {
+        return [
+            'for oxid' => [true, 'wdideal'],
+            'not for oxid' => [false, 'ideal'],
+        ];
+    }
+
+    public function testGetConfigFields()
+    {
+        $aFields = $this->_oPaymentMethod->getConfigFields();
+        $this->assertEquals([
+            'apiUrl',
+            'httpUser',
+            'httpPassword',
+            'testCredentials',
+            'maid',
+            'secret',
+            'descriptor',
+            'additionalInfo',
+            'deleteCanceledOrder',
+            'deleteFailedOrder',
+        ], array_keys($aFields));
+    }
+
+    public function testGetPublicFieldNames()
+    {
+        $aPublicFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
+        $aExpected = [
+            "apiUrl",
+            "maid",
+            "descriptor",
+            "additionalInfo",
+            "deleteCanceledOrder",
+            "deleteFailedOrder",
+        ];
+        $this->assertEquals($aExpected, $aPublicFieldNames, '', 0.0, 1, true);
     }
 
     public function testGetBanks()
