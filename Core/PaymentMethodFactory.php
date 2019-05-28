@@ -38,7 +38,9 @@ class PaymentMethodFactory
      */
     public static function getPaymentMethodClasses()
     {
-        return [
+        $aClasses = [];
+
+        foreach ([
             CreditCardPaymentMethod::class,
             GiropayPaymentMethod::class,
             PaypalPaymentMethod::class,
@@ -46,7 +48,11 @@ class PaymentMethodFactory
             SepaCreditTransferPaymentMethod::class,
             SepaDirectDebitPaymentMethod::class,
             SofortPaymentMethod::class,
-        ];
+        ] as $sClassName) {
+            $aClasses[$sClassName::getName(true)] = $sClassName;
+        }
+
+        return $aClasses;
     }
 
     /**
@@ -61,10 +67,10 @@ class PaymentMethodFactory
      */
     public static function create($sPaymentMethodType)
     {
-        foreach (self::getPaymentMethodClasses() as $sClassName) {
-            if ($sPaymentMethodType === $sClassName::getName(true)) {
-                return new $sClassName();
-            }
+        $aClasses = self::getPaymentMethodClasses();
+
+        if (isset($aClasses[$sPaymentMethodType])) {
+            return new $aClasses[$sPaymentMethodType];
         }
 
         throw new StandardException("payment type not registered: {$sPaymentMethodType}");
