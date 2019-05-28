@@ -46,10 +46,21 @@ class EpsPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertInstanceOf(EpsTransaction::class, $oTransaction);
     }
 
-    public function testGetName()
+    /**
+     * @dataProvider getNameProvider
+     */
+    public function testGetName($bForOxid, $sExpected)
     {
-        $sName = EpsPaymentMethod::getName();
-        $this->assertEquals($this->_oPaymentMethod->getName(), $sName);
+        $sName = EpsPaymentMethod::getName($bForOxid);
+        $this->assertEquals($sExpected, $sName);
+    }
+
+    public function getNameProvider()
+    {
+        return [
+            'for oxid' => [true, 'wdeps'],
+            'not for oxid' => [false, 'eps'],
+        ];
     }
 
     public function testGetConfigFields()
