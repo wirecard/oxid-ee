@@ -189,7 +189,7 @@ class PaymentGateway extends BaseModel
                 $oTransaction->setOrderDetail($sOrderDetails);
             }
         }
-        $oPaymentMethod->addMandatoryTransactionData($oTransaction);
+        $oPaymentMethod->addMandatoryTransactionData($oTransaction, $oOrder);
 
         $this->_addCustomFields($oTransaction);
     }

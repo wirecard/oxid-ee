@@ -78,10 +78,11 @@ class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
     /**
      * @inheritdoc
      * @param Transaction $oTransaction
+     * @param Order       $oOrder
      *
      * @since 1.2.0
      */
-    public function addMandatoryTransactionData(&$oTransaction)
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
     {
         $oBankAccount = new BankAccount();
         $oSession = Registry::getConfig()->getSession();

@@ -273,10 +273,11 @@ abstract class PaymentMethod
      * Adds all mandatory transaction data
      *
      * @param Transaction $oTransaction
+     * @param Order       $oOrder
      *
      * @since 1.1.0
      */
-    public function addMandatoryTransactionData(&$oTransaction)
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
     {
     }
 
