@@ -133,16 +133,16 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
                 'type' => 'multiselect',
                 'field' => 'oxpayments__shipping_countries',
                 'options' => PaymentMethodHelper::getCountryOptions(),
-                'title' => Helper::translate('config_shipping_countries'),
-                'description' => Helper::translate('config_shipping_countries_desc'),
+                'title' => Helper::translate('wd_config_shipping_countries'),
+                'description' => Helper::translate('wd_config_shipping_countries_desc'),
                 'required' => true,
             ],
             'billingCountries' => [
                 'type' => 'multiselect',
                 'field' => 'oxpayments__billing_countries',
                 'options' => PaymentMethodHelper::getCountryOptions(),
-                'title' => Helper::translate('config_billing_countries'),
-                'description' => Helper::translate('config_billing_countries_desc'),
+                'title' => Helper::translate('wd_config_billing_countries'),
+                'description' => Helper::translate('wd_config_billing_countries_desc'),
                 'required' => true,
             ],
             'billingShipping' => [
@@ -152,8 +152,8 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
                     '1' => Helper::translate('wd_yes'),
                     '0' => Helper::translate('wd_no'),
                 ],
-                'title' => Helper::translate('config_billing_shipping'),
-                'description' => Helper::translate('config_billing_shipping_desc'),
+                'title' => Helper::translate('wd_config_billing_shipping'),
+                'description' => Helper::translate('wd_config_billing_shipping_desc'),
             ],
         ];
 
