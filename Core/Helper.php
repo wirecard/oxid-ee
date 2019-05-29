@@ -11,6 +11,7 @@ namespace Wirecard\Oxid\Core;
 
 use DateTime;
 use Exception;
+
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\Shop;
 use OxidEsales\Eshop\Core\Exception\StandardException;
