@@ -72,6 +72,8 @@ class OrderController extends OrderController_parent
      */
     public function init()
     {
+        PaymentMethodHelper::checkUserDataInput();
+
         parent::init();
 
         $sWdPaymentRedirect = Registry::getRequest()->getRequestParameter('wdpayment');
@@ -119,6 +121,7 @@ class OrderController extends OrderController_parent
      */
     public function render()
     {
+
         // after calling parent::render() we are sure we will have order id stored in the session
         // order id is needed in sepa mandate
         $sTemplateName = parent::render();

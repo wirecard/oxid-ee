@@ -9,9 +9,13 @@
 
 namespace Wirecard\Oxid\Core;
 
+use DateTime;
+
+use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Model\ListModel;
 use OxidEsales\Eshop\Core\Registry;
 
+use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\PaymentSdk\Entity\Mandate;
 
 use Wirecard\Oxid\Extend\Model\Payment;
@@ -24,6 +28,8 @@ use Wirecard\Oxid\Extend\Model\Payment;
 class PaymentMethodHelper
 {
     const MAX_MANDATE_ID_LENGTH = 35;
+    const DB_DATE_FORMAT = 'Y-m-d';
+
     /**
      * Returns a payment with the selected id.
      *
@@ -149,6 +155,124 @@ class PaymentMethodHelper
     }
 
     /**
+     * Returns date of birth
+     *
+     * @return string date of birth formated for db (format 'Y-m-d')
+     *
+     * @since 1.2.0
+     */
+    public static function getDbDateOfBirth()
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+
+        $oDateOfBirth =
+            DateTime::createFromFormat(Helper::translate('wd_birthdate_format_php_code'), $aDynvalues['dateOfBirth']);
+        return $oDateOfBirth ? $oDateOfBirth->format(Helper::translate(self::DB_DATE_FORMAT)) : '';
+    }
+
+    /**
+     * Sets date of birth
+     *
+     * @param string $sDbDateOfBirth formated for db (format 'Y-m-d')
+     *
+     * @since 1.2.0
+     */
+    public static function setDbDateOfBirth($sDbDateOfBirth)
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+        $aDynvalues['dateOfBirth'] = '';
+
+        if ($sDbDateOfBirth !== '0000-00-00') {
+            $sDbFormatedDateOfBirth = DateTime::createFromFormat(self::DB_DATE_FORMAT, $sDbDateOfBirth);
+            $aDynvalues['dateOfBirth'] =
+                $sDbFormatedDateOfBirth->format(Helper::translate('wd_birthdate_format_php_code'));
+        }
+
+        $oSession->setVariable('dynvalue', $aDynvalues);
+    }
+
+    /**
+     * Returns true if user is 18 or older
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    public static function isUserEighteen()
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+
+        $oDateOfBirth =
+            DateTime::createFromFormat(Helper::translate('wd_birthdate_format_php_code'), $aDynvalues['dateOfBirth']);
+        $oToday = new DateTime();
+        $oDateInterval = $oDateOfBirth->diff($oToday);
+        return $oDateInterval->invert === 0 && $oDateInterval->y >= 18;
+    }
+
+    /**
+     * Returns phone
+     *
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    public static function getPhone()
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+        return $aDynvalues['phone'];
+    }
+
+    /**
+     * Sets the phone number
+     *
+     * @param string $sPhone
+     *
+     * @since 1.2.0
+     */
+    public static function setPhone($sPhone)
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+        $aDynvalues['phone'] = $sPhone;
+
+        $oSession->setVariable('dynvalue', $aDynvalues);
+    }
+
+    /**
+     * Returns saveCheckoutFields
+     *
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    public static function getSaveCheckoutFields()
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+        return $aDynvalues['saveCheckoutFields'];
+    }
+
+    /**
+     * Sets the saveCheckoutFields flag
+     *
+     * @param int $iSave value 1 if checkout data should be saved 0 if not
+     *
+     * @since 1.2.0
+     */
+    public static function setSaveCheckoutFields($iSave)
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+        $aDynvalues['saveCheckoutFields'] = $iSave;
+
+        $oSession->setVariable('dynvalue', $aDynvalues);
+    }
+
+    /**
      * Generates SEPA mandate html body
      *
      * @param Basket $oBasket
@@ -202,5 +326,36 @@ class PaymentMethodHelper
         $sCreditorName = trim($oShop->oxshops__oxfname . ' ' . $oShop->oxshops__oxlname);
 
         return $sCreditorName ? $sCreditorName : $oShop->oxshops__oxcompany;
+    }
+
+    /**
+     * Checks the user data if mandatory fields are set correctly and saves them if needed
+     *
+     * @since 1.2.0
+     */
+    public static function checkUserDataInput()
+    {
+        if (PaymentMethodHelper::getDbDateOfBirth() === ''
+            || !PaymentMethodHelper::isUserEighteen()) {
+            $sShopBaseUrl = Registry::getConfig()->getShopUrl();
+            $sLanguageCode = Registry::getLang()->getBaseLanguage();
+
+            $aParams = [
+                'lang' => $sLanguageCode,
+                'cl' => 'payment',
+                'payerror' => Order::ORDER_STATE_INVALIDPAYMENT,
+            ];
+            $sParamStr = http_build_query($aParams);
+            $sNewUrl = $sShopBaseUrl . 'index.php?' . $sParamStr;
+
+            Registry::getUtils()->redirect($sNewUrl);
+        }
+
+        if (PaymentMethodHelper::getSaveCheckoutFields() === '1') {
+            $oUser = Registry::getSession()->getUser();
+            $oUser->oxuser__oxbirthdate = new Field(PaymentMethodHelper::getDbDateOfBirth());
+            $oUser->oxuser__oxfon = new Field(PaymentMethodHelper::getPhone());
+            $oUser->save();
+        }
     }
 }

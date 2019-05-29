@@ -10,9 +10,11 @@
 namespace Wirecard\Oxid\Model;
 
 use OxidEsales\Eshop\Core\Registry;
+use DateTime;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 
@@ -64,25 +66,6 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     public function getTransaction()
     {
         return new RatepayInvoiceTransaction();
-    }
-
-    /**
-     * @inheritdoc
-     * @param Transaction $oTransaction
-     * @param Order       $oOrder
-     *
-     * @since 1.2.0
-     */
-    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
-    {
-        $oSession = Registry::getSession();
-        $oBasket = $oSession->getBasket();
-        $oWdBasket = $oBasket->createTransactionBasket();
-
-        $oTransaction->setBasket($oWdBasket);
-        $oTransaction->setAccountHolder($oOrder->getAccountHolder());
-        $oTransaction->setShipping($oOrder->getShippingAccountHolder());
-        $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
     }
 
     /**
@@ -163,7 +146,7 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     }
 
     /**
-     * Returns an array of all meta data fields for a payment method.
+     * @inheritdoc
      *
      * @return array
      *
@@ -172,5 +155,120 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     public function getMetaDataFieldNames()
     {
         return ['allowed_currencies'];
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public function getCheckoutFields()
+    {
+        $aCheckoutFields = null;
+
+        if ($this->_checkDateOfBirthInput()) {
+            $aCheckoutFields = [
+                'dateOfBirth' => [
+                    'type' => 'text',
+                    'title' => Helper::translate('wd_birthdate_input'),
+                    'description' => Helper::translate('wd_birthdate_format_user_hint'),
+                    'required' => true,
+                ],
+            ];
+        }
+
+        if ($this->_checkPhoneInput()) {
+            $aCheckoutFields = array_merge($aCheckoutFields, [
+                'phone' => [
+                    'type' => 'text',
+                    'title' => Helper::translate('wd_phone'),
+                    'required' => true,
+                ],
+            ]);
+        }
+
+        if ($this->_checkSaveCheckoutFields($aCheckoutFields)) {
+            $aCheckoutFields = array_merge($aCheckoutFields, [
+                'saveCheckoutFields' => [
+                    'type' => 'select',
+                    'options' => [
+                        '1' => Helper::translate('wd_yes'),
+                        '0' => Helper::translate('wd_no'),
+                    ],
+                    'title' => Helper::translate('wd_save_to_user_account'),
+                ],
+            ]);
+        }
+
+        return $aCheckoutFields;
+    }
+
+    /**
+     * @inheritdoc
+     * @param RatepayInvoiceTransaction $oTransaction
+     * @param Order                     $oOrder
+     *
+     * @since 1.2.0
+     */
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
+    {
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+        $oWdBasket = $oBasket->createTransactionBasket();
+
+        $oTransaction->setBasket($oWdBasket);
+        $oTransaction->setAccountHolder($oOrder->getAccountHolder());
+        $oTransaction->setShipping($oOrder->getShippingAccountHolder());
+        $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
+
+        $oTransaction->getAccountHolder()->setDateOfBirth(new DateTime(PaymentMethodHelper::getDbDateOfBirth()));
+        $oTransaction->getAccountHolder()->setPhone(PaymentMethodHelper::getPhone());
+    }
+
+    /**
+     * Returns true if the date of birth input field should be shown
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _checkDateOfBirthInput()
+    {
+        $oUser = Registry::getSession()->getUser();
+        PaymentMethodHelper::setDbDateOfBirth($oUser->oxuser__oxbirthdate->value);
+
+        return $oUser->oxuser__oxbirthdate->value === '0000-00-00';
+    }
+
+    /**
+     * Returns true if the phone number input field should be shown
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _checkPhoneInput()
+    {
+        $oUser = Registry::getSession()->getUser();
+        PaymentMethodHelper::setPhone($oUser->oxuser__oxfon->value);
+
+        return $oUser->oxuser__oxfon->value === '';
+    }
+
+    /**
+     * Returns true if the save checkout fields selection option should be shown
+     *
+     * @param array $aCheckoutFields
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _checkSaveCheckoutFields($aCheckoutFields)
+    {
+        PaymentMethodHelper::setSaveCheckoutFields(0);
+        return $aCheckoutFields !== null && Registry::getSession()->getUser()->oxuser__oxpassword->value !== '';
     }
 }
