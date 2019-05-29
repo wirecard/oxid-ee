@@ -93,7 +93,7 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
             'additionalInfo',
             'deleteCanceledOrder',
             'deleteFailedOrder',
-            'currencies',
+            'allowedCurrencies',
         ], $aFieldKeys);
     }
 

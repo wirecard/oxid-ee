@@ -126,9 +126,9 @@
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
         <!-- meta fields -->
-        <currencies>
+        <allowed_currencies>
             <currency>EUR</currency>
-        </currencies>
+        </allowed_currencies>
     </payment>
     <payment>
         <oxid>wdgiropay</oxid>

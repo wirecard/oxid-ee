@@ -111,9 +111,9 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
                 'title' => Helper::translate('wd_config_delete_failure_order'),
                 'description' => Helper::translate('wd_config_delete_failure_order_desc'),
             ],
-            'currencies' => [
+            'allowedCurrencies' => [
                 'type' => 'multiselect',
-                'field' => 'oxpayments__currencies',
+                'field' => 'oxpayments__allowed_currencies',
                 'options' => PaymentMethodHelper::getCurrencyOptions(),
                 'title' => Helper::translate('wd_config_allowed_currencies'),
                 'description' => Helper::translate('wd_config_allowed_currencies_desc'),
@@ -147,6 +147,6 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
      */
     public function getMetaDataFieldNames()
     {
-        return ['currencies'];
+        return ['allowed_currencies'];
     }
 }
