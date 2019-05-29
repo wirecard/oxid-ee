@@ -128,6 +128,30 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
                 'title' => Helper::translate('wd_config_allowed_currencies'),
                 'description' => Helper::translate('wd_config_allowed_currencies_desc'),
             ],
+            'shippingCountries' => [
+                'type' => 'multiselect',
+                'field' => 'oxpayments__shipping_countries',
+                'options' => PaymentMethodHelper::getCountryOptions(),
+                'title' => Helper::translate('config_shipping_countries'),
+                'description' => Helper::translate('config_shipping_countries_desc'),
+            ],
+            'billingCountries' => [
+                'type' => 'multiselect',
+                'field' => 'oxpayments__billing_countries',
+                'options' => PaymentMethodHelper::getCountryOptions(),
+                'title' => Helper::translate('config_billing_countries'),
+                'description' => Helper::translate('config_billing_countries_desc'),
+            ],
+            'billingShipping' => [
+                'type' => 'select',
+                'field' => 'oxpayments__billing_shipping',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
+                ],
+                'title' => Helper::translate('config_billing_shipping'),
+                'description' => Helper::translate('config_billing_shipping_desc'),
+            ],
         ];
 
         return parent::getConfigFields() + $aAdditionalFields;
@@ -157,7 +181,12 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
      */
     public function getMetaDataFieldNames()
     {
-        return ['allowed_currencies'];
+        return [
+            'allowed_currencies',
+            'shipping_countries',
+            'billing_countries',
+            'billing_shipping',
+        ];
     }
 
     /**

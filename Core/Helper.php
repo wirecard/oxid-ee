@@ -12,6 +12,7 @@ namespace Wirecard\Oxid\Core;
 use DateTime;
 use Exception;
 
+use OxidEsales\Eshop\Application\Model\CountryList;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\Shop;
 use OxidEsales\Eshop\Core\Exception\StandardException;
@@ -421,5 +422,20 @@ class Helper
         $oSession = Registry::getSession();
         $sSessionId = $oSession->getId();
         return md5($sSessionId . '_' . $iTimestamp);
+    }
+
+    /**
+     * Returns all countries currently enabled in the shop.
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public static function getCountries()
+    {
+        $oList = oxNew(CountryList::class);
+        $oList->loadActiveCountries();
+
+        return $oList->getArray();
     }
 }
