@@ -101,9 +101,7 @@ class IdealPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     public function testGetCheckoutFields()
     {
         $aFields = $this->_oPaymentMethod->getCheckoutFields();
-        $this->assertEquals(array_keys($aFields), [
-            'bank',
-        ]);
+        $this->assertArrayHasKey('bank', $aFields);
     }
 
     public function testAddMandatoryTransactionData()
