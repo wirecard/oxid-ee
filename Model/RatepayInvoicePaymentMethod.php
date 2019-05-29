@@ -127,6 +127,7 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
                 'options' => PaymentMethodHelper::getCurrencyOptions(),
                 'title' => Helper::translate('wd_config_allowed_currencies'),
                 'description' => Helper::translate('wd_config_allowed_currencies_desc'),
+                'required' => true,
             ],
             'shippingCountries' => [
                 'type' => 'multiselect',
@@ -134,6 +135,7 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
                 'options' => PaymentMethodHelper::getCountryOptions(),
                 'title' => Helper::translate('config_shipping_countries'),
                 'description' => Helper::translate('config_shipping_countries_desc'),
+                'required' => true,
             ],
             'billingCountries' => [
                 'type' => 'multiselect',
@@ -141,6 +143,7 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
                 'options' => PaymentMethodHelper::getCountryOptions(),
                 'title' => Helper::translate('config_billing_countries'),
                 'description' => Helper::translate('config_billing_countries_desc'),
+                'required' => true,
             ],
             'billingShipping' => [
                 'type' => 'select',
