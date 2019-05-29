@@ -105,6 +105,9 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
             'deleteCanceledOrder',
             'deleteFailedOrder',
             'allowedCurrencies',
+            'shippingCountries',
+            'billingCountries',
+            'billingShipping',
         ], $aFieldKeys);
     }
 
