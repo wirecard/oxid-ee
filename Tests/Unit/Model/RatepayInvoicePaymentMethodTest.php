@@ -124,4 +124,14 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
         ];
         $this->assertEquals($aExpected, $aPublicFields, '', 0.0, 1, true);
     }
+
+    public function testGetMetaDataFieldNames()
+    {
+        $this->assertEquals([
+            'allowed_currencies',
+            'shipping_countries',
+            'billing_countries',
+            'billing_shipping',
+        ], $this->_oPaymentMethod->getMetaDataFieldNames());
+    }
 }
