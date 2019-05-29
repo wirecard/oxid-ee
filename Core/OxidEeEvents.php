@@ -72,6 +72,8 @@ class OxidEeEvents
             'WDOXIDEE_CREDITORID' => "varchar(35) default '' NOT NULL",
             'WDOXIDEE_SEPAMANDATECUSTOM' => "text default '' NOT NULL",
             'WDOXIDEE_SEPAMANDATECUSTOM_1' => "text default '' NOT NULL",
+            'WDOXIDEE_TRUSTED_SHOP' => "tinyint(1) default 0 NOT NULL",
+            'WDOXIDEE_PAYOLUTION_TERMS_URL' => "varchar(128) default '' NOT NULL",
         ];
 
         foreach ($aColumnSettings as $sColumnName => $sSetting) {
@@ -202,7 +204,7 @@ class OxidEeEvents
          `WDOXIDEE_SECRET`, `WDOXIDEE_THREE_D_MAID`, `WDOXIDEE_THREE_D_SECRET`, `WDOXIDEE_NON_THREE_D_MAX_LIMIT`,
          `WDOXIDEE_THREE_D_MIN_LIMIT`, `WDOXIDEE_LIMITS_CURRENCY`, `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`,
          `WDOXIDEE_ISOURS`, `WDOXIDEE_BASKET`, `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`,
-         `WDOXIDEE_COUNTRYCODE`, `WDOXIDEE_LOGOVARIANT`, `WDOXIDEE_CREDITORID`) VALUES (
+         `WDOXIDEE_COUNTRYCODE`, `WDOXIDEE_LOGOVARIANT`, `WDOXIDEE_CREDITORID`, `WDOXIDEE_TRUSTED_SHOP`) VALUES (
              '{$oPayment->oxid}',
              '{$oPayment->oxactive}',
              '{$oPayment->oxfromamount}',
@@ -228,7 +230,8 @@ class OxidEeEvents
              '{$oPayment->wdoxidee_additional_info}',
              '{$oPayment->wdoxidee_countrycode}',
              '{$oPayment->wdoxidee_logovariant}',
-             '{$oPayment->wdoxidee_creditorid}'
+             '{$oPayment->wdoxidee_creditorid}',
+             '{$oPayment->wdoxidee_trusted_shop}'
         );";
 
         // insert payment method

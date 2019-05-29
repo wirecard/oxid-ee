@@ -173,4 +173,5 @@ $aLang = array(
     'wd_transaction_response_details' => 'Antwort-Details',
     'wd_wait_for_final_status' => 'Bitte warten Sie auf ein zusätzliches E-Mail mit dem finalen Bezahlstatus.',
     'wd_yes' => 'Ja',
+    'wd_trusted_shop_terms' => 'Mit der Übermittlung der für die Abwicklung des Rechnungskaufes und einer Identitäts- und Bonitätsprüfung erforderlichen Daten an payolution bin ich einverstanden. Meine <u><a href="%s" target="_blank">Einwilligung</a></u> kann ich jederzeit mit Wirkung für die Zukunft widerrufen.',
 );

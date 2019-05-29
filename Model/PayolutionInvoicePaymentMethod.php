@@ -134,6 +134,22 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
                 'title' => Helper::translate('wd_config_billing_shipping'),
                 'description' => Helper::translate('wd_config_billing_shipping_desc'),
             ],
+            'trustedShop' => [
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_trusted_shop',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
+                ],
+                'title' => Helper::translate('wd_config_billing_shipping'),
+                'description' => Helper::translate('wd_config_billing_shipping_desc'),
+                'title' => Helper::translate('wd_config_trusted_shop_seal'),
+            ],
+            'payolutionTermsUrl' => [
+                'type' => 'text',
+                'field' => 'oxpayments__wdoxidee_payolution_terms_url',
+                'title' => Helper::translate('wd_config_payolution_terms_url'),
+            ],
         ];
 
         return parent::getConfigFields() + $aAdditionalFields;

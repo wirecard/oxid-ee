@@ -173,4 +173,5 @@ $aLang = array(
     'wd_transaction_response_details' => 'Response Details',
     'wd_wait_for_final_status' => 'Please, wait for additional email with the final status of your payment.',
     'wd_yes' => 'Yes',
+    'wd_trusted_shop_terms' => 'I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to payolution. My <u><a href="%s" target="_blank">consent</a></u> can be revoked at any time with effect for the future.',
 );
