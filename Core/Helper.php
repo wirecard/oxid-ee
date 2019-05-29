@@ -434,7 +434,7 @@ class Helper
     public static function getCountries()
     {
         $oList = oxNew(CountryList::class);
-        $oList->loadActiveCountries();
+        $oList->loadActiveCountries(Registry::getLang()->getObjectTplLanguage());
 
         return $oList->getArray();
     }
