@@ -168,21 +168,19 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     {
         $aCheckoutFields = null;
 
-        if ($this->_checkDateOfBirthInput()) {
-            $aCheckoutFields = [
-                'dateOfBirth' => [
-                    'type' => 'text',
-                    'title' => Helper::translate('wd_birthdate_input'),
-                    'description' => Helper::translate('wd_birthdate_format_user_hint'),
-                    'required' => true,
-                ],
-            ];
-        }
+        $aCheckoutFields = [
+            'dateOfBirth' => [
+                'type' => $this->_getCheckoutFieldType(PaymentMethodHelper::isDateOfBirthSet()),
+                'title' => Helper::translate('wd_birthdate_input'),
+                'description' => Helper::translate('wd_birthdate_format_user_hint'),
+                'required' => true,
+            ],
+        ];
 
-        if ($this->_checkPhoneInput()) {
+        if (PaymentMethodHelper::isPhoneNeeded()) {
             $aCheckoutFields = array_merge($aCheckoutFields, [
                 'phone' => [
-                    'type' => 'text',
+                    'type' => $this->_getCheckoutFieldType(PaymentMethodHelper::isPhoneValid()),
                     'title' => Helper::translate('wd_phone'),
                     'required' => true,
                 ],
@@ -228,37 +226,21 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     }
 
     /**
-     * Returns true if the date of birth input field should be shown
+     * @inheritdoc
      *
      * @return bool
      *
      * @since 1.2.0
      */
-    private function _checkDateOfBirthInput()
+    public function isPaymentPossible()
     {
-        $oUser = Registry::getSession()->getUser();
-        PaymentMethodHelper::setDbDateOfBirth($oUser->oxuser__oxbirthdate->value);
-
-        return $oUser->oxuser__oxbirthdate->value === '0000-00-00';
+        // if basket amount is within range is checked by oxid, no need to handle that
+        // TODO: add additional checks as soon as values are available
+        return PaymentMethodHelper::isUserEighteen();
     }
 
     /**
-     * Returns true if the phone number input field should be shown
-     *
-     * @return bool
-     *
-     * @since 1.2.0
-     */
-    private function _checkPhoneInput()
-    {
-        $oUser = Registry::getSession()->getUser();
-        PaymentMethodHelper::setPhone($oUser->oxuser__oxfon->value);
-
-        return $oUser->oxuser__oxfon->value === '';
-    }
-
-    /**
-     * Returns true if the save checkout fields selection option should be shown
+     * Returns true if the save checkout fields selection option should be shown (fields are shown, user is logged in)
      *
      * @param array $aCheckoutFields
      *
@@ -268,7 +250,29 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
      */
     private function _checkSaveCheckoutFields($aCheckoutFields)
     {
-        PaymentMethodHelper::setSaveCheckoutFields(0);
-        return $aCheckoutFields !== null && Registry::getSession()->getUser()->oxuser__oxpassword->value !== '';
+        $bDataToSave = false;
+
+        foreach ($aCheckoutFields as $aCheckoutField) {
+            if ($aCheckoutField['type'] !== 'hidden') {
+                $bDataToSave = true;
+            }
+        }
+
+        return $bDataToSave && Registry::getSession()->getUser()->oxuser__oxpassword->value !== '';
+    }
+
+
+    /**
+     * Returns 'hidden' if the field value is already valid, 'text' otherwise
+     *
+     * @param bool $bIsValid
+     *
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    private function _getCheckoutFieldType($bIsValid)
+    {
+        return $bIsValid ? 'hidden' : 'text';
     }
 }

@@ -19,6 +19,8 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 /**
  * Extends the Payment model.
  *
+ * @mixin \OxidEsales\Eshop\Application\Model\Payment
+ *
  * @since 1.0.0
  */
 class Payment extends Payment_parent

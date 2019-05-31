@@ -29,6 +29,7 @@ class PaymentMethodHelper
 {
     const MAX_MANDATE_ID_LENGTH = 35;
     const DB_DATE_FORMAT = 'Y-m-d';
+    const DEFAULT_DATE_OF_BIRTH = '0000-00-00';
 
     /**
      * Returns a payment with the selected id.
@@ -165,10 +166,12 @@ class PaymentMethodHelper
     {
         $oSession = Registry::getConfig()->getSession();
         $aDynvalues = $oSession->getVariable('dynvalue');
+        $sDateOfBirth = $aDynvalues['dateOfBirth'];
+        $oDateOfBirth = DateTime::createFromFormat(Helper::translate('wd_birthdate_format_php_code'), $sDateOfBirth);
 
-        $oDateOfBirth =
-            DateTime::createFromFormat(Helper::translate('wd_birthdate_format_php_code'), $aDynvalues['dateOfBirth']);
-        return $oDateOfBirth ? $oDateOfBirth->format(Helper::translate(self::DB_DATE_FORMAT)) : '';
+        return $oDateOfBirth
+            ? $oDateOfBirth->format(Helper::translate(self::DB_DATE_FORMAT))
+            : self::DEFAULT_DATE_OF_BIRTH;
     }
 
     /**
@@ -184,17 +187,32 @@ class PaymentMethodHelper
         $aDynvalues = $oSession->getVariable('dynvalue');
         $aDynvalues['dateOfBirth'] = '';
 
-        if ($sDbDateOfBirth !== '0000-00-00') {
-            $sDbFormatedDateOfBirth = DateTime::createFromFormat(self::DB_DATE_FORMAT, $sDbDateOfBirth);
-            $aDynvalues['dateOfBirth'] =
-                $sDbFormatedDateOfBirth->format(Helper::translate('wd_birthdate_format_php_code'));
+        if ($sDbDateOfBirth !== self::DEFAULT_DATE_OF_BIRTH) {
+            $oDateOfBirth = DateTime::createFromFormat(self::DB_DATE_FORMAT, $sDbDateOfBirth);
+
+            if ($oDateOfBirth) {
+                $aDynvalues['dateOfBirth'] =
+                    $oDateOfBirth->format(Helper::translate('wd_birthdate_format_php_code'));
+            }
         }
 
         $oSession->setVariable('dynvalue', $aDynvalues);
     }
 
     /**
-     * Returns true if user is 18 or older
+     * Returns true if a valid date of birth is available
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    public static function isDateOfBirthSet()
+    {
+        return PaymentMethodHelper::getDbDateOfBirth() !== self::DEFAULT_DATE_OF_BIRTH;
+    }
+
+    /**
+     * Returns true if user is min 18 years old or date of birth is not known
      *
      * @return bool
      *
@@ -207,8 +225,14 @@ class PaymentMethodHelper
 
         $oDateOfBirth =
             DateTime::createFromFormat(Helper::translate('wd_birthdate_format_php_code'), $aDynvalues['dateOfBirth']);
+
+        if (!$oDateOfBirth) {
+            return true;
+        }
+
         $oToday = new DateTime();
         $oDateInterval = $oDateOfBirth->diff($oToday);
+
         return $oDateInterval->invert === 0 && $oDateInterval->y >= 18;
     }
 
@@ -223,7 +247,9 @@ class PaymentMethodHelper
     {
         $oSession = Registry::getConfig()->getSession();
         $aDynvalues = $oSession->getVariable('dynvalue');
-        return $aDynvalues['phone'];
+        $sPhone = $aDynvalues['phone'];
+
+        return $sPhone ? $sPhone : '';
     }
 
     /**
@@ -240,6 +266,31 @@ class PaymentMethodHelper
         $aDynvalues['phone'] = $sPhone;
 
         $oSession->setVariable('dynvalue', $aDynvalues);
+    }
+
+    /**
+     * Returns true if a valid phone number is available or not needed
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    public static function isPhoneValid()
+    {
+        return !self::isPhoneNeeded() || PaymentMethodHelper::getPhone() !== '';
+    }
+
+    /**
+     * Returns true if a phone number is needed
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    public static function isPhoneNeeded()
+    {
+        // TODO: needs to be implemented for payolution guaranteed invoice
+        return true;
     }
 
     /**
@@ -329,14 +380,39 @@ class PaymentMethodHelper
     }
 
     /**
-     * Checks the user data if mandatory fields are set correctly and saves them if needed
+     * Checks the user data if mandatory fields are set correctly for guaranteed invoice and saves them if needed
      *
      * @since 1.2.0
      */
-    public static function checkUserDataInput()
+    public static function checkPayStepUserInput()
     {
-        if (PaymentMethodHelper::getDbDateOfBirth() === ''
-            || !PaymentMethodHelper::isUserEighteen()) {
+        $oUser = Registry::getSession()->getUser();
+
+        if (self::isDateOfBirthSet()) {
+            $oUser->oxuser__oxbirthdate = new Field(self::getDbDateOfBirth());
+        }
+
+        if (self::isPhoneValid()) {
+            $oUser->oxuser__oxfon = new Field(self::getPhone());
+        }
+
+        if (self::getSaveCheckoutFields() === '1') {
+            $oUser->save();
+        }
+
+        self::_validateUserInput();
+    }
+
+    /**
+     * Validates the user input and redirects to the payment step with an error if needed
+     *
+     * @since 1.2.0
+     */
+    private static function _validateUserInput()
+    {
+        if (!self::isDateOfBirthSet()
+            || !self::isUserEighteen()
+            || !self::isPhoneValid()) {
             $sShopBaseUrl = Registry::getConfig()->getShopUrl();
             $sLanguageCode = Registry::getLang()->getBaseLanguage();
 
@@ -349,13 +425,6 @@ class PaymentMethodHelper
             $sNewUrl = $sShopBaseUrl . 'index.php?' . $sParamStr;
 
             Registry::getUtils()->redirect($sNewUrl);
-        }
-
-        if (PaymentMethodHelper::getSaveCheckoutFields() === '1') {
-            $oUser = Registry::getSession()->getUser();
-            $oUser->oxuser__oxbirthdate = new Field(PaymentMethodHelper::getDbDateOfBirth());
-            $oUser->oxuser__oxfon = new Field(PaymentMethodHelper::getPhone());
-            $oUser->save();
         }
     }
 }

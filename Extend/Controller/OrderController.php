@@ -22,6 +22,7 @@ use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Extend\Model\PaymentGateway;
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
@@ -72,12 +73,15 @@ class OrderController extends OrderController_parent
      */
     public function init()
     {
-        PaymentMethodHelper::checkUserDataInput();
+        $oSession = Registry::getSession();
+
+        if ($oSession->getBasket()->getPaymentId() === RatepayInvoicePaymentMethod::getName(true)) {
+            PaymentMethodHelper::checkPayStepUserInput();
+        }
 
         parent::init();
 
         $sWdPaymentRedirect = Registry::getRequest()->getRequestParameter('wdpayment');
-        $oSession = Registry::getSession();
         $sWdSessionToken = $oSession->getVariable('wdtoken');
 
         if (OrderHelper::isPaymentFinished($sWdSessionToken, $sWdPaymentRedirect)) {
@@ -121,7 +125,6 @@ class OrderController extends OrderController_parent
      */
     public function render()
     {
-
         // after calling parent::render() we are sure we will have order id stored in the session
         // order id is needed in sepa mandate
         $sTemplateName = parent::render();

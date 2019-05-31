@@ -316,4 +316,16 @@ abstract class PaymentMethod
     public function onBeforeTransactionCreation()
     {
     }
+
+    /**
+     * Returns true if payment method should be visible for the user
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    public function isPaymentPossible()
+    {
+        return true;
+    }
 }
