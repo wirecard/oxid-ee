@@ -244,6 +244,18 @@ abstract class PaymentMethod
     }
 
     /**
+     * Returns an array of all meta data fields for a payment method.
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public function getMetaDataFieldNames()
+    {
+        return [];
+    }
+
+    /**
      * Returns an array of fields to be displayed in support email
      *
      * @return array

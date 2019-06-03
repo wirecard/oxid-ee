@@ -57,6 +57,25 @@ class PaymentMethodHelper
     }
 
     /**
+     * Return array for currency select options
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public static function getCurrencyOptions()
+    {
+        $aCurrencies = Registry::getConfig()->getCurrencyArray();
+        $aOptions = [];
+
+        foreach ($aCurrencies as $oCurrency) {
+            $aOptions[$oCurrency->name] = $oCurrency->name;
+        }
+
+        return $aOptions;
+    }
+
+    /**
      * Returns a list of available payments added by the module.
      *
      * @return array

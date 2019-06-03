@@ -24,9 +24,13 @@
       color: red;
     }
 
-    .pg-validation {
+    .wd-validation {
       display: inline-block;
       margin-left: 12px;
+    }
+
+    .wd-multiselect {
+      min-width: 150px;
     }
   </style>
 
@@ -181,6 +185,14 @@
           </select>
         [{/if}]
 
+        [{if $configField.type === 'multiselect'}]
+          <select id="[{$configKey}]" name="editval[[{$fieldName}]][]" class="wd-multiselect" multiple>
+            [{foreach from=$configField.options key=optionKey item=optionValue}]
+              <option value="[{$optionKey}]" [{if in_array($optionValue, $edit->$fieldName->value)}]selected[{/if}]>[{$optionValue}]</option>
+            [{/foreach}]
+          </select>
+        [{/if}]
+
         [{if $configField.type === 'textarea'}]
           <textarea id="[{$configKey}]" class="editinput" rows="5" cols="37" name="editval[[{$fieldName}]]"
             value="[{$edit->$fieldName->value}]">[{$edit->$fieldName->value}]</textarea>
@@ -198,7 +210,7 @@
           [{$oViewConf->getInputHelpHtml($configField.description)}]
         [{/if}]
 
-        <span id="[{$configKey}]_validation" class="pg-validation"></span>
+        <span id="[{$configKey}]_validation" class="wd-validation"></span>
       </td>
     </tr>
   [{/foreach}]

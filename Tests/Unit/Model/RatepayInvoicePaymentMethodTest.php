@@ -80,9 +80,21 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
 
     public function testGetConfigFieldsCount()
     {
-        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
-        $this->assertCount(10, $aConfigFields);
+        $aFieldKeys = array_keys($this->_oPaymentMethod->getConfigFields());
 
+        $this->assertEquals([
+            'apiUrl',
+            'httpUser',
+            'httpPassword',
+            'testCredentials',
+            'maid',
+            'secret',
+            'descriptor',
+            'additionalInfo',
+            'deleteCanceledOrder',
+            'deleteFailedOrder',
+            'allowedCurrencies',
+        ], $aFieldKeys);
     }
 
     public function testGetPublicFieldNames()

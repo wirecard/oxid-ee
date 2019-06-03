@@ -77,6 +77,26 @@ class PaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertCount(6, $aResult);
     }
 
+    public function testDefaultCheckoutFields()
+    {
+        $this->assertEquals([], $this->_oPaymentMethodsStub->getCheckoutFields());
+    }
+
+    public function testDefaultMetaDataFieldNames()
+    {
+        $this->assertEquals([], $this->_oPaymentMethodsStub->getMetaDataFieldNames());
+    }
+
+    public function testDefaultSupportConfigFields()
+    {
+        $aFieldKeys = array_keys($this->_oPaymentMethodsStub->getSupportConfigFields());
+
+        $this->assertEquals([
+            'apiUrl',
+            'maid',
+        ], $aFieldKeys);
+    }
+
     public function testGetLogoPath()
     {
         $sLogoUrl = $this->_oPaymentMethodsStub->getLogoPath();

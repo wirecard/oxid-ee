@@ -279,4 +279,9 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oShop = Helper::getShop();
         $this->assertInstanceOf(Shop::class, $oShop);
     }
+
+    public function testRegenerateViews()
+    {
+        $this->assertTrue(Helper::regenerateViews());
+    }
 }
