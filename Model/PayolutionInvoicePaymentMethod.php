@@ -150,7 +150,15 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
     {
         return array_merge(
             parent::getPublicFieldNames(),
-            ['descriptor', 'additionalInfo', 'deleteCanceledOrder', 'deleteFailedOrder']
+            [
+                'descriptor',
+                'additionalInfo',
+                'deleteCanceledOrder',
+                'deleteFailedOrder',
+                'shippingCountries',
+                'billingCountries',
+                'billingShipping',
+            ]
         );
     }
 
@@ -164,7 +172,6 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
     public function getMetaDataFieldNames()
     {
         return [
-            'allowed_currencies',
             'shipping_countries',
             'billing_countries',
             'billing_shipping',

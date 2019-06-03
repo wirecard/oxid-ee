@@ -36,38 +36,50 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
         $this->assertInstanceOf(PayolutionInvoiceTransaction::class, $oTransaction);
     }
 
-    /**
-     * @dataProvider getConfigFieldsProvider
-     */
-    public function testGetConfigFields($sContainsKey)
+    public function testGetConfigFields()
     {
-        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
-        $this->assertArrayHasKey($sContainsKey, $aConfigFields);
-    }
+        $aFields = $this->_oPaymentMethod->getConfigFields();
 
-    public function getConfigFieldsProvider()
-    {
-        return [
-            "contains descriptor" => ['descriptor'],
-            "contains additionalInfo" => ['additionalInfo'],
-            "contains deleteCanceledOrder" => ['deleteCanceledOrder'],
-            "contains deleteFailedOrder" => ['deleteFailedOrder'],
-        ];
+        $this->assertEquals([
+            'apiUrl',
+            'httpUser',
+            'httpPassword',
+            'testCredentials',
+            'maid',
+            'secret',
+            'descriptor',
+            'additionalInfo',
+            'deleteCanceledOrder',
+            'deleteFailedOrder',
+            'shippingCountries',
+            'billingCountries',
+            'billingShipping',
+        ], array_keys($aFields));
     }
 
     public function testGetPublicFieldNames()
     {
-        $aPublicFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
+        $aFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
 
-        $aExpected = [
-            "apiUrl",
-            "maid",
-            "descriptor",
-            "additionalInfo",
-            "deleteCanceledOrder",
-            "deleteFailedOrder",
-        ];
+        $this->assertEquals([
+            'apiUrl',
+            'maid',
+            'descriptor',
+            'additionalInfo',
+            'deleteCanceledOrder',
+            'deleteFailedOrder',
+            'shippingCountries',
+            'billingCountries',
+            'billingShipping',
+        ], $aFieldNames);
+    }
 
-        $this->assertEquals($aExpected, $aPublicFieldNames);
+    public function testGetMetaDataFieldNames()
+    {
+        $this->assertEquals([
+            'shipping_countries',
+            'billing_countries',
+            'billing_shipping',
+        ], $this->_oPaymentMethod->getMetaDataFieldNames());
     }
 }
