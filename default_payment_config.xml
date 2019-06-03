@@ -48,6 +48,20 @@
         <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <!-- meta fields -->
+        <shipping_countries>
+            <country>AT</country>
+            <country>DE</country>
+            <country>CH</country>
+            <country>NL</country>
+        </shipping_countries>
+        <billing_countries>
+            <country>AT</country>
+            <country>DE</country>
+            <country>CH</country>
+            <country>NL</country>
+        </billing_countries>
+        <billing_shipping>1</billing_shipping>
     </payment>
     <payment>
         <oxid>wdideal</oxid>
