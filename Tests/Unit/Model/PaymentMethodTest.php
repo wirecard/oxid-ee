@@ -7,8 +7,6 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use OxidEsales\Eshop\Application\Model\Payment;
-
 use Wirecard\Oxid\Model\PaymentMethod;
 
 class PaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
@@ -30,6 +28,22 @@ class PaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         parent::setUp();
     }
 
+    /**
+     * @expectedException \OxidEsales\Eshop\Core\Exception\StandardException
+     */
+    public function testConstructorException()
+    {
+        $oPaymentMethod = new class extends PaymentMethod
+        {
+
+            public function getTransaction()
+            {
+                return null;
+            }
+        };
+        $this->assertNull($oPaymentMethod);
+    }
+
     public function testGetOxidPaymentMethodIdfromSdkString()
     {
         $sResult = PaymentMethod::getOxidFromSDKName("paypal");
@@ -48,12 +62,12 @@ class PaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     public function getDefaultConfigFieldsProvider()
     {
         return [
-            "contains apiUrl"=> ['apiUrl'],
-            "contains httpUser"=> ['httpUser'],
-            "contains httpPassword"=> ['httpPassword'],
-            "contains maid"=> ['maid'],
-            "contains secret"=> ['secret'],
-            "contains testCredentials"=> ['testCredentials'],
+            "contains apiUrl" => ['apiUrl'],
+            "contains httpUser" => ['httpUser'],
+            "contains httpPassword" => ['httpPassword'],
+            "contains maid" => ['maid'],
+            "contains secret" => ['secret'],
+            "contains testCredentials" => ['testCredentials'],
         ];
     }
 
@@ -77,9 +91,15 @@ class PaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertContains('maid', $aPublicFieldNames);
     }
 
-    public function getSupportConfigFields()
+    public function testGetSupportConfigFields()
     {
         $aSupportConfigFields = $this->_oPaymentMethodsStub->getSupportConfigFields();
         $this->assertCount(2, $aSupportConfigFields);
+    }
+
+    public function testGetCheckoutFields()
+    {
+        $aCheckoutFields = $this->_oPaymentMethodsStub->getCheckoutFields();
+        $this->assertEmpty($aCheckoutFields);
     }
 }

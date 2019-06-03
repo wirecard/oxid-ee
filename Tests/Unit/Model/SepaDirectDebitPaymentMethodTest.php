@@ -8,6 +8,7 @@
  */
 
 use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
@@ -83,14 +84,47 @@ class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTes
         $this->assertInstanceOf(SepaDirectDebitTransaction::class, $oTransaction);
     }
 
-    public function testAddMandatoryTransactionData()
+    /**
+     * @dataProvider addMandatoryTransactionDataProvider
+     */
+    public function testAddMandatoryTransactionData($sAttribute, $sField)
+    {
+        $aDynvalue = [
+            $sAttribute => $sField,
+        ];
+
+        Registry::getConfig()->getSession()->setVariable('dynvalue', $aDynvalue);
+        $oTransaction = $this->_oPaymentMethod->getTransaction();
+        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction);
+
+        $this->assertAttributeEquals($sField, $sAttribute, $oTransaction);
+    }
+
+    public function addMandatoryTransactionDataProvider()
+    {
+        return [
+            'contains iban' => ['iban', 'myiban'],
+            'contains bic' => ['bic', 'mybic'],
+        ];
+    }
+
+    /**
+     * @dataProvider addMandatoryTransactionDataNotEmptyProvider
+     */
+    public function testAddMandatoryTransactionDataNotEmpty($sAttribute)
     {
         $oTransaction = $this->_oPaymentMethod->getTransaction();
         $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction);
 
-        $this->assertAttributeEquals('', 'iban', $oTransaction);
-        $this->assertAttributeNotEmpty('mandate', $oTransaction);
-        $this->assertAttributeNotEmpty('accountHolder', $oTransaction);
+        $this->assertAttributeNotEmpty($sAttribute, $oTransaction);
+    }
+
+    public function addMandatoryTransactionDataNotEmptyProvider()
+    {
+        return [
+            'mandate not empty' => ['mandate'],
+            'accountHolder not empty' => ['accountHolder'],
+        ];
     }
 
     public function testGetPublicFieldNames()
@@ -159,6 +193,7 @@ class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTes
 
         $this->assertNull($this->_oPaymentMethod->onBeforeTransactionCreation());
     }
+
     /**
      * @expectedException OxidEsales\Eshop\Core\Exception\InputException
      */

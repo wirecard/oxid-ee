@@ -269,9 +269,11 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      */
     public function onBeforeTransactionCreation()
     {
-        $oConfig = Registry::getConfig();
+        parent::onBeforeTransactionCreation();
 
-        if (!$oConfig->getRequestParameter('wdsepadd_checkbox')) {
+        $oRequest = Registry::getRequest();
+
+        if (!$oRequest->getRequestParameter('wdsepadd_checkbox')) {
             throw new InputException('Mandate information was not accepted.');
         }
     }

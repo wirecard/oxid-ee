@@ -32,6 +32,24 @@
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
     </payment>
     <payment>
+        <oxid>wdpayolution-inv</oxid>
+        <oxactive>0</oxactive>
+        <oxfromamount>25</oxfromamount>
+        <oxtoamount>3500</oxtoamount>
+        <oxdesc>Wirecard Garantierter Kauf auf Rechnung (payolution)</oxdesc>
+        <oxdesc_1>Wirecard Guaranteed Invoice (payolution)</oxdesc_1>
+        <oxsort>36</oxsort>
+        <wdoxidee_logo>invoice.png</wdoxidee_logo>
+        <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
+        <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
+        <wdoxidee_maid>2048677d-57f4-44b0-8d67-9014c6631d5f</wdoxidee_maid>
+        <wdoxidee_secret>74bd2f0c-6d1b-4e9a-b278-abc34b83ab9f</wdoxidee_secret>
+        <wdoxidee_httpuser>16390-testing</wdoxidee_httpuser>
+        <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
+        <wdoxidee_descriptor>1</wdoxidee_descriptor>
+        <wdoxidee_additional_info>1</wdoxidee_additional_info>
+    </payment>
+    <payment>
         <oxid>wdpaypal</oxid>
         <oxactive>0</oxactive>
         <oxfromamount>0</oxfromamount>
@@ -98,7 +116,7 @@
         <oxdesc>Wirecard Garantierter Kauf auf Rechnung</oxdesc>
         <oxdesc_1>Wirecard Guaranteed Invoice by Wirecard</oxdesc_1>
         <oxsort>40</oxsort>
-        <wdoxidee_logo>ratepay-invoice.png</wdoxidee_logo>
+        <wdoxidee_logo>invoice.png</wdoxidee_logo>
         <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
         <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
         <wdoxidee_maid>7d7edecb-b008-4f05-9103-308c81cf2ea2</wdoxidee_maid>
