@@ -20,6 +20,16 @@ matrix:
     - php: 7.1
     - php: 7.2
 
+    - stage: selenium-tests
+      if: branch = master AND type = pull_request
+      php: 7.1
+      install:
+        - docker-compose -f docker-compose.ci.yml up --build -d
+        - timeout 300 bash -c 'while [[ "$(docker exec ${OXID_CONTAINER} curl -Ifs -o /dev/null -w ''%{http_code}'' http://localhost)" != "200" ]]; do sleep 2; done' || false
+      script:
+        - docker exec ${OXID_CONTAINER} bash -c 'reset-shop.sh && runtests-selenium.sh'
+      after_script: skip
+
     - stage: phraseapp-pull
       if: env(PHRASEAPP_PULL) = '1'
       language: ruby
@@ -54,7 +64,6 @@ script:
   - docker exec ${OXID_CONTAINER} phpcs-check.sh
   - docker exec ${OXID_CONTAINER} phpmd.sh
   - docker exec ${OXID_CONTAINER} bash -c 'runtests-coverage.sh && upload-coverage.sh'
-  - docker exec ${OXID_CONTAINER} bash -c 'reset-shop.sh && runtests-selenium.sh'
 
 after_script:
   - .bin/generate-tag.sh
