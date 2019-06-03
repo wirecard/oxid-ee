@@ -66,8 +66,8 @@ class TranslationBuilder
   # Parses a PHP file and returns used keys based on a predefined regex match
   def extract_keys_from_php_file(file_path)
     file_content = File.read(file_path, :encoding => 'utf-8')
-    keys = file_content.scan(/translate\(['"]([^'"]+)['"]\)/).flatten
-    keys += file_content.scan(/translateString\(['"]([^'"]+)['"]\)/).flatten
+    keys = file_content.scan(/translate\(['"]([^'"]+)['"]/).flatten
+    keys += file_content.scan(/translateString\(['"]([^'"]+)['"]/).flatten
     # reject OXID internal keys (all uppercase)
     keys.reject { |k| k =~ /^[A-Z_]+$/ }
   end
