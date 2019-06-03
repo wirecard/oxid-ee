@@ -20,7 +20,7 @@ matrix:
     - php: 7.1
     - php: 7.2
 
-    - stage: selenium-tests
+    - stage: Selenium Tests
       if: branch = master AND type = pull_request
       php: 7.1
       install:
@@ -30,7 +30,7 @@ matrix:
         - docker exec ${OXID_CONTAINER} bash -c 'reset-shop.sh && runtests-selenium.sh'
       after_script: skip
 
-    - stage: phraseapp-pull
+    - stage: PhraseApp - Pull
       if: env(PHRASEAPP_PULL) = '1'
       language: ruby
       ruby: 2.5.3
@@ -42,7 +42,7 @@ matrix:
         - .bin/rake phraseapp:ci_update
       after_script: skip
 
-    - stage: phraseapp-check-if-in-sync
+    - stage: PhraseApp - Check if in sync
       if: branch = master OR type = pull_request
       language: ruby
       ruby: 2.5.3
