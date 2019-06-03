@@ -28,7 +28,7 @@ class PaymentCountryTest extends \OxidEsales\TestingLibrary\UnitTestCase
      */
     public function testRender($sPaymentId, $bAllowCountryAssignment)
     {
-        $_POST['oxid'] = $sPaymentId;
+        $this->setRequestParameter('oxid', $sPaymentId);
 
         $this->oPaymentCountry->render();
 
