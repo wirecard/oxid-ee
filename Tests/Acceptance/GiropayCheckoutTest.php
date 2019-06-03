@@ -12,7 +12,7 @@ namespace Wirecard\Oxid\Tests\Acceptance;
 use Wirecard\Oxid\Model\GiropayPaymentMethod;
 
 /**
- * Acceptance tests for the Giropay checkout flow.
+ * Acceptance tests for the giropay checkout flow.
  */
 class GiropayCheckoutTest extends CheckoutTestCase
 {

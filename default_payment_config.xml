@@ -134,8 +134,8 @@
         <oxid>wdgiropay</oxid>
         <oxactive>0</oxactive>
         <oxtoamount>10000</oxtoamount>
-        <oxdesc>Wirecard Giropay</oxdesc>
-        <oxdesc_1>Wirecard Giropay</oxdesc_1>
+        <oxdesc>Wirecard giropay</oxdesc>
+        <oxdesc_1>Wirecard giropay</oxdesc_1>
         <oxsort>33</oxsort>
         <wdoxidee_logo>giropay.png</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
