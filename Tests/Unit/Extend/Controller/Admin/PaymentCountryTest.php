@@ -9,7 +9,7 @@
 
 use Wirecard\Oxid\Extend\Controller\Admin\PaymentCountry;
 
-class OrderListTest extends \OxidEsales\TestingLibrary\UnitTestCase
+class PaymentCountryTest extends \OxidEsales\TestingLibrary\UnitTestCase
 {
     /**
      * @var PaymentCountry
