@@ -23,7 +23,6 @@ trait MetaDataModel
 {
     /**
      * Returns the name of the meta data table for this model.
-     * @return string
      *
      * @since 1.2.0
      */

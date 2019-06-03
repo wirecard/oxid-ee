@@ -21,7 +21,7 @@ use Wirecard\Oxid\Core\Helper;
  *
  * @since 1.0.0
  */
-class SofortPaymentMethod extends PaymentMethod
+class SofortPaymentMethod extends SepaCreditTransferPaymentMethod
 {
     /**
      * @inheritdoc
@@ -29,6 +29,15 @@ class SofortPaymentMethod extends PaymentMethod
      * @since 1.0.0
      */
     protected static $_sName = "sofortbanking";
+
+    /**
+     * @inheritdoc
+     *
+     * @var bool
+     *
+     * @since 1.2.0
+     */
+    protected static $_bMerchantOnly = false;
 
     /**
      * @inheritdoc
@@ -145,7 +154,6 @@ class SofortPaymentMethod extends PaymentMethod
         return parent::getConfigFields() + $aAdditionalFields;
     }
 
-
     /**
      * @inheritdoc
      *
@@ -159,19 +167,5 @@ class SofortPaymentMethod extends PaymentMethod
             parent::getPublicFieldNames(),
             ['additionalInfo', 'countryCode', 'logoType', 'deleteCanceledOrder', 'deleteFailedOrder']
         );
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @param string $sAction
-     *
-     * @return SepaCreditTransferPaymentMethod
-     *
-     * @since 1.1.0
-     */
-    public function getPostProcessingPaymentMethod($sAction)
-    {
-        return new SepaCreditTransferPaymentMethod();
     }
 }

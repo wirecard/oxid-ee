@@ -24,7 +24,7 @@ use Wirecard\Oxid\Core\Helper;
  *
  * @since 1.2.0
  */
-class GiropayPaymentMethod extends PaymentMethod
+class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
 {
     /**
      * @inheritdoc
@@ -32,6 +32,15 @@ class GiropayPaymentMethod extends PaymentMethod
      * @since 1.2.0
      */
     protected static $_sName = 'giropay';
+
+    /**
+     * @inheritdoc
+     *
+     * @var bool
+     *
+     * @since 1.2.0
+     */
+    protected static $_bMerchantOnly = false;
 
     /**
      * @inheritdoc
@@ -170,19 +179,5 @@ class GiropayPaymentMethod extends PaymentMethod
             'deleteCanceledOrder',
             'deleteFailedOrder',
         ]);
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @param string $sAction
-     *
-     * @return SepaCreditTransferPaymentMethod
-     *
-     * @since 1.2.0
-     */
-    public function getPostProcessingPaymentMethod($sAction)
-    {
-        return new SepaCreditTransferPaymentMethod();
     }
 }

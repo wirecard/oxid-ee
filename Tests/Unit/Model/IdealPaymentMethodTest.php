@@ -9,11 +9,9 @@
 
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\IdealPaymentMethod;
-use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use Wirecard\PaymentSdk\Entity\IdealBic;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 
 use OxidEsales\Eshop\Core\Registry;
@@ -120,11 +118,5 @@ class IdealPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     {
         $aBanks = $this->_oPaymentMethod->getBanks();
         $this->assertNotNull($aBanks);
-    }
-
-    public function testGetPostProcessingPaymentMethod()
-    {
-        $oTransaction = $this->_oPaymentMethod->getPostProcessingPaymentMethod('');
-        $this->assertInstanceOf(SepaCreditTransferPaymentMethod::class, $oTransaction);
     }
 }

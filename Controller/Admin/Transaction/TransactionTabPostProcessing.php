@@ -13,16 +13,15 @@ use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\TransactionHandler;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
-use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Model\PaymentMethod;
-use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Config\Config;
-use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 
 /**
@@ -341,10 +340,13 @@ class TransactionTabPostProcessing extends TransactionTab
      */
     private function _filterPostProcessingActions($aPossibleOperations, $oPaymentMethod)
     {
-        $oPostProcessPayment = $oPaymentMethod->getPostProcessingPaymentMethod(Transaction::ACTION_CREDIT);
+        $oTransaction = $oPaymentMethod->getPostProcessingTransaction(Transaction::ACTION_CREDIT, $this->oTransaction);
+        $oPayment = PaymentMethodHelper::getPaymentById(
+            PaymentMethod::getOxidFromSDKName($oTransaction->getConfigKey())
+        );
 
-        if ($oPostProcessPayment instanceof SepaCreditTransferPaymentMethod
-            && !$oPostProcessPayment->getPayment()->oxpayments__oxactive->value) {
+        if ($oTransaction instanceof SepaCreditTransferTransaction
+            && !$oPayment->oxpayments__oxactive->value) {
                 return [];
         }
 
@@ -425,7 +427,7 @@ class TransactionTabPostProcessing extends TransactionTab
     }
 
     /**
-     * Returns an instance of TransactionHandler (singleton)
+     * Returns an instance of TransactionHandler
      *
      * @return TransactionHandler
      *
@@ -439,15 +441,6 @@ class TransactionTabPostProcessing extends TransactionTab
         }
 
         $oConfig = $this->_getPaymentMethodConfig();
-
-        $oSepaCtPayment = PaymentMethodHelper::getPaymentById(SepaCreditTransferPaymentMethod::getName(true));
-        $oSepaCtConfig = new SepaConfig(
-            SepaCreditTransferTransaction::NAME,
-            $oSepaCtPayment->oxpayments__wdoxidee_maid->value,
-            $oSepaCtPayment->oxpayments__wdoxidee_secret->value
-        );
-
-        $oConfig->add($oSepaCtConfig);
 
         return new TransactionHandler($this->_getBackendService($oConfig));
     }

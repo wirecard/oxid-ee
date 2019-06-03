@@ -14,7 +14,6 @@ use OxidEsales\Eshop\Core\Exception\InputException;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
-use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
 use Wirecard\PaymentSdk\Config\Config;
@@ -28,7 +27,7 @@ use Wirecard\PaymentSdk\Entity\AccountHolder;
  *
  * @since 1.1.0
  */
-class SepaDirectDebitPaymentMethod extends PaymentMethod
+class SepaDirectDebitPaymentMethod extends SepaCreditTransferPaymentMethod
 {
     /**
      * @inheritdoc
@@ -36,6 +35,15 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
      * @since 1.1.0
      */
     protected static $_sName = "sepadd";
+
+    /**
+     * @inheritdoc
+     *
+     * @var bool
+     *
+     * @since 1.2.0
+     */
+    protected static $_bMerchantOnly = false;
 
     /**
      * @inheritdoc
@@ -232,19 +240,20 @@ class SepaDirectDebitPaymentMethod extends PaymentMethod
     /**
      * @inheritdoc
      *
-     * @param string $sAction
+     * @param string      $sAction
+     * @param Transaction $oParentTransaction
      *
-     * @return PaymentMethod
+     * @return Transaction
      *
      * @since 1.1.0
      */
-    public function getPostProcessingPaymentMethod($sAction)
+    public function getPostProcessingTransaction($sAction, $oParentTransaction)
     {
         if ($this->_isRefundAction($sAction)) {
-            return new SepaCreditTransferPaymentMethod();
+            return parent::getPostProcessingTransaction($sAction, $oParentTransaction);
         }
 
-        return parent::getPostProcessingPaymentMethod($sAction);
+        return $this->getTransaction();
     }
 
     /**

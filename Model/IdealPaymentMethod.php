@@ -9,6 +9,7 @@
 
 namespace Wirecard\Oxid\Model;
 
+use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Entity\IdealBic;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
@@ -23,7 +24,7 @@ use OxidEsales\Eshop\Core\Registry;
  *
  * @since 1.2.0
  */
-class IdealPaymentMethod extends PaymentMethod
+class IdealPaymentMethod extends SepaCreditTransferPaymentMethod
 {
     /**
      * @inheritdoc
@@ -31,6 +32,15 @@ class IdealPaymentMethod extends PaymentMethod
      * @since 1.2.0
      */
     protected static $_sName = "ideal";
+
+    /**
+     * @inheritdoc
+     *
+     * @var bool
+     *
+     * @since 1.2.0
+     */
+    protected static $_bMerchantOnly = false;
 
     /**
      *
@@ -201,19 +211,5 @@ class IdealPaymentMethod extends PaymentMethod
         $aDynvalues = $oSession->getVariable('dynvalue');
 
         $oTransaction->setBic($this->_aBankOptions[$aDynvalues['bank']]);
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @param string $sAction
-     *
-     * @return SepaCreditTransferPaymentMethod
-     *
-     * @since 1.2.0
-     */
-    public function getPostProcessingPaymentMethod($sAction)
-    {
-        return new SepaCreditTransferPaymentMethod();
     }
 }

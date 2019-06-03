@@ -30,6 +30,8 @@ class SepaCreditTransferPaymentMethod extends PaymentMethod
     protected static $_sName = "sepacredit";
 
     /**
+     * @inheritdoc
+     *
      * @var bool
      *
      * @since 1.1.0
@@ -47,10 +49,11 @@ class SepaCreditTransferPaymentMethod extends PaymentMethod
     {
         $oConfig = parent::getConfig();
 
+        $oCtPayment = PaymentMethodHelper::getPaymentById(self::getOxidFromSDKName(self::$_sName));
         $oPaymentMethodConfig = new SepaConfig(
             SepaCreditTransferTransaction::NAME,
-            $this->_oPayment->oxpayments__wdoxidee_maid->value,
-            $this->_oPayment->oxpayments__wdoxidee_secret->value
+            $oCtPayment->oxpayments__wdoxidee_maid->value,
+            $oCtPayment->oxpayments__wdoxidee_secret->value
         );
 
         $oConfig->add($oPaymentMethodConfig);
@@ -71,19 +74,24 @@ class SepaCreditTransferPaymentMethod extends PaymentMethod
     }
 
     /**
-     * Adds all needed data to the post-processing transaction
+     * @inheritdoc
      *
-     * @param SepaCreditTransferTransaction $oTransaction
-     * @param Transaction                   $oParentTransaction
+     * @param string      $sAction
+     * @param Transaction $oParentTransaction
      *
-     * @since 1.1.0
+     * @return SepaCreditTransferTransaction
+     *
+     * @since 1.2.0
      */
-    public function addPostProcessingTransactionData(&$oTransaction, $oParentTransaction)
+    public function getPostProcessingTransaction($sAction, $oParentTransaction)
     {
+        $oTransaction = new SepaCreditTransferTransaction();
+
         $oMandate = PaymentMethodHelper::getMandate(
             $oParentTransaction->wdoxidee_ordertransactions__orderid->value
         );
-
         $oTransaction->setMandate($oMandate);
+
+        return $oTransaction;
     }
 }
