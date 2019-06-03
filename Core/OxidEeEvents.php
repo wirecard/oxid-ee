@@ -16,7 +16,6 @@ use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\DbMetaDataHandler;
 
-use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
