@@ -85,7 +85,7 @@ class MetaDataModelTest extends WdUnitTestCase
             'baz' => [1, 2, 3],
         ];
 
-        $this->assertEquals(count($aInput), $this->_oMetaDataModelStub->saveMetaData($aInput));
+        $this->assertEquals(2, $this->_oMetaDataModelStub->saveMetaData($aInput));
         $this->assertEquals(0, $this->_oMetaDataModelStub->saveMetaData([]));
 
         return $aInput;

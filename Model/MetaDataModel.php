@@ -11,7 +11,6 @@ namespace Wirecard\Oxid\Model;
 
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Field;
-use OxidEsales\Eshop\Core\Registry;
 
 use OxidEsales\EshopCommunity\Core\Model\BaseModel;
 
@@ -82,10 +81,14 @@ trait MetaDataModel
 
             if ($this->$sFieldLongName instanceof Field) {
                 $aMetaData[$sFieldShortName] = $this->$sFieldLongName->getRawValue();
+
+                continue;
             }
+
+            // if the field is not valid, delete the meta data entry
+            $this->deleteMetaData([$sFieldShortName]);
         }
 
-        $this->deleteMetaData();
         $this->saveMetaData($aMetaData);
 
         return is_subclass_of($this, BaseModel::class) ? parent::save() : true;
@@ -141,14 +144,12 @@ trait MetaDataModel
             return 0;
         }
 
-        // delete all duplicate keys for this object
-        $this->deleteMetaData(array_keys($aMetaData));
-
         $aValuesQuery = [];
 
         foreach ($aMetaData as $sKey => $mValue) {
             $aValues = [
-                Registry::getUtilsObject()->generateUID(),
+                // the primary key is composed of the object ID and the meta key so that meta keys must be unique
+                md5($this->getId() . $sKey),
                 $this->getId(),
                 $sKey,
                 serialize($mValue),
@@ -159,7 +160,7 @@ trait MetaDataModel
 
         return DatabaseProvider::getDb()->execute(
             "INSERT INTO `{$this->getTableName()}` (`OXID`, `OXOBJECTID`, `KEY`, `VALUE`) VALUES " .
-            implode(', ', $aValuesQuery)
+            implode(', ', $aValuesQuery) . " ON DUPLICATE KEY UPDATE `OXID`=VALUES(`OXID`), `VALUE`=VALUES(`VALUE`);"
         );
     }
 
