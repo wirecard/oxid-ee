@@ -14,7 +14,7 @@
   [{if $oPayment->oxpayments__oxid->value === 'wdratepay-invoice'}]
 
   [{assign var="sDeviceIdentToken" value=$oViewConf->getRatepayUniqueToken()}]
-  <script language="JavaScript">
+  <script>
     var di = {t:"[{$sDeviceIdentToken}]",v:"WDWL",l:"Checkout"};
   </script>
   <script type="text/javascript" src="//d.ratepay.com/[{$sDeviceIdentToken}]/di.js">
