@@ -281,6 +281,7 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     public function isPaymentPossible()
     {
         $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
         $oBillingAddress = $oSession->getUser()->getSelectedAddress();
         $oShippingAddress = $oBillingAddress;
 
@@ -291,8 +292,29 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
 
         // if basket amount is within range is checked by oxid, no need to handle that
         return (!SessionHelper::isDateOfBirthSet() || SessionHelper::isUserOlderThan(18)) &&
-            $this->_isCurrencyAllowed($oSession->getBasket()->getBasketCurrency()) &&
+            $this->_areArticlesAllowed($oBasket->getBasketArticles()) &&
+            $this->_isCurrencyAllowed($oBasket->getBasketCurrency()) &&
             $this->_areAddressesAllowed($oBillingAddress, $oShippingAddress);
+    }
+
+    /**
+     * Checks if given articles are allowed for this payment.
+     *
+     * @param array $aArticles
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _areArticlesAllowed($aArticles)
+    {
+        foreach ($aArticles as $oArticle) {
+            if ($oArticle->oxarticles__oxisdownloadable->value) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
