@@ -32,6 +32,7 @@ class OrderControllerTest extends \Wirecard\Test\WdUnitTestCase
 
     public function testInit()
     {
+        $this->_mockBasketGetPaymentId();
 
         $result = $this->_controller->init();
         $this->assertTrue($result);
@@ -52,6 +53,7 @@ class OrderControllerTest extends \Wirecard\Test\WdUnitTestCase
             ->getMock();
 
         $this->_controller->setUser($oUserStub);
+        $this->_mockBasketGetPaymentId();
 
         $result = $this->_controller->init();
         $this->assertContains('wdtoken=sessionToken', $result);
@@ -73,6 +75,7 @@ class OrderControllerTest extends \Wirecard\Test\WdUnitTestCase
             ->getMock();
 
         $this->_controller->setUser($oUserStub);
+        $this->_mockBasketGetPaymentId();
 
         $result = $this->_controller->init();
         $this->assertContains('wdtoken=sessionToken', $result);
@@ -80,15 +83,8 @@ class OrderControllerTest extends \Wirecard\Test\WdUnitTestCase
 
     public function testExecuteWithPayError()
     {
-        $oBasketStub = $this->getMockBuilder(\Wirecard\Oxid\Extend\Model\Basket::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getPaymentId'])
-            ->getMock();
 
-        $oBasketStub->method('getPaymentId')
-            ->willReturn('wdpaypal');
-
-        Registry::getSession()->setBasket($oBasketStub);
+        $this->_mockBasketGetPaymentId();
 
         $result = $this->_controller->execute();
         $this->assertEquals('payment?payerror=2', $result);
@@ -100,15 +96,8 @@ class OrderControllerTest extends \Wirecard\Test\WdUnitTestCase
             "INSERT INTO oxorder(`oxid`) VALUES('oxid1');"
         );
 
-        $oBasketStub = $this->getMockBuilder(\Wirecard\Oxid\Extend\Model\Basket::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getPaymentId'])
-            ->getMock();
+        $this->_mockBasketGetPaymentId();
 
-        $oBasketStub->method('getPaymentId')
-            ->willReturn('wdpaypal');
-
-        Registry::getSession()->setBasket($oBasketStub);
         Registry::getSession()->setVariable('sess_challenge', 'oxid1');
 
         $result = $this->_controller->execute();
@@ -176,5 +165,18 @@ class OrderControllerTest extends \Wirecard\Test\WdUnitTestCase
         $this->assertEquals('oxuser__oxusername', $oJson->email);
         $this->assertEquals('oxuser__oxstreet oxuser__oxstreetnr', $oJson->street1);
         $this->assertEquals('creditcard', $oJson->payment_method);
+    }
+
+    private function _mockBasketGetPaymentId()
+    {
+        $oBasketStub = $this->getMockBuilder(Basket::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getPaymentId'])
+            ->getMock();
+
+        $oBasketStub->method('getPaymentId')
+            ->willReturn('wdpaypal');
+
+        Registry::getSession()->setBasket($oBasketStub);
     }
 }

@@ -11,7 +11,7 @@ namespace Wirecard\Oxid\Extend\Controller;
 
 use OxidEsales\Eshop\Core\Registry;
 
-use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Extend\Model\Order;
 
 /**
@@ -37,7 +37,7 @@ class PaymentController extends PaymentController_parent
 
         $this->_setDateOfBirthInput();
         $this->_setPhoneInput();
-        PaymentMethodHelper::setSaveCheckoutFields(0);
+        SessionHelper::setSaveCheckoutFields(0);
     }
 
     /**
@@ -102,7 +102,7 @@ class PaymentController extends PaymentController_parent
     private function _setDateOfBirthInput()
     {
         $oUser = Registry::getSession()->getUser();
-        PaymentMethodHelper::setDbDateOfBirth($oUser->oxuser__oxbirthdate->value);
+        SessionHelper::setDbDateOfBirth($oUser->oxuser__oxbirthdate->value);
     }
 
     /**
@@ -113,6 +113,6 @@ class PaymentController extends PaymentController_parent
     private function _setPhoneInput()
     {
         $oUser = Registry::getSession()->getUser();
-        PaymentMethodHelper::setPhone($oUser->oxuser__oxfon->value);
+        SessionHelper::setPhone($oUser->oxuser__oxfon->value);
     }
 }

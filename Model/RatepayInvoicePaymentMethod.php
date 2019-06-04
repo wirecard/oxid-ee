@@ -9,11 +9,14 @@
 
 namespace Wirecard\Oxid\Model;
 
-use OxidEsales\Eshop\Core\Registry;
 use DateTime;
+use OxidEsales\Eshop\Core\Exception\InputException;
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
@@ -170,22 +173,20 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
 
         $aCheckoutFields = [
             'dateOfBirth' => [
-                'type' => $this->_getCheckoutFieldType(PaymentMethodHelper::isDateOfBirthSet()),
+                'type' => $this->_getCheckoutFieldType(SessionHelper::isDateOfBirthSet()),
                 'title' => Helper::translate('wd_birthdate_input'),
-                'description' => Helper::translate('wd_birthdate_format_user_hint'),
+                'description' => Helper::translate('wd_date_format_user_hint'),
                 'required' => true,
             ],
         ];
 
-        if (PaymentMethodHelper::isPhoneNeeded()) {
-            $aCheckoutFields = array_merge($aCheckoutFields, [
-                'phone' => [
-                    'type' => $this->_getCheckoutFieldType(PaymentMethodHelper::isPhoneValid()),
-                    'title' => Helper::translate('wd_phone'),
-                    'required' => true,
-                ],
-            ]);
-        }
+        $aCheckoutFields = array_merge($aCheckoutFields, [
+            'phone' => [
+                'type' => $this->_getCheckoutFieldType(SessionHelper::isPhoneValid()),
+                'title' => Helper::translate('wd_phone'),
+                'required' => true,
+            ],
+        ]);
 
         if ($this->_checkSaveCheckoutFields($aCheckoutFields)) {
             $aCheckoutFields = array_merge($aCheckoutFields, [
@@ -234,9 +235,9 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
      */
     public function isPaymentPossible()
     {
-        // if basket amount is within range is checked by oxid, no need to handle that
+        // no need to handle if basket amount is within range, this is checked by oxid
         // TODO: add additional checks as soon as values are available
-        return PaymentMethodHelper::isUserEighteen();
+        return !SessionHelper::isDateOfBirthSet() || SessionHelper::isUserOlderThan(18);
     }
 
     /**
@@ -274,5 +275,55 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     private function _getCheckoutFieldType($bIsValid)
     {
         return $bIsValid ? 'hidden' : 'text';
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @since 1.2.0
+     */
+    public function onBeforeOrderCreation()
+    {
+        $this->checkPayStepUserInput();
+    }
+
+    /**
+     * Checks the user data if mandatory fields are set correctly for guaranteed invoice and saves them if needed
+     *
+     * @since 1.2.0
+     */
+    public function checkPayStepUserInput()
+    {
+        $oUser = Registry::getSession()->getUser();
+
+        if (SessionHelper::isDateOfBirthSet()) {
+            $oUser->oxuser__oxbirthdate = new Field(SessionHelper::getDbDateOfBirth());
+        }
+
+        if (SessionHelper::isPhoneValid()) {
+            $oUser->oxuser__oxfon = new Field(SessionHelper::getPhone());
+        }
+
+        if (SessionHelper::getSaveCheckoutFields() === '1') {
+            $oUser->save();
+        }
+
+        self::_validateUserInput();
+    }
+
+    /**
+     * Validates the user input and throws a specific error if an input is wrong
+     *
+     * @since 1.2.0
+     */
+    private function _validateUserInput()
+    {
+        if (!SessionHelper::isUserOlderThan(18)) {
+            throw new InputException(Helper::translate('wd_ratepayinvoice_fields_error'));
+        }
+
+        if (!SessionHelper::isPhoneValid()) {
+            throw new InputException(Helper::translate('wd_text_generic_error'));
+        }
     }
 }
