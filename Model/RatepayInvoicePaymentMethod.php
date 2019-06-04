@@ -13,6 +13,8 @@ use DateTime;
 use OxidEsales\Eshop\Core\Exception\InputException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Application\Model\Address;
+use OxidEsales\Eshop\Application\Model\Country;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
@@ -278,14 +280,66 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
      */
     public function isPaymentPossible()
     {
-        $oPayment = $this->getPayment();
         $oSession = Registry::getSession();
-        $oBasket = $oSession->getBasket();
-        $oCurrency = $oBasket->getBasketCurrency();
+        $oBillingAddress = $oSession->getUser()->getSelectedAddress();
+        $oShippingAddress = $oBillingAddress;
+
+        if ($oSession->getVariable('deladrid')) {
+            $oShippingAddress = oxNew(Address::class);
+            $oShippingAddress->load($oSession->getVariable('deladrid'));
+        }
 
         // if basket amount is within range is checked by oxid, no need to handle that
         return (!SessionHelper::isDateOfBirthSet() || SessionHelper::isUserOlderThan(18)) &&
-            in_array($oCurrency->name, $oPayment->oxpayments__allowed_currencies->value);
+            $this->_isCurrencyAllowed($oSession->getBasket()->getBasketCurrency()) &&
+            $this->_areAddressesAllowed($oBillingAddress, $oShippingAddress);
+    }
+
+    /**
+     * Checks if the selected currency is allowed for this payment.
+     *
+     * @param object $oCurrency
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _isCurrencyAllowed($oCurrency)
+    {
+        $oPayment = $this->getPayment();
+
+        return in_array($oCurrency->name, $oPayment->oxpayments__allowed_currencies->value ?? []);
+    }
+
+    /**
+     * Checks if given billing and shipping addresses are allowed for this payment.
+     *
+     * @param Address $oBillingAddress
+     * @param Address $oShippingAddress
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _areAddressesAllowed($oBillingAddress, $oShippingAddress)
+    {
+        $oPayment = $this->getPayment();
+        $oBillingCountry = oxNew(Country::class);
+        $oShippingCountry = oxNew(Country::class);
+
+        $oBillingCountry->load($oBillingAddress->oxaddress__oxcountryid->value);
+        $oShippingCountry->load($oShippingAddress->oxaddress__oxcountryid->value);
+
+        return in_array(
+            $oBillingCountry->oxcountry__oxisoalpha2->value,
+            $oPayment->oxpayments__billing_countries->value ?? []
+        ) && in_array(
+            $oShippingCountry->oxcountry__oxisoalpha2->value,
+            $oPayment->oxpayments__shipping_countries->value ?? []
+        ) && (
+            $oBillingAddress === $oShippingAddress ||
+            !$oPayment->oxpayments__billing_shipping->value
+        );
     }
 
     /**
