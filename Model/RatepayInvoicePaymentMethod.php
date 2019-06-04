@@ -278,9 +278,14 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
      */
     public function isPaymentPossible()
     {
-        // no need to handle if basket amount is within range, this is checked by oxid
-        // TODO: add additional checks as soon as values are available
-        return !SessionHelper::isDateOfBirthSet() || SessionHelper::isUserOlderThan(18);
+        $oPayment = $this->getPayment();
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+        $oCurrency = $oBasket->getBasketCurrency();
+
+        // if basket amount is within range is checked by oxid, no need to handle that
+        return (!SessionHelper::isDateOfBirthSet() || SessionHelper::isUserOlderThan(18)) &&
+            in_array($oCurrency->name, $oPayment->oxpayments__allowed_currencies->value);
     }
 
     /**
