@@ -20,7 +20,7 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 use Wirecard\Oxid\Core\Helper;
 
 /**
- * Payment method implementation for Giropay.
+ * Payment method implementation for giropay.
  *
  * @since 1.2.0
  */
