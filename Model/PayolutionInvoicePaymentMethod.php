@@ -207,7 +207,6 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
                     'type' => $aConfigProps['fieldType'],
                     'field' => $aConfigProps['dbFieldPrefix'] . '_' . strtolower($sCurrency),
                     'title' => $aConfigProps['title'],
-                    'required' => true,
                 ];
 
                 if (isset($aConfigProps['description'])) {

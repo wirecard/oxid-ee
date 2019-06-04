@@ -36,8 +36,8 @@
         <oxactive>0</oxactive>
         <oxfromamount>25</oxfromamount>
         <oxtoamount>3500</oxtoamount>
-        <oxdesc>Wirecard Garantierter Kauf auf Rechnung (payolution)</oxdesc>
-        <oxdesc_1>Wirecard Guaranteed Invoice (payolution)</oxdesc_1>
+        <oxdesc>Wirecard Garantierter Kauf auf Rechnung (Payolution)</oxdesc>
+        <oxdesc_1>Wirecard Guaranteed Invoice (Payolution)</oxdesc_1>
         <oxsort>36</oxsort>
         <wdoxidee_logo>invoice.png</wdoxidee_logo>
         <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>

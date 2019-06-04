@@ -13,6 +13,7 @@ use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 
@@ -36,6 +37,13 @@ class PaymentMain extends PaymentMain_parent
     private $_oTransactionService;
 
     /**
+     * Stores the result of the save possible result.
+     *
+     * @since 1.2.0
+     */
+    private $_bIsSavePossible;
+
+    /**
      * @inheritdoc
      *
      * @return string
@@ -56,7 +64,7 @@ class PaymentMain extends PaymentMain_parent
             // if it is not valid, the 'save' or 'addfield' operation is aborted
             // and an error message shown in the frontend
             Helper::addToViewData($this, [
-                'bConfigNotValid' => ($sFnc === 'save' || $sFnc === 'addfield') && !$this->_isSavePossible(),
+                'bConfigNotValid' => ($sFnc === 'save' || $sFnc === 'addfield') && !$this->_bIsSavePossible,
             ]);
         }
 
@@ -72,7 +80,9 @@ class PaymentMain extends PaymentMain_parent
      */
     public function save()
     {
-        if ($this->_isCustomPaymentMethod() && !$this->_isSavePossible()) {
+        // store is save possible result for use in render()
+        $this->_bIsSavePossible = $this->_isSavePossible();
+        if ($this->_isCustomPaymentMethod() && !$this->_bIsSavePossible) {
             // abort the save operation if the custom form validation failed
             return;
         }
@@ -215,7 +225,65 @@ class PaymentMain extends PaymentMain_parent
             return $oTransactionService->checkCredentials();
         }
 
-        return false;
+        // handle the case of different configuration per currency (currently only Payolution)
+        // there it's only checked if config values are entered on the frontend but no validation is done on the backend
+        return $this->_checkCurrencyConfigFields($aParams);
+    }
+
+    /**
+     * Checks if the config fields for all selected allowed currencies have been set.
+     *
+     * @param array $aParams
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _checkCurrencyConfigFields($aParams)
+    {
+        $aOldCurrencyValue = $this->_getPaymentMethod()->oxpayments__allowed_currencies->value;
+        $aNewCurrencyValue = $aParams['oxpayments__allowed_currencies'];
+
+        foreach ($aNewCurrencyValue as $sCurrency) {
+            // it is only necessary to check this currency at this point if it was already saved before
+            if (!in_array($sCurrency, $aOldCurrencyValue)) {
+                continue;
+            }
+
+            if (!$this->_validateRequiredCurrencyFields($aParams, $sCurrency)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks that all the required fields for the selected currencies have been set.
+     *
+     * @param array  $aParams
+     * @param string $sCurrency
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _validateRequiredCurrencyFields($aParams, $sCurrency)
+    {
+        $aRequiredFields = [
+            'oxpayments__httpuser_',
+            'oxpayments__httppass_',
+        ];
+
+        foreach ($aRequiredFields as $sFieldNamePrefix) {
+            $sFieldName = $sFieldNamePrefix . strtolower($sCurrency);
+
+            if (!isset($aParams[$sFieldName]) || empty($aParams[$sFieldName])) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
@@ -227,9 +295,20 @@ class PaymentMain extends PaymentMain_parent
      */
     private function _isCustomPaymentMethod()
     {
+        return $this->_getPaymentMethod()->isCustomPaymentMethod();
+    }
+
+    /**
+     * Returns the currently selected payment method.
+     *
+     * @return Payment
+     *
+     * @since 1.2.0
+     */
+    private function _getPaymentMethod()
+    {
         $sOxId = $this->getEditObjectId();
-        $oPayment = PaymentMethodHelper::getPaymentById($sOxId);
-        return $oPayment->isCustomPaymentMethod();
+        return PaymentMethodHelper::getPaymentById($sOxId);
     }
 
     /**
