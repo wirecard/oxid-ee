@@ -71,6 +71,7 @@ class RatepayInvoiceCheckoutTest extends CheckoutTestCase
 
     private function removeRequiredProfileData()
     {
-        $this->executeSql("UPDATE `oxuser` SET `OXFON` = '', `OXBIRTHDATE` = '0000-00-00' WHERE `OXID` = '{$this->getMockData('oxuser.0.OXID')}';");
+        $this->executeSql("UPDATE `oxuser` SET `OXFON` = '', `OXBIRTHDATE` = '0000-00-00'
+            WHERE `OXID` = '{$this->getMockData('oxuser.0.OXID')}';");
     }
 }
