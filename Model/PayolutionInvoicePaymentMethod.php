@@ -9,6 +9,8 @@
 
 namespace Wirecard\Oxid\Model;
 
+use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\PaymentSdk\Config\Config;
@@ -34,15 +36,32 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
      */
     public function getConfig()
     {
-        $oConfig = parent::getConfig();
+        // get the currency-specific config values
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+        $sCurrency = strtolower($oBasket->getBasketCurrency()->name);
+
+        $sHttpUserField = 'oxpayments__httpuser_' . $sCurrency;
+        $sHttpPassField = 'oxpayments__httppass_' . $sCurrency;
+        $sMaidField = 'oxpayments__maid_' . $sCurrency;
+        $sSecretField = 'oxpayments__secret_' . $sCurrency;
+
+        $oConfig = new Config(
+            $this->_oPayment->oxpayments__wdoxidee_apiurl->value,
+            $this->_oPayment->$sHttpUserField->value,
+            $this->_oPayment->$sHttpPassField->value
+        );
+
+        self::_addAdditionalConfigInfo($oConfig);
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
             PayolutionInvoiceTransaction::NAME,
-            $this->_oPayment->oxpayments__wdoxidee_maid->value,
-            $this->_oPayment->oxpayments__wdoxidee_secret->value
+            $this->_oPayment->$sMaidField->value,
+            $this->_oPayment->$sSecretField->value
         );
 
         $oConfig->add($oPaymentMethodConfig);
+
         return $oConfig;
     }
 

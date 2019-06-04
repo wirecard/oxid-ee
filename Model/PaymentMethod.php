@@ -90,14 +90,26 @@ abstract class PaymentMethod
             $this->_oPayment->oxpayments__wdoxidee_httppass->value
         );
 
+        self::_addAdditionalConfigInfo($oConfig);
+
+        return $oConfig;
+    }
+
+    /**
+     * Adds additional information (shop info and plugin info) to the config object
+     *
+     * @param Config $oConfig
+     *
+     * @since 1.2.0
+     */
+    protected static function _addAdditionalConfigInfo(&$oConfig)
+    {
         $aShopInfoFields = Helper::getShopInfoFields();
         $oConfig->setShopInfo($aShopInfoFields[Helper::SHOP_SYSTEM_KEY], $aShopInfoFields[Helper::SHOP_VERSION_KEY]);
         $oConfig->setPluginInfo(
             $aShopInfoFields[Helper::PLUGIN_NAME_KEY],
             $aShopInfoFields[Helper::PLUGIN_VERSION_KEY]
         );
-
-        return $oConfig;
     }
 
     /**
