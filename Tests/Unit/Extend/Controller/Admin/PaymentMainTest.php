@@ -57,7 +57,6 @@ class PaymentMainTest extends \Wirecard\Test\WdUnitTestCase
     public function renderProvider()
     {
         return [
-            'validation successful' => [true, false],
             'validation failure' => [false, true],
         ];
     }
