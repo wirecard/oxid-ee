@@ -26,21 +26,14 @@ class PaymentMainAjax extends PaymentMainAjax_parent
      *
      * @since 1.0.0
      */
-    private $oLogger;
+    private $_oLogger;
 
     /**
      * @var \OxidEsales\Eshop\Core\Util
      *
      * @since 1.0.0
      */
-    private $oUtils;
-
-    /**
-     * @var \OxidEsales\Eshop\Core\Config
-     *
-     * @since 1.0.0
-     */
-    private $oConfig;
+    private $_oUtils;
 
     /**
      * BasePaymentMain controller constructor.
@@ -49,9 +42,9 @@ class PaymentMainAjax extends PaymentMainAjax_parent
      */
     public function __construct()
     {
-        $this->oLogger = Registry::getLogger();
-        $this->oUtils = Registry::getUtils();
-        $this->oConfig = Registry::getConfig();
+        $this->_oLogger = Registry::getLogger();
+        $this->_oUtils = Registry::getUtils();
+        $this->_oConfig = Registry::getConfig();
     }
 
     /**
@@ -68,18 +61,18 @@ class PaymentMainAjax extends PaymentMainAjax_parent
         $bSuccess = false;
 
         // get the parameters from the request
-        $sApiUrl = $this->oConfig->getRequestParameter('apiUrl');
-        $sHttpUser = $this->oConfig->getRequestParameter('httpUser');
-        $sHttpPass = $this->oConfig->getRequestParameter('httpPass');
+        $sApiUrl = $this->_oConfig->getRequestParameter('apiUrl');
+        $sHttpUser = $this->_oConfig->getRequestParameter('httpUser');
+        $sHttpPass = $this->_oConfig->getRequestParameter('httpPass');
 
         // only perform the check if all parameters were sent
         if ($sApiUrl && $sHttpUser && $sHttpPass) {
             // use the paymentSDK transaction service to validate the credentials
             $oConfig = new Config($sApiUrl, $sHttpUser, $sHttpPass);
-            $oTransactionService = new TransactionService($oConfig, $this->oLogger);
+            $oTransactionService = new TransactionService($oConfig, $this->_oLogger);
             $bSuccess = $oTransactionService->checkCredentials();
         }
 
-        return $this->oUtils->showMessageAndExit(json_encode(["success" => $bSuccess]));
+        return $this->_oUtils->showMessageAndExit(json_encode(["success" => $bSuccess]));
     }
 }

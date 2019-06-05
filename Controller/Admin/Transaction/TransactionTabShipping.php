@@ -25,6 +25,6 @@ class TransactionTabShipping extends TransactionTab
      */
     protected function _getData()
     {
-        return $this->_getListDataFromArray($this->oResponseMapper->getShipping());
+        return $this->_getListDataFromArray($this->_oResponseMapper->getShipping());
     }
 }

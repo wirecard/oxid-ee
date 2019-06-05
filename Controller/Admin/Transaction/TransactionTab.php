@@ -28,14 +28,14 @@ class TransactionTab extends Tab
      *
      * @since 1.0.0
      */
-    protected $oPayment;
+    protected $_oPayment;
 
     /**
      * @var ResponseMapper
      *
      * @since 1.0.0
      */
-    protected $oResponseMapper;
+    protected $_oResponseMapper;
 
     // transaction state key in transaction response
     const KEY_TRANSACTION_STATE = 'transactionState';
@@ -49,14 +49,14 @@ class TransactionTab extends Tab
     {
         parent::__construct();
 
-        $this->oPayment = oxNew(Payment::class);
+        $this->_oPayment = oxNew(Payment::class);
 
         if ($this->_isListObjectIdSet()) {
-            $this->oTransaction->load($this->sListObjectId);
-            $this->oOrder->load($this->oTransaction->wdoxidee_ordertransactions__orderid->value);
-            $this->oPayment->load($this->oOrder->oxorder__oxpaymenttype->value);
+            $this->_oTransaction->load($this->_sListObjectId);
+            $this->_oOrder->load($this->_oTransaction->wdoxidee_ordertransactions__orderid->value);
+            $this->_oPayment->load($this->_oOrder->oxorder__oxpaymenttype->value);
 
-            $this->oResponseMapper = new ResponseMapper($this->oTransaction->getResponseXML());
+            $this->_oResponseMapper = new ResponseMapper($this->_oTransaction->getResponseXML());
         }
     }
 

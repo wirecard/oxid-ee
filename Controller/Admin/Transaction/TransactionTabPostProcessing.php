@@ -87,7 +87,7 @@ class TransactionTabPostProcessing extends TransactionTab
         $this->_oLogger = Registry::getLogger();
 
         if ($this->_isListObjectIdSet()) {
-            $this->oTransaction->load($this->sListObjectId);
+            $this->_oTransaction->load($this->_sListObjectId);
         }
     }
 
@@ -156,7 +156,7 @@ class TransactionTabPostProcessing extends TransactionTab
         $this->_aActions = [];
 
         // if the transaction state is 'closed', there are no post-processing actions available
-        if ($this->oTransaction->wdoxidee_ordertransactions__state->value !== Transaction::STATE_CLOSED) {
+        if ($this->_oTransaction->wdoxidee_ordertransactions__state->value !== Transaction::STATE_CLOSED) {
             $this->_aActions = $this->_getPostProcessingActions();
         }
 
@@ -164,7 +164,7 @@ class TransactionTabPostProcessing extends TransactionTab
 
         // use the maximum available amount of the transaction as default if there is no action to be processed
         if (empty($aRequestParameters[self::KEY_ACTION])) {
-            $sTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
+            $sTransactionId = $this->_oTransaction->wdoxidee_ordertransactions__transactionid->value;
             $aRequestParameters[self::KEY_AMOUNT] =
                 $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId);
         }
@@ -173,7 +173,7 @@ class TransactionTabPostProcessing extends TransactionTab
             'actions' => $this->_aActions,
             'requestParameters' => $aRequestParameters,
             'message' => $this->_processRequest($aRequestParameters),
-            'currency' => $this->oTransaction->wdoxidee_ordertransactions__currency->value,
+            'currency' => $this->_oTransaction->wdoxidee_ordertransactions__currency->value,
             'emptyText' => Helper::translate('wd_text_no_further_operations_possible'),
         ]);
 
@@ -223,7 +223,7 @@ class TransactionTabPostProcessing extends TransactionTab
             throw new StandardException(Helper::translate('wd_text_generic_error'));
         }
 
-        $sTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
+        $sTransactionId = $this->_oTransaction->wdoxidee_ordertransactions__transactionid->value;
         $fMaxAmount = $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId);
 
         if (!$this->_isPositiveBelowMax($fAmount, $fMaxAmount)) {
@@ -304,13 +304,13 @@ class TransactionTabPostProcessing extends TransactionTab
      */
     protected function _getPostProcessingActions()
     {
-        $sPaymentId = $this->oTransaction->getPaymentType();
+        $sPaymentId = $this->_oTransaction->getPaymentType();
 
         // Need to create a transaction object with the ID of the currently selected one to get
         // the available post-processing operations from the Payment SDK
         $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
         $oTransaction = $oPaymentMethod->getTransaction();
-        $sParentTransactionId = $this->oTransaction->wdoxidee_ordertransactions__transactionid->value;
+        $sParentTransactionId = $this->_oTransaction->wdoxidee_ordertransactions__transactionid->value;
         $oTransaction->setParentTransactionId($sParentTransactionId);
 
         $oConfig = $this->_getPaymentMethodConfig();
@@ -396,7 +396,7 @@ class TransactionTabPostProcessing extends TransactionTab
     private function _handleRequestAction($sActionTitle, $fAmount)
     {
         $oTransactionHandler = $this->_getTransactionHandler();
-        $aResult = $oTransactionHandler->processAction($this->oTransaction, $sActionTitle, $fAmount);
+        $aResult = $oTransactionHandler->processAction($this->_oTransaction, $sActionTitle, $fAmount);
 
         $bSuccess = $aResult[self::KEY_STATUS] === Transaction::STATE_SUCCESS;
 
@@ -455,8 +455,8 @@ class TransactionTabPostProcessing extends TransactionTab
     {
         $oConfig = null;
 
-        if (!is_null($this->oTransaction)) {
-            $sPaymentId = $this->oTransaction->getPaymentType();
+        if (!is_null($this->_oTransaction)) {
+            $sPaymentId = $this->_oTransaction->getPaymentType();
             $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
             $oConfig = $oPaymentMethod->getConfig();
         }

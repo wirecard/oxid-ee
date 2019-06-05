@@ -52,8 +52,8 @@ class OrderTabSepaMandate extends OrderTab
      */
     protected function _getData()
     {
-        if ($this->oOrder->oxorder__wdoxidee_sepamandate->value) {
-            return [$this->oOrder->oxorder__wdoxidee_sepamandate->value];
+        if ($this->_oOrder->oxorder__wdoxidee_sepamandate->value) {
+            return [$this->_oOrder->oxorder__wdoxidee_sepamandate->value];
         }
         return [];
     }

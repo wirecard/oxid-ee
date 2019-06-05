@@ -92,7 +92,7 @@ class OrderTabTransactions extends OrderTab
      */
     protected function _getData()
     {
-        $aTransactions = $this->oOrder->getOrderTransactionList()->getNestedArray();
+        $aTransactions = $this->_oOrder->getOrderTransactionList()->getNestedArray();
         $aBodyData = $this->_getBodyData($aTransactions);
 
         return $aBodyData ? [

@@ -25,7 +25,7 @@ class OrderTab extends Tab
      *
      * @since 1.0.0
      */
-    protected $oResponseMapper;
+    protected $_oResponseMapper;
 
     /**
      * TransactionTab constructor.
@@ -37,11 +37,11 @@ class OrderTab extends Tab
         parent::__construct();
 
         if ($this->_isListObjectIdSet()) {
-            $this->oOrder->load($this->sListObjectId);
-            $this->oTransaction->loadWithTransactionId($this->oOrder->oxorder__wdoxidee_transactionid->value);
+            $this->_oOrder->load($this->_sListObjectId);
+            $this->_oTransaction->loadWithTransactionId($this->_oOrder->oxorder__wdoxidee_transactionid->value);
 
-            if ($this->oTransaction->isLoaded()) {
-                $this->oResponseMapper = new ResponseMapper($this->oTransaction->getResponseXML());
+            if ($this->_oTransaction->isLoaded()) {
+                $this->_oResponseMapper = new ResponseMapper($this->_oTransaction->getResponseXML());
             }
         }
     }
