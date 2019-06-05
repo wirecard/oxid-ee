@@ -25,6 +25,7 @@ use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
+use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -38,8 +39,8 @@ use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
-use Wirecard\PaymentSdk\Transaction\Transaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 use Wirecard\PaymentSdk\TransactionService;
 
 /**
@@ -310,6 +311,11 @@ class PaymentGateway extends BaseModel
         $oDevice = new Device($_SERVER['HTTP_USER_AGENT']);
         $sMaid = $oPayment->oxpayments__wdoxidee_maid->value;
         $sDeviceId = Helper::createDeviceFingerprint($sMaid, $sSessionId);
+
+        if ($oPayment->oxpayments__oxid->value === RatepayInvoicePaymentMethod::getName(true)) {
+            $sDeviceId = Registry::getSession()->getVariable(RatepayInvoicePaymentMethod::UNIQUE_TOKEN_VARIABLE);
+        }
+
         $oDevice->setFingerprint($sDeviceId);
         $oTransaction->setDevice($oDevice);
     }

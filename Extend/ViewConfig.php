@@ -10,9 +10,10 @@
 
 namespace Wirecard\Oxid\Extend;
 
-use OxidEsales\Eshop\Application\Model\Shop;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 
 /**
  * Extends the OXID ViewConfig
@@ -29,6 +30,7 @@ class ViewConfig extends ViewConfig_parent
      * Returns the device id for the fraud protection script in out/blocks/profiling_tags.tpl
      *
      * @param string $sMaid
+     *
      * @return string
      *
      * @since 1.0.0
@@ -39,10 +41,26 @@ class ViewConfig extends ViewConfig_parent
     }
 
     /**
+     * Returns the token for the RatePay fraud protection
+     *
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    public function getRatepayUniqueToken()
+    {
+        $sUniqueToken = Helper::getUniqueToken();
+        Registry::getSession()->setVariable(RatepayInvoicePaymentMethod::UNIQUE_TOKEN_VARIABLE, $sUniqueToken);
+        return $sUniqueToken;
+    }
+
+    /**
      * Returns HTML for the [{oxinputhelp}] Smarty function.
      *
-     * @see Helper::getInputHelpHtml()
+     * @see   Helper::getInputHelpHtml()
+     *
      * @param string $sText
+     *
      * @return string
      *
      * @since 1.0.0
@@ -56,6 +74,7 @@ class ViewConfig extends ViewConfig_parent
      * Returns path to the module asset file
      *
      * @param string $sPath
+     *
      * @return string
      *
      * @since 1.0.0
@@ -69,6 +88,7 @@ class ViewConfig extends ViewConfig_parent
      * Check if passed module is Payment Gateway Module id
      *
      * @param string $sModuleId
+     *
      * @return bool
      *
      * @since 1.0.0

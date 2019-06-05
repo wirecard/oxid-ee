@@ -8,7 +8,9 @@
  *
  */
 
+use OxidEsales\Eshop\Core\Registry;
 use Wirecard\Oxid\Extend\ViewConfig;
+use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 
 class ViewConfigTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
@@ -51,5 +53,12 @@ class ViewConfigTest extends OxidEsales\TestingLibrary\UnitTestCase
             'is our module' => ['wdoxidee', true],
             'is not our module' => ['fake', false],
         ];
+    }
+
+    public function testGetRatePayUniqueToken()
+    {
+        $sRatepayUniqueToken = $this->_oViewConfig->getRatepayUniqueToken();
+        $sRatepayUniqueTokenFromSession = Registry::getSession()->getVariable(RatepayInvoicePaymentMethod::UNIQUE_TOKEN_VARIABLE);
+        $this->assertEquals($sRatepayUniqueToken, $sRatepayUniqueTokenFromSession);
     }
 }

@@ -21,6 +21,9 @@ use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
  */
 class RatepayInvoicePaymentMethod extends PaymentMethod
 {
+
+    const UNIQUE_TOKEN_VARIABLE = 'wd_ratepay_unique_token';
+
     /**
      * @inheritdoc
      *

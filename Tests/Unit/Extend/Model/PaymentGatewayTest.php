@@ -12,6 +12,12 @@ use OxidEsales\Eshop\Application\Model\Order;
 
 use Wirecard\Oxid\Extend\Model\PaymentGateway;
 
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
+use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
+use Wirecard\PaymentSdk\Transaction\SofortTransaction;
+
 class PaymentGatewayTest extends \Wirecard\Test\WdUnitTestCase
 {
     /**
@@ -58,8 +64,11 @@ class PaymentGatewayTest extends \Wirecard\Test\WdUnitTestCase
     public function createTransactionProvider()
     {
         return [
-            'Credit card transaction' => ['wdcreditcard', \Wirecard\PaymentSdk\Transaction\CreditCardTransaction::class],
-            'Paypal transaction' => ['wdpaypal', \Wirecard\PaymentSdk\Transaction\PayPalTransaction::class],
+            'Credit card transaction' => ['wdcreditcard', CreditCardTransaction::class],
+            'PayPal transaction' => ['wdpaypal', PayPalTransaction::class],
+            'RatePay transaction' => ['wdratepay-invoice', RatepayInvoiceTransaction::class],
+            'SEPA Direct Debit transaction' => ['wdsepadd', SepaDirectDebitTransaction::class],
+            'Sofort. transaction' => ['wdsofortbanking', SofortTransaction::class],
         ];
     }
 

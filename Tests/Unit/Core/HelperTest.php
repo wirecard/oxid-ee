@@ -13,7 +13,6 @@ use OxidEsales\Eshop\Application\Model\Shop;
 use OxidEsales\Eshop\Core\Controller\BaseController;
 use OxidEsales\Eshop\Core\Module\Module;
 use OxidEsales\Eshop\Core\Registry;
-
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 
@@ -283,5 +282,12 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     public function testRegenerateViews()
     {
         $this->assertTrue(Helper::regenerateViews());
+    }
+
+    public function testGetUniqueToken()
+    {
+        $sToken = Helper::getUniqueToken();
+        $sTokenTwo = Helper::getUniqueToken();
+        $this->assertNotEquals($sToken, $sTokenTwo);
     }
 }
