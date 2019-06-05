@@ -124,7 +124,8 @@ class SepaDirectDebitPaymentMethodTest extends Wirecard\Test\WdUnitTestCase
     public function testAddMandatoryTransactionDataNotEmpty($sAttribute)
     {
         $oTransaction = $this->_oPaymentMethod->getTransaction();
-        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction);
+        $oOrder = oxNew(Order::class);
+        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction, $oOrder);
 
         $this->assertAttributeNotEmpty($sAttribute, $oTransaction);
     }
