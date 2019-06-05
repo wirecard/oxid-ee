@@ -240,17 +240,16 @@ class SepaDirectDebitPaymentMethod extends SepaCreditTransferPaymentMethod
     /**
      * @inheritdoc
      *
-     * @param string      $sAction
-     * @param Transaction $oParentTransaction
+     * @param string $sAction
      *
      * @return Transaction
      *
      * @since 1.1.0
      */
-    public function getPostProcessingTransaction($sAction, $oParentTransaction)
+    public function getPostProcessingTransaction($sAction)
     {
         if ($this->_isRefundAction($sAction)) {
-            return parent::getPostProcessingTransaction($sAction, $oParentTransaction);
+            return parent::getPostProcessingTransaction($sAction);
         }
 
         return $this->getTransaction();

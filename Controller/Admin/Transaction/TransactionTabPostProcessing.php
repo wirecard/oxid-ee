@@ -22,7 +22,6 @@ use Wirecard\Oxid\Model\PaymentMethod;
 
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Config\Config;
-use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 
 /**
  * Controls the view for the post-processing transaction tab.
@@ -340,14 +339,15 @@ class TransactionTabPostProcessing extends TransactionTab
      */
     private function _filterPostProcessingActions($aPossibleOperations, $oPaymentMethod)
     {
-        $oTransaction = $oPaymentMethod->getPostProcessingTransaction(Transaction::ACTION_CREDIT, $this->oTransaction);
-        $oPayment = PaymentMethodHelper::getPaymentById(
-            PaymentMethod::getOxidFromSDKName($oTransaction->getConfigKey())
-        );
+        foreach ($aPossibleOperations as $sActionKey => $sDisplayValue) {
+            $oTransaction = $oPaymentMethod->getPostProcessingTransaction($sActionKey);
+            $oPayment = PaymentMethodHelper::getPaymentById(
+                PaymentMethod::getOxidFromSDKName($oTransaction->getConfigKey())
+            );
 
-        if ($oTransaction instanceof SepaCreditTransferTransaction
-            && !$oPayment->oxpayments__oxactive->value) {
-                return [];
+            if (!$oPayment->oxpayments__oxactive->value) {
+                unset($aPossibleOperations[$sActionKey]);
+            }
         }
 
         return $aPossibleOperations;

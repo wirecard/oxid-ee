@@ -278,7 +278,7 @@ class TransactionHandler
     {
         try {
             $oPaymentMethod = PaymentMethodFactory::create($oTransaction->getPaymentType());
-            return $oPaymentMethod->getPostProcessingTransaction($sActionTitle, $oTransaction);
+            return $oPaymentMethod->getPostProcessingTransaction($sActionTitle);
         } catch (Exception $oExc) {
             $this->_oLogger->error("Error getting the payment method", [$oExc]);
             return $this->_getErrorMessage($oExc->getMessage());
