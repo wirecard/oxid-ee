@@ -8,7 +8,9 @@
  */
 
 use OxidEsales\Eshop\Core\Field;
+
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Application\Model\Order;
 
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
@@ -102,7 +104,8 @@ class SepaDirectDebitPaymentMethodTest extends Wirecard\Test\WdUnitTestCase
 
         Registry::getConfig()->getSession()->setVariable('dynvalue', $aDynvalue);
         $oTransaction = $this->_oPaymentMethod->getTransaction();
-        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction);
+        $oOrder = oxNew(Order::class);
+        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction, $oOrder);
 
         $this->assertAttributeEquals($sField, $sAttribute, $oTransaction);
     }
@@ -121,7 +124,8 @@ class SepaDirectDebitPaymentMethodTest extends Wirecard\Test\WdUnitTestCase
     public function testAddMandatoryTransactionDataNotEmpty($sAttribute)
     {
         $oTransaction = $this->_oPaymentMethod->getTransaction();
-        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction);
+        $oOrder = oxNew(Order::class);
+        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction, $oOrder);
 
         $this->assertAttributeNotEmpty($sAttribute, $oTransaction);
     }

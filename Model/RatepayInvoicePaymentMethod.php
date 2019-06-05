@@ -9,6 +9,8 @@
 
 namespace Wirecard\Oxid\Model;
 
+use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
@@ -62,6 +64,25 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     public function getTransaction()
     {
         return new RatepayInvoiceTransaction();
+    }
+
+    /**
+     * @inheritdoc
+     * @param Transaction $oTransaction
+     * @param Order       $oOrder
+     *
+     * @since 1.2.0
+     */
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
+    {
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+        $oWdBasket = $oBasket->createTransactionBasket();
+
+        $oTransaction->setBasket($oWdBasket);
+        $oTransaction->setAccountHolder($oOrder->getAccountHolder());
+        $oTransaction->setShipping($oOrder->getShippingAccountHolder());
+        $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
     }
 
     /**

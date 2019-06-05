@@ -7,6 +7,8 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use OxidEsales\Eshop\Application\Model\Order;
+
 use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 
@@ -58,6 +60,15 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
             'for oxid' => [true, 'wdratepay-invoice'],
             'not for oxid' => [false, 'ratepay-invoice'],
         ];
+    }
+
+    public function testAddMandatoryTransactionData()
+    {
+        $oTransaction = $this->_oPaymentMethod->getTransaction();
+        $oOrder = oxNew(Order::class);
+        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction, $oOrder);
+
+        $this->assertObjectHasAttribute('shipping', $oTransaction);
     }
 
     /**

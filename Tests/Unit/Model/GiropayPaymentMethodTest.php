@@ -7,6 +7,9 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+
+use OxidEsales\Eshop\Application\Model\Order;
+
 use Wirecard\Oxid\Model\GiropayPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
@@ -43,7 +46,8 @@ class GiropayPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     public function testAddMandatoryTransactionData()
     {
         $oTransaction = $this->_oPaymentMethod->getTransaction();
-        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction);
+        $oOrder = oxNew(Order::class);
+        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction, $oOrder);
 
         $this->assertObjectHasAttribute('bankData', $oTransaction);
     }
