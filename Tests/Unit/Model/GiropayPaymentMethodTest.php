@@ -7,9 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\GiropayPaymentMethod;
-use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
@@ -89,13 +87,5 @@ class GiropayPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
             'deleteCanceledOrder',
             'deleteFailedOrder',
         ], $aFieldNames);
-    }
-
-    public function testGetPostProcessingPaymentMethod()
-    {
-        $this->assertInstanceOf(
-            SepaCreditTransferPaymentMethod::class,
-            $this->_oPaymentMethod->getPostProcessingPaymentMethod('')
-        );
     }
 }

@@ -103,8 +103,6 @@ abstract class PaymentMethod
     /**
      * Get the payments method transaction configuration
      *
-     * @return \Wirecard\PaymentSdk\Transaction\Transaction
-     *
      * @since 1.0.0
      */
     abstract public function getTransaction();
@@ -283,29 +281,18 @@ abstract class PaymentMethod
     }
 
     /**
-     * Adds all needed data to the post-processing transaction
+     * Returns the post-processing transaction for this payment method
      *
-     * @param Transaction $oTransaction
+     * @param string      $sAction
      * @param Transaction $oParentTransaction
      *
-     * @since 1.1.0
-     */
-    public function addPostProcessingTransactionData(&$oTransaction, $oParentTransaction)
-    {
-    }
-
-    /**
-     * Returns the post-processing payment method for this payment method
-     *
-     * @param string $sAction
-     *
-     * @return PaymentMethod
+     * @return Wirecard\PaymentSdk\Transaction\Transaction
      *
      * @since 1.1.0
      */
-    public function getPostProcessingPaymentMethod($sAction)
+    public function getPostProcessingTransaction($sAction, $oParentTransaction)
     {
-        return $this;
+        return $this->getTransaction();
     }
 
     /**

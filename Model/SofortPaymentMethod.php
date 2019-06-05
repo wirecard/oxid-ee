@@ -9,11 +9,8 @@
 
 namespace Wirecard\Oxid\Model;
 
-use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use Wirecard\PaymentSdk\Config\SepaConfig;
-use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
@@ -24,7 +21,7 @@ use Wirecard\Oxid\Core\Helper;
  *
  * @since 1.0.0
  */
-class SofortPaymentMethod extends PaymentMethod
+class SofortPaymentMethod extends SepaCreditTransferPaymentMethod
 {
     /**
      * @inheritdoc
@@ -32,6 +29,15 @@ class SofortPaymentMethod extends PaymentMethod
      * @since 1.0.0
      */
     protected static $_sName = "sofortbanking";
+
+    /**
+     * @inheritdoc
+     *
+     * @var bool
+     *
+     * @since 1.2.0
+     */
+    protected static $_bMerchantOnly = false;
 
     /**
      * @inheritdoc
@@ -50,14 +56,6 @@ class SofortPaymentMethod extends PaymentMethod
             $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
         $oConfig->add($oPaymentMethodConfig);
-
-        $oSepaCtPayment = PaymentMethodHelper::getPaymentById(SepaCreditTransferPaymentMethod::getName(true));
-        $oSepaCtConfig = new SepaConfig(
-            SepaCreditTransferTransaction::NAME,
-            $oSepaCtPayment->oxpayments__wdoxidee_maid->value,
-            $oSepaCtPayment->oxpayments__wdoxidee_secret->value
-        );
-        $oConfig->add($oSepaCtConfig);
 
         return $oConfig;
     }
@@ -156,7 +154,6 @@ class SofortPaymentMethod extends PaymentMethod
         return parent::getConfigFields() + $aAdditionalFields;
     }
 
-
     /**
      * @inheritdoc
      *
@@ -170,19 +167,5 @@ class SofortPaymentMethod extends PaymentMethod
             parent::getPublicFieldNames(),
             ['additionalInfo', 'countryCode', 'logoType', 'deleteCanceledOrder', 'deleteFailedOrder']
         );
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @param string $sAction
-     *
-     * @return SepaCreditTransferPaymentMethod
-     *
-     * @since 1.1.0
-     */
-    public function getPostProcessingPaymentMethod($sAction)
-    {
-        return new SepaCreditTransferPaymentMethod();
     }
 }

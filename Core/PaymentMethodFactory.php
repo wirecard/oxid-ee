@@ -20,6 +20,7 @@ use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
+use Wirecard\Oxid\Model\IdealPaymentMethod;
 
 /**
  * Class PaymentMethodFactory
@@ -44,6 +45,7 @@ class PaymentMethodFactory
         foreach ([
             CreditCardPaymentMethod::class,
             GiropayPaymentMethod::class,
+            IdealPaymentMethod::class,
             PaypalPaymentMethod::class,
             PayolutionInvoicePaymentMethod::class,
             RatepayInvoicePaymentMethod::class,

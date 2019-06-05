@@ -10,10 +10,12 @@
 use OxidEsales\Eshop\Core\Field;
 
 use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
+use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Tests\Unit\Controller\Admin\TestDataHelper;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
+use Wirecard\Test\WdUnitTestCase;
 
-class SepaCreditTransferPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
+class SepaCreditTransferPaymentMethodTest extends Wirecard\Test\WdUnitTestCase
 {
     /**
      * @var SepaCreditTransferPaymentMethod
@@ -60,13 +62,14 @@ class SepaCreditTransferPaymentMethodTest extends OxidEsales\TestingLibrary\Unit
         $this->assertTrue($this->_oPaymentMethod->isMerchantOnly());
     }
 
-    public function testAddPostProcessingTransactionData()
+    public function testGetPostProcessingTransaction()
     {
-        $oTransaction = $this->_oPaymentMethod->getTransaction();
-        $oParentTransaction = $this->_oPaymentMethod->getTransaction();
-        $oParentTransaction->wdoxidee_ordertransactions__orderid = new Field('testid');
+        $oParentTransaction = oxNew(Transaction::class);
+        $oParentTransaction->loadWithTransactionId('transaction 1');
 
-        $oResult = $this->_oPaymentMethod->addPostProcessingTransactionData($oTransaction, $oParentTransaction);
-        $this->assertNull($oResult);
+        $this->assertInstanceOf(
+            SepaCreditTransferTransaction::class,
+            $this->_oPaymentMethod->getPostProcessingTransaction('', $oParentTransaction)
+        );
     }
 }

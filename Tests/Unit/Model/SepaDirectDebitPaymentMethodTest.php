@@ -10,17 +10,24 @@
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 
-use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
+use Wirecard\Oxid\Tests\Unit\Controller\Admin\TestDataHelper;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
+use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
+use Wirecard\Test\WdUnitTestCase;
 
-class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
+class SepaDirectDebitPaymentMethodTest extends Wirecard\Test\WdUnitTestCase
 {
     /**
      * @var SepaDirectDebitPaymentMethod
      */
     private $_oPaymentMethod;
+
+    protected function dbData()
+    {
+        return TestDataHelper::getDemoData();
+    }
 
     protected function setUp()
     {
@@ -164,25 +171,28 @@ class SepaDirectDebitPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTes
     }
 
     /**
-     * @dataProvider getPostProcessingPaymentMethodProvider
+     * @dataProvider getPostProcessingTransactionProvider
      */
-    public function testGetPostProcessingPaymentMethod($sAction, $sClassName)
+    public function testGetPostProcessingTransaction($sAction, $sClassName)
     {
-        $sResult = $this->_oPaymentMethod->getPostProcessingPaymentMethod($sAction);
+        $oParentTransaction = oxNew(Transaction::class);
+        $oParentTransaction->loadWithTransactionId('transaction 1');
+
+        $sResult = $this->_oPaymentMethod->getPostProcessingTransaction($sAction, $oParentTransaction);
 
         $this->assertInstanceOf($sClassName, $sResult);
     }
 
-    public function getPostProcessingPaymentMethodProvider()
+    public function getPostProcessingTransactionProvider()
     {
         return [
             'refund action' => [
                 Transaction::ACTION_CREDIT,
-                SepaCreditTransferPaymentMethod::class,
+                SepaCreditTransferTransaction::class,
             ],
             'non-refund action' => [
                 Transaction::ACTION_RESERVE,
-                SepaDirectDebitPaymentMethod::class,
+                SepaDirectDebitTransaction::class,
             ],
         ];
     }

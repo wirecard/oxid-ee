@@ -50,6 +50,23 @@
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
     </payment>
     <payment>
+        <oxid>wdideal</oxid>
+        <oxactive>0</oxactive>
+        <oxtoamount>1000000</oxtoamount>
+        <oxdesc>Wirecard iDEAL</oxdesc>
+        <oxdesc_1>Wirecard iDEAL</oxdesc_1>
+        <oxsort>50</oxsort>
+        <wdoxidee_logo>ideal.png</wdoxidee_logo>
+        <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
+        <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
+        <wdoxidee_maid>4aeccf39-0d47-47f6-a399-c05c1f2fc819</wdoxidee_maid>
+        <wdoxidee_secret>dbc5a498-9a66-43b9-bf1d-a618dd399684</wdoxidee_secret>
+        <wdoxidee_httpuser>16390-testing</wdoxidee_httpuser>
+        <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
+        <wdoxidee_descriptor>1</wdoxidee_descriptor>
+        <wdoxidee_additional_info>1</wdoxidee_additional_info>
+    </payment>
+    <payment>
         <oxid>wdpaypal</oxid>
         <oxactive>0</oxactive>
         <oxfromamount>0</oxfromamount>
