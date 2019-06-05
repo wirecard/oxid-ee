@@ -17,6 +17,7 @@ use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 class PaymentGatewayTest extends \Wirecard\Test\WdUnitTestCase
 {
@@ -56,6 +57,8 @@ class PaymentGatewayTest extends \Wirecard\Test\WdUnitTestCase
         $oOrderStub = $this->getMockBuilder(Order::class)
             ->disableOriginalConstructor()
             ->getMock();
+        $oOrderStub->method('getAccountHolder')
+            ->willReturn(new AccountHolder());
 
         $oTransaction = $this->_oPaymentGateway->createTransaction($oBasketStub, $oOrderStub);
         $this->assertInstanceOf($sTransactionClass, $oTransaction);

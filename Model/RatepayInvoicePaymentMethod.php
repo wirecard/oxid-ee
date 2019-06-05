@@ -206,6 +206,7 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
 
     /**
      * @inheritdoc
+     *
      * @param RatepayInvoiceTransaction $oTransaction
      * @param Order                     $oOrder
      *
@@ -218,12 +219,13 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
         $oWdBasket = $oBasket->createTransactionBasket();
 
         $oTransaction->setBasket($oWdBasket);
-        $oTransaction->setAccountHolder($oOrder->getAccountHolder());
         $oTransaction->setShipping($oOrder->getShippingAccountHolder());
         $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
-
-        $oTransaction->getAccountHolder()->setDateOfBirth(new DateTime(PaymentMethodHelper::getDbDateOfBirth()));
-        $oTransaction->getAccountHolder()->setPhone(PaymentMethodHelper::getPhone());
+        
+        $oAccountHolder = $oOrder->getAccountHolder();
+        $oAccountHolder->setDateOfBirth(new DateTime(SessionHelper::getDbDateOfBirth()));
+        $oAccountHolder->setPhone(SessionHelper::getPhone());
+        $oTransaction->setAccountHolder($oAccountHolder);
     }
 
     /**

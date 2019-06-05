@@ -214,7 +214,7 @@ class SepaDirectDebitPaymentMethod extends SepaCreditTransferPaymentMethod
     }
 
     /**
-     * Adds all needed data to the post-processing transaction
+     * @inheritdoc
      *
      * @param SepaDirectDebitTransaction $oTransaction
      * @param Order                      $oOrder
