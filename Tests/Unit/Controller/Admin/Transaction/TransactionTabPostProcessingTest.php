@@ -143,6 +143,12 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
         $_GET['oxid'] = 'transaction 1';
         $_GET['0'] = 'pay';
         $_GET[TransactionTabPostProcessing::KEY_AMOUNT] = $input;
+        $_GET[TransactionTabPostProcessing::KEY_ACTION] = 'pay';
+
+        $oPayment = oxNew(Payment::class);
+        $oPayment->load('wdpaypal');
+        $oPayment->oxpayments__oxactive = new Field(1);
+        $oPayment->save();
 
         $this->_transactionTabPostProcessing = new TransactionTabPostProcessing();
         $this->_transactionTabPostProcessing->setBackendService($this->_oBackendServiceStub);

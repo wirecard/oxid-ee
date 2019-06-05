@@ -76,22 +76,14 @@ class SepaCreditTransferPaymentMethod extends PaymentMethod
     /**
      * @inheritdoc
      *
-     * @param string      $sAction
-     * @param Transaction $oParentTransaction
+     * @param string $sAction
      *
      * @return SepaCreditTransferTransaction
      *
      * @since 1.2.0
      */
-    public function getPostProcessingTransaction($sAction, $oParentTransaction)
+    public function getPostProcessingTransaction($sAction)
     {
-        $oTransaction = new SepaCreditTransferTransaction();
-
-        $oMandate = PaymentMethodHelper::getMandate(
-            $oParentTransaction->wdoxidee_ordertransactions__orderid->value
-        );
-        $oTransaction->setMandate($oMandate);
-
-        return $oTransaction;
+        return new SepaCreditTransferTransaction();
     }
 }
