@@ -9,10 +9,15 @@
 
 namespace Wirecard\Oxid\Model;
 
+use DateTime;
+use OxidEsales\Eshop\Core\Exception\InputException;
+use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Core\SessionHelper;
+use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 
@@ -64,25 +69,6 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     public function getTransaction()
     {
         return new RatepayInvoiceTransaction();
-    }
-
-    /**
-     * @inheritdoc
-     * @param Transaction $oTransaction
-     * @param Order       $oOrder
-     *
-     * @since 1.2.0
-     */
-    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
-    {
-        $oSession = Registry::getSession();
-        $oBasket = $oSession->getBasket();
-        $oWdBasket = $oBasket->createTransactionBasket();
-
-        $oTransaction->setBasket($oWdBasket);
-        $oTransaction->setAccountHolder($oOrder->getAccountHolder());
-        $oTransaction->setShipping($oOrder->getShippingAccountHolder());
-        $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
     }
 
     /**
@@ -163,7 +149,7 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     }
 
     /**
-     * Returns an array of all meta data fields for a payment method.
+     * @inheritdoc
      *
      * @return array
      *
@@ -172,5 +158,174 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     public function getMetaDataFieldNames()
     {
         return ['allowed_currencies'];
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public function getCheckoutFields()
+    {
+        $aCheckoutFields = null;
+
+        $aCheckoutFields = [
+            'dateOfBirth' => [
+                'type' => $this->_getCheckoutFieldType(SessionHelper::isDateOfBirthSet()),
+                'title' => Helper::translate('wd_birthdate_input'),
+                'description' => Helper::translate('wd_date_format_user_hint'),
+                'required' => true,
+            ],
+        ];
+
+        $aCheckoutFields = array_merge($aCheckoutFields, [
+            'phone' => [
+                'type' => $this->_getCheckoutFieldType(SessionHelper::isPhoneValid()),
+                'title' => Helper::translate('wd_phone'),
+                'required' => true,
+            ],
+        ]);
+
+        if ($this->_checkSaveCheckoutFields($aCheckoutFields)) {
+            $aCheckoutFields = array_merge($aCheckoutFields, [
+                'saveCheckoutFields' => [
+                    'type' => 'select',
+                    'options' => [
+                        '1' => Helper::translate('wd_yes'),
+                        '0' => Helper::translate('wd_no'),
+                    ],
+                    'title' => Helper::translate('wd_save_to_user_account'),
+                ],
+            ]);
+        }
+
+        return $aCheckoutFields;
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @param RatepayInvoiceTransaction $oTransaction
+     * @param Order                     $oOrder
+     *
+     * @since 1.2.0
+     */
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
+    {
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+        $oWdBasket = $oBasket->createTransactionBasket();
+
+        $oTransaction->setBasket($oWdBasket);
+        $oTransaction->setShipping($oOrder->getShippingAccountHolder());
+        $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
+        
+        $oAccountHolder = $oOrder->getAccountHolder();
+        $oAccountHolder->setDateOfBirth(new DateTime(SessionHelper::getDbDateOfBirth()));
+        $oAccountHolder->setPhone(SessionHelper::getPhone());
+        $oTransaction->setAccountHolder($oAccountHolder);
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    public function isPaymentPossible()
+    {
+        // no need to handle if basket amount is within range, this is checked by oxid
+        // TODO: add additional checks as soon as values are available
+        return !SessionHelper::isDateOfBirthSet() || SessionHelper::isUserOlderThan(18);
+    }
+
+    /**
+     * Returns true if the save checkout fields selection option should be shown (fields are shown, user is logged in)
+     *
+     * @param array $aCheckoutFields
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _checkSaveCheckoutFields($aCheckoutFields)
+    {
+        $bDataToSave = false;
+
+        foreach ($aCheckoutFields as $aCheckoutField) {
+            if ($aCheckoutField['type'] !== 'hidden') {
+                $bDataToSave = true;
+            }
+        }
+
+        return $bDataToSave && Registry::getSession()->getUser()->oxuser__oxpassword->value !== '';
+    }
+
+
+    /**
+     * Returns 'hidden' if the field value is already valid, 'text' otherwise
+     *
+     * @param bool $bIsValid
+     *
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    private function _getCheckoutFieldType($bIsValid)
+    {
+        return $bIsValid ? 'hidden' : 'text';
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @since 1.2.0
+     */
+    public function onBeforeOrderCreation()
+    {
+        $this->checkPayStepUserInput();
+    }
+
+    /**
+     * Checks the user data if mandatory fields are set correctly for guaranteed invoice and saves them if needed
+     *
+     * @since 1.2.0
+     */
+    public function checkPayStepUserInput()
+    {
+        $oUser = Registry::getSession()->getUser();
+
+        if (SessionHelper::isDateOfBirthSet()) {
+            $oUser->oxuser__oxbirthdate = new Field(SessionHelper::getDbDateOfBirth());
+        }
+
+        if (SessionHelper::isPhoneValid()) {
+            $oUser->oxuser__oxfon = new Field(SessionHelper::getPhone());
+        }
+
+        if (SessionHelper::getSaveCheckoutFields() === '1') {
+            $oUser->save();
+        }
+
+        self::_validateUserInput();
+    }
+
+    /**
+     * Validates the user input and throws a specific error if an input is wrong
+     *
+     * @since 1.2.0
+     */
+    private function _validateUserInput()
+    {
+        if (!SessionHelper::isUserOlderThan(18)) {
+            throw new InputException(Helper::translate('wd_ratepayinvoice_fields_error'));
+        }
+
+        if (!SessionHelper::isPhoneValid()) {
+            throw new InputException(Helper::translate('wd_text_generic_error'));
+        }
     }
 }

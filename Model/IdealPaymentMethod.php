@@ -199,13 +199,14 @@ class IdealPaymentMethod extends SepaCreditTransferPaymentMethod
     }
 
     /**
-     * Adds all needed data to the post-processing transaction
+     * @inheritdoc
      *
      * @param IdealTransaction $oTransaction
+     * @param Order            $oOrder
      *
      * @since 1.2.0
      */
-    public function addMandatoryTransactionData(&$oTransaction)
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
     {
         $oSession = Registry::getConfig()->getSession();
         $aDynvalues = $oSession->getVariable('dynvalue');

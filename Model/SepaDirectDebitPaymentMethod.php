@@ -14,6 +14,7 @@ use OxidEsales\Eshop\Core\Exception\InputException;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
 use Wirecard\PaymentSdk\Config\Config;
@@ -213,7 +214,7 @@ class SepaDirectDebitPaymentMethod extends SepaCreditTransferPaymentMethod
     }
 
     /**
-     * Adds all needed data to the post-processing transaction
+     * @inheritdoc
      *
      * @param SepaDirectDebitTransaction $oTransaction
      * @param Order                      $oOrder
@@ -222,8 +223,8 @@ class SepaDirectDebitPaymentMethod extends SepaCreditTransferPaymentMethod
      */
     public function addMandatoryTransactionData(&$oTransaction, $oOrder)
     {
-        $oTransaction->setIban(PaymentMethodHelper::getIban());
-        $sBic = PaymentMethodHelper::getBic();
+        $oTransaction->setIban(SessionHelper::getIban());
+        $sBic = SessionHelper::getBic();
 
         if ($sBic) {
             $oTransaction->setBic($sBic);
@@ -234,7 +235,7 @@ class SepaDirectDebitPaymentMethod extends SepaCreditTransferPaymentMethod
         $oTransaction->setMandate($oMandate);
 
         $oAccountHolder = new AccountHolder();
-        $oAccountHolder->setLastName(PaymentMethodHelper::getAccountHolder());
+        $oAccountHolder->setLastName(SessionHelper::getAccountHolder());
         $oTransaction->setAccountHolder($oAccountHolder);
     }
 

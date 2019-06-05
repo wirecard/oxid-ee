@@ -109,7 +109,7 @@ class IdealPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         ];
         Registry::getSession()->setVariable('dynvalue', $aDynArray);
         $oTransaction = $this->_oPaymentMethod->getTransaction();
-        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction);
+        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction, null);
 
         $this->assertAttributeNotEmpty('bic', $oTransaction);
     }

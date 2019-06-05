@@ -316,4 +316,25 @@ abstract class PaymentMethod
     public function onBeforeTransactionCreation()
     {
     }
+
+    /**
+     * Function to be run before an order is generated for the payment method.
+     *
+     * @since 1.2.0
+     */
+    public function onBeforeOrderCreation()
+    {
+    }
+
+    /**
+     * Returns true if payment method should be visible for the user
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    public function isPaymentPossible()
+    {
+        return true;
+    }
 }

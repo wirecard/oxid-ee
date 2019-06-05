@@ -11,6 +11,7 @@ namespace Wirecard\Oxid\Extend\Controller;
 
 use OxidEsales\Eshop\Core\Registry;
 
+use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Extend\Model\Order;
 
 /**
@@ -28,8 +29,21 @@ class PaymentController extends PaymentController_parent
     /**
      * @inheritdoc
      *
-     * @since 1.0.0
+     * @since 1.2.0
+     */
+    public function init()
+    {
+        parent::init();
+
+        $this->_setDateOfBirthInput();
+        $this->_setPhoneInput();
+        SessionHelper::setSaveCheckoutFields(0);
+    }
+
+    /**
+     * @inheritdoc
      *
+     * @since 1.0.0
      */
     protected function _unsetPaymentErrors()
     {
@@ -48,5 +62,57 @@ class PaymentController extends PaymentController_parent
         }
 
         parent::_unsetPaymentErrors();
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return object
+     *
+     * @since 1.2.0
+     */
+    public function getPaymentList()
+    {
+        return array_filter(parent::getPaymentList(), [PaymentController::class, '_filterPaymentList']);
+    }
+
+    /**
+     * Filters the payment list for payment methods that should be shown
+     *
+     * @param object $oPayment
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _filterPaymentList($oPayment)
+    {
+        if (!$oPayment->isCustomPaymentMethod()) {
+            return true;
+        }
+
+        return $oPayment->getPaymentMethod()->isPaymentPossible();
+    }
+
+    /**
+     * Sets the date of birth input field for payment step
+     *
+     * @since 1.2.0
+     */
+    private function _setDateOfBirthInput()
+    {
+        $oUser = Registry::getSession()->getUser();
+        SessionHelper::setDbDateOfBirth($oUser->oxuser__oxbirthdate->value);
+    }
+
+    /**
+     * Sets the phone number input field for payment step
+     *
+     * @since 1.2.0
+     */
+    private function _setPhoneInput()
+    {
+        $oUser = Registry::getSession()->getUser();
+        SessionHelper::setPhone($oUser->oxuser__oxfon->value);
     }
 }

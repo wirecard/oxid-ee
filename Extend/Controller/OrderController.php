@@ -13,10 +13,12 @@ use Exception;
 
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Exception\InputException;
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
+use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
@@ -72,10 +74,21 @@ class OrderController extends OrderController_parent
      */
     public function init()
     {
+        $oSession = Registry::getSession();
+
+        try {
+            $oPaymentMethod = PaymentMethodFactory::create($oSession->getBasket()->getPaymentId());
+            $oPaymentMethod->onBeforeOrderCreation();
+        } catch (InputException $oException) {
+            OrderHelper::setSessionPaymentError($oException->getMessage());
+
+            $sRedirectUrl = Registry::getConfig()->getShopHomeUrl() . 'cl=payment';
+            return Registry::getUtils()->redirect($sRedirectUrl);
+        }
+
         parent::init();
 
         $sWdPaymentRedirect = Registry::getRequest()->getRequestParameter('wdpayment');
-        $oSession = Registry::getSession();
         $sWdSessionToken = $oSession->getVariable('wdtoken');
 
         if (OrderHelper::isPaymentFinished($sWdSessionToken, $sWdPaymentRedirect)) {

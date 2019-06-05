@@ -77,8 +77,9 @@ class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
 
     /**
      * @inheritdoc
-     * @param Transaction $oTransaction
-     * @param Order       $oOrder
+     *
+     * @param GiropayTransaction $oTransaction
+     * @param Order              $oOrder
      *
      * @since 1.2.0
      */

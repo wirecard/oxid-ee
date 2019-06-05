@@ -12,6 +12,7 @@ namespace Wirecard\Oxid\Core;
 use OxidEsales\Eshop\Core\Model\ListModel;
 use OxidEsales\Eshop\Core\Registry;
 
+use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\PaymentSdk\Entity\Mandate;
 
 use Wirecard\Oxid\Extend\Model\Payment;
@@ -24,6 +25,7 @@ use Wirecard\Oxid\Extend\Model\Payment;
 class PaymentMethodHelper
 {
     const MAX_MANDATE_ID_LENGTH = 35;
+
     /**
      * Returns a payment with the selected id.
      *
@@ -106,49 +108,6 @@ class PaymentMethodHelper
     }
 
     /**
-     * Returns account holder for SEPA Direct Debit
-     *
-     * @return string
-     *
-     * @since 1.1.0
-     */
-    public static function getAccountHolder()
-    {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
-        return $aDynvalues['accountHolder'];
-    }
-
-
-    /**
-     * Returns IBAN
-     *
-     * @return string
-     *
-     * @since 1.1.0
-     */
-    public static function getIban()
-    {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
-        return $aDynvalues['iban'];
-    }
-
-    /**
-     * Returns BIC
-     *
-     * @return string
-     *
-     * @since 1.1.0
-     */
-    public static function getBic()
-    {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
-        return $aDynvalues['bic'];
-    }
-
-    /**
      * Generates SEPA mandate html body
      *
      * @param Basket $oBasket
@@ -168,12 +127,12 @@ class PaymentMethodHelper
 
         $oSmarty = Registry::getUtilsView()->getSmarty();
 
-        $oSmarty->assign('sAccountHolder', self::getAccountHolder());
+        $oSmarty->assign('sAccountHolder', SessionHelper::getAccountHolder());
         $oSmarty->assign('oShop', $oShop);
         $oSmarty->assign('oPayment', $oPayment);
         $oSmarty->assign('sMandateId', self::getMandate($sSessionChallenge)->mappedProperties()['mandate-id']);
-        $oSmarty->assign('sIban', self::getIban());
-        $oSmarty->assign('sBic', self::getBic());
+        $oSmarty->assign('sIban', SessionHelper::getIban());
+        $oSmarty->assign('sBic', SessionHelper::getBic());
         $oSmarty->assign('sConsumerCity', $oUser->oxuser__oxcity->value);
         $oSmarty->assign('sDate', date('d.m.Y', time()));
         $oSmarty->assign('sCreditorName', $sCreditorName);

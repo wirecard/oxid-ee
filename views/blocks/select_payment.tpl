@@ -34,10 +34,12 @@
             [{/if}]
             [{foreach from=$checkoutFields key=fieldKey item=checkoutField}]
                 <div class="form-group">
-                    <label class="req control-label col-lg-3">[{$checkoutField.title}] [{if $checkoutField.required}]*[{/if}]</label>
+                    [{if $checkoutField.type !== 'hidden'}]
+                        <label class="req control-label col-lg-3">[{$checkoutField.title}] [{if $checkoutField.required}]*[{/if}]</label>
+                    [{/if}]
                     <div class="col-lg-9">
-                        [{if $checkoutField.type === 'text'}]
-                            <input id="[{$fieldKey}]" type="text" class="form-control" name="dynvalue[[{$fieldKey}]]" value="[{$dynvalue.$fieldKey}]" [{if $checkoutField.required}]required[{/if}]/>
+                        [{if $checkoutField.type === 'text' || $checkoutField.type === 'hidden'}]
+                            <input id="[{$fieldKey}]" type="[{$checkoutField.type}]" class="form-control" name="dynvalue[[{$fieldKey}]]" value="[{$dynvalue.$fieldKey}]" [{if $checkoutField.required}]required[{/if}]/>
                         [{/if}]
 
                         [{if $checkoutField.type === 'select'}]
@@ -48,7 +50,7 @@
                             </select>
                         [{/if}]
 
-                        [{if $checkoutField.description}]
+                        [{if $checkoutField.type !== 'hidden' && $checkoutField.description}]
                             <div class="help-block">[{$checkoutField.description}]</div>
                         [{/if}]
                     </div>
