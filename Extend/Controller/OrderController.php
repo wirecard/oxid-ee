@@ -176,6 +176,18 @@ class OrderController extends OrderController_parent
         $sOrderId = Helper::getSessionChallenge();
         $bIsOrderLoaded = $oOrder->load($sOrderId);
 
+        // necessary to prevent order being overwritten when consumer does not
+        // correctly finalise eps payment (does not redirect back to OXID shop)
+        if ($bIsOrderLoaded && $oOrder->oxorder__wdoxidee_final->value === 0) {
+            Registry::getSession()->setVariable(
+                'sess_challenge',
+                $this->getUtilsObjectInstance()->generateUID()
+            );
+            $sOrderId = Helper::getSessionChallenge();
+            $oOrder->load($sOrderId);
+            $bIsOrderLoaded = $oOrder->load($sOrderId);
+        }
+
         return $this->_determineNextStep($oOrder, $bIsOrderLoaded, $oPayment);
     }
 
