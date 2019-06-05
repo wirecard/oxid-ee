@@ -16,7 +16,6 @@ use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\TransactionHandler;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
-use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Model\PaymentMethod;
 
