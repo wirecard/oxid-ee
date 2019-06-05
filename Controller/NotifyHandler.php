@@ -182,7 +182,15 @@ class NotifyHandler extends FrontendController
         }
 
         $oOrder = oxNew(Order::class);
-        if (!$oOrder->loadWithTransactionId($oResponse->getParentTransactionId())) {
+
+        $sTransactionId = $oResponse->getParentTransactionId();
+
+        // Ratepay Invoice and Payolution Invoice do not have a  parent transaction ID set
+        if (is_null($sTransactionId)) {
+            $sTransactionId = $oResponse->getTransactionId();
+        }
+
+        if (!$oOrder->loadWithTransactionId($sTransactionId)) {
             $this->_oLogger->error('No order found for transactionId: ' . $oResponse->getParentTransactionId());
             return;
         }
