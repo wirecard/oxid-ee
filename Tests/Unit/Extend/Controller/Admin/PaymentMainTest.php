@@ -57,12 +57,33 @@ class PaymentMainTest extends \Wirecard\Test\WdUnitTestCase
     public function renderProvider()
     {
         return [
+            'validation success' => [true, true],
             'validation failure' => [false, true],
         ];
     }
 
     public function testSave()
     {
+        $_POST['editval']['oxpayments__allowed_currencies'] = [];
+
+        try {
+            $this->_controller->save();
+        } catch (\Exception $exc) {
+            $this->fail($exc->getMessage());
+        }
+    }
+
+    public function testSaveWithCurrencies()
+    {
+        $this->_controller->setEditObjectId('wdpayolution-inv');
+
+        $_POST['editval']['oxpayments__allowed_currencies'] = ['EUR', 'CHF'];
+        $_POST['editval']['oxpayments__httpuser_eur'] = 'abcd';
+        $_POST['editval']['oxpayments__httppass_eur'] = 'efgh';
+        $_POST['editval']['oxpayments__wdoxidee_apiurl'] = 'http://api.url';
+        $_POST['editval']['oxpayments__wdoxidee_httpuser'] = 'user';
+        $_POST['editval']['oxpayments__wdoxidee_httppass'] = 'mysecretpasswordnooneknows';
+
         try {
             $this->_controller->save();
         } catch (\Exception $exc) {

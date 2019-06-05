@@ -8,6 +8,7 @@
  */
 
 use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
+use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\PayolutionInvoiceTransaction;
 
@@ -21,13 +22,16 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
     protected function setUp()
     {
         parent::setUp();
+
         $this->_oPaymentMethod = new PayolutionInvoicePaymentMethod();
     }
 
     public function testGetConfig()
     {
         $oConfig = $this->_oPaymentMethod->getConfig();
-        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get("payolution-inv"));
+
+        $this->assertInstanceOf(Config::class, $oConfig);
+        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get(PayolutionInvoicePaymentMethod::getName()));
     }
 
     public function testGetTransaction()

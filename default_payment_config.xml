@@ -62,6 +62,13 @@
             <country>NL</country>
         </billing_countries>
         <billing_shipping>1</billing_shipping>
+        <allowed_currencies>
+            <currency>EUR</currency>
+        </allowed_currencies>
+        <httpuser_eur>16390-testing</httpuser_eur>
+        <httppass_eur>3!3013=D3fD8X7</httppass_eur>
+        <maid_eur>7d7edecb-b008-4f05-9103-308c81cf2ea2</maid_eur>
+        <secret_eur>555d998b-15db-46a9-8f1f-d9bc3ec66b19</secret_eur>
     </payment>
     <payment>
         <oxid>wdideal</oxid>
@@ -79,13 +86,6 @@
         <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
-        <allowed_currencies>
-            <currency>EUR</currency>
-        </allowed_currencies>
-        <httpuser_eur>16390-testing</httpuser_eur>
-        <httppass_eur>3!3013=D3fD8X7</httppass_eur>
-        <maid_eur>7d7edecb-b008-4f05-9103-308c81cf2ea2</maid_eur>
-        <secret_eur>555d998b-15db-46a9-8f1f-d9bc3ec66b19</secret_eur>
     </payment>
     <payment>
         <oxid>wdpaypal</oxid>
