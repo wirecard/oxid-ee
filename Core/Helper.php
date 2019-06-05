@@ -366,7 +366,6 @@ class Helper
     }
 
     /**
-<<<<<<< HEAD
      * Parses the contents of an XML node to either a string or an array of strings,
      * depending whether there are chld nodes.
      *
