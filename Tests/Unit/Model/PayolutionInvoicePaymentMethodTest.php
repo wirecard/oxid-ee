@@ -30,7 +30,6 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
     {
         $oConfig = $this->_oPaymentMethod->getConfig();
 
-        $this->assertInstanceOf(Config::class, $oConfig);
         $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get(PayolutionInvoicePaymentMethod::getName()));
     }
 
