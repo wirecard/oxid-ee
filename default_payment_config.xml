@@ -180,7 +180,7 @@
         <oxactive>0</oxactive>
         <oxfromamount>0</oxfromamount>
         <oxtoamount>0</oxtoamount>
-        <oxdesc>Wirecard SEPA Credit Transfer</oxdesc>
+        <oxdesc>Wirecard SEPA-Überweisung</oxdesc>
         <oxdesc_1>Wirecard SEPA Credit Transfer</oxdesc_1>
         <wdoxidee_logo>sepa.png</wdoxidee_logo>
         <wdoxidee_transactionaction>credit</wdoxidee_transactionaction>
