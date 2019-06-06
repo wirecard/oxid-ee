@@ -1,0 +1,26 @@
+/*
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/oxid-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
+ */
+
+.wd-table {
+  width: 100%;
+  border-spacing: 0;
+  border-collapse: collapse;
+  overflow: hidden;
+}
+
+.wd-table th,
+.wd-table td {
+  padding: 4px 8px;
+  border: 1px solid #ddd;
+}
+
+.wd-table th {
+  font-size: 12px;
+  text-align: inherit;
+  text-transform: uppercase;
+}

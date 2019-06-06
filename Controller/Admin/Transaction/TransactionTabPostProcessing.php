@@ -9,15 +9,17 @@
 
 namespace Wirecard\Oxid\Controller\Admin\Transaction;
 
-use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Exception\StandardException;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\TransactionHandler;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
-use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Model\PaymentMethod;
+use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
+use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
+use Wirecard\Oxid\Model\Transaction;
 
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Config\Config;
@@ -143,7 +145,7 @@ class TransactionTabPostProcessing extends TransactionTab
     /**
      * @inheritdoc
      *
-     * @throws Exception
+     * @throws \Exception
      *
      * @return string
      *
@@ -177,6 +179,21 @@ class TransactionTabPostProcessing extends TransactionTab
             'emptyText' => Helper::translate('wd_text_no_further_operations_possible'),
         ]);
 
+        if ($this->shouldUseOrderItems()) {
+            Helper::addToViewData($this, [
+                'data' => [
+                    "head" => [
+                        //TODO translate
+                        ['text' => 'Article Number'],
+                        ['text' => 'Name'],
+                        ['text' => 'Quantity'],
+                        ['text' => 'Amount'],
+                    ],
+                    "body" => self::_getMappedTableOrderItems($this->oTransaction->getBasket()->mappedProperties()["order-item"])
+                ]
+            ]);
+        }
+
         return $sTemplate;
     }
 
@@ -189,20 +206,18 @@ class TransactionTabPostProcessing extends TransactionTab
      */
     private function _getRequestParameters()
     {
-        /**
-         * @var OxidEsales\Eshop\Core\Config
-         */
-        $oConfig = Registry::getConfig();
+
+        $oRequest = Registry::getRequest();
         $aActionConfig = null;
 
         foreach ($this->_aActions as $sActionType => $aSingleActionConfig) {
-            if ($oConfig->getRequestParameter($sActionType)) {
+            if ($oRequest->getRequestParameter($sActionType)) {
                 $aActionConfig = $aSingleActionConfig;
             }
         }
 
         return [
-            self::KEY_AMOUNT => Helper::getFloatFromString($oConfig->getRequestParameter(self::KEY_AMOUNT) ?? ''),
+            self::KEY_AMOUNT => Helper::getFloatFromString($oRequest->getRequestParameter(self::KEY_AMOUNT) ?? ''),
             self::KEY_ACTION => $aActionConfig,
         ];
     }
@@ -211,6 +226,7 @@ class TransactionTabPostProcessing extends TransactionTab
      * Validates a request.
      *
      * @param array $aRequestParameters
+     *
      * @throws StandardException
      *
      * @since 1.1.0
@@ -265,6 +281,7 @@ class TransactionTabPostProcessing extends TransactionTab
      * Processes a request and returns a state array if it is valid.
      *
      * @param array $aRequestParameters
+     *
      * @return array|null
      *
      * @since 1.1.0
@@ -296,7 +313,7 @@ class TransactionTabPostProcessing extends TransactionTab
     /**
      * Returns an array of processing actions to be displayed below the amount input field.
      *
-     * @throws Exception in case the payment method type is not found
+     * @throws \Exception in case the payment method type is not found
      *
      * @return array
      *
@@ -391,6 +408,8 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @return array
      *
+     * @throws StandardException
+     *
      * @since 1.1.0
      */
     private function _handleRequestAction($sActionTitle, $fAmount)
@@ -426,9 +445,11 @@ class TransactionTabPostProcessing extends TransactionTab
     }
 
     /**
-     * Returns an instance of TransactionHandler
+     * Returns an instance of TransactionHandler (singleton)
      *
      * @return TransactionHandler
+     *
+     * @throws StandardException
      *
      * @since 1.1.0
      */
@@ -449,6 +470,8 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @return Config | null
      *
+     * @throws StandardException
+     *
      * @since 1.1.0
      */
     private function _getPaymentMethodConfig()
@@ -462,5 +485,30 @@ class TransactionTabPostProcessing extends TransactionTab
         }
 
         return $oConfig;
+    }
+
+    public function shouldUseOrderItems()
+    {
+        return in_array($this->oTransaction->getPaymentType(), [
+            RatepayInvoicePaymentMethod::getName(true),
+            PayolutionInvoicePaymentMethod::getName(true),
+        ]);
+    }
+
+    private static function _getMappedTableOrderItems($aOrderItems)
+    {
+        $aMappedItems = array_map(function ($aOrderItem) {
+
+            $sInputFileds = '<input type="number" value="' . $aOrderItem['quantity'] . '" name="quantity"/>' .
+                '<input type="hidden" value="' . $aOrderItem['article-number'] . '" name="article-number" />';
+
+            return [
+                ['text' => $aOrderItem['article-number']],
+                ['text' => $aOrderItem['name']],
+                ['text' => $sInputFileds],
+                ['text' => $aOrderItem['amount']['value']],
+            ];
+        }, $aOrderItems);
+        return $aMappedItems;
     }
 }
