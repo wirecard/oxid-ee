@@ -7,8 +7,6 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use OxidEsales\Eshop\Application\Model\Order;
-
 use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
@@ -18,6 +16,8 @@ use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Core\Exception\InputException;
 
 class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
@@ -31,6 +31,19 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
     {
         parent::setUp();
         $this->_oPaymentMethod = new RatepayInvoicePaymentMethod();
+    }
+
+    protected function dbData()
+    {
+        return [
+            [
+                'table' => 'oxuser',
+                'columns' => ['oxid', 'oxpassword', 'oxbirthdate', 'oxfon'],
+                'rows' => [
+                    ['testuser', 'testpassword', '12.12.1985', '45646846'],
+                ]
+            ],
+        ];
     }
 
     public function testGetConfig()
@@ -55,9 +68,9 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
     /**
      * @dataProvider getNameProvider
      */
-    public function testGetName($bforOxid, $sExpected)
+    public function testGetName($bForOxid, $sExpected)
     {
-        $sName = RatepayInvoicePaymentMethod::getName($bforOxid);
+        $sName = RatepayInvoicePaymentMethod::getName($bForOxid);
         $this->assertEquals($sExpected, $sName);
     }
 
@@ -66,6 +79,78 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
         return [
             'for oxid' => [true, 'wdratepay-invoice'],
             'not for oxid' => [false, 'ratepay-invoice'],
+        ];
+    }
+
+    /**
+     * @dataProvider getCheckoutFieldsProvider
+     */
+    public function testGetCheckoutFields($aValues, $aExpected, $bGuestUser)
+    {
+        $oUser = oxNew(User::class);
+        $oUser->load('testuser');
+        $oUser->oxuser__oxpassword = new Field($bGuestUser ? '' : 'testpassword');
+        $oUser->save();
+        $this->getSession()->setUser($oUser);
+
+        $aDynvalues['dateOfBirth'] = $aValues['dateOfBirth'];
+        $aDynvalues['phone'] = $aValues['phone'];
+        $this->getSession()->setVariable('dynvalue', $aDynvalues);
+
+        $aFields = $this->_oPaymentMethod->getCheckoutFields();
+
+        foreach ($aFields as $sKey => $aValue) {
+            if ($aValue['type'] === 'hidden') {
+                unset($aFields[$sKey]);
+            }
+        }
+
+        $this->assertEquals($aExpected, array_keys($aFields));
+    }
+
+    public function getCheckoutFieldsProvider()
+    {
+        return [
+            'nothing set' => [
+                ['dateOfBirth' => '', 'phone' => ''],
+                ['dateOfBirth', 'phone', 'saveCheckoutFields'],
+                false,
+            ],
+            'date of birth set' => [
+                ['dateOfBirth' => '12.12.1985', 'phone' => ''],
+                ['phone', 'saveCheckoutFields'],
+                false,
+            ],
+            'phone set' => [
+                ['dateOfBirth' => '', 'phone' => '324324234'],
+                ['dateOfBirth', 'saveCheckoutFields'],
+                false,
+            ],
+            'both set' => [
+                ['dateOfBirth' => '12.12.1985', 'phone' => '324324234'],
+                [],
+                false,
+            ],
+            'guest user nothing set' => [
+                ['dateOfBirth' => '', 'phone' => ''],
+                ['dateOfBirth', 'phone'],
+                true,
+            ],
+            'guest user date of birth set' => [
+                ['dateOfBirth' => '12.12.1985', 'phone' => ''],
+                ['phone'],
+                true,
+            ],
+            'guest user phone set' => [
+                ['dateOfBirth' => '', 'phone' => '324324234'],
+                ['dateOfBirth'],
+                true,
+            ],
+            'guest user both set' => [
+                ['dateOfBirth' => '12.12.1985', 'phone' => '324324234'],
+                [],
+                true,
+            ],
         ];
     }
 
@@ -205,6 +290,55 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
             'with disallowed currency' => [false, null, false, 'USD', 'a7c40f631fc920687.20179984', null],
             'with disallowed billing country' => [false, null, false, 'EUR', 'a7c40f6320aeb2ec2.72885259', null],
             'with disallowed shipping country' => [false, null, false, 'EUR', 'a7c40f631fc920687.20179984', 'a7c40f6320aeb2ec2.72885259'],
+        ];
+    }
+
+    public function testOnBeforeOrderCreation()
+    {
+        $oUser = oxNew(User::class);
+        $oUser->load('testuser');
+        $oUser->save();
+        $this->getSession()->setUser($oUser);
+
+        $aDynvalues['dateOfBirth'] = '12.12.1985';
+        $aDynvalues['phone'] = '65161651';
+        $aDynvalues['saveCheckoutFields'] = '1';
+        $this->getSession()->setVariable('dynvalue', $aDynvalues);
+
+        try {
+            $this->_oPaymentMethod->onBeforeOrderCreation();
+        } catch (InputException $exception) {
+            $this->fail("Exception thrown: " . get_class($exception));
+        }
+    }
+
+    /**
+     * @dataProvider onBeforeOrderCreationFailedProvider
+     * @expectedException \OxidEsales\Eshop\Core\Exception\InputException
+     */
+    public function testOnBeforeOrderCreationFailed($aValues)
+    {
+        $oUser = oxNew(User::class);
+        $oUser->load('testuser');
+        $oUser->save();
+        $this->getSession()->setUser($oUser);
+
+        $aDynvalues['dateOfBirth'] = $aValues['dateOfBirth'];
+        $aDynvalues['phone'] = $aValues['phone'];
+        $this->getSession()->setVariable('dynvalue', $aDynvalues);
+
+        $this->_oPaymentMethod->onBeforeOrderCreation();
+    }
+
+    public function onBeforeOrderCreationFailedProvider()
+    {
+        return [
+            'date of birth invalid' => [
+                ['dateOfBirth' => '', 'phone' => '65161651'],
+            ],
+            'phone invalid' => [
+                ['dateOfBirth' => '12.12.1985', 'phone' => ''],
+            ],
         ];
     }
 }

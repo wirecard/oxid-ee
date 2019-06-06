@@ -46,9 +46,9 @@ class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     /**
      * @dataProvider getNameProvider
      */
-    public function testGetName($bforOxid, $sExpected)
+    public function testGetName($bForOxid, $sExpected)
     {
-        $sName = SofortPaymentMethod::getName($bforOxid);
+        $sName = SofortPaymentMethod::getName($bForOxid);
         $this->assertEquals($sExpected, $sName);
     }
 
