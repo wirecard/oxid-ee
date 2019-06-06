@@ -24,19 +24,26 @@ class Custom_Sniffs_CodeAnalysis_UnusedImportSniff implements PHP_CodeSniffer_Sn
      */
     public function process(PHP_CodeSniffer_File $phpcsFile, $stackPtr)
     {
-        $tokens = $phpcsFile->getTokens();
         $tokenColonPosition = $phpcsFile->findNext(T_SEMICOLON, $stackPtr);
-        $tokenImportPosition = $tokenColonPosition ? $tokenColonPosition - 1 : null;
-        $tokenImport = $tokenImportPosition ? $tokens[$tokenImportPosition] : null;
+
+        if (!$tokenColonPosition) {
+            return;
+        }
+
+        $tokens = $phpcsFile->getTokens();
+        $tokenImport = $tokens[$tokenColonPosition - 1];
         $isUsed = false;
 
-        foreach ($tokens as $token) {
+        foreach ($tokens as $tokenPosition => $token) {
             if ($token === $tokenImport || empty($token['content'])) {
                 continue;
             }
 
-            if ($token['content'] === $tokenImport['content'] || (
-                $token['code'] === T_DOC_COMMENT_STRING && strpos($token['content'], $tokenImport['content']) !== false
+            if ($token['content'] === $tokenImport['content'] || $this->isDocBlockTagCommentAndContainsImport(
+                $phpcsFile,
+                $token,
+                $tokenPosition,
+                $tokenImport['content']
             )) {
                 $isUsed = true;
 
@@ -58,5 +65,12 @@ class Custom_Sniffs_CodeAnalysis_UnusedImportSniff implements PHP_CodeSniffer_Sn
                 }
             }
         }
+    }
+
+    private function isDocBlockTagCommentAndContainsImport($phpcsFile, $token, $tokenPosition, $importName)
+    {
+        return $token['code'] === T_DOC_COMMENT_STRING &&
+            preg_match("/^[^\s]*{$importName}(\W|$)/", $token['content']) &&
+            $phpcsFile->findFirstOnLine(T_DOC_COMMENT_TAG, $tokenPosition);
     }
 }

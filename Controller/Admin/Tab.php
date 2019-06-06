@@ -29,21 +29,21 @@ class Tab extends AdminDetailsController
      *
      * @since 1.1.0
      */
-    protected $oTransaction;
+    protected $_oTransaction;
 
     /**
      * @var Order
      *
      * @since 1.1.0
      */
-    protected $oOrder;
+    protected $_oOrder;
 
     /**
      * @var string
      *
      * @since 1.0.0
      */
-    protected $sListObjectId;
+    protected $_sListObjectId;
 
     /**
      * @inheritdoc
@@ -61,9 +61,9 @@ class Tab extends AdminDetailsController
     {
         parent::__construct();
 
-        $this->oOrder = oxNew(Order::class);
-        $this->oTransaction = oxNew(Transaction::class);
-        $this->sListObjectId = $this->getEditObjectId();
+        $this->_oOrder = oxNew(Order::class);
+        $this->_oTransaction = oxNew(Transaction::class);
+        $this->_sListObjectId = $this->getEditObjectId();
     }
 
     /**
@@ -95,11 +95,11 @@ class Tab extends AdminDetailsController
      */
     public function shouldDisplayLiveChat()
     {
-        return $this->oOrder->isCustomPaymentMethod();
+        return $this->_oOrder->isCustomPaymentMethod();
     }
 
     /**
-     * Check if $sListObjectId is set
+     * Check if $_sListObjectId is set
      *
      * @return bool
      *
@@ -107,7 +107,7 @@ class Tab extends AdminDetailsController
      */
     protected function _isListObjectIdSet()
     {
-        return isset($this->sListObjectId) && $this->sListObjectId !== self::NOTHING_SELECTED;
+        return isset($this->_sListObjectId) && $this->_sListObjectId !== self::NOTHING_SELECTED;
     }
 
     /**

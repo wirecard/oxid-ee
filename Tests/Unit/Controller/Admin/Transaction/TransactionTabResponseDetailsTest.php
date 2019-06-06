@@ -55,7 +55,7 @@ class TransactionTabResponseDetailsTest extends Wirecard\Test\WdUnitTestCase
 
             public function setResponseMapper($oResponseMapper)
             {
-                $this->oResponseMapper = $oResponseMapper;
+                $this->_oResponseMapper = $oResponseMapper;
             }
         };
 

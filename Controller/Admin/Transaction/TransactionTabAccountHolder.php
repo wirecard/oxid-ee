@@ -25,6 +25,6 @@ class TransactionTabAccountHolder extends TransactionTab
      */
     protected function _getData()
     {
-        return $this->_getListDataFromArray($this->oResponseMapper->getAccountHolder());
+        return $this->_getListDataFromArray($this->_oResponseMapper->getAccountHolder());
     }
 }

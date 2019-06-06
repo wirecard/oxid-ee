@@ -37,7 +37,7 @@ class OxidEeEvents
      *
      * @since 1.0.0
      */
-    private static $oDb;
+    private static $_oDb;
 
     /**
      * Extends OXID's internal payment methods table with the fields required by the module
@@ -138,7 +138,7 @@ class OxidEeEvents
             PRIMARY KEY (`TRANSACTIONNUMBER`)
         ) Engine=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 
-        self::$oDb->execute($sQuery);
+        self::$_oDb->execute($sQuery);
     }
 
     /**
@@ -156,7 +156,7 @@ class OxidEeEvents
             PRIMARY KEY (`OXID`)
         ) Engine=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 
-        self::$oDb->execute($sQuery);
+        self::$_oDb->execute($sQuery);
     }
 
     /**
@@ -292,7 +292,7 @@ class OxidEeEvents
         $sPaymentId = SepaDirectDebitPaymentMethod::getName(true);
         $sQuery = "UPDATE oxpayments SET `WDOXIDEE_SEPAMANDATECUSTOM` = '$sSepaMandate', `WDOXIDEE_SEPAMANDATECUSTOM_1`
             = '$sSepaMandate1' WHERE `OXID` LIKE " . "'" . $sPaymentId . "'";
-        self::$oDb->execute($sQuery);
+        self::$_oDb->execute($sQuery);
     }
 
     /**
@@ -321,7 +321,7 @@ class OxidEeEvents
      */
     public static function onActivate()
     {
-        self::$oDb = DatabaseProvider::getDb();
+        self::$_oDb = DatabaseProvider::getDb();
 
         // extend OXID's payment method table
         self::extendPaymentMethodTable();
@@ -359,7 +359,7 @@ class OxidEeEvents
      */
     public static function onDeactivate()
     {
-        self::$oDb = DatabaseProvider::getDb();
+        self::$_oDb = DatabaseProvider::getDb();
         self::_disablePaymentMethods();
     }
 
@@ -372,7 +372,7 @@ class OxidEeEvents
     {
         $sQuery = "UPDATE oxpayments SET `OXACTIVE` = 0 WHERE `OXID` LIKE 'wd%'";
 
-        self::$oDb->execute($sQuery);
+        self::$_oDb->execute($sQuery);
     }
 
     /**
@@ -388,24 +388,24 @@ class OxidEeEvents
             // adds a sortable transaction number
             $sQuery = "ALTER TABLE " . self::TRANSACTION_TABLE .
                 " DROP PRIMARY KEY, ADD COLUMN `TRANSACTIONNUMBER` int AUTO_INCREMENT NOT NULL PRIMARY KEY";
-            self::$oDb->execute($sQuery);
+            self::$_oDb->execute($sQuery);
 
             // adds new enum to transactionActions field
             $sTransactionActions = implode("','", Transaction::getActions());
 
             $sQuery = "ALTER TABLE " . self::TRANSACTION_TABLE .
                 " MODIFY `ACTION` enum('{$sTransactionActions}')";
-            self::$oDb->execute($sQuery);
+            self::$_oDb->execute($sQuery);
 
             $sQuery = "ALTER TABLE " . self::PAYMENT_TABLE .
                 " MODIFY COLUMN `WDOXIDEE_TRANSACTIONACTION` enum('{$sTransactionActions}')";
-            self::$oDb->execute($sQuery);
+            self::$_oDb->execute($sQuery);
         }
 
         // adds a unique index on the transaction ID to preemptively prevent multiple entries of the same transaction
         if (!$oDbMetaDataHandler->hasIndex('TRANSACTIONID', self::TRANSACTION_TABLE)) {
             $sQuery = "ALTER TABLE " . self::TRANSACTION_TABLE . " ADD UNIQUE INDEX (`TRANSACTIONID`)";
-            self::$oDb->execute($sQuery);
+            self::$_oDb->execute($sQuery);
         }
     }
 

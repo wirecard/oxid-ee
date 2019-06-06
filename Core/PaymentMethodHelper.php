@@ -12,7 +12,6 @@ namespace Wirecard\Oxid\Core;
 use OxidEsales\Eshop\Core\Model\ListModel;
 use OxidEsales\Eshop\Core\Registry;
 
-use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\PaymentSdk\Entity\Mandate;
 
 use Wirecard\Oxid\Extend\Model\Payment;

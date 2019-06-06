@@ -26,8 +26,8 @@ class TransactionTabTransactionDetails extends TransactionTab
     protected function _getData()
     {
         return $this->_getListDataFromArray(
-            $this->oResponseMapper->getTransactionDetails(),
-            $this->oTransaction->wdoxidee_ordertransactions__state->value
+            $this->_oResponseMapper->getTransactionDetails(),
+            $this->_oTransaction->wdoxidee_ordertransactions__state->value
         );
     }
 }

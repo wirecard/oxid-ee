@@ -42,7 +42,7 @@ class ResponseHandler
     public static function onSuccessResponse($oResponse, $oBackendService, $oOrder)
     {
         /**
-         * @var $oLogger LoggerInterface
+         * @var LoggerInterface $oLogger
          */
         $oLogger = Registry::getLogger();
 
