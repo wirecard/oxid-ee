@@ -9,19 +9,20 @@
 
 namespace Wirecard\Oxid\Core;
 
+use Exception;
+
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\DatabaseProvider;
-use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Model\Transaction;
+
+use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Amount;
-use Wirecard\PaymentSdk\Response\SuccessResponse;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\Response;
-use Wirecard\PaymentSdk\BackendService;
-
-use Exception;
+use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
  * Class TransactionHandler
@@ -63,16 +64,17 @@ class TransactionHandler
      *
      * @param Transaction $oParentTransaction
      * @param string      $sActionTitle
-     * @param float       $fAmount
+     * @param float|null  $fAmount
+     * @param array|null  $aOrderItems
      *
      * @return array either [status => success] or [status => error, message => errorMessage]
      *
      * @since 1.1.0
      */
-    public function processAction($oParentTransaction, $sActionTitle, $fAmount = null)
+    public function processAction($oParentTransaction, $sActionTitle, $fAmount = null, $aOrderItems = null)
     {
         $oOrder = $oParentTransaction->getTransactionOrder();
-        $oTransaction = $this->_getPostProcessingTransaction($oParentTransaction, $sActionTitle);
+        $oTransaction = $this->_getPostProcessingTransaction($oParentTransaction, $sActionTitle, $aOrderItems);
 
         $sParentTransactionId = $oParentTransaction->wdoxidee_ordertransactions__transactionid->value;
         $oTransaction->setParentTransactionId($sParentTransactionId);
@@ -269,16 +271,17 @@ class TransactionHandler
      *
      * @param Transaction $oTransaction
      * @param string      $sActionTitle
+     * @param array       $aOrderItems
      *
-     * @return array | Wirecard\PaymentSdk\Transaction\Transaction
+     * @return array|\Wirecard\PaymentSdk\Transaction\Transaction
      *
      * @since 1.1.0
      */
-    private function _getPostProcessingTransaction($oTransaction, $sActionTitle)
+    private function _getPostProcessingTransaction($oTransaction, $sActionTitle, $aOrderItems)
     {
         try {
             $oPaymentMethod = PaymentMethodFactory::create($oTransaction->getPaymentType());
-            return $oPaymentMethod->getPostProcessingTransaction($sActionTitle);
+            return $oPaymentMethod->getPostProcessingTransaction($sActionTitle, $oTransaction, $aOrderItems);
         } catch (Exception $oExc) {
             $this->_oLogger->error("Error getting the payment method", [$oExc]);
             return $this->_getErrorMessage($oExc->getMessage());

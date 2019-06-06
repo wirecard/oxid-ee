@@ -19,8 +19,13 @@ use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Extend\Model\Order;
+
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Entity\Basket;
+use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Payment method implementation for Ratepay Invoice
@@ -205,6 +210,32 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     /**
      * @inheritdoc
      *
+     * @param RatepayInvoiceTransaction $oTransaction
+     * @param Order                     $oOrder
+     *
+     * @throws \Exception
+     *
+     * @since 1.2.0
+     */
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
+    {
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+        $oWdBasket = $oBasket->createTransactionBasket();
+
+        $oTransaction->setBasket($oWdBasket);
+        $oTransaction->setShipping($oOrder->getShippingAccountHolder());
+        $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
+
+        $oAccountHolder = $oOrder->getAccountHolder();
+        $oAccountHolder->setDateOfBirth(new DateTime(SessionHelper::getDbDateOfBirth()));
+        $oAccountHolder->setPhone(SessionHelper::getPhone());
+        $oTransaction->setAccountHolder($oAccountHolder);
+    }
+
+    /**
+     * @inheritdoc
+     *
      * @return array
      *
      * @since 1.2.0
@@ -249,30 +280,6 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     /**
      * @inheritdoc
      *
-     * @param RatepayInvoiceTransaction $oTransaction
-     * @param Order                     $oOrder
-     *
-     * @since 1.2.0
-     */
-    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
-    {
-        $oSession = Registry::getSession();
-        $oBasket = $oSession->getBasket();
-        $oWdBasket = $oBasket->createTransactionBasket();
-
-        $oTransaction->setBasket($oWdBasket);
-        $oTransaction->setShipping($oOrder->getShippingAccountHolder());
-        $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
-
-        $oAccountHolder = $oOrder->getAccountHolder();
-        $oAccountHolder->setDateOfBirth(new DateTime(SessionHelper::getDbDateOfBirth()));
-        $oAccountHolder->setPhone(SessionHelper::getPhone());
-        $oTransaction->setAccountHolder($oAccountHolder);
-    }
-
-    /**
-     * @inheritdoc
-     *
      * @return bool
      *
      * @since 1.2.0
@@ -310,7 +317,6 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
 
         return $bDataToSave && Registry::getSession()->getUser()->oxuser__oxpassword->value !== '';
     }
-
 
     /**
      * Returns 'hidden' if the field value is already valid, 'text' otherwise
@@ -458,5 +464,73 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
             !$oPayment->oxpayments__billing_shipping->value ||
             !$sShippingCountryId
         );
+    }
+
+    /**
+     *
+     * @inheritdoc
+     *
+     * @param string                           $sAction
+     * @param \Wirecard\Oxid\Model\Transaction $oParentTransaction
+     * @param array|null                       $aOrderItems
+     *
+     * @return Transaction
+     *
+     * @since 1.2.0
+     */
+    public function getPostProcessingTransaction($sAction, $oParentTransaction, $aOrderItems = null)
+    {
+        $oTransaction = new RatepayInvoiceTransaction();
+        $aBasketResult = $this->_createPostProcessingBasket($oParentTransaction, $aOrderItems);
+
+        /**
+         * @var $oBasket Basket
+         */
+        $oBasket = $aBasketResult[0];
+        $oTransaction->setBasket($oBasket);
+        $oTransaction->setAmount(new Amount(
+            $aBasketResult[1],
+            $oBasket->getTotalAmount()->getCurrency()
+        ));
+        return $oTransaction;
+    }
+
+    /**
+     * @param \Wirecard\Oxid\Model\Transaction $oParentTransaction
+     * @param array|null                       $aOrderItems
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    private function _createPostProcessingBasket($oParentTransaction, $aOrderItems)
+    {
+        $oBasket = new Basket();
+
+        $oXmlBasket = simplexml_load_string($oParentTransaction->getResponseXML());
+        $oBasket->parseFromXml($oXmlBasket);
+        $oBasket->setVersion(RatepayInvoiceTransaction::class);
+
+        $fAmount = 0;
+
+        foreach ($aOrderItems as $sArticleNumber => $iQuantity) {
+            foreach ($oBasket as $iIndex => $oBasketItem) {
+
+                /**
+                 * @var $oBasketItem Item
+                 */
+                if ($oBasketItem->getArticleNumber() == $sArticleNumber) {
+                    $oBasketItem->setQuantity($iQuantity);
+
+                    //set Tax-rate ourselves. paymentSdk xml parser does not do that
+                    $fTaxRate = (float) $oXmlBasket->{'order-items'}->children()[$iIndex]->{'tax-rate'};
+                    $oBasketItem->setTaxRate($fTaxRate);
+
+                    $fAmount += $oBasketItem->getPrice()->getValue() * $iQuantity;
+                }
+            }
+        }
+
+        return [$oBasket, $fAmount];
     }
 }

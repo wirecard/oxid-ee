@@ -9,13 +9,14 @@
 
 namespace Wirecard\Oxid\Model;
 
-use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Exception\StandardException;
+use OxidEsales\Eshop\Core\Registry;
 
 use Psr\Log\LoggerInterface;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
 
 use Wirecard\PaymentSdk\Config\Config;
@@ -296,13 +297,15 @@ abstract class PaymentMethod
     /**
      * Returns the post-processing transaction for this payment method
      *
-     * @param string $sAction
+     * @param string                           $sAction
+     * @param \Wirecard\Oxid\Model\Transaction $oParentTransaction
+     * @param array|null                       $aOrderItems
      *
-     * @return Wirecard\PaymentSdk\Transaction\Transaction
+     * @return \Wirecard\PaymentSdk\Transaction\Transaction
      *
      * @since 1.1.0
      */
-    public function getPostProcessingTransaction($sAction)
+    public function getPostProcessingTransaction($sAction, $oParentTransaction, $aOrderItems = null)
     {
         return $this->getTransaction();
     }

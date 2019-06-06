@@ -225,7 +225,10 @@ class Transaction extends MultiLanguageModel
     }
 
     /**
+     * Returns the Basket object
+     *
      * @return Basket
+     *
      * @since 1.2.0
      */
     public function getBasket()

@@ -13,9 +13,9 @@ use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\TransactionHandler;
-use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
 use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
@@ -39,6 +39,7 @@ class TransactionTabPostProcessing extends TransactionTab
     const KEY_INFO = 'info';
     const KEY_SUCCESS = 'success';
     const KEY_ERROR = 'error';
+    const KEY_ORDER_ITEMS = 'order_items';
 
     /**
      * @var \Psr\Log\LoggerInterface
@@ -180,18 +181,7 @@ class TransactionTabPostProcessing extends TransactionTab
         ]);
 
         if ($this->shouldUseOrderItems()) {
-            Helper::addToViewData($this, [
-                'data' => [
-                    "head" => [
-                        //TODO translate
-                        ['text' => 'Article Number'],
-                        ['text' => 'Name'],
-                        ['text' => 'Quantity'],
-                        ['text' => 'Amount'],
-                    ],
-                    "body" => self::_getMappedTableOrderItems($this->oTransaction->getBasket()->mappedProperties()["order-item"])
-                ]
-            ]);
+            $this->_addOrderItemsToViewData();
         }
 
         return $sTemplate;
@@ -206,7 +196,6 @@ class TransactionTabPostProcessing extends TransactionTab
      */
     private function _getRequestParameters()
     {
-
         $oRequest = Registry::getRequest();
         $aActionConfig = null;
 
@@ -216,9 +205,18 @@ class TransactionTabPostProcessing extends TransactionTab
             }
         }
 
+        $aOrderArticles = array_combine(
+            $oRequest->getRequestParameter('article-number'),
+            $oRequest->getRequestParameter('quantity')
+        );
+
         return [
-            self::KEY_AMOUNT => Helper::getFloatFromString($oRequest->getRequestParameter(self::KEY_AMOUNT) ?? ''),
+            self::KEY_AMOUNT =>
+                $aOrderArticles
+                    ? null
+                    : Helper::getFloatFromString($oRequest->getRequestParameter(self::KEY_AMOUNT) ?? ''),
             self::KEY_ACTION => $aActionConfig,
+            self::KEY_ORDER_ITEMS => $aOrderArticles,
         ];
     }
 
@@ -233,8 +231,30 @@ class TransactionTabPostProcessing extends TransactionTab
      */
     private function _validateRequest($aRequestParameters)
     {
+        $aOrderItems = $aRequestParameters[self::KEY_ORDER_ITEMS];
+
+        if ($aOrderItems) {
+            $this->_validateOrderItems($aOrderItems);
+        }
+
         $fAmount = $aRequestParameters[self::KEY_AMOUNT];
 
+        if (!is_null($fAmount)) {
+            $this->_validateAmount($fAmount);
+        }
+    }
+
+    /**
+     * Check for correct amount
+     *
+     * @param float $fAmount
+     *
+     * @throws StandardException
+     *
+     * @since 1.2.0
+     */
+    private function _validateAmount($fAmount)
+    {
         if (!$this->_isAmountNumeric($fAmount)) {
             throw new StandardException(Helper::translate('wd_text_generic_error'));
         }
@@ -244,6 +264,31 @@ class TransactionTabPostProcessing extends TransactionTab
 
         if (!$this->_isPositiveBelowMax($fAmount, $fMaxAmount)) {
             throw new StandardException(Helper::translate('wd_total_amount_not_in_range_text'));
+        }
+    }
+
+    /**
+     *
+     * Checks order items quantity
+     *
+     * @param array $aOrderItems
+     *
+     * @throws StandardException
+     *
+     * @since 1.2.0
+     */
+    private function _validateOrderItems($aOrderItems)
+    {
+        $bAllItemsZero = true;
+        foreach ($aOrderItems as $sArticleNumber => $iQuantity) {
+            if ($iQuantity > 0) {
+                $bAllItemsZero = false;
+                break;
+            }
+        }
+
+        if ($bAllItemsZero) {
+            throw new StandardException(Helper::translate('wd_text_generic_error'));
         }
     }
 
@@ -299,12 +344,14 @@ class TransactionTabPostProcessing extends TransactionTab
 
             $sActionTitle = $aRequestParameters[self::KEY_ACTION][self::KEY_ACTION];
             $sTransactionAmount = $aRequestParameters[self::KEY_AMOUNT];
+            $aOrderItems = $aRequestParameters[self::KEY_ORDER_ITEMS];
 
             // execute the callback method defined in the "action" request parameter
-            $aState = $this->_handleRequestAction($sActionTitle, $sTransactionAmount);
+            $aState = $this->_handleRequestAction($sActionTitle, $sTransactionAmount, $aOrderItems);
         } catch (StandardException $oException) {
             $aState[self::KEY_MESSAGE] = $oException->getMessage();
             $aState[self::KEY_TYPE] = self::KEY_ERROR;
+            $this->_oLogger->error($oException->getMessage(), [$oException]);
         }
 
         return $aState;
@@ -356,7 +403,7 @@ class TransactionTabPostProcessing extends TransactionTab
     private function _filterPostProcessingActions($aPossibleOperations, $oPaymentMethod)
     {
         foreach ($aPossibleOperations as $sActionKey => $sDisplayValue) {
-            $oTransaction = $oPaymentMethod->getPostProcessingTransaction($sActionKey);
+            $oTransaction = $oPaymentMethod->getPostProcessingTransaction($sActionKey, $this->_oTransaction);
             $oPayment = PaymentMethodHelper::getPaymentById(
                 PaymentMethod::getOxidFromSDKName($oTransaction->getConfigKey())
             );
@@ -403,8 +450,9 @@ class TransactionTabPostProcessing extends TransactionTab
     /**
      * Handles the request action by passing it on to the transaction handler
      *
-     * @param string $sActionTitle
-     * @param float  $fAmount
+     * @param string     $sActionTitle
+     * @param float|null $fAmount
+     * @param array|null $aOrderItems
      *
      * @return array
      *
@@ -412,10 +460,10 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @since 1.1.0
      */
-    private function _handleRequestAction($sActionTitle, $fAmount)
+    private function _handleRequestAction($sActionTitle, $fAmount, $aOrderItems)
     {
         $oTransactionHandler = $this->_getTransactionHandler();
-        $aResult = $oTransactionHandler->processAction($this->_oTransaction, $sActionTitle, $fAmount);
+        $aResult = $oTransactionHandler->processAction($this->_oTransaction, $sActionTitle, $fAmount, $aOrderItems);
 
         $bSuccess = $aResult[self::KEY_STATUS] === Transaction::STATE_SUCCESS;
 
@@ -487,26 +535,67 @@ class TransactionTabPostProcessing extends TransactionTab
         return $oConfig;
     }
 
+    /**
+     * Returns whether to use order items or amount in the panel
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
     public function shouldUseOrderItems()
     {
-        return in_array($this->oTransaction->getPaymentType(), [
+        return in_array($this->_oTransaction->getPaymentType(), [
             RatepayInvoicePaymentMethod::getName(true),
             PayolutionInvoicePaymentMethod::getName(true),
         ]);
     }
 
+    /**
+     * Adds the order items to the view data
+     *
+     * @throws StandardException
+     *
+     * @since 1.2.0
+     */
+    private function _addOrderItemsToViewData()
+    {
+        Helper::addToViewData($this, [
+            'data' => [
+                "head" => [
+                    ['text' => Helper::translate('wd_text_article_number')],
+                    ['text' => Helper::translate('wd_text_article_name')],
+                    ['text' => Helper::translate('wd_amount')],
+                    ['text' => Helper::translate('wd_text_quantity')],
+                ],
+                "body" => self::_getMappedTableOrderItems(
+                    $this->_oTransaction->getBasket()->mappedProperties()["order-item"]
+                ),
+            ],
+        ]);
+    }
+
+    /**
+     * Map order items to tableable items
+     *
+     * @param array $aOrderItems
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
     private static function _getMappedTableOrderItems($aOrderItems)
     {
         $aMappedItems = array_map(function ($aOrderItem) {
 
-            $sInputFileds = '<input type="number" value="' . $aOrderItem['quantity'] . '" name="quantity"/>' .
-                '<input type="hidden" value="' . $aOrderItem['article-number'] . '" name="article-number" />';
+            $sInputFileds = '<input type="number" value="' . $aOrderItem['quantity'] . '" name="quantity[]" min="0"' .
+                ' max="' . $aOrderItem['quantity'] . '"/>' .
+                '<input type="hidden" value="' . $aOrderItem['article-number'] . '" name="article-number[]" />';
 
             return [
                 ['text' => $aOrderItem['article-number']],
                 ['text' => $aOrderItem['name']],
-                ['text' => $sInputFileds],
                 ['text' => $aOrderItem['amount']['value']],
+                ['text' => $sInputFileds],
             ];
         }, $aOrderItems);
         return $aMappedItems;

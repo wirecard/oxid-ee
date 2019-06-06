@@ -9,8 +9,8 @@
 
 namespace Wirecard\Oxid\Model;
 
-use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Exception\InputException;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
@@ -18,10 +18,10 @@ use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
 use Wirecard\PaymentSdk\Config\Config;
-use Wirecard\PaymentSdk\Transaction\Transaction;
-use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
+use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Payment method implementation for SEPA Direct Debit
@@ -92,23 +92,23 @@ class SepaDirectDebitPaymentMethod extends SepaCreditTransferPaymentMethod
     {
         $aAdditionalFields = [
             'descriptor' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_descriptor',
-                'options'     => [
-                    '1'       => Helper::translate('wd_yes'),
-                    '0'       => Helper::translate('wd_no'),
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_descriptor',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
                 ],
-                'title'       => Helper::translate('wd_config_descriptor'),
+                'title' => Helper::translate('wd_config_descriptor'),
                 'description' => Helper::translate('wd_config_descriptor_desc'),
             ],
             'additionalInfo' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_additional_info',
-                'options'     => [
-                    '1'       => Helper::translate('wd_yes'),
-                    '0'       => Helper::translate('wd_no'),
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_additional_info',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
                 ],
-                'title'       => Helper::translate('wd_config_additional_info'),
+                'title' => Helper::translate('wd_config_additional_info'),
                 'description' => Helper::translate('wd_config_additional_info_desc'),
             ],
             'deleteCanceledOrder' => [
@@ -141,22 +141,22 @@ class SepaDirectDebitPaymentMethod extends SepaCreditTransferPaymentMethod
                 'title' => Helper::translate('wd_config_enable_bic'),
             ],
             'paymentAction' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_transactionaction',
-                'options'     => TransactionModel::getTranslatedActions(),
-                'title'       => Helper::translate('wd_config_payment_action'),
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_transactionaction',
+                'options' => TransactionModel::getTranslatedActions(),
+                'title' => Helper::translate('wd_config_payment_action'),
                 'description' => Helper::translate('wd_config_payment_action_desc'),
             ],
             'creditorId' => [
-                'type'        => 'text',
-                'field'       => 'oxpayments__wdoxidee_creditorid',
-                'title'       => Helper::translate('wd_config_creditor_id'),
+                'type' => 'text',
+                'field' => 'oxpayments__wdoxidee_creditorid',
+                'title' => Helper::translate('wd_config_creditor_id'),
                 'description' => Helper::translate('wd_config_creditor_id_desc'),
             ],
             'sepaMandateCustom' => [
-                'type'        => 'textarea',
-                'field'       => 'oxpayments__wdoxidee_sepamandatecustom',
-                'title'       => Helper::translate('wd_sepa_mandate'),
+                'type' => 'textarea',
+                'field' => 'oxpayments__wdoxidee_sepamandatecustom',
+                'title' => Helper::translate('wd_sepa_mandate'),
             ],
         ];
 
@@ -242,16 +242,18 @@ class SepaDirectDebitPaymentMethod extends SepaCreditTransferPaymentMethod
     /**
      * @inheritdoc
      *
-     * @param string $sAction
+     * @param string                           $sAction
+     * @param \Wirecard\Oxid\Model\Transaction $oParentTransaction
+     * @param array|null                       $aOrderItems
      *
      * @return Transaction
      *
      * @since 1.1.0
      */
-    public function getPostProcessingTransaction($sAction)
+    public function getPostProcessingTransaction($sAction, $oParentTransaction, $aOrderItems = null)
     {
         if ($this->_isRefundAction($sAction)) {
-            return parent::getPostProcessingTransaction($sAction);
+            return parent::getPostProcessingTransaction($sAction, $oParentTransaction, $aOrderItems);
         }
 
         return $this->getTransaction();
