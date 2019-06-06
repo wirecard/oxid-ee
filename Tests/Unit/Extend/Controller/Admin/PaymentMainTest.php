@@ -84,6 +84,16 @@ class PaymentMainTest extends \Wirecard\Test\WdUnitTestCase
         $_POST['editval']['oxpayments__wdoxidee_httpuser'] = 'user';
         $_POST['editval']['oxpayments__wdoxidee_httppass'] = 'mysecretpasswordnooneknows';
 
+        $oTransactionServStub = $this->getMockBuilder(TransactionService::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['checkCredentials'])
+            ->getMock();
+
+        $oTransactionServStub->method('checkCredentials')
+            ->willReturn(true);
+
+        $this->_controller->setTransactionService($oTransactionServStub);
+
         try {
             $this->_controller->save();
         } catch (\Exception $exc) {
