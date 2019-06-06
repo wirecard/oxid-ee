@@ -108,6 +108,7 @@ class OrderController extends OrderController_parent
                 'oxdownloadableproductsagreement' => '0',
                 'oxserviceproductsagreement' => '0',
                 'wdtoken' => $sWdSessionToken,
+                'wdfinishedpayment' => true,
             ];
 
             if (Registry::getRequest()->getRequestParameter('redirectFromForm')) {
@@ -176,9 +177,11 @@ class OrderController extends OrderController_parent
         $sOrderId = Helper::getSessionChallenge();
         $bIsOrderLoaded = $oOrder->load($sOrderId);
 
-        // necessary to prevent order being overwritten when consumer does not
-        // correctly finalise eps payment (does not redirect back to OXID shop)
-        if ($bIsOrderLoaded && $oOrder->oxorder__wdoxidee_final->value === 0) {
+        $sWdPaymentRedirect = Registry::getRequest()->getRequestParameter('wdfinishedpayment');
+
+        // necessary to prevent order being overwritten when consumer does not correctly finalise
+        // eps payment (does not redirect back to OXID shop)
+        if ($bIsOrderLoaded && !$sWdPaymentRedirect) {
             Registry::getSession()->setVariable(
                 'sess_challenge',
                 $this->getUtilsObjectInstance()->generateUID()
