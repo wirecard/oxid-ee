@@ -59,7 +59,7 @@ class PaymentMethodHelper
     }
 
     /**
-     * Return array for currency select options
+     * Returns an array of currency select options.
      *
      * @return array
      *
@@ -72,6 +72,25 @@ class PaymentMethodHelper
 
         foreach ($aCurrencies as $oCurrency) {
             $aOptions[$oCurrency->name] = $oCurrency->name;
+        }
+
+        return $aOptions;
+    }
+
+    /**
+     * Returns an array of country select options.
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public static function getCountryOptions()
+    {
+        $aCountries = Helper::getCountries();
+        $aOptions = [];
+
+        foreach ($aCountries as $oCountry) {
+            $aOptions[$oCountry->oxcountry__oxisoalpha2->value] = $oCountry->oxcountry__oxtitle->value;
         }
 
         return $aOptions;

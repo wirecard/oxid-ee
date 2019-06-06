@@ -57,6 +57,8 @@ $aModule = [
             => \Wirecard\Oxid\Extend\Controller\Admin\OrderList::class,
         \OxidEsales\Eshop\Application\Controller\Admin\PaymentMain::class
             => \Wirecard\Oxid\Extend\Controller\Admin\PaymentMain::class,
+        \OxidEsales\Eshop\Application\Controller\Admin\PaymentCountry::class
+            => \Wirecard\Oxid\Extend\Controller\Admin\PaymentCountry::class,
         \OxidEsales\Eshop\Application\Model\Order::class
             => \Wirecard\Oxid\Extend\Model\Order::class,
         \OxidEsales\Eshop\Application\Controller\OrderController::class

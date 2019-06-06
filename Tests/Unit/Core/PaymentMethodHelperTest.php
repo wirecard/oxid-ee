@@ -15,17 +15,6 @@ use OxidEsales\Eshop\Application\Model\User;
 
 class PaymentMethodHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
-    /**
-     * @var PaymentMethodHelper
-     */
-    private $_oPaymentMethodHelper;
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->_oPaymentMethodHelper = new PaymentMethodHelper();
-    }
-
     public function testGetSepaMandateHtml()
     {
         $oBasketStub = $this->getMockBuilder(Basket::class)
@@ -39,8 +28,21 @@ class PaymentMethodHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $aDynArray['iban'] = 'DE42512308000000060004';
         Registry::getSession()->setVariable('dynvalue', $aDynArray);
 
-        $sSepaMandate = $this->_oPaymentMethodHelper->getSepaMandateHtml($oBasketStub, $oUserStub);
+        $sSepaMandate = PaymentMethodHelper::getSepaMandateHtml($oBasketStub, $oUserStub);
         $this->assertContains('DE42512308000000060004', $sSepaMandate);
     }
 
+    public function testGetCurrencyOptions()
+    {
+        $aCurrencyOptions = PaymentMethodHelper::getCurrencyOptions();
+
+        $this->assertEquals(array_keys($aCurrencyOptions), array_values($aCurrencyOptions));
+    }
+
+    public function testGetCountryOptions()
+    {
+        $aCountryOptions = PaymentMethodHelper::getCountryOptions();
+
+        $this->assertNotEquals(array_keys($aCountryOptions), array_values($aCountryOptions));
+    }
 }

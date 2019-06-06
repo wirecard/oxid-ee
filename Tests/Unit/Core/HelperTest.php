@@ -8,6 +8,7 @@
  *
  */
 
+use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Application\Model\Shop;
 use OxidEsales\Eshop\Core\Controller\BaseController;
@@ -289,5 +290,10 @@ class HelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         $sToken = Helper::getUniqueToken();
         $sTokenTwo = Helper::getUniqueToken();
         $this->assertNotEquals($sToken, $sTokenTwo);
+    }
+
+    public function testGetCountries()
+    {
+        $this->assertContainsOnlyInstancesOf(Country::class, Helper::getCountries());
     }
 }

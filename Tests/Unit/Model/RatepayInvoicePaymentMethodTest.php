@@ -71,27 +71,9 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
         $this->assertObjectHasAttribute('shipping', $oTransaction);
     }
 
-    /**
-     * @dataProvider configFieldsProvider
-     */
-    public function testGetConfigFields($sContainsKey)
+    public function testGetConfigFields()
     {
-        $aConfigFields = $this->_oPaymentMethod->getConfigFields();
-        $this->assertArrayHasKey($sContainsKey, $aConfigFields);
-    }
-
-    public function configFieldsProvider()
-    {
-        return [
-            "contains additionalInfo" => ['additionalInfo'],
-            "contains deleteCanceledOrder" => ['deleteCanceledOrder'],
-            "contains deleteFailedOrder" => ['deleteFailedOrder'],
-        ];
-    }
-
-    public function testGetConfigFieldsCount()
-    {
-        $aFieldKeys = array_keys($this->_oPaymentMethod->getConfigFields());
+        $aFields = $this->_oPaymentMethod->getConfigFields();
 
         $this->assertEquals([
             'apiUrl',
@@ -105,20 +87,37 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
             'deleteCanceledOrder',
             'deleteFailedOrder',
             'allowedCurrencies',
-        ], $aFieldKeys);
+            'shippingCountries',
+            'billingCountries',
+            'billingShipping',
+        ], array_keys($aFields));
     }
 
     public function testGetPublicFieldNames()
     {
-        $aPublicFields = $this->_oPaymentMethod->getPublicFieldNames();
-        $aExpected = [
+        $aFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
+
+        $this->assertEquals([
             'apiUrl',
             'maid',
             'descriptor',
             'additionalInfo',
             'deleteCanceledOrder',
             'deleteFailedOrder',
-        ];
-        $this->assertEquals($aExpected, $aPublicFields, '', 0.0, 1, true);
+            'allowedCurrencies',
+            'shippingCountries',
+            'billingCountries',
+            'billingShipping',
+        ], $aFieldNames);
+    }
+
+    public function testGetMetaDataFieldNames()
+    {
+        $this->assertEquals([
+            'allowed_currencies',
+            'shipping_countries',
+            'billing_countries',
+            'billing_shipping',
+        ], $this->_oPaymentMethod->getMetaDataFieldNames());
     }
 }

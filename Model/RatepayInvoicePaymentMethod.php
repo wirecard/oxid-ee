@@ -127,6 +127,33 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
                 'options' => PaymentMethodHelper::getCurrencyOptions(),
                 'title' => Helper::translate('wd_config_allowed_currencies'),
                 'description' => Helper::translate('wd_config_allowed_currencies_desc'),
+                'required' => true,
+            ],
+            'shippingCountries' => [
+                'type' => 'multiselect',
+                'field' => 'oxpayments__shipping_countries',
+                'options' => PaymentMethodHelper::getCountryOptions(),
+                'title' => Helper::translate('wd_config_shipping_countries'),
+                'description' => Helper::translate('wd_config_shipping_countries_desc'),
+                'required' => true,
+            ],
+            'billingCountries' => [
+                'type' => 'multiselect',
+                'field' => 'oxpayments__billing_countries',
+                'options' => PaymentMethodHelper::getCountryOptions(),
+                'title' => Helper::translate('wd_config_billing_countries'),
+                'description' => Helper::translate('wd_config_billing_countries_desc'),
+                'required' => true,
+            ],
+            'billingShipping' => [
+                'type' => 'select',
+                'field' => 'oxpayments__billing_shipping',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
+                ],
+                'title' => Helper::translate('wd_config_billing_shipping'),
+                'description' => Helper::translate('wd_config_billing_shipping_desc'),
             ],
         ];
 
@@ -144,7 +171,16 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     {
         return array_merge(
             parent::getPublicFieldNames(),
-            ['descriptor', 'additionalInfo', 'deleteCanceledOrder', 'deleteFailedOrder']
+            [
+                'descriptor',
+                'additionalInfo',
+                'deleteCanceledOrder',
+                'deleteFailedOrder',
+                'allowedCurrencies',
+                'shippingCountries',
+                'billingCountries',
+                'billingShipping',
+            ]
         );
     }
 
@@ -157,7 +193,12 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
      */
     public function getMetaDataFieldNames()
     {
-        return ['allowed_currencies'];
+        return [
+            'allowed_currencies',
+            'shipping_countries',
+            'billing_countries',
+            'billing_shipping',
+        ];
     }
 
     /**

@@ -146,6 +146,15 @@
         <allowed_currencies>
             <currency>EUR</currency>
         </allowed_currencies>
+        <shipping_countries>
+            <country>AT</country>
+            <country>DE</country>
+        </shipping_countries>
+        <billing_countries>
+            <country>AT</country>
+            <country>DE</country>
+        </billing_countries>
+        <billing_shipping>1</billing_shipping>
     </payment>
     <payment>
         <oxid>wdgiropay</oxid>

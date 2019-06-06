@@ -145,7 +145,14 @@
       [{oxmultilang ident="GENERAL_ACTIVE"}]
     </td>
     <td class="edittext">
-      <input class="edittext" type="checkbox" name="editval[oxpayments__oxactive]" value='1' [{if $edit->oxpayments__oxactive->value == 1}]checked[{/if}] [{$readonly}]>
+      <input
+        class="edittext"
+        type="checkbox"
+        name="editval[oxpayments__oxactive]"
+        value='1'
+        [{if $edit->oxpayments__oxactive->value == 1}]checked[{/if}]
+        [{$readonly}]
+      >
       [{oxinputhelp ident="HELP_GENERAL_ACTIVE"}]
     </td>
   </tr>
@@ -154,7 +161,15 @@
       [{oxmultilang ident="PAYMENT_MAIN_NAME"}]
     </td>
     <td class="edittext">
-      <input type="text" class="editinput" size="25" maxlength="[{$edit->oxpayments__oxdesc->fldmax_length}]" name="editval[oxpayments__oxdesc]" value="[{$edit->oxpayments__oxdesc->value}]" [{$readonly}]>
+      <input
+        type="text"
+        class="editinput"
+        size="25"
+        maxlength="[{$edit->oxpayments__oxdesc->fldmax_length}]"
+        name="editval[oxpayments__oxdesc]"
+        value="[{$edit->oxpayments__oxdesc->value}]"
+        [{$readonly}]
+      >
       [{oxinputhelp ident="HELP_PAYMENT_MAIN_NAME"}]
     </td>
   </tr>
@@ -171,31 +186,59 @@
       [{/if}]
       <td class="edittext" [{if $configField.colspan}]colspan="[{$configField.colspan}]"[{/if}]>
         [{if $configField.type === 'text'}]
-          <input id="[{$configKey}]" type="text" class="editinput" size="38"
-                 name="editval[[{$fieldName}]]" value="[{$edit->$fieldName->value}]"
-                 [{if $configField.onchange}]onchange="[{$configField.onchange}]"[{/if}]
-                 / >
+          <input
+            id="[{$configKey}]"
+            type="text"
+            class="editinput"
+            size="38"
+            name="editval[[{$fieldName}]]"
+            value="[{$edit->$fieldName->value}]"
+            [{if $configField.required}]required[{/if}]
+            [{if $configField.onchange}]onchange="[{$configField.onchange}]"[{/if}]
+          >
         [{/if}]
 
         [{if $configField.type === 'select'}]
-          <select name="editval[[{$fieldName}]]">
+          <select
+            name="editval[[{$fieldName}]]"
+            [{if $configField.required}]required[{/if}]
+          >
             [{foreach from=$configField.options key=optionKey item=optionValue}]
-              <option value="[{$optionKey}]" [{if $edit->$fieldName->value == $optionKey}]selected[{/if}]>[{$optionValue}]</option>
+              <option
+                value="[{$optionKey}]"
+                [{if $edit->$fieldName->value == $optionKey}]selected[{/if}]
+              >[{$optionValue}]</option>
             [{/foreach}]
           </select>
         [{/if}]
 
         [{if $configField.type === 'multiselect'}]
-          <select id="[{$configKey}]" name="editval[[{$fieldName}]][]" class="wd-multiselect" multiple>
+          <select
+            id="[{$configKey}]"
+            name="editval[[{$fieldName}]][]"
+            class="wd-multiselect"
+            multiple
+            [{if $configField.required}]required[{/if}]
+          >
             [{foreach from=$configField.options key=optionKey item=optionValue}]
-              <option value="[{$optionKey}]" [{if in_array($optionValue, $edit->$fieldName->value)}]selected[{/if}]>[{$optionValue}]</option>
+              <option
+                  value="[{$optionKey}]"
+                  [{if $edit->$fieldName->value && in_array($optionKey, $edit->$fieldName->value)}]selected[{/if}]
+              >[{$optionValue}]</option>
             [{/foreach}]
           </select>
         [{/if}]
 
         [{if $configField.type === 'textarea'}]
-          <textarea id="[{$configKey}]" class="editinput" rows="5" cols="37" name="editval[[{$fieldName}]]"
-            value="[{$edit->$fieldName->value}]">[{$edit->$fieldName->value}]</textarea>
+          <textarea
+            id="[{$configKey}]"
+            class="editinput"
+            rows="5"
+            cols="37"
+            name="editval[[{$fieldName}]]"
+            value="[{$edit->$fieldName->value}]"
+            [{if $configField.required}]required[{/if}]
+          >[{$edit->$fieldName->value}]</textarea>
         [{/if}]
 
         [{if $configField.type === 'link'}]
