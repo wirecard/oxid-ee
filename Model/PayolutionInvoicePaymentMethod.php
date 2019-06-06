@@ -15,6 +15,9 @@ use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\PayolutionInvoiceTransaction;
 
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Exception\InputException;
+
 /**
  * Payment method implementation for payolution Invoice
  *
@@ -192,5 +195,21 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
             'billing_countries',
             'billing_shipping',
         ];
+    }
+
+    /**
+     * @throws InputException
+     *
+     * @since 1.2.0
+     */
+    public function onBeforeTransactionCreation()
+    {
+        parent::onBeforeTransactionCreation();
+
+        $oRequest = Registry::getRequest();
+
+        if (!$oRequest->getRequestParameter('trustedshop_checkbox')) {
+            throw new InputException('Trusted Shop terms were not accepted.');
+        }
     }
 }

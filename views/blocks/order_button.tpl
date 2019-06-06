@@ -31,8 +31,8 @@
 
         <div class="well well-sm cart-buttons">
             <div>
-                <input type="checkbox" id="trusted-shop-checkbox" />
-                [{oxmultilang ident="wd_trusted_shop_terms" args=$payment->oxpayments__wdoxidee_payolution_url->value}]
+                <input type="checkbox" name="trustedshop_checkbox" id="trusted-shop-checkbox" />
+                [{oxmultilang ident="wd_trusted_shop_terms" args=$payment->oxpayments__wdoxidee_payolution_terms_url->value}]
             </div>
             [{block name="checkout_order_btn_submit_bottom"}]
             <button type="submit" disabled id="payolution-inv-order-button" class="btn btn-lg btn-primary pull-right submitButton nextStep largeButton">
