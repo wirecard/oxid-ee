@@ -97,4 +97,12 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
     {
         $this->_oPaymentMethod->onBeforeTransactionCreation();
     }
+
+    public function testGetMetaDataFieldNames()
+    {
+        $this->assertEquals([
+            'trusted_shop',
+            'payolution_terms_url',
+        ], $this->_oPaymentMethod->getMetaDataFieldNames());
+    }
 }

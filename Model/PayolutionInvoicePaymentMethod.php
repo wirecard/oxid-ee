@@ -139,7 +139,7 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
             ],
             'trustedShop' => [
                 'type' => 'select',
-                'field' => 'oxpayments__wdoxidee_trusted_shop',
+                'field' => 'oxpayments__trusted_shop',
                 'options' => [
                     '1' => Helper::translate('wd_yes'),
                     '0' => Helper::translate('wd_no'),
@@ -150,12 +150,27 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
             ],
             'payolutionTermsUrl' => [
                 'type' => 'text',
-                'field' => 'oxpayments__wdoxidee_payolution_terms_url',
+                'field' => 'oxpayments__payolution_terms_url',
                 'title' => Helper::translate('wd_config_payolution_terms_url'),
             ],
         ];
 
         return parent::getConfigFields() + $aAdditionalFields;
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public function getMetaDataFieldNames()
+    {
+        return [
+            'trusted_shop',
+            'payolution_terms_url',
+        ];
     }
 
     /**
