@@ -8,12 +8,15 @@
  */
 
 use OxidEsales\Eshop\Core\Field;
+
 use PHPUnit\Framework\MockObject\MockObject;
+
 use Wirecard\Oxid\Controller\Admin\Transaction\TransactionTabPostProcessing;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\TransactionHandler;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\Transaction;
+
 use Wirecard\PaymentSdk\BackendService;
 
 class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase

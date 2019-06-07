@@ -26,9 +26,7 @@
     [{/if}]
 
     [{if $data}]
-    <table class="wd-table">
       [{include file="table.tpl"}]
-    </table>
     [{include file="post_processing_buttons_row.tpl"}]
     [{else}]
     <table cellspacing="0" cellpadding="0" border="0" width="600">

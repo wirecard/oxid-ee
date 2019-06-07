@@ -1,3 +1,4 @@
+<table class="wd-table">
 [{if $data.head}]
   <thead>
   [{foreach from=$data.head item=cell}]
@@ -28,3 +29,5 @@
     [{/foreach}]
   </tfoot>
   [{/if}]
+</table>
+

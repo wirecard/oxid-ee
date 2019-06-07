@@ -510,9 +510,6 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
         $oXmlBasket = simplexml_load_string($oParentTransaction->getResponseXML());
         $oBasket->parseFromXml($oXmlBasket);
 
-        // for the rounding precision use either the value the merchant set for currency
-        // decimal precision or a fallback value
-
         $aItemsToAdd = self::_getItemsToAddToBasket($oBasket, $oXmlBasket, $aOrderItems);
 
         $oPostProcBasket = new Basket();

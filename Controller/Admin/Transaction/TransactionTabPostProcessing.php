@@ -10,13 +10,16 @@
 namespace Wirecard\Oxid\Controller\Admin\Transaction;
 
 use Exception;
+
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\PostProcessingHelper;
 use Wirecard\Oxid\Core\TransactionHandler;
 use Wirecard\Oxid\Model\Transaction;
+
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Config\Config;
 
@@ -267,23 +270,21 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @param array $aOrderItems
      *
-     * @throws StandardException
+     * @throws StandardException if all order items are zero
+     *
+     * @return void
      *
      * @since 1.2.0
      */
     private function _validateOrderItems($aOrderItems)
     {
-        $bAllItemsZero = true;
         foreach ($aOrderItems as $sArticleNumber => $iQuantity) {
             if ($iQuantity > 0) {
-                $bAllItemsZero = false;
-                break;
+                return;
             }
         }
 
-        if ($bAllItemsZero) {
-            throw new StandardException(Helper::translate('wd_text_generic_error'));
-        }
+        throw new StandardException(Helper::translate('wd_text_generic_error'));
     }
 
     /**

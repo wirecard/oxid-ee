@@ -18,9 +18,7 @@
 </form>
 
 [{if $data}]
-  <table class="wd-table">
   [{include file="table.tpl"}]
-  </table>
 [{elseif $emptyText}]
     <em>[{$emptyText}]</em>
 [{/if}]
