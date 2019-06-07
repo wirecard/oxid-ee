@@ -173,8 +173,7 @@ class OrderController extends OrderController_parent
         }
 
         $oOrder = oxNew(Order::class);
-        $sOrderId = Helper::getSessionChallenge();
-        $bIsOrderLoaded = $oOrder->load($sOrderId);
+        $bIsOrderLoaded = OrderHelper::loadOrderWithSessionChallenge($oOrder);
         $sWdPaymentRedirect = Registry::getRequest()->getRequestParameter('wdfinishedpayment');
         // necessary to prevent order being overwritten when consumer does not correctly finalise eps payment
         if ($bIsOrderLoaded && !$sWdPaymentRedirect) {
@@ -182,9 +181,7 @@ class OrderController extends OrderController_parent
                 'sess_challenge',
                 $this->getUtilsObjectInstance()->generateUID()
             );
-            $sOrderId = Helper::getSessionChallenge();
-            $oOrder->load($sOrderId);
-            $bIsOrderLoaded = $oOrder->load($sOrderId);
+            $bIsOrderLoaded = OrderHelper::loadOrderWithSessionChallenge($oOrder);
         }
         return $this->_determineNextStep($oOrder, $bIsOrderLoaded, $oPayment);
     }
