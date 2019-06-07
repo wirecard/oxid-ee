@@ -67,8 +67,8 @@
         </allowed_currencies>
         <httpuser_eur>16390-testing</httpuser_eur>
         <httppass_eur>3!3013=D3fD8X7</httppass_eur>
-        <maid_eur>7d7edecb-b008-4f05-9103-308c81cf2ea2</maid_eur>
-        <secret_eur>555d998b-15db-46a9-8f1f-d9bc3ec66b19</secret_eur>
+        <maid_eur>2048677d-57f4-44b0-8d67-9014c6631d5f</maid_eur>
+        <secret_eur>74bd2f0c-6d1b-4e9a-b278-abc34b83ab9f</secret_eur>
     </payment>
     <payment>
         <oxid>wdideal</oxid>

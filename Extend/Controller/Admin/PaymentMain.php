@@ -241,7 +241,7 @@ class PaymentMain extends PaymentMain_parent
      */
     private function _checkCurrencyConfigFields($aParams)
     {
-        $aOldCurrencyValue = $this->_getPaymentMethod()->oxpayments__allowed_currencies->value;
+        $aOldCurrencyValue = $this->_getPaymentMethod()->oxpayments__allowed_currencies->value ?? [];
         $aNewCurrencyValue = $aParams['oxpayments__allowed_currencies'];
 
         foreach ($aNewCurrencyValue as $sCurrency) {
@@ -278,7 +278,7 @@ class PaymentMain extends PaymentMain_parent
         foreach ($aRequiredFields as $sFieldNamePrefix) {
             $sFieldName = $sFieldNamePrefix . strtolower($sCurrency);
 
-            if (!isset($aParams[$sFieldName]) || empty($aParams[$sFieldName])) {
+            if (empty($aParams[$sFieldName])) {
                 return false;
             }
         }

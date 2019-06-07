@@ -190,25 +190,25 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
 
         // fields that are configurable per currency
         $aFields = [
-            'httpUser' => [
-                'fieldType' => 'text',
-                'dbFieldPrefix' => 'oxpayments__httpuser',
+            'httpUser_%s' => [
+                'type' => 'text',
+                'field' => 'oxpayments__httpuser_%s',
                 'title' => Helper::translate('wd_config_http_user'),
             ],
-            'httpPassword' => [
-                'fieldType' => 'text',
-                'dbFieldPrefix' => 'oxpayments__httppass',
+            'httpPassword_%s' => [
+                'type' => 'text',
+                'field' => 'oxpayments__httppass_%s',
                 'title' => Helper::translate('wd_config_http_password'),
             ],
-            'maid' => [
-                'fieldType' => 'text',
-                'dbFieldPrefix' => 'oxpayments__maid',
+            'maid_%s' => [
+                'type' => 'text',
+                'field' => 'oxpayments__maid_%s',
                 'title' => Helper::translate('wd_config_merchant_account_id'),
                 'description' => Helper::translate('wd_config_merchant_account_id_desc'),
             ],
-            'secret' => [
-                'fieldType' => 'text',
-                'dbFieldPrefix' => 'oxpayments__secret',
+            'secret_%s' => [
+                'type' => 'text',
+                'field' => 'oxpayments__secret_%s',
                 'title' => Helper::translate('wd_config_merchant_secret'),
                 'description' => Helper::translate('wd_config_merchant_secret_desc'),
             ],
@@ -221,10 +221,10 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
             ];
 
             foreach ($aFields as $sFieldName => $aConfigProps) {
-                $sConfigKey = $sFieldName . '_' . $sCurrency;
+                $sConfigKey = sprintf($sFieldName, $sCurrency);
                 $aFieldProps = [
-                    'type' => $aConfigProps['fieldType'],
-                    'field' => $aConfigProps['dbFieldPrefix'] . '_' . strtolower($sCurrency),
+                    'type' => $aConfigProps['type'],
+                    'field' => sprintf($aConfigProps['field'], strtolower($sCurrency)),
                     'title' => $aConfigProps['title'],
                 ];
 
