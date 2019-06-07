@@ -165,21 +165,6 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
      *
      * @since 1.2.0
      */
-    public function getMetaDataFieldNames()
-    {
-        return [
-            'trusted_shop',
-            'payolution_terms_url',
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @return array
-     *
-     * @since 1.2.0
-     */
     public function getPublicFieldNames()
     {
         return array_merge(
@@ -192,6 +177,8 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
                 'shippingCountries',
                 'billingCountries',
                 'billingShipping',
+                'trustedShop',
+                'payolutionTermsUrl',
             ]
         );
     }
@@ -209,6 +196,8 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
             'shipping_countries',
             'billing_countries',
             'billing_shipping',
+            'trusted_shop',
+            'payolution_terms_url',
         ];
     }
 
@@ -223,7 +212,8 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
 
         $oRequest = Registry::getRequest();
 
-        if (!$oRequest->getRequestParameter('trustedshop_checkbox')) {
+        if ($this->_oPayment->oxpayments__trusted_shop->value &&
+         !$oRequest->getRequestParameter('trustedshop_checkbox')) {
             throw new InputException('Trusted Shop terms were not accepted.');
         }
     }

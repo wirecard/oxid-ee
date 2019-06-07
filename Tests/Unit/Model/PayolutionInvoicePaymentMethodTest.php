@@ -54,6 +54,8 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
             'shippingCountries',
             'billingCountries',
             'billingShipping',
+            'trustedShop',
+            'payolutionTermsUrl',
         ], array_keys($aFields));
     }
 
@@ -71,6 +73,8 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
             'shippingCountries',
             'billingCountries',
             'billingShipping',
+            'trustedShop',
+            'payolutionTermsUrl',
         ], $aFieldNames);
     }
 
@@ -80,6 +84,8 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
             'shipping_countries',
             'billing_countries',
             'billing_shipping',
+            'trusted_shop',
+            'payolution_terms_url',
         ], $this->_oPaymentMethod->getMetaDataFieldNames());
     }
 
@@ -96,13 +102,5 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
     public function testOnBeforeTransactionCreationWithoutRequestParameter()
     {
         $this->_oPaymentMethod->onBeforeTransactionCreation();
-    }
-
-    public function testGetMetaDataFieldNames()
-    {
-        $this->assertEquals([
-            'trusted_shop',
-            'payolution_terms_url',
-        ], $this->_oPaymentMethod->getMetaDataFieldNames());
     }
 }
