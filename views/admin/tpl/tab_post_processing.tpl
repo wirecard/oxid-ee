@@ -28,8 +28,8 @@
     [{if $data}]
     <table class="wd-table">
       [{include file="table.tpl"}]
-      [{include file="post_processing_buttons_row.tpl"}]
     </table>
+    [{include file="post_processing_buttons_row.tpl"}]
     [{else}]
     <table cellspacing="0" cellpadding="0" border="0" width="600">
       <tr>
@@ -37,8 +37,8 @@
         <td><input type="text" name="amount" pattern="^[0-9]*[\.,]?[0-9]+$" value="[{$requestParameters.amount}]"
                    size="25"></td>
       </tr>
-      [{include file="post_processing_buttons_row.tpl"}]
     </table>
+    [{include file="post_processing_buttons_row.tpl"}]
     [{/if}]
   </form>
   [{else}]

@@ -103,8 +103,9 @@ class TransactionHandler
      *
      * @return array either [status => success] or [status => error, message => errorMessage]
      *
-     * @since 1.1.0
      * @throws Exception
+     *
+     * @since 1.1.0
      */
     private function _onActionResponse($oResponse)
     {

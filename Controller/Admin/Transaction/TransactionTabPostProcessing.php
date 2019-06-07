@@ -12,7 +12,6 @@ namespace Wirecard\Oxid\Controller\Admin\Transaction;
 use Exception;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
-
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\PostProcessingHelper;
@@ -203,8 +202,8 @@ class TransactionTabPostProcessing extends TransactionTab
         }
 
         $aOrderArticles = array_combine(
-            $oRequest->getRequestParameter('article-number'),
-            $oRequest->getRequestParameter('quantity')
+            $oRequest->getRequestParameter('article-number') ?? [],
+            $oRequest->getRequestParameter('quantity') ?? []
         );
 
         return [
