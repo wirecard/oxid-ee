@@ -144,8 +144,6 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
                     '1' => Helper::translate('wd_yes'),
                     '0' => Helper::translate('wd_no'),
                 ],
-                'title' => Helper::translate('wd_config_billing_shipping'),
-                'description' => Helper::translate('wd_config_billing_shipping_desc'),
                 'title' => Helper::translate('wd_config_trusted_shop_seal'),
             ],
             'payolutionTermsUrl' => [
