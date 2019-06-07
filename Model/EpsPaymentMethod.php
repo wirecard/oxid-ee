@@ -21,7 +21,7 @@ use Wirecard\Oxid\Core\Helper;
  *
  * @since 1.2.0
  */
-class EpsPaymentMethod extends PaymentMethod
+class EpsPaymentMethod extends SepaCreditTransferPaymentMethod
 {
     /**
      * @inheritdoc
@@ -134,19 +134,5 @@ class EpsPaymentMethod extends PaymentMethod
             'deleteCanceledOrder',
             'deleteFailedOrder',
         ]);
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @param string $sAction
-     *
-     * @return SepaCreditTransferPaymentMethod
-     *
-     * @since 1.2.0
-     */
-    public function getPostProcessingPaymentMethod($sAction)
-    {
-        return new SepaCreditTransferPaymentMethod();
     }
 }
