@@ -10,10 +10,12 @@
       "OXLNAME": "Test",
       "OXSTREET": "Tester Street",
       "OXSTREETNR": "1",
-      "OXCITY": "Berlin",
-      "OXCOUNTRYID": "a7c40f631fc920687.20179984",
-      "OXZIP": "10115",
-      "OXSAL": "MR"
+      "OXCITY": "Graz",
+      "OXCOUNTRYID": "a7c40f6320aeb2ec2.72885259",
+      "OXZIP": "8020",
+      "OXSAL": "MR",
+      "OXFON": "123456",
+      "OXBIRTHDATE": "1999-12-12"
     }
   ],
   "oxarticles": [
@@ -23,6 +25,12 @@
       "OXTITLE_1": "Test Article",
       "OXPRICE": 100.99,
       "OXSTOCK": 10
+    }
+  ],
+  "oxcountry": [
+    {
+      "OXID": "a7c40f6320aeb2ec2.72885259",
+      "OXACTIVE": "1"
     }
   ]
 }

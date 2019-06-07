@@ -32,6 +32,10 @@
     },
     "ideal": {
       "bank": "ING"
+    },
+    "ratepayInvoice": {
+      "dateOfBirth": "12/12/1999",
+      "phone": "123456"
     }
   }
 }

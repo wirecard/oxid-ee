@@ -48,6 +48,10 @@
       "bank": "//select[@class='form-control']",
       "nextStep": "//form/button[contains(@class, 'nextStep')]",
       "confirmTransaction": "//*[@id='data']/table/tbody/tr[2]/td/table/tbody/tr/td/table/tbody/tr/td/form/table/tbody/tr[3]/td[1]/input"
+    },
+    "ratepayInvoice": {
+      "dateOfBirth": "dateOfBirth",
+      "phone": "phone"
     }
   }
 }

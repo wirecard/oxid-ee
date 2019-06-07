@@ -74,9 +74,12 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
         foreach ($this->getMockData() as $table => $entries) {
             foreach ($entries as $fields) {
                 $columns = '`' . implode('`, `', array_keys($fields)) . '`';
-                $values = '\'' . implode('\', \'', array_values($fields)) . '\'';
+                $valuesInsert = '\'' . implode('\', \'', array_values($fields)) . '\'';
+                $valuesUpdate = implode(', ', array_map(function ($column) {
+                    return "`{$column}`=VALUES(`{$column}`)";
+                }, array_keys($fields)));
 
-                $this->executeSql("INSERT INTO `{$table}` ({$columns}) VALUES ({$values})");
+                $this->executeSql("INSERT INTO `{$table}` ({$columns}) VALUES ({$valuesInsert}) ON DUPLICATE KEY UPDATE {$valuesUpdate}");
             }
         }
     }
