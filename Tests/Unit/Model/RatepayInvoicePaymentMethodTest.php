@@ -230,9 +230,11 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
         $oBasketStub = $this->getMockBuilder(Basket::class)
             ->setMethods(['getBasketArticles'])
             ->getMock();
-        $oUserStub = $this->getMockBuilder(User::class)
-            ->setMethods(['getSelectedAddress'])
-            ->getMock();
+
+        $oUser = oxNew(User::class);
+        $oUser->load('testuser');
+        $oUser->oxuser__oxcountryid = new Field($sBillingCountryId);
+        $oUser->save();
         $oPayment = oxNew(Payment::class);
 
         // configure the payment
@@ -267,15 +269,11 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
         $oAddress = oxNew(Address::class);
         $oAddress->oxaddress__oxcountryid = new Field($sBillingCountryId);
 
-        $oUserStub
-            ->method('getSelectedAddress')
-            ->willReturn($oAddress);
-
         if ($sShippingCountryId) {
             $this->setSessionParam('deladrid', $sShippingCountryId);
         }
 
-        $this->getSession()->setUser($oUserStub);
+        $this->getSession()->setUser($oUser);
 
         $this->assertEquals($blExpected, $oPaymentMethodStub->isPaymentPossible());
     }
