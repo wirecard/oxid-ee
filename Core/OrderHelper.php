@@ -330,4 +330,19 @@ class OrderHelper
         $oSession->setVariable(self::PAY_ERROR_VARIABLE, self::PAY_ERROR_ID);
         $oSession->setVariable(self::PAY_ERROR_TEXT_VARIABLE, $sText);
     }
+
+    /**
+     * Loads order with session challenge
+     *
+     * @param Order $oOrder
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    public static function loadOrderWithSessionChallenge(&$oOrder)
+    {
+        $sOrderId = Helper::getSessionChallenge();
+        return $oOrder->load($sOrderId);
+    }
 }

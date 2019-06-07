@@ -52,6 +52,16 @@
     "ratepayInvoice": {
       "dateOfBirth": "dateOfBirth",
       "phone": "phone"
+    },
+    "eps": {
+      "bic": "bankname",
+      "submitBic": "selectionSubmit",
+      "id": "verfNr",
+      "submitLogin": "sbtnLogin",
+      "signPayment": "sbtnSign",
+      "finalize": "sbtnSignSingle",
+      "ok": "sbtnOk",
+      "goBackToOxid": "//*[@id='content']/div[4]/div/form/div[2]/input"
     }
   }
 }

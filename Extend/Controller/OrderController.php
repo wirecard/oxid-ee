@@ -108,6 +108,7 @@ class OrderController extends OrderController_parent
                 'oxdownloadableproductsagreement' => '0',
                 'oxserviceproductsagreement' => '0',
                 'wdtoken' => $sWdSessionToken,
+                'wdfinishedpayment' => true,
             ];
 
             if (Registry::getRequest()->getRequestParameter('redirectFromForm')) {
@@ -165,7 +166,6 @@ class OrderController extends OrderController_parent
     {
         $oSession = Registry::getSession();
         $oBasket = $oSession->getBasket();
-
         $oPayment = PaymentMethodHelper::getPaymentById($oBasket->getPaymentId());
 
         if (!$oPayment->isCustomPaymentMethod()) {
@@ -173,9 +173,16 @@ class OrderController extends OrderController_parent
         }
 
         $oOrder = oxNew(Order::class);
-        $sOrderId = Helper::getSessionChallenge();
-        $bIsOrderLoaded = $oOrder->load($sOrderId);
-
+        $bIsOrderLoaded = OrderHelper::loadOrderWithSessionChallenge($oOrder);
+        $sWdPaymentRedirect = Registry::getRequest()->getRequestParameter('wdfinishedpayment');
+        // necessary to prevent order being overwritten when consumer does not correctly finalise eps payment
+        if ($bIsOrderLoaded && !$sWdPaymentRedirect) {
+            Registry::getSession()->setVariable(
+                'sess_challenge',
+                $this->getUtilsObjectInstance()->generateUID()
+            );
+            $bIsOrderLoaded = OrderHelper::loadOrderWithSessionChallenge($oOrder);
+        }
         return $this->_determineNextStep($oOrder, $bIsOrderLoaded, $oPayment);
     }
 

@@ -81,6 +81,23 @@
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
     </payment>
     <payment>
+        <oxid>wdeps</oxid>
+        <oxactive>0</oxactive>
+        <oxtoamount>1000000</oxtoamount>
+        <oxdesc>Wirecard eps-Überweisung</oxdesc>
+        <oxdesc_1>Wirecard eps-Überweisung</oxdesc_1>
+        <oxsort>30</oxsort>
+        <wdoxidee_logo>eps.png</wdoxidee_logo>
+        <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
+        <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
+        <wdoxidee_maid>1f629760-1a66-4f83-a6b4-6a35620b4a6d</wdoxidee_maid>
+        <wdoxidee_secret>20c6a95c-e39b-4e6a-971f-52cfb347d359</wdoxidee_secret>
+        <wdoxidee_httpuser>16390-testing</wdoxidee_httpuser>
+        <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
+        <wdoxidee_descriptor>1</wdoxidee_descriptor>
+        <wdoxidee_additional_info>1</wdoxidee_additional_info>
+    </payment>
+    <payment>
         <oxid>wdpaypal</oxid>
         <oxactive>0</oxactive>
         <oxfromamount>0</oxfromamount>
@@ -204,4 +221,5 @@
         <wdoxidee_httpuser>16390-testing</wdoxidee_httpuser>
         <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
     </payment>
+
 </payments>
