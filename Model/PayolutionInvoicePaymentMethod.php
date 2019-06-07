@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Model;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\PayolutionInvoiceTransaction;
@@ -107,7 +108,34 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
                 'title' => Helper::translate('wd_config_delete_failure_order'),
                 'description' => Helper::translate('wd_config_delete_failure_order_desc'),
             ],
+            'shippingCountries' => [
+                'type' => 'multiselect',
+                'field' => 'oxpayments__shipping_countries',
+                'options' => PaymentMethodHelper::getCountryOptions(),
+                'title' => Helper::translate('wd_config_shipping_countries'),
+                'description' => Helper::translate('wd_config_shipping_countries_desc'),
+                'required' => true,
+            ],
+            'billingCountries' => [
+                'type' => 'multiselect',
+                'field' => 'oxpayments__billing_countries',
+                'options' => PaymentMethodHelper::getCountryOptions(),
+                'title' => Helper::translate('wd_config_billing_countries'),
+                'description' => Helper::translate('wd_config_billing_countries_desc'),
+                'required' => true,
+            ],
+            'billingShipping' => [
+                'type' => 'select',
+                'field' => 'oxpayments__billing_shipping',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
+                ],
+                'title' => Helper::translate('wd_config_billing_shipping'),
+                'description' => Helper::translate('wd_config_billing_shipping_desc'),
+            ],
         ];
+
         return parent::getConfigFields() + $aAdditionalFields;
     }
 
@@ -122,7 +150,31 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
     {
         return array_merge(
             parent::getPublicFieldNames(),
-            ['descriptor', 'additionalInfo', 'deleteCanceledOrder', 'deleteFailedOrder']
+            [
+                'descriptor',
+                'additionalInfo',
+                'deleteCanceledOrder',
+                'deleteFailedOrder',
+                'shippingCountries',
+                'billingCountries',
+                'billingShipping',
+            ]
         );
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public function getMetaDataFieldNames()
+    {
+        return [
+            'shipping_countries',
+            'billing_countries',
+            'billing_shipping',
+        ];
     }
 }
