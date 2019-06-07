@@ -9,16 +9,14 @@
 
 namespace Wirecard\Oxid\Controller\Admin\Transaction;
 
+use Exception;
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
-use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\PostProcessingHelper;
 use Wirecard\Oxid\Core\TransactionHandler;
-use Wirecard\Oxid\Model\PaymentMethod;
-use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
-use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Config\Config;
@@ -179,7 +177,7 @@ class TransactionTabPostProcessing extends TransactionTab
             'emptyText' => Helper::translate('wd_text_no_further_operations_possible'),
         ]);
 
-        if ($this->shouldUseOrderItems()) {
+        if (PostProcessingHelper::shouldUseOrderItems($this->_oTransaction)) {
             $this->_addOrderItemsToViewData();
         }
 
@@ -210,10 +208,8 @@ class TransactionTabPostProcessing extends TransactionTab
         );
 
         return [
-            self::KEY_AMOUNT =>
-                $aOrderArticles
-                    ? null
-                    : Helper::getFloatFromString($oRequest->getRequestParameter(self::KEY_AMOUNT) ?? ''),
+            self::KEY_AMOUNT => $aOrderArticles ? null
+                : Helper::getFloatFromString($oRequest->getRequestParameter(self::KEY_AMOUNT) ?? ''),
             self::KEY_ACTION => $aActionConfig,
             self::KEY_ORDER_ITEMS => $aOrderArticles,
         ];
@@ -261,7 +257,7 @@ class TransactionTabPostProcessing extends TransactionTab
         $sTransactionId = $this->_oTransaction->wdoxidee_ordertransactions__transactionid->value;
         $fMaxAmount = $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId);
 
-        if (!$this->_isPositiveBelowMax($fAmount, $fMaxAmount)) {
+        if (!Helper::isPositiveBelowMax($fAmount, $fMaxAmount)) {
             throw new StandardException(Helper::translate('wd_total_amount_not_in_range_text'));
         }
     }
@@ -306,22 +302,6 @@ class TransactionTabPostProcessing extends TransactionTab
     }
 
     /**
-     * Checks that the amount is in the range of the transaction
-     *
-     * @param float $fAmount
-     * @param float $fMaxAmount
-     *
-     * @return boolean true if $fAmount is in the specified range
-     *
-     * @since 1.1.0
-     */
-    private function _isPositiveBelowMax($fAmount, $fMaxAmount)
-    {
-        return $fAmount > 0 && $fMaxAmount > 0 &&
-            ((bcsub($fAmount, $fMaxAmount, Helper::BCSUB_SCALE) / $fMaxAmount) < Helper::FLOATING_POINT_EPSILON);
-    }
-
-    /**
      * Processes a request and returns a state array if it is valid.
      *
      * @param array $aRequestParameters
@@ -347,7 +327,7 @@ class TransactionTabPostProcessing extends TransactionTab
 
             // execute the callback method defined in the "action" request parameter
             $aState = $this->_handleRequestAction($sActionTitle, $sTransactionAmount, $aOrderItems);
-        } catch (StandardException $oException) {
+        } catch (Exception $oException) {
             $aState[self::KEY_MESSAGE] = $oException->getMessage();
             $aState[self::KEY_TYPE] = self::KEY_ERROR;
             $this->_oLogger->error($oException->getMessage(), [$oException]);
@@ -383,36 +363,13 @@ class TransactionTabPostProcessing extends TransactionTab
             return [];
         }
 
-        $aPossibleOperations = $this->_filterPostProcessingActions($aPossibleOperations, $oPaymentMethod);
+        $aPossibleOperations = PostProcessingHelper::filterPostProcessingActions(
+            $aPossibleOperations,
+            $oPaymentMethod,
+            $this->_oTransaction
+        );
 
         return $this->_getTranslatedPostProcessingActions($aPossibleOperations);
-    }
-
-    /**
-     * Filters the returned post processing actions for a payment method.
-     * It is possible to do payment method specific modifications in this method.
-     *
-     * @param array         $aPossibleOperations
-     * @param PaymentMethod $oPaymentMethod
-     *
-     * @return array
-     *
-     * @since 1.1.0
-     */
-    private function _filterPostProcessingActions($aPossibleOperations, $oPaymentMethod)
-    {
-        foreach ($aPossibleOperations as $sActionKey => $sDisplayValue) {
-            $oTransaction = $oPaymentMethod->getPostProcessingTransaction($sActionKey, $this->_oTransaction);
-            $oPayment = PaymentMethodHelper::getPaymentById(
-                PaymentMethod::getOxidFromSDKName($oTransaction->getConfigKey())
-            );
-
-            if (!$oPayment->oxpayments__oxactive->value) {
-                unset($aPossibleOperations[$sActionKey]);
-            }
-        }
-
-        return $aPossibleOperations;
     }
 
     /**
@@ -456,6 +413,7 @@ class TransactionTabPostProcessing extends TransactionTab
      * @return array
      *
      * @throws StandardException
+     * @throws \Exception
      *
      * @since 1.1.0
      */
@@ -535,21 +493,6 @@ class TransactionTabPostProcessing extends TransactionTab
     }
 
     /**
-     * Returns whether to use order items or amount in the panel
-     *
-     * @return bool
-     *
-     * @since 1.2.0
-     */
-    public function shouldUseOrderItems()
-    {
-        return in_array($this->_oTransaction->getPaymentType(), [
-            RatepayInvoicePaymentMethod::getName(true),
-            PayolutionInvoicePaymentMethod::getName(true),
-        ]);
-    }
-
-    /**
      * Adds the order items to the view data
      *
      * @throws StandardException
@@ -566,61 +509,8 @@ class TransactionTabPostProcessing extends TransactionTab
                     ['text' => Helper::translate('wd_amount')],
                     ['text' => Helper::translate('wd_text_quantity')],
                 ],
-                "body" => $this->_getMappedTableOrderItems(
-                    PostProcessingHelper::getOrderItems($this->_oTransaction)
-                ),
+                "body" => PostProcessingHelper::getMappedTableOrderItems($this->_oTransaction),
             ],
         ]);
-    }
-
-    /**
-     * Map order items to tableable items
-     *
-     * @param array $aOrderItems
-     *
-     * @return array
-     *
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     *
-     * @since 1.2.0
-     */
-    private function _getMappedTableOrderItems($aOrderItems)
-    {
-        $this->_recalculateQuantity($aOrderItems);
-        $aMappedItems = array_map(function ($aOrderItem) {
-
-            $sInputFileds = '<input type="number" value="' . $aOrderItem['quantity'] . '" name="quantity[]" min="0"' .
-                ' max="' . $aOrderItem['quantity'] . '"/>' .
-                '<input type="hidden" value="' . $aOrderItem['article-number'] . '" name="article-number[]" />';
-
-            return [
-                ['text' => $aOrderItem['article-number']],
-                ['text' => $aOrderItem['name']],
-                ['text' => $aOrderItem['amount']['value']],
-                ['text' => $sInputFileds],
-            ];
-        }, $aOrderItems);
-        return $aMappedItems;
-    }
-
-    /**
-     * @param array $aOrderItems
-     *
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
-     *
-     * @since 1.2.0
-     */
-    private function _recalculateQuantity(&$aOrderItems)
-    {
-        $aChildTransactions = $this->_oTransaction->getChildTransactions();
-
-        foreach ($aChildTransactions as $oChildTransaction) {
-            PostProcessingHelper::recalculateOrderItems(
-                $aOrderItems,
-                PostProcessingHelper::getOrderItems($oChildTransaction)
-            );
-        }
     }
 }

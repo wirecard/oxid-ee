@@ -510,12 +510,46 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
         $oXmlBasket = simplexml_load_string($oParentTransaction->getResponseXML());
         $oBasket->parseFromXml($oXmlBasket);
 
-        $fAmount = 0;
-
         // for the rounding precision use either the value the merchant set for currency
         // decimal precision or a fallback value
+
+        $aItemsToAdd = self::_getItemsToAddToBasket($oBasket, $oXmlBasket, $aOrderItems);
+
+        $oPostProcBasket = new Basket();
+        $oPostProcBasket->setVersion(RatepayInvoiceTransaction::class);
+
         $iRoundPrecision = Helper::getCurrencyRoundPrecision($oBasket->getTotalAmount()->getCurrency());
 
+        $fAmount = 0;
+        foreach ($aItemsToAdd as $oBasketItem) {
+            /**
+             * @var $oBasketItem Item
+             */
+            $oPostProcBasket->add($oBasketItem);
+            $fAmount = round(
+                bcadd(
+                    $fAmount,
+                    $oBasketItem->getPrice()->getValue() * $oBasketItem->getQuantity(),
+                    Helper::BCSUB_SCALE
+                ),
+                $iRoundPrecision
+            );
+        }
+
+        return [$oPostProcBasket, $fAmount];
+    }
+
+    /**
+     * @param Basket            $oBasket
+     * @param \SimpleXMLElement $oXmlBasket
+     * @param array             $aOrderItems
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    private static function _getItemsToAddToBasket($oBasket, $oXmlBasket, $aOrderItems)
+    {
         $aItemsToAdd = [];
 
         foreach ($aOrderItems as $sArticleNumber => $iQuantity) {
@@ -523,38 +557,43 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
                 continue;
             }
 
-            foreach ($oBasket as $iIndex => $oBasketItem) {
-
-                /**
-                 * @var $oBasketItem Item
-                 */
-                if ($oBasketItem->getArticleNumber() == $sArticleNumber) {
-                    $oBasketItem->setQuantity($iQuantity);
-
-                    //set Tax-rate ourselves. paymentSdk xml parser does not do that
-                    $fTaxRate = (float) $oXmlBasket->{'order-items'}->children()[$iIndex]->{'tax-rate'};
-                    $oBasketItem->setTaxRate($fTaxRate);
-
-                    $fAmount = round(
-                        bcadd(
-                            $fAmount,
-                            $oBasketItem->getPrice()->getValue() * $iQuantity,
-                            Helper::BCSUB_SCALE),
-                        $iRoundPrecision
-                    );
-
-                    $aItemsToAdd[] = $oBasketItem;
-                }
+            $oItem = self::_getRecalculatedItem($oBasket, $oXmlBasket, $sArticleNumber, $iQuantity);
+            if (!is_null($oItem)) {
+                $aItemsToAdd[] = $oItem;
             }
         }
 
-        $oPostProcessingBasket = new Basket();
-        $oPostProcessingBasket->setVersion(RatepayInvoiceTransaction::class);
+        return $aItemsToAdd;
+    }
 
-        foreach ($aItemsToAdd as $oBasketItem) {
-            $oPostProcessingBasket->add($oBasketItem);
+    /**
+     * @param Basket            $oBasket
+     * @param \SimpleXMLElement $oXmlBasket
+     * @param string            $sArticleNumber
+     * @param int               $iQuantity
+     *
+     * @return Item|null
+     *
+     * @since 1.2.0
+     */
+    private static function _getRecalculatedItem($oBasket, $oXmlBasket, $sArticleNumber, $iQuantity)
+    {
+        foreach ($oBasket as $iIndex => $oBasketItem) {
+
+            /**
+             * @var $oBasketItem Item
+             */
+            if ($oBasketItem->getArticleNumber() == $sArticleNumber) {
+                $oBasketItem->setQuantity($iQuantity);
+
+                //set Tax-rate ourselves. paymentSdk xml parser does not do that
+                $fTaxRate = (float) $oXmlBasket->{'order-items'}->children()[$iIndex]->{'tax-rate'};
+                $oBasketItem->setTaxRate($fTaxRate);
+
+                return $oBasketItem;
+            }
         }
 
-        return [$oPostProcessingBasket, $fAmount];
+        return null;
     }
 }
