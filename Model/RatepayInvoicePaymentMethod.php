@@ -19,7 +19,7 @@ use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Extend\Model\Order;
-
+use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Entity\Basket;
@@ -509,11 +509,20 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
 
         $oXmlBasket = simplexml_load_string($oParentTransaction->getResponseXML());
         $oBasket->parseFromXml($oXmlBasket);
-        $oBasket->setVersion(RatepayInvoiceTransaction::class);
 
         $fAmount = 0;
 
+        // for the rounding precision use either the value the merchant set for currency
+        // decimal precision or a fallback value
+        $iRoundPrecision = Helper::getCurrencyRoundPrecision($oBasket->getTotalAmount()->getCurrency());
+
+        $aItemsToAdd = [];
+
         foreach ($aOrderItems as $sArticleNumber => $iQuantity) {
+            if ($iQuantity < 1) {
+                continue;
+            }
+
             foreach ($oBasket as $iIndex => $oBasketItem) {
 
                 /**
@@ -526,11 +535,26 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
                     $fTaxRate = (float) $oXmlBasket->{'order-items'}->children()[$iIndex]->{'tax-rate'};
                     $oBasketItem->setTaxRate($fTaxRate);
 
-                    $fAmount += $oBasketItem->getPrice()->getValue() * $iQuantity;
+                    $fAmount = round(
+                        bcadd(
+                            $fAmount,
+                            $oBasketItem->getPrice()->getValue() * $iQuantity,
+                            Helper::BCSUB_SCALE),
+                        $iRoundPrecision
+                    );
+
+                    $aItemsToAdd[] = $oBasketItem;
                 }
             }
         }
 
-        return [$oBasket, $fAmount];
+        $oPostProcessingBasket = new Basket();
+        $oPostProcessingBasket->setVersion(RatepayInvoiceTransaction::class);
+
+        foreach ($aItemsToAdd as $oBasketItem) {
+            $oPostProcessingBasket->add($oBasketItem);
+        }
+
+        return [$oPostProcessingBasket, $fAmount];
     }
 }

@@ -11,16 +11,15 @@ namespace Wirecard\Oxid\Controller\Admin\Transaction;
 
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
-
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Core\PostProcessingHelper;
 use Wirecard\Oxid\Core\TransactionHandler;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
 use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
-
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Config\Config;
 
@@ -567,8 +566,8 @@ class TransactionTabPostProcessing extends TransactionTab
                     ['text' => Helper::translate('wd_amount')],
                     ['text' => Helper::translate('wd_text_quantity')],
                 ],
-                "body" => self::_getMappedTableOrderItems(
-                    $this->_oTransaction->getBasket()->mappedProperties()["order-item"]
+                "body" => $this->_getMappedTableOrderItems(
+                    PostProcessingHelper::getOrderItems($this->_oTransaction)
                 ),
             ],
         ]);
@@ -581,10 +580,14 @@ class TransactionTabPostProcessing extends TransactionTab
      *
      * @return array
      *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     *
      * @since 1.2.0
      */
-    private static function _getMappedTableOrderItems($aOrderItems)
+    private function _getMappedTableOrderItems($aOrderItems)
     {
+        $this->_recalculateQuantity($aOrderItems);
         $aMappedItems = array_map(function ($aOrderItem) {
 
             $sInputFileds = '<input type="number" value="' . $aOrderItem['quantity'] . '" name="quantity[]" min="0"' .
@@ -599,5 +602,25 @@ class TransactionTabPostProcessing extends TransactionTab
             ];
         }, $aOrderItems);
         return $aMappedItems;
+    }
+
+    /**
+     * @param array $aOrderItems
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     *
+     * @since 1.2.0
+     */
+    private function _recalculateQuantity(&$aOrderItems)
+    {
+        $aChildTransactions = $this->_oTransaction->getChildTransactions();
+
+        foreach ($aChildTransactions as $oChildTransaction) {
+            PostProcessingHelper::recalculateOrderItems(
+                $aOrderItems,
+                PostProcessingHelper::getOrderItems($oChildTransaction)
+            );
+        }
     }
 }

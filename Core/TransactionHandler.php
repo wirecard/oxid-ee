@@ -69,6 +69,8 @@ class TransactionHandler
      *
      * @return array either [status => success] or [status => error, message => errorMessage]
      *
+     * @throws Exception
+     *
      * @since 1.1.0
      */
     public function processAction($oParentTransaction, $sActionTitle, $fAmount = null, $aOrderItems = null)
@@ -102,6 +104,7 @@ class TransactionHandler
      * @return array either [status => success] or [status => error, message => errorMessage]
      *
      * @since 1.1.0
+     * @throws Exception
      */
     private function _onActionResponse($oResponse)
     {
@@ -122,6 +125,8 @@ class TransactionHandler
      * @param SuccessResponse $oResponse
      *
      * @return array
+     *
+     * @throws Exception
      *
      * @since 1.1.0
      */
@@ -185,6 +190,9 @@ class TransactionHandler
      *
      * @param SuccessResponse $oResponse
      *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     *
      * @since 1.1.0
      */
     private function _updateParentTransactionStateIfNecessary($oResponse)
@@ -209,6 +217,9 @@ class TransactionHandler
      *
      * @return float
      *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     *
      * @since 1.1.0
      */
     public function getTransactionMaxAmount($sTransactionId)
@@ -223,7 +234,7 @@ class TransactionHandler
 
         $sDbIdentifier = $oDb->quoteIdentifier('wdoxidee_ordertransactions');
 
-        $sDbQuery = "SELECT SUM(amount) AS childTransactionsTotalAmount FROM {$sDbIdentifier}
+        $sDbQuery = "SELECT SUM(`amount`) AS childTransactionsTotalAmount FROM {$sDbIdentifier}
                         WHERE PARENTTRANSACTIONID = ?";
 
         $aQueryArgs = [$sTransactionId];
