@@ -13,7 +13,6 @@ use Exception;
 
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Core\Exception\InputException;
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
@@ -74,20 +73,11 @@ class OrderController extends OrderController_parent
      */
     public function init()
     {
-        $oSession = Registry::getSession();
-
-        try {
-            $oPaymentMethod = PaymentMethodFactory::create($oSession->getBasket()->getPaymentId());
-            $oPaymentMethod->onBeforeOrderCreation();
-        } catch (InputException $oException) {
-            OrderHelper::setSessionPaymentError($oException->getMessage());
-
-            $sRedirectUrl = Registry::getConfig()->getShopHomeUrl() . 'cl=payment';
-            return Registry::getUtils()->redirect($sRedirectUrl);
-        }
-
         parent::init();
 
+        $this->_onBeforeOrderCreation();
+
+        $oSession = Registry::getSession();
         $sWdPaymentRedirect = Registry::getRequest()->getRequestParameter('wdpayment');
         $sWdSessionToken = $oSession->getVariable('wdtoken');
 
@@ -122,6 +112,34 @@ class OrderController extends OrderController_parent
         }
 
         return true;
+    }
+
+    /**
+     * Runs the payment method's `onBeforeOrderCreation` callback and shows a potential error message to the user.
+     *
+     * @return null
+     *
+     * @since 1.2.0
+     */
+    private function _onBeforeOrderCreation()
+    {
+        $oSession = Registry::getSession();
+        $oPayment = $this->getPayment();
+
+        if (!$oPayment || !$oPayment->isCustomPaymentMethod()) {
+            return;
+        }
+
+        try {
+            $oPaymentMethod = PaymentMethodFactory::create($oSession->getBasket()->getPaymentId());
+            $oPaymentMethod->onBeforeOrderCreation();
+        } catch (Exception $oException) {
+            OrderHelper::setSessionPaymentError($oException->getMessage());
+
+            $sRedirectUrl = Registry::getConfig()->getShopHomeUrl() . 'cl=payment';
+
+            return Registry::getUtils()->redirect($sRedirectUrl);
+        }
     }
 
     /**

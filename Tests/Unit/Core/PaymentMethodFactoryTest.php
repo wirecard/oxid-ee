@@ -49,7 +49,7 @@ class PaymentMethodFactoryTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @expectedException \OxidEsales\Eshop\Core\Exception\StandardException
+     * @expectedException \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function testInvalidPaymentMethod()
     {
