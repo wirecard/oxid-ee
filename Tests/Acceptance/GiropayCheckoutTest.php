@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\GiropayPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\GiropayPaymentMethod;
 
 /**
  * Acceptance tests for the giropay checkout flow.
@@ -45,7 +45,7 @@ class GiropayCheckoutTest extends CheckoutTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->getPaymentMethodName()
+            $this->paymentMethod::getName()
         ));
         $this->type(
             $this->getLocator('external.giropay.bic'),

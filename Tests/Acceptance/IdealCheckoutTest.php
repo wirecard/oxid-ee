@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\IdealPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\IdealPaymentMethod;
 
 /**
  * Acceptance tests for the iDEAL checkout flow.
@@ -45,7 +45,7 @@ class IdealCheckoutTest extends CheckoutTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->getPaymentMethodName()
+            $this->paymentMethod::getName()
         ));
         $this->select(
             $this->getLocator('external.ideal.bank'),

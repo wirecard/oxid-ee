@@ -7,7 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Model;
+namespace Wirecard\Oxid\Model\PaymentMethod;
 
 use OxidEsales\Eshop\Core\Exception\StandardException;
 use OxidEsales\Eshop\Core\Registry;
@@ -73,7 +73,7 @@ abstract class PaymentMethod
             throw new StandardException("payment method name not defined: " . get_class());
         }
 
-        $this->_oPayment = PaymentMethodHelper::getPaymentById(self::getName(true));
+        $this->_oPayment = PaymentMethodHelper::getPaymentById(self::getName());
     }
 
     /**
@@ -133,23 +133,16 @@ abstract class PaymentMethod
     }
 
     /**
-     * Get the payment methods name
-     *
-     * @param bool $bForOxid
+     * Get the payment methods name used in OXID
      *
      * @return string
      *
-     * @since 1.0.0
+     * @since 1.2.0
      */
-    public static function getName($bForOxid = false)
+    public static function getName()
     {
         $oChildClass = get_called_class();
-
-        if ($bForOxid) {
-            return self::OXID_NAME_PREFIX . $oChildClass::$_sName;
-        }
-
-        return $oChildClass::$_sName;
+        return self::OXID_NAME_PREFIX . $oChildClass::$_sName;
     }
 
     /**

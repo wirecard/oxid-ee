@@ -7,31 +7,39 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Model;
+/**
+ * Shop System Plugins:
+ * - Terms of Use can be found under:
+ * https://github.com/wirecard/oxid-ee/blob/master/_TERMS_OF_USE
+ * - License can be found under:
+ * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
+ */
 
-use OxidEsales\Eshop\Core\Registry;
+namespace Wirecard\Oxid\Model\PaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use Wirecard\PaymentSdk\Entity\BankAccount;
-use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
+use Wirecard\PaymentSdk\Entity\IdealBic;
+use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 use Wirecard\Oxid\Core\Helper;
 
+use OxidEsales\Eshop\Core\Registry;
+
 /**
- * Payment method implementation for giropay.
+ * Payment method implementation for iDEAL
  *
  * @since 1.2.0
  */
-class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
+class IdealPaymentMethod extends SepaCreditTransferPaymentMethod
 {
     /**
      * @inheritdoc
      *
      * @since 1.2.0
      */
-    protected static $_sName = 'giropay';
+    protected static $_sName = "ideal";
 
     /**
      * @inheritdoc
@@ -41,6 +49,24 @@ class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
      * @since 1.2.0
      */
     protected static $_bMerchantOnly = false;
+
+    /**
+     *
+     * @since 1.2.0
+     */
+    private $_aBankOptions = [];
+
+    /**
+     * IdealPaymentMethod constructor.
+     *
+     * @since 1.2.0
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->_aBankOptions = $this->getBanks();
+    }
 
     /**
      * @inheritdoc
@@ -54,12 +80,13 @@ class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
         $oConfig = parent::getConfig();
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
-            GiropayTransaction::NAME,
+            IdealTransaction::NAME,
             $this->_oPayment->oxpayments__wdoxidee_maid->value,
             $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
 
         $oConfig->add($oPaymentMethodConfig);
+
         return $oConfig;
     }
 
@@ -72,25 +99,7 @@ class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
      */
     public function getTransaction()
     {
-        return new GiropayTransaction();
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @param GiropayTransaction $oTransaction
-     * @param Order              $oOrder
-     *
-     * @since 1.2.0
-     */
-    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
-    {
-        $oBankAccount = new BankAccount();
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
-
-        $oBankAccount->setBic($aDynvalues['bic'] ?? '');
-        $oTransaction->setBankAccount($oBankAccount);
+        return new IdealTransaction();
     }
 
     /**
@@ -158,12 +167,26 @@ class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
     public function getCheckoutFields()
     {
         return [
-            'bic' => [
-                'type' => 'text',
-                'title' => Helper::translate('wd_bic'),
-                'required' => true,
+            'bank' => [
+                'type' => 'select',
+                'options' => $this->_aBankOptions,
+                'title' => Helper::translate('wd_ideal_legend'),
             ],
         ];
+    }
+
+    /**
+     * Returns array for bank select options
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public function getBanks()
+    {
+        //IdealBic extends Enum class and contains const variables which represent bank options.
+        //toArray() combines all const variables from IdealBic and converts them to array.
+        return IdealBic::toArray();
     }
 
     /**
@@ -181,5 +204,21 @@ class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
             'deleteCanceledOrder',
             'deleteFailedOrder',
         ]);
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @param IdealTransaction $oTransaction
+     * @param Order            $oOrder
+     *
+     * @since 1.2.0
+     */
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+
+        $oTransaction->setBic($this->_aBankOptions[$aDynvalues['bank']]);
     }
 }

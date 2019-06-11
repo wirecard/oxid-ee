@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\SepaDirectDebitPaymentMethod;
 
 /**
  * Acceptance tests for the SEPA Direct Debit checkout flow.
@@ -63,7 +63,7 @@ class SepaDirectDebitCheckoutTest extends CheckoutTestCase
     {
         $this->executeSql("UPDATE `oxpayments`
             SET `WDOXIDEE_BIC` = '1'
-            WHERE `OXID` = '{$this->getPaymentMethodName()}'");
+            WHERE `OXID` = '{$this->paymentMethod::getName()}'");
     }
 
     public function goThroughCheckout()
@@ -81,7 +81,7 @@ class SepaDirectDebitCheckoutTest extends CheckoutTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->getPaymentMethodName()
+            $this->paymentMethod::getName()
         ));
         $this->type(
             $this->getLocator('external.sepadd.accountHolder'),

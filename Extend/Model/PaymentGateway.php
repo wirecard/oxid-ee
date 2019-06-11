@@ -23,9 +23,9 @@ use Psr\Log\LoggerInterface;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
-use Wirecard\Oxid\Model\PaymentMethod;
-use Wirecard\Oxid\Model\PaypalPaymentMethod;
-use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaypalPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\RatepayInvoicePaymentMethod;
 
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -316,7 +316,7 @@ class PaymentGateway extends BaseModel
         $sMaid = $oPayment->oxpayments__wdoxidee_maid->value;
         $sDeviceId = Helper::createDeviceFingerprint($sMaid, $sSessionId);
 
-        if ($oPayment->oxpayments__oxid->value === RatepayInvoicePaymentMethod::getName(true)) {
+        if ($oPayment->oxpayments__oxid->value === RatepayInvoicePaymentMethod::getName()) {
             $sDeviceId = Registry::getSession()->getVariable(RatepayInvoicePaymentMethod::UNIQUE_TOKEN_VARIABLE);
         }
 

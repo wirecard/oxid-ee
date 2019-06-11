@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\RatepayInvoicePaymentMethod;
 
 /**
  * Acceptance tests for the Ratepay Invoice checkout flow.
@@ -53,7 +53,7 @@ class RatepayInvoiceCheckoutTest extends CheckoutTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->getPaymentMethodName()
+            $this->paymentMethod::getName()
         ));
         $this->type(
             $this->getLocator('external.ratepayInvoice.dateOfBirth'),

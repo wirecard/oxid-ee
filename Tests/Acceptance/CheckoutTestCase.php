@@ -50,7 +50,7 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     public function activatePaymentMethod()
     {
         $this->executeSql("UPDATE `oxpayments` SET `OXACTIVE` = '1'
-            WHERE `OXID` = '{$this->getPaymentMethodName()}'");
+            WHERE `OXID` = '{$this->paymentMethod::getName()}'");
     }
 
     /**
@@ -59,7 +59,7 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     public function setPaymentActionPurchase()
     {
         $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_PAY .
-            "' WHERE `OXID` = '{$this->getPaymentMethodName()}'");
+            "' WHERE `OXID` = '{$this->paymentMethod::getName()}'");
     }
 
     /**
@@ -68,7 +68,7 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     public function setPaymentActionAuthorize()
     {
         $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_RESERVE .
-            "' WHERE `OXID` = '{$this->getPaymentMethodName()}'");
+            "' WHERE `OXID` = '{$this->paymentMethod::getName()}'");
     }
 
     /**
@@ -134,7 +134,7 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->getPaymentMethodName()
+            $this->paymentMethod::getName()
         ));
         $this->continueToNextStep();
 

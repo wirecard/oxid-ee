@@ -17,7 +17,7 @@ use OxidEsales\Eshop\Core\DbMetaDataHandler;
 
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Transaction;
-use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\SepaDirectDebitPaymentMethod;
 
 /**
  * Class handles module behaviour on shop installation events
@@ -237,7 +237,7 @@ class OxidEeEvents
 
         // insert payment method
         $bIsInserted = DatabaseHelper::insertRowIfNotExists(self::PAYMENT_TABLE, $aKeyValue, $sQuery);
-        if ((string) $oPayment->oxid === SepaDirectDebitPaymentMethod::getName(true) && $bIsInserted) {
+        if ((string) $oPayment->oxid === SepaDirectDebitPaymentMethod::getName() && $bIsInserted) {
             self::_insertSepaMandate();
         }
 
@@ -293,10 +293,10 @@ class OxidEeEvents
     {
         $sSepaMandate = self::_prepareSepaMandate(0);
         $sSepaMandate1 = self::_prepareSepaMandate(1);
-        $sPaymentId = SepaDirectDebitPaymentMethod::getName(true);
-        $sQuery = "UPDATE oxpayments SET `WDOXIDEE_SEPAMANDATECUSTOM` = '$sSepaMandate', 
-                                         `WDOXIDEE_SEPAMANDATECUSTOM_1` = '$sSepaMandate1' 
-                   WHERE `OXID` LIKE " . "'" . $sPaymentId . "'";
+
+        $sPaymentId = SepaDirectDebitPaymentMethod::getName();
+        $sQuery = "UPDATE oxpayments SET `WDOXIDEE_SEPAMANDATECUSTOM` = '$sSepaMandate', `WDOXIDEE_SEPAMANDATECUSTOM_1`
+            = '$sSepaMandate1' WHERE `OXID` LIKE " . "'" . $sPaymentId . "'";
         self::$_oDb->execute($sQuery);
     }
 

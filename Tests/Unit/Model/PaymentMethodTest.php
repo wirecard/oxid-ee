@@ -7,7 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use Wirecard\Oxid\Model\PaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaymentMethod;
 
 class PaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 {

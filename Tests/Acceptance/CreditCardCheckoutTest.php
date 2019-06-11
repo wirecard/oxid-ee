@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
 
 /**
  * Acceptance tests for the Credit Card checkout flow.
@@ -65,14 +65,14 @@ class CreditCardCheckoutTest extends CheckoutTestCase
     {
         $this->executeSql("UPDATE `oxpayments`
             SET `WDOXIDEE_MAID` = '', `WDOXIDEE_SECRET` = ''
-            WHERE `OXID` = '{$this->getPaymentMethodName()}'");
+            WHERE `OXID` = '{$this->paymentMethod::getName()}'");
     }
 
     private function forceNonThreeD()
     {
         $this->executeSql("UPDATE `oxpayments`
             SET `WDOXIDEE_THREE_D_MAID` = '', `WDOXIDEE_THREE_D_SECRET` = ''
-            WHERE `OXID` = '{$this->getPaymentMethodName()}'");
+            WHERE `OXID` = '{$this->paymentMethod::getName()}'");
     }
 
     public function goThroughCheckout()
@@ -90,7 +90,7 @@ class CreditCardCheckoutTest extends CheckoutTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->getPaymentMethodName()
+            $this->paymentMethod::getName()
         ));
         $this->continueToNextStep();
 

@@ -7,12 +7,14 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Exception\InputException;
 use OxidEsales\Eshop\Core\Field;
-use Wirecard\Oxid\Extend\Model\Payment;
-use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
+
+use Wirecard\Oxid\Model\PaymentMethod\PayolutionInvoicePaymentMethod;
+
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\PayolutionInvoiceTransaction;

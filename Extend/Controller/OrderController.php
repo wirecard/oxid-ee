@@ -22,10 +22,11 @@ use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Extend\Model\PaymentGateway;
-use Wirecard\Oxid\Model\CreditCardPaymentMethod;
-use Wirecard\Oxid\Model\PayolutionBtwobPaymentMethod;
-use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
-use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+
+use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PayolutionBtwobPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PayolutionInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\SepaDirectDebitPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -129,7 +130,7 @@ class OrderController extends OrderController_parent
         $sTemplateName = parent::render();
         $oBasket = Registry::getSession()->getBasket();
 
-        if ($oBasket->getPaymentId() === SepaDirectDebitPaymentMethod::getName(true)) {
+        if ($oBasket->getPaymentId() === SepaDirectDebitPaymentMethod::getName()) {
             $sSepaMandate = PaymentMethodHelper::getSepaMandateHtml($oBasket, $this->getUser());
 
             Helper::addToViewData($this, [
@@ -270,7 +271,7 @@ class OrderController extends OrderController_parent
     private function _prepareSepaMandate($oBasket, $oUser)
     {
         $sSepaMandate = null;
-        if ($oBasket->getPaymentId() === SepaDirectDebitPaymentMethod::getName(true)) {
+        if ($oBasket->getPaymentId() === SepaDirectDebitPaymentMethod::getName()) {
             $sSepaMandate = PaymentMethodHelper::getSepaMandateHtml($oBasket, $oUser);
         }
         return $sSepaMandate;

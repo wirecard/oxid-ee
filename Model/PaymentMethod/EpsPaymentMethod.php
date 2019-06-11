@@ -7,31 +7,28 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Model;
+namespace Wirecard\Oxid\Model\PaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use Wirecard\PaymentSdk\Entity\IdealBic;
-use Wirecard\PaymentSdk\Transaction\IdealTransaction;
+use Wirecard\PaymentSdk\Transaction\EpsTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 use Wirecard\Oxid\Core\Helper;
 
-use OxidEsales\Eshop\Core\Registry;
-
 /**
- * Payment method implementation for iDEAL
+ * Payment method implementation for eps
  *
  * @since 1.2.0
  */
-class IdealPaymentMethod extends SepaCreditTransferPaymentMethod
+class EpsPaymentMethod extends SepaCreditTransferPaymentMethod
 {
     /**
      * @inheritdoc
      *
      * @since 1.2.0
      */
-    protected static $_sName = "ideal";
+    protected static $_sName = "eps";
 
     /**
      * @inheritdoc
@@ -41,24 +38,6 @@ class IdealPaymentMethod extends SepaCreditTransferPaymentMethod
      * @since 1.2.0
      */
     protected static $_bMerchantOnly = false;
-
-    /**
-     *
-     * @since 1.2.0
-     */
-    private $_aBankOptions = [];
-
-    /**
-     * IdealPaymentMethod constructor.
-     *
-     * @since 1.2.0
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        $this->_aBankOptions = $this->getBanks();
-    }
 
     /**
      * @inheritdoc
@@ -72,7 +51,7 @@ class IdealPaymentMethod extends SepaCreditTransferPaymentMethod
         $oConfig = parent::getConfig();
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
-            IdealTransaction::NAME,
+            EpsTransaction::NAME,
             $this->_oPayment->oxpayments__wdoxidee_maid->value,
             $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
@@ -91,7 +70,7 @@ class IdealPaymentMethod extends SepaCreditTransferPaymentMethod
      */
     public function getTransaction()
     {
-        return new IdealTransaction();
+        return new EpsTransaction();
     }
 
     /**
@@ -156,38 +135,6 @@ class IdealPaymentMethod extends SepaCreditTransferPaymentMethod
      *
      * @since 1.2.0
      */
-    public function getCheckoutFields()
-    {
-        return [
-            'bank' => [
-                'type' => 'select',
-                'options' => $this->_aBankOptions,
-                'title' => Helper::translate('wd_ideal_legend'),
-            ],
-        ];
-    }
-
-    /**
-     * Returns array for bank select options
-     *
-     * @return array
-     *
-     * @since 1.2.0
-     */
-    public function getBanks()
-    {
-        //IdealBic extends Enum class and contains const variables which represent bank options.
-        //toArray() combines all const variables from IdealBic and converts them to array.
-        return IdealBic::toArray();
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @return array
-     *
-     * @since 1.2.0
-     */
     public function getPublicFieldNames()
     {
         return array_merge(parent::getPublicFieldNames(), [
@@ -196,21 +143,5 @@ class IdealPaymentMethod extends SepaCreditTransferPaymentMethod
             'deleteCanceledOrder',
             'deleteFailedOrder',
         ]);
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @param IdealTransaction $oTransaction
-     * @param Order            $oOrder
-     *
-     * @since 1.2.0
-     */
-    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
-    {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
-
-        $oTransaction->setBic($this->_aBankOptions[$aDynvalues['bank']]);
     }
 }
