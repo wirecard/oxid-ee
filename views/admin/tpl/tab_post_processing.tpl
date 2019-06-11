@@ -12,11 +12,12 @@
 [{oxstyle include=$oViewConf->getPaymentGatewayUrl("out/css/wirecard_wdoxidee_common.css")}]
 [{oxstyle include=$oViewConf->getPaymentGatewayUrl("out/css/wirecard_wdoxidee_table.css")}]
 
+<form name="transfer" id="transfer" action="[{$oViewConf->getSelfLink()}]" method="post">
+  [{$oViewConf->getHiddenSid()}]
+  <input type="hidden" name="oxid" value="[{$oxid}]">
+  <input type="hidden" name="cl" value="[{$controller}]">
 [{if $actions|@count > 0}]
-  <form name="transfer" id="transfer" action="[{$oViewConf->getSelfLink()}]" method="post">
-    [{$oViewConf->getHiddenSid()}]
-    <input type="hidden" name="oxid" value="[{$oxid}]">
-    <input type="hidden" name="cl" value="[{$controller}]">
+
 
 
     [{if $message}]
@@ -38,12 +39,12 @@
     </table>
     [{include file="post_processing_buttons_row.tpl"}]
     [{/if}]
-  </form>
   [{else}]
   <div class="wdoxidee-messagebox wdoxidee-messagebox--info">
     [{$emptyText}]
   </div>
   [{/if}]
+</form>
 
 [{if $message.type === 'success'}]
   <script type="text/javascript">
