@@ -13,9 +13,17 @@ use Wirecard\Oxid\Tests\Unit\Controller\Admin\TestDataHelper;
 class OrderTabDescriptorTest extends Wirecard\Test\WdUnitTestCase
 {
     /**
-     * @var OrderTab
+     * @var OrderTabDescriptor
      */
-    private $_orderTab;
+    private $_orderTabDescriptor;
+
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->_orderTabDescriptor = oxNew(OrderTabDescriptor::class);
+
+    }
 
     protected function dbData()
     {
@@ -24,13 +32,9 @@ class OrderTabDescriptorTest extends Wirecard\Test\WdUnitTestCase
 
     public function testRender()
     {
-        $_GET['oxid'] = 'oxid 1';
-        $this->_orderTabDescriptor = new OrderTabDescriptor();
+        $this->setRequestParameter('oxid', 'oxid 1');
         $this->_orderTabDescriptor->render();
-
-        $aViewData = $this->_orderTabDescriptor->getViewData();
-
-        $this->assertArrayHasKey('emptyText', $aViewData);
+        $this->assertArrayHasKey('emptyText', $this->_orderTabDescriptor->getViewData());
     }
 
     /**
@@ -38,15 +42,13 @@ class OrderTabDescriptorTest extends Wirecard\Test\WdUnitTestCase
      */
     public function testGetData($sOrderId, $aExpectedArray)
     {
-        $_GET['oxid'] = $sOrderId;
+        $this->setRequestParameter('oxid', $sOrderId);
 
         // use an anonymous class to get access to protected methods and variables
         $cOrderTabDescriptor = $this->_getAnonymousOrderTabDescriptor();
+        $aData = $cOrderTabDescriptor->publicGetData();
 
-        $this->_orderTabDescriptor = $cOrderTabDescriptor;
-        $aData = $this->_orderTabDescriptor->publicGetData();
-
-        $this->assertEquals($aData, $aExpectedArray);
+        $this->assertEquals($aExpectedArray, $aData);
     }
 
     public function getDataProvider()
