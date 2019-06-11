@@ -32,7 +32,9 @@
         <div class="well well-sm cart-buttons">
             <div>
                 <input type="checkbox" name="trustedshop_checkbox" id="trusted-shop-checkbox" />
-                [{oxmultilang ident="wd_trusted_shop_terms" args=$payment->oxpayments__payolution_terms_url->value}]
+                <label for="trusted-shop-checkbox" style="display: inline">
+                    [{oxmultilang ident="wd_trusted_shop_terms" args=$payment->oxpayments__payolution_terms_url->value}]
+                </label>
             </div>
             [{block name="checkout_order_btn_submit_bottom"}]
             <button type="submit" disabled id="payolution-inv-order-button" class="btn btn-lg btn-primary pull-right submitButton nextStep largeButton">
@@ -49,11 +51,13 @@
 
 [{include file="sepa_mandate_modal.tpl"}]
 
-<script>
-    var checkbox = document.getElementById("trusted-shop-checkbox");
-    var button = document.getElementById("payolution-inv-order-button");
+[{if $payment->oxpayments__oxid->value == "wdpayolution-inv" && $payment->oxpayments__trusted_shop->value}]
+    <script>
+        var checkbox = document.getElementById("trusted-shop-checkbox");
+        var button = document.getElementById("payolution-inv-order-button");
 
-    checkbox.onclick = function(){
-        button.disabled = !checkbox.checked;
-    };
-</script>
+        checkbox.onclick = function(){
+            button.disabled = !checkbox.checked;
+        };
+    </script>
+[{/if}]
