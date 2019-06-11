@@ -54,17 +54,28 @@ class PaymentController extends PaymentController_parent
     /**
      * @inheritdoc
      *
-     * @return object
+     * @return array
      *
      * @since 1.2.0
      */
     public function getPaymentList()
     {
-        return array_filter(parent::getPaymentList(), [PaymentController::class, '_filterPaymentList']);
+        $aPaymentList = parent::getPaymentList();
+
+        foreach (parent::getPaymentList() as $sKey => $oPayment) {
+            if (!$this->_showPayment($oPayment)) {
+                unset($aPaymentList[$sKey]);
+                continue;
+            }
+
+            $this->_initializeInputFields($oPayment);
+        }
+
+        return $aPaymentList;
     }
 
     /**
-     * Filters the payment list for payment methods that should be shown
+     * Returns true if payment should be shown
      *
      * @param object $oPayment
      *
@@ -72,10 +83,28 @@ class PaymentController extends PaymentController_parent
      *
      * @since 1.2.0
      */
-    private function _filterPaymentList($oPayment)
+    private function _showPayment($oPayment)
     {
         if (!$oPayment->isCustomPaymentMethod()) {
             return true;
+        }
+
+        return $oPayment->getPaymentMethod()->isPaymentPossible();
+    }
+
+    /**
+     * Initializes the input fields for guaranteed invoice payment methods
+     *
+     * @param object $oPayment
+     *
+     * @return void
+     *
+     * @since 1.2.0
+     */
+    private function _initializeInputFields($oPayment)
+    {
+        if (!$oPayment->isCustomPaymentMethod()) {
+            return;
         }
 
         $oPaymentMethod = $oPayment->getPaymentMethod();
@@ -86,7 +115,5 @@ class PaymentController extends PaymentController_parent
             SessionHelper::setPhone($oUser->oxuser__oxfon->value, $oPaymentMethod::getName());
             SessionHelper::setSaveCheckoutFields(0, $oPaymentMethod::getName());
         }
-
-        return $oPayment->getPaymentMethod()->isPaymentPossible();
     }
 }
