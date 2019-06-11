@@ -17,7 +17,6 @@ use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
-use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
@@ -75,7 +74,7 @@ class OrderController extends OrderController_parent
     {
         parent::init();
 
-        $this->_onBeforeOrderCreation();
+        OrderHelper::onBeforeOrderCreation($this->getPayment());
 
         $oSession = Registry::getSession();
         $sWdPaymentRedirect = Registry::getRequest()->getRequestParameter('wdpayment');
@@ -112,34 +111,6 @@ class OrderController extends OrderController_parent
         }
 
         return true;
-    }
-
-    /**
-     * Runs the payment method's `onBeforeOrderCreation` callback and shows a potential error message to the user.
-     *
-     * @return null
-     *
-     * @since 1.2.0
-     */
-    private function _onBeforeOrderCreation()
-    {
-        $oSession = Registry::getSession();
-        $oPayment = $this->getPayment();
-
-        if (!$oPayment || !$oPayment->isCustomPaymentMethod()) {
-            return;
-        }
-
-        try {
-            $oPaymentMethod = PaymentMethodFactory::create($oSession->getBasket()->getPaymentId());
-            $oPaymentMethod->onBeforeOrderCreation();
-        } catch (Exception $oException) {
-            OrderHelper::setSessionPaymentError($oException->getMessage());
-
-            $sRedirectUrl = Registry::getConfig()->getShopHomeUrl() . 'cl=payment';
-
-            return Registry::getUtils()->redirect($sRedirectUrl);
-        }
     }
 
     /**
