@@ -13,6 +13,7 @@ use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Model\InvoicePaymentMethod;
 
 /**
  * Class PaymentController
@@ -25,20 +26,6 @@ class PaymentController extends PaymentController_parent
 {
     const ERROR_CODE_CANCELED = '-100';
     const ERROR_CODE_FAILED = '-101';
-
-    /**
-     * @inheritdoc
-     *
-     * @since 1.2.0
-     */
-    public function init()
-    {
-        parent::init();
-
-        $this->_setDateOfBirthInput();
-        $this->_setPhoneInput();
-        SessionHelper::setSaveCheckoutFields(0);
-    }
 
     /**
      * @inheritdoc
@@ -91,28 +78,15 @@ class PaymentController extends PaymentController_parent
             return true;
         }
 
+        $oPaymentMethod = $oPayment->getPaymentMethod();
+        if ($oPaymentMethod instanceof InvoicePaymentMethod) {
+            $oUser = Registry::getSession()->getUser();
+
+            SessionHelper::setDbDateOfBirth($oUser->oxuser__oxbirthdate->value, $oPaymentMethod::getName());
+            SessionHelper::setPhone($oUser->oxuser__oxfon->value, $oPaymentMethod::getName());
+            SessionHelper::setSaveCheckoutFields(0, $oPaymentMethod::getName());
+        }
+
         return $oPayment->getPaymentMethod()->isPaymentPossible();
-    }
-
-    /**
-     * Sets the date of birth input field for payment step
-     *
-     * @since 1.2.0
-     */
-    private function _setDateOfBirthInput()
-    {
-        $oUser = Registry::getSession()->getUser();
-        SessionHelper::setDbDateOfBirth($oUser->oxuser__oxbirthdate->value);
-    }
-
-    /**
-     * Sets the phone number input field for payment step
-     *
-     * @since 1.2.0
-     */
-    private function _setPhoneInput()
-    {
-        $oUser = Registry::getSession()->getUser();
-        SessionHelper::setPhone($oUser->oxuser__oxfon->value);
     }
 }
