@@ -13,7 +13,6 @@ use DateTime;
 use OxidEsales\Eshop\Core\Exception\InputException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\Basket;
 
@@ -283,20 +282,14 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     {
         $oSession = Registry::getSession();
         $oBasket = $oSession->getBasket();
-        $sBillingCountryId = $oSession->getUser()->oxuser__oxcountryid->value;
-        $sShippingCountryId = $sBillingCountryId;
+        $sBillingCountryId = SessionHelper::getBillingCountryId();
+        $sShippingCountryId = SessionHelper::getShippingCountryId() ?? $sBillingCountryId;
 
-        if ($oSession->getVariable('deladrid')) {
-            if ($this->getPayment()->oxpayments__billing_shipping->value) {
-                return false;
-            }
-
-            $oShippingAddress = oxNew(Address::class);
-            $oShippingAddress->load($oSession->getVariable('deladrid'));
-            $sShippingCountryId = $oShippingAddress->oxaddress__oxcountryid->value;
-        }
-
-        return $this->_shouldBeDisplayed($oBasket, $sBillingCountryId, $sShippingCountryId);
+        // if basket amount is within range is checked by oxid, no need to handle that
+        return $this->_checkDateOfBirth() &&
+            $this->_areArticlesAllowed($oBasket->getBasketArticles(), $oBasket->getVouchers()) &&
+            $this->_isCurrencyAllowed($oBasket->getBasketCurrency()) &&
+            $this->_areAddressesAllowed($sBillingCountryId, $sShippingCountryId);
     }
 
     /**
@@ -464,27 +457,9 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
         ) && in_array(
             $oShippingCountry->oxcountry__oxisoalpha2->value,
             $oPayment->oxpayments__shipping_countries->value ?? []
+        ) && (
+            !$oPayment->oxpayments__billing_shipping->value ||
+            $sBillingCountryId === $sShippingCountryId
         );
-    }
-
-
-    /**
-     * Checks if the merchant's settings are matched
-     *
-     * @param Basket $oBasket
-     * @param string $sBillingCountryId
-     * @param string $sShippingCountryId
-     *
-     * @return bool
-     *
-     * @since 1.2.0
-     */
-    private function _shouldBeDisplayed($oBasket, $sBillingCountryId, $sShippingCountryId)
-    {
-        // if basket amount is within range is checked by oxid, no need to handle that
-        return $this->_checkDateOfBirth() &&
-            $this->_areArticlesAllowed($oBasket->getBasketArticles(), $oBasket->getVouchers()) &&
-            $this->_isCurrencyAllowed($oBasket->getBasketCurrency()) &&
-            $this->_areAddressesAllowed($sBillingCountryId, $sShippingCountryId);
     }
 }
