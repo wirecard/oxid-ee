@@ -265,7 +265,7 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
         $oTransaction->setBasket($oWdBasket);
         $oTransaction->setShipping($oOrder->getShippingAccountHolder());
         $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
-        
+
         $oAccountHolder = $oOrder->getAccountHolder();
         $oAccountHolder->setDateOfBirth(new DateTime(SessionHelper::getDbDateOfBirth()));
         $oAccountHolder->setPhone(SessionHelper::getPhone());
@@ -296,73 +296,7 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
             $sShippingCountryId = $oShippingAddress->oxaddress__oxcountryid->value;
         }
 
-        // if basket amount is within range is checked by oxid, no need to handle that
-        return $this->_checkDateOfBirth()
-            && $this->_checkSettings($oBasket, $sBillingCountryId, $sShippingCountryId);
-    }
-
-    /**
-     * Checks if given articles are allowed for this payment.
-     *
-     * @param array $aArticles
-     *
-     * @return bool
-     *
-     * @since 1.2.0
-     */
-    private function _areArticlesAllowed($aArticles)
-    {
-        foreach ($aArticles as $oArticle) {
-            if ($oArticle->oxarticles__oxisdownloadable->value) {
-                return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Checks if the selected currency is allowed for this payment.
-     *
-     * @param object $oCurrency
-     *
-     * @return bool
-     *
-     * @since 1.2.0
-     */
-    private function _isCurrencyAllowed($oCurrency)
-    {
-        $oPayment = $this->getPayment();
-
-        return in_array($oCurrency->name, $oPayment->oxpayments__allowed_currencies->value ?? []);
-    }
-
-    /**
-     * Checks if given billing and shipping countries are allowed for this payment.
-     *
-     * @param string $sBillingCountryId
-     * @param string $sShippingCountryId
-     *
-     * @return bool
-     *
-     * @since 1.2.0
-     */
-    private function _areAddressesAllowed($sBillingCountryId, $sShippingCountryId)
-    {
-        $oPayment = $this->getPayment();
-        $oBillingCountry = oxNew(Country::class);
-        $oShippingCountry = oxNew(Country::class);
-
-        $oBillingCountry->load($sBillingCountryId);
-        $oShippingCountry->load($sShippingCountryId);
-
-        return in_array(
-            $oBillingCountry->oxcountry__oxisoalpha2->value,
-            $oPayment->oxpayments__billing_countries->value ?? []
-        ) && in_array(
-            $oShippingCountry->oxcountry__oxisoalpha2->value,
-            $oPayment->oxpayments__shipping_countries->value ?? []
-        );
+        return $this->_shouldBeDisplayed($oBasket, $sBillingCountryId, $sShippingCountryId);
     }
 
     /**
@@ -465,6 +399,76 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     }
 
     /**
+     * Checks if given articles are allowed for this payment.
+     *
+     * @param array $aArticles
+     * @param array $aVouchers
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _areArticlesAllowed($aArticles, $aVouchers = [])
+    {
+        if ($aVouchers) {
+            return false;
+        }
+
+        foreach ($aArticles as $oArticle) {
+            if ($oArticle->oxarticles__oxisdownloadable->value) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if the selected currency is allowed for this payment.
+     *
+     * @param object $oCurrency
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _isCurrencyAllowed($oCurrency)
+    {
+        $oPayment = $this->getPayment();
+
+        return in_array($oCurrency->name, $oPayment->oxpayments__allowed_currencies->value ?? []);
+    }
+
+    /**
+     * Checks if given billing and shipping countries are allowed for this payment.
+     *
+     * @param string $sBillingCountryId
+     * @param string $sShippingCountryId
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _areAddressesAllowed($sBillingCountryId, $sShippingCountryId)
+    {
+        $oPayment = $this->getPayment();
+        $oBillingCountry = oxNew(Country::class);
+        $oShippingCountry = oxNew(Country::class);
+
+        $oBillingCountry->load($sBillingCountryId);
+        $oShippingCountry->load($sShippingCountryId);
+
+        return in_array(
+            $oBillingCountry->oxcountry__oxisoalpha2->value,
+            $oPayment->oxpayments__billing_countries->value ?? []
+        ) && in_array(
+            $oShippingCountry->oxcountry__oxisoalpha2->value,
+            $oPayment->oxpayments__shipping_countries->value ?? []
+        );
+    }
+
+
+    /**
      * Checks if the merchant's settings are matched
      *
      * @param Basket $oBasket
@@ -475,9 +479,11 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
      *
      * @since 1.2.0
      */
-    private function _checkSettings($oBasket, $sBillingCountryId, $sShippingCountryId)
+    private function _shouldBeDisplayed($oBasket, $sBillingCountryId, $sShippingCountryId)
     {
-        return $this->_areArticlesAllowed($oBasket->getBasketArticles()) &&
+        // if basket amount is within range is checked by oxid, no need to handle that
+        return $this->_checkDateOfBirth() &&
+            $this->_areArticlesAllowed($oBasket->getBasketArticles(), $oBasket->getVouchers()) &&
             $this->_isCurrencyAllowed($oBasket->getBasketCurrency()) &&
             $this->_areAddressesAllowed($sBillingCountryId, $sShippingCountryId);
     }
