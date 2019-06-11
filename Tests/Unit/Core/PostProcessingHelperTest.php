@@ -42,9 +42,9 @@ class PostProcessingHelperTest extends \Wirecard\Test\WdUnitTestCase
             ->willReturn('wdpayolution-inv');
 
         return [
-            'PayPal transaction' => [$oPpTransactionStub, false],
             'Ratepay transaction' => [$oRpTransactionStub, true],
-            'Payolution transaction' => [$oPayTransactionStub, true],
+            'Payolution transaction' => [$oPayTransactionStub, false],
+            'PayPal transaction' => [$oPpTransactionStub, false],
         ];
     }
 

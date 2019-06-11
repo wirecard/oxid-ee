@@ -10,7 +10,6 @@
 namespace Wirecard\Oxid\Core;
 
 use Wirecard\Oxid\Model\PaymentMethod;
-use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
 use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
 
@@ -35,7 +34,6 @@ class PostProcessingHelper
     {
         return in_array($oTransaction->getPaymentType(), [
             RatepayInvoicePaymentMethod::getName(true),
-            PayolutionInvoicePaymentMethod::getName(true),
         ]);
     }
 
