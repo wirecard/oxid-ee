@@ -91,7 +91,7 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
 
     public function testOnBeforeTransactionCreationWithRequestParameter()
     {
-        $_POST['trustedshop_checkbox'] = true;
+        $this->setRequestParameter('trustedshop_checkbox', true);
 
         $this->assertNull($this->_oPaymentMethod->onBeforeTransactionCreation());
     }

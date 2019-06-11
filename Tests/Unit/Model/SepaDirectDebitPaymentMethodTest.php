@@ -203,7 +203,7 @@ class SepaDirectDebitPaymentMethodTest extends Wirecard\Test\WdUnitTestCase
 
     public function testOnBeforeTransactionCreationWithRequestParameter()
     {
-        $_POST['wdsepadd_checkbox'] = true;
+        $this->setRequestParameter('wdsepadd_checkbox', true);
 
         $this->assertNull($this->_oPaymentMethod->onBeforeTransactionCreation());
     }

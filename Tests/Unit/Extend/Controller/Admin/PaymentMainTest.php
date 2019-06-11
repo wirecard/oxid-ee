@@ -31,13 +31,16 @@ class PaymentMainTest extends \Wirecard\Test\WdUnitTestCase
     public function testRender($bValidationResult, $bExpected)
     {
         $this->_controller->setEditObjectId('wdpaypal');
-        $_POST['fnc'] = 'save';
+        $this->setRequestParameter('fnc', 'save');
         if ($bValidationResult) {
-            $_POST['editval'] = [
-                'oxpayments__wdoxidee_apiurl' => 'http://api.url',
-                'oxpayments__wdoxidee_httpuser' => 'user',
-                'oxpayments__wdoxidee_httppass' => 'mysecretpasswordnooneknows',
-            ];
+            $this->setRequestParameter(
+                'editval',
+                [
+                    'oxpayments__wdoxidee_apiurl' => 'http://api.url',
+                    'oxpayments__wdoxidee_httpuser' => 'user',
+                    'oxpayments__wdoxidee_httppass' => 'mysecretpasswordnooneknows',
+                ]
+            );
         }
 
         $oTransactionServStub = $this->getMockBuilder(TransactionService::class)

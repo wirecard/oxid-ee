@@ -45,7 +45,7 @@ class OrderControllerTest extends \Wirecard\Test\WdUnitTestCase
             'redirect',
             '{ return $aA[0]; }');
 
-        $_POST['wdpayment'] = "sessionToken";
+        $this->setRequestParameter('wdpayment', 'sessionToken');
         Registry::getSession()->setVariable('wdtoken', "sessionToken");
 
         $oUserStub = $this->getMockBuilder(User::class)
@@ -65,9 +65,8 @@ class OrderControllerTest extends \Wirecard\Test\WdUnitTestCase
             'oxUtils',
             'redirect',
             '{ return $aA[0]; }');
-
-        $_POST['wdpayment'] = "sessionToken";
-        $_POST['redirectFromForm'] = true;
+        $this->setRequestParameter('wdpayment', 'sessionToken');
+        $this->setRequestParameter('redirectFromForm', true);
         Registry::getSession()->setVariable('wdtoken', "sessionToken");
 
         $oUserStub = $this->getMockBuilder(User::class)

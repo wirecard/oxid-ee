@@ -64,9 +64,9 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
     public function testSendSupportEmailActionWithParams($sText, $sFromEmail, $sReplyEmail, $sErrorText)
     {
         $this->_moduleSupport->setEditObjectId(Helper::MODULE_ID);
-        $_POST['module_support_text'] = $sText;
-        $_POST['module_support_email_from'] = $sFromEmail;
-        $_POST['module_support_email_reply'] = $sReplyEmail;
+        $this->setRequestParameter('module_support_text', $sText);
+        $this->setRequestParameter('module_support_email_from', $sFromEmail);
+        $this->setRequestParameter('module_support_email_reply', $sReplyEmail);
 
         $this->_moduleSupport->sendSupportEmailAction();
 
@@ -87,9 +87,9 @@ class ModuleSupportTest extends \Wirecard\Test\WdUnitTestCase
 
     public function testAddDataFromForm()
     {
-        $_POST['module_support_text'] = 'abcd';
-        $_POST['module_support_email_reply'] = 'reply@test.com';
-        $_POST['module_support_email_from'] = 'from@test.com';
+        $this->setRequestParameter('module_support_text', 'abcd');
+        $this->setRequestParameter('module_support_email_reply', 'reply@test.com');
+        $this->setRequestParameter('module_support_email_from', 'from@test.com');
 
         $this->_moduleSupport = $this->_getAnonymousModuleSupport();
 
