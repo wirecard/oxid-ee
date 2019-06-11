@@ -53,13 +53,16 @@ class OrderTabDescriptor extends OrderTab
      */
     protected function _getData()
     {
-        $sOrderPaymentName = $this->_oOrder->getOrderPayment()->getPaymentMethod()->getName();
+        if ($this->_oOrder->isCustomPaymentMethod()) {
+            $sOrderPaymentName = $this->_oOrder->getOrderPayment()->getPaymentMethod()->getName();
 
-        if ($sOrderPaymentName === RatepayInvoicePaymentMethod::getName()) {
-            $oTransactionDetails = $this->_oResponseMapper->getDataReadable();
-            $iIndex = array_search('descriptor', array_column($oTransactionDetails, 'title'));
-            if ($iIndex) {
-                return [$oTransactionDetails[$iIndex]['value']];
+            if ($sOrderPaymentName === RatepayInvoicePaymentMethod::getName()) {
+                $oTransactionDetails = $this->_oResponseMapper->getDataReadable();
+                // find index of element in array with attribute title === 'descriptor'
+                $iIndex = array_search('descriptor', array_column($oTransactionDetails, 'title'));
+                if ($iIndex) {
+                    return [$oTransactionDetails[$iIndex]['value']];
+                }
             }
         }
         return [];
