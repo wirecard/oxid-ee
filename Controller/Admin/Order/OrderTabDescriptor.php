@@ -10,10 +10,7 @@
 namespace Wirecard\Oxid\Controller\Admin\Order;
 
 use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
-
 use Wirecard\Oxid\Core\Helper;
-
-use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Controls the view for the order descriptor tab.
