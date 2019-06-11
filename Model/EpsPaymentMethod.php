@@ -33,6 +33,15 @@ class EpsPaymentMethod extends SepaCreditTransferPaymentMethod
     /**
      * @inheritdoc
      *
+     * @var bool
+     *
+     * @since 1.2.0
+     */
+    protected static $_bMerchantOnly = false;
+
+    /**
+     * @inheritdoc
+     *
      * @return Config
      *
      * @since 1.2.0
@@ -117,6 +126,10 @@ class EpsPaymentMethod extends SepaCreditTransferPaymentMethod
         ];
 
         return array_merge(parent::getConfigFields(), $aAdditionalFields);
+
+        return array_merge(parent::getConfigFields(), $aAdditionalFields); //giropay
+
+        return parent::getConfigFields() + $aAdditionalFields; //credit card
     }
 
     /**
