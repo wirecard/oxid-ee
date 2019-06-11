@@ -44,12 +44,6 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
         $aFields = $this->_oPaymentMethod->getConfigFields();
 
         $this->assertEquals([
-            'apiUrl',
-            'httpUser',
-            'httpPassword',
-            'testCredentials',
-            'maid',
-            'secret',
             'descriptor',
             'additionalInfo',
             'deleteCanceledOrder',
@@ -57,6 +51,14 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
             'shippingCountries',
             'billingCountries',
             'billingShipping',
+            'allowedCurrencies',
+            'apiUrl',
+            'groupSeparator_eur',
+            'httpUser_eur',
+            'httpPassword_eur',
+            'maid_eur',
+            'secret_eur',
+            'testCredentials_eur',
         ], array_keys($aFields));
     }
 
@@ -79,10 +81,21 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
 
     public function testGetMetaDataFieldNames()
     {
-        $this->assertEquals([
+        $aMinimumExpectedKeys = [
             'shipping_countries',
             'billing_countries',
             'billing_shipping',
-        ], $this->_oPaymentMethod->getMetaDataFieldNames());
+            'allowed_currencies',
+            'billing_countries',
+            'billing_shipping',
+            'httpuser_eur',
+            'httppass_eur',
+            'maid_eur',
+            'secret_eur',
+        ];
+
+        foreach ($aMinimumExpectedKeys as $sKey) {
+            $this->assertContains($sKey, $this->_oPaymentMethod->getMetaDataFieldNames());
+        }
     }
 }

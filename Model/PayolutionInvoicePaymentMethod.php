@@ -215,13 +215,13 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
          ];
 
         foreach ($aCurrencies as $sCurrency) {
-            $aCurrencyFields['groupSeparator_' . $sCurrency] = [
+            $aCurrencyFields['groupSeparator_' . strtolower($sCurrency)] = [
                 'type' => 'separator',
                 'title' => $sCurrency,
             ];
 
             foreach ($aFields as $sFieldName => $aConfigProps) {
-                $sConfigKey = sprintf($sFieldName, $sCurrency);
+                $sConfigKey = sprintf($sFieldName, strtolower($sCurrency));
                 $aFieldProps = [
                     'type' => $aConfigProps['type'],
                     'field' => sprintf($aConfigProps['field'], strtolower($sCurrency)),
@@ -235,7 +235,7 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
                 $aCurrencyFields[$sConfigKey] = $aFieldProps;
             }
 
-            $aCurrencyFields['testCredentials_' . $sCurrency] = [
+            $aCurrencyFields['testCredentials_' . strtolower($sCurrency)] = [
                 'type' => 'button',
                 'onclick' => 'wdTestPaymentMethodCredentials(\'' . $sCurrency . '\')',
                 'text' => Helper::translate('wd_test_credentials'),
