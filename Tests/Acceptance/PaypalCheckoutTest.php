@@ -16,9 +16,9 @@ use Wirecard\Oxid\Model\PaypalPaymentMethod;
  */
 class PaypalCheckoutTest extends CheckoutTestCase
 {
-    public function getPaymentMethod()
+    public function getPaymentMethodName()
     {
-        return new PaypalPaymentMethod();
+        return PaypalPaymentMethod::getName(true);
     }
 
     public function testCheckoutForPurchase()
