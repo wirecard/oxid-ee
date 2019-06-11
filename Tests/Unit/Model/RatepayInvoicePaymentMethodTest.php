@@ -269,11 +269,15 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
         $oAddress = oxNew(Address::class);
         $oAddress->oxaddress__oxcountryid = new Field($sBillingCountryId);
 
-        if ($sShippingCountryId) {
-            $this->setSessionParam('deladrid', $sShippingCountryId);
-        }
-
         $this->getSession()->setUser($oUser);
+
+        if ($sShippingCountryId) {
+            $oAddress = oxNew(Address::class);
+            $oAddress->oxaddress__oxcountryid = new Field($sShippingCountryId);
+            $oAddress->save();
+
+            $this->setSessionParam('deladrid', $oAddress->getId());
+        }
 
         $this->assertEquals($blExpected, $oPaymentMethodStub->isPaymentPossible());
     }

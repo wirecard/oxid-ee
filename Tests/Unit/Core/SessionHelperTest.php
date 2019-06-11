@@ -10,6 +10,10 @@
 
 use Wirecard\Oxid\Core\SessionHelper;
 
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Application\Model\Address;
+
 class SessionHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
     public function testGetAccountHolder()
@@ -153,5 +157,28 @@ class SessionHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         SessionHelper::setSaveCheckoutFields('foo');
 
         $this->assertEquals('foo', $this->getSessionParam('dynvalue')['saveCheckoutFields']);
+    }
+
+    public function testGetBillingCountryId()
+    {
+        $oUser = oxNew(User::class);
+        $oUser->load('testuser');
+        $oUser->oxuser__oxcountryid = new Field('countryid');
+        $oUser->save();
+
+        $this->getSession()->setUser($oUser);
+
+        $this->assertEquals('countryid', SessionHelper::getBillingCountryId());
+    }
+
+    public function testGetShippingCountryId()
+    {
+        $oAddress = oxNew(Address::class);
+        $oAddress->oxaddress__oxcountryid = new Field('countryid');
+        $oAddress->save();
+
+        $this->setSessionParam('deladrid', $oAddress->getId());
+
+        $this->assertEquals('countryid', SessionHelper::getShippingCountryId());
     }
 }
