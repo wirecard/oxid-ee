@@ -16,9 +16,9 @@ use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
  */
 class RatepayInvoiceCheckoutTest extends CheckoutTestCase
 {
-    public function getPaymentMethod()
+    public function getPaymentMethodName()
     {
-        return new RatepayInvoicePaymentMethod();
+        return RatepayInvoicePaymentMethod::getName(true);
     }
 
     public function testCheckoutWithRequiredProfileData()
@@ -53,7 +53,7 @@ class RatepayInvoiceCheckoutTest extends CheckoutTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->paymentMethod::getName(true)
+            $this->getPaymentMethodName()
         ));
         $this->type(
             $this->getLocator('external.ratepayInvoice.dateOfBirth'),

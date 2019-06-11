@@ -16,9 +16,9 @@ use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
  */
 class SepaDirectDebitCheckoutTest extends CheckoutTestCase
 {
-    public function getPaymentMethod()
+    public function getPaymentMethodName()
     {
-        return new SepaDirectDebitPaymentMethod();
+        return SepaDirectDebitPaymentMethod::getName(true);
     }
 
     public function testCheckoutForPurchase()
@@ -63,7 +63,7 @@ class SepaDirectDebitCheckoutTest extends CheckoutTestCase
     {
         $this->executeSql("UPDATE `oxpayments`
             SET `WDOXIDEE_BIC` = '1'
-            WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
+            WHERE `OXID` = '{$this->getPaymentMethodName()}'");
     }
 
     public function goThroughCheckout()
@@ -81,7 +81,7 @@ class SepaDirectDebitCheckoutTest extends CheckoutTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->paymentMethod::getName(true)
+            $this->getPaymentMethodName()
         ));
         $this->type(
             $this->getLocator('external.sepadd.accountHolder'),

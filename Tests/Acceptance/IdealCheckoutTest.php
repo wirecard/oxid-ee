@@ -16,9 +16,9 @@ use Wirecard\Oxid\Model\IdealPaymentMethod;
  */
 class IdealCheckoutTest extends CheckoutTestCase
 {
-    public function getPaymentMethod()
+    public function getPaymentMethodName()
     {
-        return new IdealPaymentMethod();
+        return IdealPaymentMethod::getName(true);
     }
 
     public function testCheckout()
@@ -45,7 +45,7 @@ class IdealCheckoutTest extends CheckoutTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->paymentMethod::getName(true)
+            $this->getPaymentMethodName()
         ));
         $this->select(
             $this->getLocator('external.ideal.bank'),

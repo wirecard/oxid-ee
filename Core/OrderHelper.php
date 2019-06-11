@@ -345,4 +345,36 @@ class OrderHelper
         $sOrderId = Helper::getSessionChallenge();
         return $oOrder->load($sOrderId);
     }
+
+    /**
+     * Runs the payment method's `onBeforeOrderCreation` callback and shows a potential error message to the user.
+     *
+     * @param Payment $oPayment
+     *
+     * @return bool false if an error occurred, otherwise true
+     *
+     * @since 1.2.0
+     */
+    public static function onBeforeOrderCreation($oPayment)
+    {
+        if (!$oPayment || !$oPayment->isCustomPaymentMethod()) {
+            return true;
+        }
+
+        $oSession = Registry::getSession();
+
+        try {
+            $oPaymentMethod = PaymentMethodFactory::create($oSession->getBasket()->getPaymentId());
+            $oPaymentMethod->onBeforeOrderCreation();
+        } catch (Exception $oException) {
+            self::setSessionPaymentError($oException->getMessage());
+
+            $sRedirectUrl = Registry::getConfig()->getShopHomeUrl() . 'cl=payment';
+            Registry::getUtils()->redirect($sRedirectUrl);
+
+            return false;
+        }
+
+        return true;
+    }
 }

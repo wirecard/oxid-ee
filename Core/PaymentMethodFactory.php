@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Core;
 
-use OxidEsales\Eshop\Core\Exception\StandardException;
+use OxidEsales\Eshop\Core\Exception\SystemComponentException;
 
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\GiropayPaymentMethod;
@@ -67,7 +67,7 @@ class PaymentMethodFactory
      * @param string $sPaymentMethodType
      *
      * @return PaymentMethod
-     * @throws StandardException if $sPaymentMethodType is not registered
+     * @throws SystemComponentException if $sPaymentMethodType is not registered
      *
      * @since 1.0.0
      */
@@ -79,6 +79,6 @@ class PaymentMethodFactory
             return new $aClasses[$sPaymentMethodType];
         }
 
-        throw new StandardException("payment type not registered: {$sPaymentMethodType}");
+        throw new SystemComponentException("payment type not registered: {$sPaymentMethodType}");
     }
 }

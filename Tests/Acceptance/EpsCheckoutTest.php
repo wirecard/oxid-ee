@@ -16,9 +16,9 @@ use Wirecard\Oxid\Model\EpsPaymentMethod;
  */
 class EpsCheckoutTest extends CheckoutTestCase
 {
-    public function getPaymentMethod()
+    public function getPaymentMethodName()
     {
-        return new EpsPaymentMethod();
+        return EpsPaymentMethod::getName(true);
     }
 
     public function testCheckout()

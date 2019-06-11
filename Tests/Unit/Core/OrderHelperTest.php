@@ -224,4 +224,29 @@ class OrderHelperTest extends WdUnitTestCase
         $this->assertEquals($oSession->getVariable(OrderHelper::PAY_ERROR_VARIABLE), OrderHelper::PAY_ERROR_ID);
         $this->assertEquals($oSession->getVariable(OrderHelper::PAY_ERROR_TEXT_VARIABLE), 'foo');
     }
+
+    /**
+     * @dataProvider onBeforeOrderCreationProvider
+     */
+    public function testOnBeforeOrderCreation($blExpected, $sPaymentId)
+    {
+        oxTestModules::addFunction(
+            'oxUtils',
+            'redirect',
+            '{}'
+        );
+
+        $oPayment = oxNew(Payment::class);
+        $oPayment->load($sPaymentId);
+
+        $this->assertEquals($blExpected, OrderHelper::onBeforeOrderCreation($oPayment));
+    }
+
+    public function onBeforeOrderCreationProvider()
+    {
+        return [
+            'foreign payment method' => [true, 'oxidpayadvance'],
+            'custom payment method' => [false, 'wdpaypal'],
+        ];
+    }
 }
