@@ -8,6 +8,10 @@
  */
 
 use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Exception\InputException;
+use OxidEsales\Eshop\Core\Field;
+use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
@@ -118,5 +122,59 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
     public function testOnBeforeTransactionCreationWithoutRequestParameter()
     {
         $this->_oPaymentMethod->onBeforeTransactionCreation();
+    }
+
+    public function testAddMandatoryTransactionData()
+    {
+        $oUser = oxNew(User::class);
+        $oUser->load('testuser');
+        $oUser->oxuser__oxcountryid = new Field('a7c40f632cdd63c52.64272623');
+        $oUser->save();
+        $this->getSession()->setUser($oUser);
+
+        $aDynvalues['phonepayolution-inv'] = '4512543425';
+        $this->getSession()->setVariable('dynvalue', $aDynvalues);
+
+        $oTransaction = $this->_oPaymentMethod->getTransaction();
+        $oOrder = oxNew(Order::class);
+        $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction, $oOrder);
+
+        $this->assertObjectHasAttribute('shipping', $oTransaction);
+    }
+    /**
+     * @dataProvider onBeforeOrderCreationProvider
+     */
+    public function testOnBeforeOrderCreation($sCountryId, $sPhone)
+    {
+        $oUser = oxNew(User::class);
+        $oUser->load('testuser');
+        $oUser->oxuser__oxcountryid = new Field($sCountryId);
+        $oUser->save();
+        $this->getSession()->setUser($oUser);
+
+        $aDynvalues['dateOfBirthpayolution-inv'] = '12.12.1985';
+        $aDynvalues['phonepayolution-inv'] = $sPhone;
+        $aDynvalues['saveCheckoutFieldspayolution-inv'] = '1';
+        $this->getSession()->setVariable('dynvalue', $aDynvalues);
+
+        try {
+            $this->_oPaymentMethod->onBeforeOrderCreation();
+        } catch (InputException $exception) {
+            $this->fail("Exception thrown: " . get_class($exception));
+        }
+    }
+
+    public function onBeforeOrderCreationProvider()
+    {
+        return [
+            'user from netherlands with phone set' => [
+                'countryId' => 'a7c40f632cdd63c52.64272623',
+                'phone' => '65161651',
+            ],
+            'user not from austria no pone set' => [
+                'countryId' => 'a7c40f6320aeb2ec2.72885259',
+                'phone' => '',
+            ],
+        ];
     }
 }
