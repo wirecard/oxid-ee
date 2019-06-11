@@ -287,5 +287,5 @@ abstract class InvoicePaymentMethod extends PaymentMethod
      *
      * @since 1.2.0
      */
-    protected abstract function _isPhoneMandatory();
+    abstract protected function _isPhoneMandatory();
 }

@@ -42,9 +42,9 @@ class SessionHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
      */
     public function testGetDbDateOfBirth($sExpected, $sInput)
     {
-        $this->setSessionParam('dynvalue', ['dateOfBirth' => $sInput]);
+        $this->setSessionParam('dynvalue', ['dateOfBirthtestPaymentName' => $sInput]);
 
-        $this->assertEquals($sExpected, SessionHelper::getDbDateOfBirth());
+        $this->assertEquals($sExpected, SessionHelper::getDbDateOfBirth('testPaymentName'));
     }
 
     public function getDbDateOfBirthProvider()
@@ -61,9 +61,9 @@ class SessionHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
      */
     public function testSetDbDateOfBirth($sExpected, $sInput)
     {
-        SessionHelper::setDbDateOfBirth($sInput);
+        SessionHelper::setDbDateOfBirth($sInput, 'testPaymentName');
 
-        $this->assertEquals($sExpected, $this->getSessionParam('dynvalue')['dateOfBirth']);
+        $this->assertEquals($sExpected, $this->getSessionParam('dynvalue')['dateOfBirthtestPaymentName']);
     }
 
     public function setDbDateOfBirthProvider()
@@ -80,9 +80,9 @@ class SessionHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
      */
     public function testIsDateOfBirthSet($blExpected, $sInput)
     {
-        SessionHelper::setDbDateOfBirth($sInput);
+        SessionHelper::setDbDateOfBirth($sInput, 'testPaymentName');
 
-        $this->assertEquals($blExpected, SessionHelper::isDateOfBirthSet());
+        $this->assertEquals($blExpected, SessionHelper::isDateOfBirthSet('testPaymentName'));
     }
 
     public function testIsDateOfBirthSetProvider()
@@ -99,9 +99,9 @@ class SessionHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
      */
     public function testIsUserOlderThan($blExpected, $sInput, $iAge)
     {
-        $this->setSessionParam('dynvalue', ['dateOfBirth' => $sInput]);
+        $this->setSessionParam('dynvalue', ['dateOfBirthtestPaymentName' => $sInput]);
 
-        $this->assertEquals($blExpected, SessionHelper::isUserOlderThan($iAge));
+        $this->assertEquals($blExpected, SessionHelper::isUserOlderThan($iAge, testPaymentName));
     }
 
     public function isUserOlderThanProvider()
@@ -115,16 +115,16 @@ class SessionHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetPhone()
     {
-        $this->setSessionParam('dynvalue', ['phone' => 'foo']);
+        $this->setSessionParam('dynvalue', ['phonetestPaymentName' => 'foo']);
 
-        $this->assertEquals('foo', SessionHelper::getPhone());
+        $this->assertEquals('foo', SessionHelper::getPhone('testPaymentName'));
     }
 
     public function testSetPhone()
     {
-        SessionHelper::setPhone('foo');
+        SessionHelper::setPhone('foo', 'testPaymentName');
 
-        $this->assertEquals('foo', $this->getSessionParam('dynvalue')['phone']);
+        $this->assertEquals('foo', $this->getSessionParam('dynvalue')['phonetestPaymentName']);
     }
 
     /**
@@ -132,9 +132,9 @@ class SessionHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
      */
     public function testIsPhoneValid($blExpected, $sInput)
     {
-        $this->setSessionParam('dynvalue', ['phone' => $sInput]);
+        $this->setSessionParam('dynvalue', ['phonetestPaymentName' => $sInput]);
 
-        $this->assertEquals($blExpected, SessionHelper::isPhoneValid());
+        $this->assertEquals($blExpected, SessionHelper::isPhoneValid('testPaymentName'));
     }
 
     public function isPhoneValidProvider()
@@ -147,16 +147,16 @@ class SessionHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetSaveCheckoutFields()
     {
-        $this->setSessionParam('dynvalue', ['saveCheckoutFields' => 'foo']);
+        $this->setSessionParam('dynvalue', ['saveCheckoutFieldstestPaymentName' => 'foo']);
 
-        $this->assertEquals('foo', SessionHelper::getSaveCheckoutFields());
+        $this->assertEquals('foo', SessionHelper::getSaveCheckoutFields('testPaymentName'));
     }
 
     public function testSetSaveCheckoutFields()
     {
-        SessionHelper::setSaveCheckoutFields('foo');
+        SessionHelper::setSaveCheckoutFields('foo', testPaymentName);
 
-        $this->assertEquals('foo', $this->getSessionParam('dynvalue')['saveCheckoutFields']);
+        $this->assertEquals('foo', $this->getSessionParam('dynvalue')['saveCheckoutFieldstestPaymentName']);
     }
 
     public function testGetBillingCountryId()

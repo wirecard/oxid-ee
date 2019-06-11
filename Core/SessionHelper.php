@@ -92,7 +92,7 @@ class SessionHelper
     /**
      * Sets date of birth
      *
-     * @param string $sDbDateOfBirth formated for db (format 'Y-m-d')
+     * @param string $sDbDateOfBirth     formated for db (format 'Y-m-d')
      * @param string $sPaymentMethodName
      *
      * @since 1.2.0
@@ -144,8 +144,10 @@ class SessionHelper
         $oSession = Registry::getConfig()->getSession();
         $aDynvalues = $oSession->getVariable('dynvalue');
 
-        $oDateOfBirth =
-            DateTime::createFromFormat(Helper::translate('wd_date_format_php_code'), $aDynvalues['dateOfBirth' . $sPaymentMethodName]);
+        $oDateOfBirth = DateTime::createFromFormat(
+            Helper::translate('wd_date_format_php_code'),
+            $aDynvalues['dateOfBirth' . $sPaymentMethodName]
+        );
 
         if (!$oDateOfBirth) {
             return false;
@@ -225,7 +227,7 @@ class SessionHelper
     /**
      * Sets the saveCheckoutFields flag
      *
-     * @param int    $iSave value 1 if checkout data should be saved 0 if not
+     * @param int    $iSave              value 1 if checkout data should be saved 0 if not
      * @param string $sPaymentMethodName
      *
      * @since 1.2.0
