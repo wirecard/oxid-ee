@@ -33,6 +33,15 @@ class EpsPaymentMethod extends SepaCreditTransferPaymentMethod
     /**
      * @inheritdoc
      *
+     * @var bool
+     *
+     * @since 1.2.0
+     */
+    protected static $_bMerchantOnly = false;
+
+    /**
+     * @inheritdoc
+     *
      * @return Config
      *
      * @since 1.2.0
