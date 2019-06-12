@@ -16,7 +16,7 @@
 </form>
 
 [{if $data}]
-    [{$data[0]|html_entity_decode}]
+    [{$data[0]}]
 [{elseif $emptyText}]
     <em>[{$emptyText}]</em>
 [{/if}]

@@ -54,11 +54,12 @@ class OrderTabDescriptor extends OrderTab
     protected function _getData()
     {
         if ($this->_oOrder->isCustomPaymentMethod()) {
-
             $sOrderPaymentName = $this->_oOrder->oxorder__oxpaymenttype->value;
             if ($sOrderPaymentName === RatepayInvoicePaymentMethod::getName(true)) {
                 $oXml = simplexml_load_string($this->_oTransaction->getResponseXML());
-                return [$oXml->descriptor];
+                if (isset($oXml->descriptor)) {
+                    return [$oXml->descriptor];
+                }
             }
         }
         return [];
