@@ -59,7 +59,7 @@ class IdealCheckoutTest extends CheckoutTestCase
 
     private function goThroughExternalFlow()
     {
-        $this->waitForElement($this->getLocator('external.ideal.confirmTransaction'), 30);
-        $this->clickAndWait($this->getLocator('external.ideal.confirmTransaction'));
+        $this->waitForElement($this->getLocator('external.ideal.nextStep'), 30);
+        $this->clickAndWait($this->getLocator('external.ideal.nextStep'));
     }
 }
