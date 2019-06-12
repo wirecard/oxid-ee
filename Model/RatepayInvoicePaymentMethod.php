@@ -10,15 +10,17 @@
 namespace Wirecard\Oxid\Model;
 
 use DateTime;
+
+use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Core\Exception\InputException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Application\Model\Country;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Extend\Model\Order;
+
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -31,6 +33,10 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
  * Payment method implementation for Ratepay Invoice
  *
  * @since 1.2.0
+ *
+ * @codingStandardsIgnoreStart Custom.Classes.ClassLinesOfCode.MaxExceeded
+ * Will be fixed with https://github.com/wirecard/oxid-ee/pull/132
+ *
  */
 class RatepayInvoicePaymentMethod extends PaymentMethod
 {
@@ -594,3 +600,4 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
         return null;
     }
 }
+// @codingStandardsIgnoreEnd
