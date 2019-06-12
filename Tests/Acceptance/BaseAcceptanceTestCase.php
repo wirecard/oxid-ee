@@ -31,6 +31,10 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
 
     /**
      * Parses JSON from a file and returns it if it is valid.
+     *
+     * @param string $path
+     *
+     * @return array
      */
     private function getJsonFromFile($path)
     {
@@ -60,6 +64,7 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
 
     /**
      * Do not fail tests on log messages.
+     *
      * @inheritdoc
      */
     protected function failOnLoggedExceptions()
@@ -68,8 +73,10 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
 
     /**
      * Returns a value in an array by a path in dot notation (e.g. "a.b.c").
+     *
      * @param array $array
      * @param string $path
+     *
      * @return mixed
      */
     private function getArrayValueByPath($array, $path)
@@ -89,7 +96,9 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
 
     /**
      * Returns a config value by path.
+     *
      * @param string $path
+     *
      * @return mixed
      */
     public function getConfig($path = null)
@@ -99,7 +108,9 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
 
     /**
      * Returns a mock data value by path.
+     *
      * @param string $path
+     *
      * @return mixed
      */
     public function getMockData($path = null)
@@ -109,7 +120,9 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
 
     /**
      * Returns a locator by path.
+     *
      * @param string $path
+     *
      * @return mixed
      */
     public function getLocator($path = null)
@@ -119,6 +132,7 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
 
     /**
      * Patches the select method by ignoring an event exception thrown in Selenium RC.
+     *
      * @see https://github.com/seleniumhq/selenium-google-code-issue-archive/issues/8184
      * @inheritdoc
      */
@@ -133,5 +147,19 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
 
             $this->fireEvent($selector, 'change');
         }
+    }
+
+    /**
+     * Selects a frame by selector.
+     *
+     * @param string $selector
+     */
+    public function selectFrameBySelector($selector)
+    {
+        $element = $this->getElement($selector);
+        $elementName = $element->getAttribute('name');
+
+        $this->getMinkSession()->getDriver()->switchToIFrame($elementName);
+        $this->selectedFrame = $elementName;
     }
 }

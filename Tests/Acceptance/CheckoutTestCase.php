@@ -132,6 +132,7 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
 
     /**
      * Waits until the redirect process has finished.
+     *
      * @param int $seconds
      */
     public function waitForRedirectConfirmation($seconds = 30)
@@ -147,7 +148,9 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
 
     /**
      * Checks if the given URL is pointing to the "Thank you" page.
+     *
      * @param string $url
+     *
      * @return bool
      */
     public function isThankYouPage($url)

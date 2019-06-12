@@ -95,12 +95,8 @@ class CreditCardCheckoutTest extends CheckoutTestCase
         $this->continueToNextStep();
 
         // Step 4: Order
-        $rootFrame = $this->getSelectedFrame();
-
-        $this->waitForElement($this->getLocator('external.creditcard.frame'), 30);
-        $this->selectFrame($this->getLocator('external.creditcard.frameId'));
-
-        $this->waitForElement($this->getLocator('external.creditcard.firstName'));
+        $this->waitForItemAppear($this->getLocator('external.creditcard.frame'), 30);
+        $this->selectFrameBySelector($this->getLocator('external.creditcard.frame'));
         $this->type(
             $this->getLocator('external.creditcard.firstName'),
             $this->getConfig('payments.creditcard.firstName')
@@ -126,8 +122,7 @@ class CreditCardCheckoutTest extends CheckoutTestCase
             $this->getLocator('external.creditcard.expiryYear'),
             $this->getConfig('payments.creditcard.expiryYear')
         );
-
-        $this->selectFrame($rootFrame);
+        $this->selectWindow(null);
         $this->continueToNextStep();
     }
 
