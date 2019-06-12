@@ -123,7 +123,7 @@ class CreditCardCheckoutTest extends CheckoutTestCase
             $this->getConfig('payments.creditcard.expiryYear')
         );
         $this->selectWindow(null);
-        $this->continueToNextStep();
+        $this->continueToNextStep(self::WAIT_TIME_EXTERNAL);
     }
 
     private function goThroughExternalFlow()

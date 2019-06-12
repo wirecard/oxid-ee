@@ -66,7 +66,7 @@ class RatepayInvoiceCheckoutTest extends CheckoutTestCase
         $this->continueToNextStep();
 
         // Step 4: Order
-        $this->continueToNextStep();
+        $this->continueToNextStep(self::WAIT_TIME_EXTERNAL);
     }
 
     private function removeRequiredProfileData()
