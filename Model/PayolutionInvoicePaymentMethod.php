@@ -25,7 +25,7 @@ use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\PayolutionInvoiceTransaction;
 
 /**
- * Payment method implementation for payolution Invoice
+ * Payment method implementation for Payolution Invoice
  *
  * @since 1.2.0
  */
@@ -97,7 +97,7 @@ class PayolutionInvoicePaymentMethod extends InvoicePaymentMethod
      */
     public function getConfigFields()
     {
-        // the configuration from the parent class is not used because payolution should support
+        // the configuration from the parent class is not used because Payolution should support
         // MAID/secret/HTTP user & password per shop currency
         $aConfigFields = [
             'descriptor' => [

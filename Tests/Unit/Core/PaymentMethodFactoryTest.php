@@ -42,7 +42,7 @@ class PaymentMethodFactoryTest extends OxidEsales\TestingLibrary\UnitTestCase
             'SEPA CT payment method' => ['wdsepacredit', SepaCreditTransferPaymentMethod::class],
             'SEPA DD payment method' => ['wdsepadd', SepaDirectDebitPaymentMethod::class],
             'Sofort. payment method' => ['wdsofortbanking', SofortPaymentMethod::class],
-            'payolution payment method' => ['wdpayolution-inv', PayolutionInvoicePaymentMethod::class],
+            'Payolution payment method' => ['wdpayolution-inv', PayolutionInvoicePaymentMethod::class],
             'Ratepay payment method' => ['wdratepay-invoice', RatepayInvoicePaymentMethod::class],
         ];
     }
