@@ -59,6 +59,8 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
             'maid_eur',
             'secret_eur',
             'testCredentials_eur',
+            'trustedShop',
+            'payolutionTermsUrl',
         ], array_keys($aFields));
     }
 
@@ -76,6 +78,8 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
             'shippingCountries',
             'billingCountries',
             'billingShipping',
+            'trustedShop',
+            'payolutionTermsUrl',
         ], $aFieldNames);
     }
 
@@ -86,16 +90,32 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
             'billing_countries',
             'billing_shipping',
             'allowed_currencies',
-            'billing_countries',
             'billing_shipping',
             'httpuser_eur',
             'httppass_eur',
             'maid_eur',
             'secret_eur',
+            'trusted_shop',
+            'payolution_terms_url',
         ];
 
         foreach ($aMinimumExpectedKeys as $sKey) {
             $this->assertContains($sKey, $this->_oPaymentMethod->getMetaDataFieldNames());
         }
+    }
+
+    public function testOnBeforeTransactionCreationWithRequestParameter()
+    {
+        $this->setRequestParameter('trustedshop_checkbox', true);
+
+        $this->assertNull($this->_oPaymentMethod->onBeforeTransactionCreation());
+    }
+
+    /**
+     * @expectedException OxidEsales\Eshop\Core\Exception\InputException
+     */
+    public function testOnBeforeTransactionCreationWithoutRequestParameter()
+    {
+        $this->_oPaymentMethod->onBeforeTransactionCreation();
     }
 }

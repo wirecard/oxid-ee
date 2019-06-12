@@ -52,9 +52,9 @@ class PaypalPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     /**
      * @dataProvider getNameProvider
      */
-    public function testGetName($bforOxid, $sExpected)
+    public function testGetName($bForOxid, $sExpected)
     {
-        $sName = PaypalPaymentMethod::getName($bforOxid);
+        $sName = PaypalPaymentMethod::getName($bForOxid);
         $this->assertEquals($sExpected, $sName);
     }
 

@@ -52,6 +52,7 @@ $aLang = array(
     'wd_config_message' => 'Your message',
     'wd_config_payment_action' => 'Payment Action',
     'wd_config_payment_action_desc' => 'Select between "Purchase" to capture/invoice your order automatically or "Authorization" to capture/invoice manually.',
+    'wd_config_payolution_terms_url' => 'payolution URL',
     'wd_config_reply_to' => 'Reply to (optionally)',
     'wd_config_shipping_countries' => 'Allowed Shipping Countries',
     'wd_config_shipping_countries_desc' => 'Payment method Guaranteed Invoice is only displayed if the consumer\'s shipping country is one of the countries selected here. CTRL-click to select. Default pre-selection: Austria and Germany.',
@@ -65,6 +66,7 @@ $aLang = array(
     'wd_config_three_d_merchant_secret_desc' => 'Secret Key is mandatory to calculate the Digital Signature for the 3-D Secure payment. Can be set to "null" to force SSL process.',
     'wd_config_three_d_min_limit' => '3-D Secure Min. Limit',
     'wd_config_three_d_min_limit_desc' => 'This amount forces 3-D Secure transactions. Enter "null" to disable the 3-D Secure Min. Limit.',
+    'wd_config_trusted_shop_seal' => 'Trusted Shop seal',
     'wd_copy_xml_text' => 'Copy XML',
     'wd_credit' => 'Refund',
     'wd_creditor' => 'Creditor',
@@ -171,6 +173,7 @@ $aLang = array(
     'wd_transactionType' => 'Transaction Type',
     'wd_transaction_details_title' => 'Transaction Details',
     'wd_transaction_response_details' => 'Response Details',
+    'wd_trusted_shop_terms' => 'I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to payolution. My <u><a href="%s" target="_blank">consent</a></u> can be revoked at any time with effect for the future.',
     'wd_wait_for_final_status' => 'Please, wait for additional email with the final status of your payment.',
     'wd_yes' => 'Yes',
 );

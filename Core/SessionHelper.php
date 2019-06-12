@@ -12,6 +12,7 @@ namespace Wirecard\Oxid\Core;
 use DateTime;
 
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Application\Model\Address;
 
 /**
  * Helper class to handle session values
@@ -22,6 +23,7 @@ class SessionHelper
 {
     const DB_DATE_FORMAT = 'Y-m-d';
     const DEFAULT_DATE_OF_BIRTH = '0000-00-00';
+    const SESSION_VAR_DELIVERY_ADDRESS = 'deladrid';
 
     /**
      * Returns account holder for SEPA Direct Debit
@@ -221,5 +223,41 @@ class SessionHelper
         $aDynvalues['saveCheckoutFields'] = $iSave;
 
         $oSession->setVariable('dynvalue', $aDynvalues);
+    }
+
+    /**
+     * Returns the ID for the billing country the user has set. If no country was set, null will be returned.
+     *
+     * @return string|null
+     *
+     * @since 1.2.0
+     */
+    public static function getBillingCountryId()
+    {
+        $oSession = Registry::getSession();
+
+        return $oSession->getUser()->oxuser__oxcountryid->value ?? null;
+    }
+
+    /**
+     * Returns the ID for the shipping country the user has set. If no country was set (or no explicit shipping address
+     * was set), null will be returned.
+     *
+     * @return string|null
+     *
+     * @since 1.2.0
+     */
+    public static function getShippingCountryId()
+    {
+        $oSession = Registry::getSession();
+
+        if ($oSession->getVariable(self::SESSION_VAR_DELIVERY_ADDRESS)) {
+            $oShippingAddress = oxNew(Address::class);
+            $oShippingAddress->load($oSession->getVariable(self::SESSION_VAR_DELIVERY_ADDRESS));
+
+            return $oShippingAddress->oxaddress__oxcountryid->value ?? null;
+        }
+
+        return null;
     }
 }

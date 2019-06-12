@@ -16,9 +16,9 @@ use Wirecard\Oxid\Model\SofortPaymentMethod;
  */
 class SofortCheckoutTest extends CheckoutTestCase
 {
-    public function getPaymentMethod()
+    public function getPaymentMethodName()
     {
-        return new SofortPaymentMethod();
+        return SofortPaymentMethod::getName(true);
     }
 
     public function testCheckout()

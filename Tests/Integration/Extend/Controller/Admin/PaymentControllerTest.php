@@ -34,7 +34,7 @@ class PaymentControllerTest extends \Wirecard\Test\WdUnitTestCase
 
         //OXID uses the `sess_challenge` to set the order id in the order flow.
         Registry::getSession()->setVariable('sess_challenge', 'oxid1');
-        $_POST['payerror'] = $iErrorCode;
+        $this->setRequestParameter('payerror', $iErrorCode);
 
         $paymentController = self::_createControllerWrapper();
         $paymentController->publicUnsetPaymentErrors();

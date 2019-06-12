@@ -13,6 +13,7 @@ use DateTime;
 use OxidEsales\Eshop\Core\Exception\InputException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Application\Model\Country;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
@@ -262,7 +263,7 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
         $oTransaction->setBasket($oWdBasket);
         $oTransaction->setShipping($oOrder->getShippingAccountHolder());
         $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
-        
+
         $oAccountHolder = $oOrder->getAccountHolder();
         $oAccountHolder->setDateOfBirth(new DateTime(SessionHelper::getDbDateOfBirth()));
         $oAccountHolder->setPhone(SessionHelper::getPhone());
@@ -278,9 +279,16 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
      */
     public function isPaymentPossible()
     {
-        // no need to handle if basket amount is within range, this is checked by oxid
-        // TODO: add additional checks as soon as values are available
-        return !SessionHelper::isDateOfBirthSet() || SessionHelper::isUserOlderThan(18);
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+        $sBillingCountryId = SessionHelper::getBillingCountryId();
+        $sShippingCountryId = SessionHelper::getShippingCountryId() ?? $sBillingCountryId;
+
+        // if basket amount is within range is checked by oxid, no need to handle that
+        return $this->_checkDateOfBirth() &&
+            $this->_areArticlesAllowed($oBasket->getBasketArticles(), $oBasket->getVouchers()) &&
+            $this->_isCurrencyAllowed($oBasket->getBasketCurrency()) &&
+            $this->_areAddressesAllowed($sBillingCountryId, $sShippingCountryId);
     }
 
     /**
@@ -351,7 +359,7 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
             $oUser->save();
         }
 
-        self::_validateUserInput();
+        $this->_validateUserInput();
     }
 
     /**
@@ -368,5 +376,89 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
         if (!SessionHelper::isPhoneValid()) {
             throw new InputException(Helper::translate('wd_text_generic_error'));
         }
+    }
+
+    /**
+     * Checks if the user is older than 18 or the date of birth needs to be entered
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _checkDateOfBirth()
+    {
+        return !SessionHelper::isDateOfBirthSet() || SessionHelper::isUserOlderThan(18);
+    }
+
+    /**
+     * Checks if given articles are allowed for this payment.
+     *
+     * @param array $aArticles
+     * @param array $aVouchers
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _areArticlesAllowed($aArticles, $aVouchers = [])
+    {
+        if ($aVouchers) {
+            return false;
+        }
+
+        foreach ($aArticles as $oArticle) {
+            if ($oArticle->oxarticles__oxisdownloadable->value) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if the selected currency is allowed for this payment.
+     *
+     * @param object $oCurrency
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _isCurrencyAllowed($oCurrency)
+    {
+        $oPayment = $this->getPayment();
+
+        return in_array($oCurrency->name, $oPayment->oxpayments__allowed_currencies->value ?? []);
+    }
+
+    /**
+     * Checks if given billing and shipping countries are allowed for this payment.
+     *
+     * @param string $sBillingCountryId
+     * @param string $sShippingCountryId
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _areAddressesAllowed($sBillingCountryId, $sShippingCountryId)
+    {
+        $oPayment = $this->getPayment();
+        $oBillingCountry = oxNew(Country::class);
+        $oShippingCountry = oxNew(Country::class);
+
+        $oBillingCountry->load($sBillingCountryId);
+        $oShippingCountry->load($sShippingCountryId);
+
+        return in_array(
+            $oBillingCountry->oxcountry__oxisoalpha2->value,
+            $oPayment->oxpayments__billing_countries->value ?? []
+        ) && in_array(
+            $oShippingCountry->oxcountry__oxisoalpha2->value,
+            $oPayment->oxpayments__shipping_countries->value ?? []
+        ) && (
+            !$oPayment->oxpayments__billing_shipping->value ||
+            $sBillingCountryId === $sShippingCountryId
+        );
     }
 }

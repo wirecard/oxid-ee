@@ -16,9 +16,9 @@ use Wirecard\Oxid\Model\GiropayPaymentMethod;
  */
 class GiropayCheckoutTest extends CheckoutTestCase
 {
-    public function getPaymentMethod()
+    public function getPaymentMethodName()
     {
-        return new GiropayPaymentMethod();
+        return GiropayPaymentMethod::getName(true);
     }
 
     public function testCheckout()
@@ -45,7 +45,7 @@ class GiropayCheckoutTest extends CheckoutTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->paymentMethod::getName(true)
+            $this->getPaymentMethodName()
         ));
         $this->type(
             $this->getLocator('external.giropay.bic'),

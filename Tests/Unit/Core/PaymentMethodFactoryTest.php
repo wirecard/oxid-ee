@@ -29,10 +29,9 @@ class PaymentMethodFactoryTest extends OxidEsales\TestingLibrary\UnitTestCase
     /**
      * @dataProvider createProvider
      */
-    public function testCreatePaypal()
+    public function testCreate($sPaymentMethodType, $oExpectedClassName)
     {
-        $oPaymentMethod = PaymentMethodFactory::create("wdpaypal");
-        $this->assertInstanceOf(PaypalPaymentMethod::class, $oPaymentMethod);
+        $this->assertInstanceOf($oExpectedClassName, PaymentMethodFactory::create($sPaymentMethodType));
     }
 
     public function createProvider()
@@ -49,7 +48,7 @@ class PaymentMethodFactoryTest extends OxidEsales\TestingLibrary\UnitTestCase
     }
 
     /**
-     * @expectedException \OxidEsales\Eshop\Core\Exception\StandardException
+     * @expectedException \OxidEsales\Eshop\Core\Exception\SystemComponentException
      */
     public function testInvalidPaymentMethod()
     {

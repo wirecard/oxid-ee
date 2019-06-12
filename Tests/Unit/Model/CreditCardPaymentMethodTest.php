@@ -129,9 +129,9 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     /**
      * @dataProvider getNameProvider
      */
-    public function testGetName($bforOxid, $sExpected)
+    public function testGetName($bForOxid, $sExpected)
     {
-        $sName = CreditCardPaymentMethod::getName($bforOxid);
+        $sName = CreditCardPaymentMethod::getName($bForOxid);
         $this->assertEquals($sExpected, $sName);
     }
 

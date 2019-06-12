@@ -17,27 +17,20 @@ use Wirecard\Oxid\Model\Transaction;
 abstract class CheckoutTestCase extends BaseAcceptanceTestCase
 {
     /**
-     * @var Wirecard\Oxid\Model\PaymentMethod
-     */
-    protected $paymentMethod;
-
-    /**
      * @inheritdoc
      */
     protected function setUp()
     {
         parent::setUp();
 
-        $this->paymentMethod = $this->getPaymentMethod();
-
         $this->insertMockData();
         $this->activatePaymentMethod();
     }
 
     /**
-     * Payment method getter.
+     * Payment method name getter.
      */
-    abstract public function getPaymentMethod();
+    abstract public function getPaymentMethodName();
 
     /**
      * Activates the payment method.
@@ -45,7 +38,7 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     public function activatePaymentMethod()
     {
         $this->executeSql("UPDATE `oxpayments` SET `OXACTIVE` = '1'
-            WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
+            WHERE `OXID` = '{$this->getPaymentMethodName()}'");
     }
 
     /**
@@ -54,7 +47,7 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     public function setPaymentActionPurchase()
     {
         $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_PAY .
-            "' WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
+            "' WHERE `OXID` = '{$this->getPaymentMethodName()}'");
     }
 
     /**
@@ -63,7 +56,7 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     public function setPaymentActionAuthorize()
     {
         $this->executeSql("UPDATE `oxpayments` SET `WDOXIDEE_TRANSACTIONACTION` = '" . Transaction::ACTION_RESERVE .
-            "' WHERE `OXID` = '{$this->paymentMethod::getName(true)}'");
+            "' WHERE `OXID` = '{$this->getPaymentMethodName()}'");
     }
 
     /**
@@ -129,7 +122,7 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->paymentMethod::getName(true)
+            $this->getPaymentMethodName()
         ));
         $this->continueToNextStep();
 

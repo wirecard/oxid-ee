@@ -14,7 +14,7 @@ use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Model\MetaDataModel;
 use Wirecard\Oxid\Model\PaymentMethod;
 
-use OxidEsales\Eshop\Core\Exception\StandardException;
+use OxidEsales\Eshop\Core\Exception\SystemComponentException;
 
 /**
  * Extends the Payment model.
@@ -61,7 +61,7 @@ class Payment extends Payment_parent
     {
         try {
             return PaymentMethodFactory::create($this->getId());
-        } catch (StandardException $oException) {
+        } catch (SystemComponentException $oException) {
             return null;
         }
     }
