@@ -216,6 +216,20 @@ class BasketHelper
     }
 
     /**
+     * Returns the name of the currency from the session's basket
+     *
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    public static function getCurrencyFromBasket()
+    {
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+        return strtolower($oBasket->getBasketCurrency()->name);
+    }
+
+    /**
      * Adds an article to the basket
      *
      * @param WdBasket   $oBasket

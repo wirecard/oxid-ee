@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Model;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\BasketHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
@@ -37,15 +38,30 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
      */
     public function getConfig()
     {
-        $oConfig = parent::getConfig();
+        // get the currency-specific config values
+        $sCurrency = BasketHelper::getCurrencyFromBasket();
+
+        $sHttpUserField = 'oxpayments__httpuser_' . $sCurrency;
+        $sHttpPassField = 'oxpayments__httppass_' . $sCurrency;
+        $sMaidField = 'oxpayments__maid_' . $sCurrency;
+        $sSecretField = 'oxpayments__secret_' . $sCurrency;
+
+        $oConfig = new Config(
+            $this->_oPayment->oxpayments__wdoxidee_apiurl->value,
+            $this->_oPayment->$sHttpUserField->value,
+            $this->_oPayment->$sHttpPassField->value
+        );
+
+        self::_addAnalyticsShopInfo($oConfig);
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
             PayolutionInvoiceTransaction::NAME,
-            $this->_oPayment->oxpayments__wdoxidee_maid->value,
-            $this->_oPayment->oxpayments__wdoxidee_secret->value
+            $this->_oPayment->$sMaidField->value,
+            $this->_oPayment->$sSecretField->value
         );
 
         $oConfig->add($oPaymentMethodConfig);
+
         return $oConfig;
     }
 
@@ -70,7 +86,9 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
      */
     public function getConfigFields()
     {
-        $aAdditionalFields = [
+        // the configuration from the parent class is not used because payolution should support
+        // MAID/secret/HTTP user & password per shop currency
+        $aConfigFields = [
             'descriptor' => [
                 'type' => 'select',
                 'field' => 'oxpayments__wdoxidee_descriptor',
@@ -151,9 +169,95 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
                 'field' => 'oxpayments__payolution_terms_url',
                 'title' => Helper::translate('wd_config_payolution_terms_url'),
             ],
+            'allowedCurrencies' => [
+                'type' => 'multiselect',
+                'field' => 'oxpayments__allowed_currencies',
+                'options' => PaymentMethodHelper::getCurrencyOptions(),
+                'title' => Helper::translate('wd_config_allowed_currencies'),
+                'description' => Helper::translate('wd_config_allowed_currencies_desc'),
+                'required' => true,
+            ],
+            'apiUrl' => [
+                'type' => 'text',
+                'field' => 'oxpayments__wdoxidee_apiurl',
+                'title' => Helper::translate('wd_config_base_url'),
+                'description' => Helper::translate('wd_config_base_url_desc'),
+                'required' => true,
+            ],
         ];
+        return $aConfigFields + $this->_getCustomCurrencyConfigFields();
+    }
 
-        return parent::getConfigFields() + $aAdditionalFields;
+    /**
+     * Returns an array of all custom config fields per activated currency.
+     * One separator, HTTP user/password and MAID and secret fields are added per currency.
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    private function _getCustomCurrencyConfigFields()
+    {
+        $aCurrencyFields = [];
+
+        $aCurrencies = $this->_oPayment->oxpayments__allowed_currencies->value;
+
+        // fields that are configurable per currency
+        $aFields = [
+            'httpUser_%s' => [
+                'type' => 'text',
+                'field' => 'oxpayments__httpuser_%s',
+                'title' => Helper::translate('wd_config_http_user'),
+            ],
+            'httpPassword_%s' => [
+                'type' => 'text',
+                'field' => 'oxpayments__httppass_%s',
+                'title' => Helper::translate('wd_config_http_password'),
+            ],
+            'maid_%s' => [
+                'type' => 'text',
+                'field' => 'oxpayments__maid_%s',
+                'title' => Helper::translate('wd_config_merchant_account_id'),
+                'description' => Helper::translate('wd_config_merchant_account_id_desc'),
+            ],
+            'secret_%s' => [
+                'type' => 'text',
+                'field' => 'oxpayments__secret_%s',
+                'title' => Helper::translate('wd_config_merchant_secret'),
+                'description' => Helper::translate('wd_config_merchant_secret_desc'),
+            ],
+         ];
+
+        foreach ($aCurrencies as $sCurrency) {
+            $aCurrencyFields['groupSeparator_' . strtolower($sCurrency)] = [
+                'type' => 'separator',
+                'title' => $sCurrency,
+            ];
+
+            foreach ($aFields as $sFieldName => $aConfigProps) {
+                $sConfigKey = sprintf($sFieldName, strtolower($sCurrency));
+                $aFieldProps = [
+                    'type' => $aConfigProps['type'],
+                    'field' => sprintf($aConfigProps['field'], strtolower($sCurrency)),
+                    'title' => $aConfigProps['title'],
+                ];
+
+                if (isset($aConfigProps['description'])) {
+                    $aFieldProps['description'] = $aConfigProps['description'];
+                }
+
+                $aCurrencyFields[$sConfigKey] = $aFieldProps;
+            }
+
+            $aCurrencyFields['testCredentials_' . strtolower($sCurrency)] = [
+                'type' => 'button',
+                'onclick' => 'wdTestPaymentMethodCredentials(\'' . strtolower($sCurrency) . '\')',
+                'text' => Helper::translate('wd_test_credentials'),
+                'colspan' => '2',
+            ];
+        }
+
+        return $aCurrencyFields;
     }
 
     /**
@@ -190,13 +294,25 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
      */
     public function getMetaDataFieldNames()
     {
-        return [
+        $aReturn = [
+            'allowed_currencies',
             'shipping_countries',
             'billing_countries',
             'billing_shipping',
             'trusted_shop',
             'payolution_terms_url',
         ];
+
+        $aCurrencies = PaymentMethodHelper::getCurrencyOptions();
+        $aFieldNames = ['httpuser', 'httppass', 'maid', 'secret'];
+
+        foreach ($aCurrencies as $sCurrency) {
+            foreach ($aFieldNames as $sFieldName) {
+                $aReturn[] = $sFieldName . '_' . strtolower($sCurrency);
+            }
+        }
+
+        return $aReturn;
     }
 
     /**

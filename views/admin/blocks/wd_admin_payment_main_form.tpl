@@ -14,7 +14,7 @@
   [{assign var="configFields" value=$paymentMethod->getConfigFields()}]
 [{/if}]
 
-[{if $configFields.apiUrl && $configFields.httpUser && $configFields.httpPassword}]
+[{if $configFields.apiUrl}]
   <style>
     .color-success {
       color: green;
@@ -32,6 +32,13 @@
     .wd-multiselect {
       min-width: 150px;
     }
+
+    .wd-separator {
+      display: block;
+      margin-top: 12px;
+      font-size: 1.1em;
+      font-weight: bold;
+    }
   </style>
 
   [{oxscript include="js/libs/jquery.min.js"}]
@@ -39,13 +46,19 @@
 
   <script type="text/javascript">
     <!--
-    function wdTestPaymentMethodCredentials() {
+    function wdTestPaymentMethodCredentials(currency) {
       var $ = jQuery;
+
+      var apiUrlFieldId = '#apiUrl';
+      var httpUserFieldId = '#httpUser' + (currency ? '_' + currency : '');
+      var httpPassFieldId = '#httpPassword' + (currency ? '_' + currency : '');
+      var resultFieldId = '#testCredentials' + (currency ? '_' + currency : '') + '_validation';
+
       var elements = {
-        apiUrl: $('#apiUrl'),
-        httpUser: $('#httpUser'),
-        httpPass: $('#httpPassword'),
-        result: $('#testCredentials_validation')
+        apiUrl: $(apiUrlFieldId),
+        httpUser: $(httpUserFieldId),
+        httpPass: $(httpPassFieldId),
+        result: $(resultFieldId)
       };
 
       elements.labels = $()
@@ -60,6 +73,7 @@
 
       // check if API URL is a root URL, if not there is no need to perform the request
       if (!/^https\:\/\/[^\/]+$/.test(elements.apiUrl.val())) {
+        console.log('api url failed', elements.apiUrl.val());
         elements.result
           .text('[{oxmultilang ident="wd_error_credentials"}]')
           .add(elements.labels.eq(0))
@@ -182,7 +196,7 @@
     [{assign var="fieldName" value=$configField.field}]
     <tr>
       [{if $configField.title}]
-        <td class="edittext" width="70">[{$configField.title}]</td>
+        <td class="edittext [{if $configField.type === 'separator'}]wd-separator[{/if}]" width="70">[{$configField.title}]</td>
       [{/if}]
       <td class="edittext" [{if $configField.colspan}]colspan="[{$configField.colspan}]"[{/if}]>
         [{if $configField.type === 'text'}]

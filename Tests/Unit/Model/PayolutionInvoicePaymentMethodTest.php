@@ -8,6 +8,7 @@
  */
 
 use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
+use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\PayolutionInvoiceTransaction;
 
@@ -21,13 +22,15 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
     protected function setUp()
     {
         parent::setUp();
+
         $this->_oPaymentMethod = new PayolutionInvoicePaymentMethod();
     }
 
     public function testGetConfig()
     {
         $oConfig = $this->_oPaymentMethod->getConfig();
-        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get("payolution-inv"));
+
+        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get(PayolutionInvoicePaymentMethod::getName()));
     }
 
     public function testGetTransaction()
@@ -41,12 +44,6 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
         $aFields = $this->_oPaymentMethod->getConfigFields();
 
         $this->assertEquals([
-            'apiUrl',
-            'httpUser',
-            'httpPassword',
-            'testCredentials',
-            'maid',
-            'secret',
             'descriptor',
             'additionalInfo',
             'deleteCanceledOrder',
@@ -56,6 +53,14 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
             'billingShipping',
             'trustedShop',
             'payolutionTermsUrl',
+            'allowedCurrencies',
+            'apiUrl',
+            'groupSeparator_eur',
+            'httpUser_eur',
+            'httpPassword_eur',
+            'maid_eur',
+            'secret_eur',
+            'testCredentials_eur',
         ], array_keys($aFields));
     }
 
@@ -80,13 +85,23 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
 
     public function testGetMetaDataFieldNames()
     {
-        $this->assertEquals([
+        $aMinimumExpectedKeys = [
             'shipping_countries',
             'billing_countries',
             'billing_shipping',
+            'allowed_currencies',
+            'billing_shipping',
+            'httpuser_eur',
+            'httppass_eur',
+            'maid_eur',
+            'secret_eur',
             'trusted_shop',
             'payolution_terms_url',
-        ], $this->_oPaymentMethod->getMetaDataFieldNames());
+        ];
+
+        foreach ($aMinimumExpectedKeys as $sKey) {
+            $this->assertContains($sKey, $this->_oPaymentMethod->getMetaDataFieldNames());
+        }
     }
 
     public function testOnBeforeTransactionCreationWithRequestParameter()
