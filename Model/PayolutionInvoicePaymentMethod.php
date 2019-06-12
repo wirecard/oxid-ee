@@ -15,6 +15,9 @@ use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\PayolutionInvoiceTransaction;
 
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Exception\InputException;
+
 /**
  * Payment method implementation for payolution Invoice
  *
@@ -134,6 +137,20 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
                 'title' => Helper::translate('wd_config_billing_shipping'),
                 'description' => Helper::translate('wd_config_billing_shipping_desc'),
             ],
+            'trustedShop' => [
+                'type' => 'select',
+                'field' => 'oxpayments__trusted_shop',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
+                ],
+                'title' => Helper::translate('wd_config_trusted_shop_seal'),
+            ],
+            'payolutionTermsUrl' => [
+                'type' => 'text',
+                'field' => 'oxpayments__payolution_terms_url',
+                'title' => Helper::translate('wd_config_payolution_terms_url'),
+            ],
         ];
 
         return parent::getConfigFields() + $aAdditionalFields;
@@ -158,6 +175,8 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
                 'shippingCountries',
                 'billingCountries',
                 'billingShipping',
+                'trustedShop',
+                'payolutionTermsUrl',
             ]
         );
     }
@@ -175,6 +194,41 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
             'shipping_countries',
             'billing_countries',
             'billing_shipping',
+            'trusted_shop',
+            'payolution_terms_url',
         ];
+    }
+
+    /**
+     * @throws InputException
+     *
+     * @since 1.2.0
+     */
+    public function onBeforeTransactionCreation()
+    {
+        parent::onBeforeTransactionCreation();
+
+        if (!$this->_isTermsAccepted()) {
+            throw new InputException('Trusted Shop terms were not accepted.');
+        }
+    }
+
+    /**
+     * Checks if trusted shop terms are accepted
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _isTermsAccepted()
+    {
+        $oRequest = Registry::getRequest();
+
+        if ($this->_oPayment->oxpayments__trusted_shop->value &&
+         !$oRequest->getRequestParameter('trustedshop_checkbox')) {
+            return false;
+        }
+
+        return true;
     }
 }
