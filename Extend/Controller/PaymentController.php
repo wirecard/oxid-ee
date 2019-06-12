@@ -65,7 +65,6 @@ class PaymentController extends PaymentController_parent
         foreach (parent::getPaymentList() as $sKey => $oPayment) {
             if (!$this->_showPayment($oPayment)) {
                 unset($aPaymentList[$sKey]);
-                continue;
             }
 
             $this->_initializeInputFields($oPayment);
