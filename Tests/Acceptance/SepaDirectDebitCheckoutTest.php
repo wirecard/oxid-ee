@@ -106,6 +106,6 @@ class SepaDirectDebitCheckoutTest extends CheckoutTestCase
 
         // Step 4: Popover
         $this->click($this->getLocator('external.sepadd.terms'));
-        $this->clickAndWait($this->getLocator('external.sepadd.nextStep'));
+        $this->clickAndWait($this->getLocator('external.sepadd.nextStep'), self::WAIT_TIME_EXTERNAL);
     }
 }
