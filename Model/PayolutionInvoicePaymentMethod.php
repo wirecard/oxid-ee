@@ -208,11 +208,27 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
     {
         parent::onBeforeTransactionCreation();
 
+        if (!$this->_isTermsAccepted()) {
+            throw new InputException('Trusted Shop terms were not accepted.');
+        }
+    }
+
+    /**
+     * Checks if trusted shop terms are accepted
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _isTermsAccepted()
+    {
         $oRequest = Registry::getRequest();
 
         if ($this->_oPayment->oxpayments__trusted_shop->value &&
          !$oRequest->getRequestParameter('trustedshop_checkbox')) {
-            throw new InputException('Trusted Shop terms were not accepted.');
+            return false;
         }
+
+        return true;
     }
 }
