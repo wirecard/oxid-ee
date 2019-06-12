@@ -53,14 +53,14 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
             'billingShipping',
             'allowedCurrencies',
             'apiUrl',
+            'trustedShop',
+            'payolutionTermsUrl',
             'groupSeparator_eur',
             'httpUser_eur',
             'httpPassword_eur',
             'maid_eur',
             'secret_eur',
             'testCredentials_eur',
-            'trustedShop',
-            'payolutionTermsUrl',
         ], array_keys($aFields));
     }
 
