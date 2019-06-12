@@ -73,6 +73,7 @@
 
       // check if API URL is a root URL, if not there is no need to perform the request
       if (!/^https\:\/\/[^\/]+$/.test(elements.apiUrl.val())) {
+        console.log('api url failed', elements.apiUrl.val());
         elements.result
           .text('[{oxmultilang ident="wd_error_credentials"}]')
           .add(elements.labels.eq(0))

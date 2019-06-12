@@ -155,6 +155,20 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
                 'title' => Helper::translate('wd_config_billing_shipping'),
                 'description' => Helper::translate('wd_config_billing_shipping_desc'),
             ],
+            'trustedShop' => [
+                'type' => 'select',
+                'field' => 'oxpayments__trusted_shop',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
+                ],
+                'title' => Helper::translate('wd_config_trusted_shop_seal'),
+            ],
+            'payolutionTermsUrl' => [
+                'type' => 'text',
+                'field' => 'oxpayments__payolution_terms_url',
+                'title' => Helper::translate('wd_config_payolution_terms_url'),
+            ],
             'allowedCurrencies' => [
                 'type' => 'multiselect',
                 'field' => 'oxpayments__allowed_currencies',
@@ -169,20 +183,6 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
                 'title' => Helper::translate('wd_config_base_url'),
                 'description' => Helper::translate('wd_config_base_url_desc'),
                 'required' => true,
-            ],
-            'trustedShop' => [
-                'type' => 'select',
-                'field' => 'oxpayments__trusted_shop',
-                'options' => [
-                    '1' => Helper::translate('wd_yes'),
-                    '0' => Helper::translate('wd_no'),
-                ],
-                'title' => Helper::translate('wd_config_trusted_shop_seal'),
-            ],
-            'payolutionTermsUrl' => [
-                'type' => 'text',
-                'field' => 'oxpayments__payolution_terms_url',
-                'title' => Helper::translate('wd_config_payolution_terms_url'),
             ],
         ];
         return $aConfigFields + $this->_getCustomCurrencyConfigFields();
@@ -251,7 +251,7 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
 
             $aCurrencyFields['testCredentials_' . strtolower($sCurrency)] = [
                 'type' => 'button',
-                'onclick' => 'wdTestPaymentMethodCredentials(\'' . $sCurrency . '\')',
+                'onclick' => 'wdTestPaymentMethodCredentials(\'' . strtolower($sCurrency) . '\')',
                 'text' => Helper::translate('wd_test_credentials'),
                 'colspan' => '2',
             ];
