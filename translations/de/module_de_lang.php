@@ -52,7 +52,7 @@ $aLang = array(
     'wd_config_message' => 'Ihre Nachricht',
     'wd_config_payment_action' => 'Zahlungsaktion',
     'wd_config_payment_action_desc' => 'Wählen Sie "Buchung", um automatisch eine Buchung durchzuführen, oder "Genehmigung", um eine manuelle Buchung zu ermöglichen.',
-    'wd_config_payolution_terms_url' => 'payolution URL',
+    'wd_config_payolution_terms_url' => 'Payolution URL',
     'wd_config_reply_to' => 'Antwort an (optional)',
     'wd_config_shipping_countries' => 'Erlaubte Lieferländer',
     'wd_config_shipping_countries_desc' => 'Garantierter Kauf auf Rechnung wird nur dann angezeigt, wenn das Lieferland einem der hier gewählten Länder entspricht. Mehrfachauswahl mit STRG + Klick. Standardvorauswahl: Österreich und Deutschland.',
@@ -176,7 +176,7 @@ $aLang = array(
     'wd_transactionType' => 'Transaktionstyp',
     'wd_transaction_details_title' => 'Transaktionsdetails',
     'wd_transaction_response_details' => 'Antwort-Details',
-    'wd_trusted_shop_terms' => 'Mit der Übermittlung der für die Abwicklung des Rechnungskaufes und einer Identitäts- und Bonitätsprüfung erforderlichen Daten an payolution bin ich einverstanden. Meine <u><a href="%s" target="_blank">Einwilligung</a></u> kann ich jederzeit mit Wirkung für die Zukunft widerrufen.',
+    'wd_trusted_shop_terms' => 'Mit der Übermittlung der für die Abwicklung des Rechnungskaufes und einer Identitäts- und Bonitätsprüfung erforderlichen Daten an Payolution bin ich einverstanden. Meine <u><a href="%s" target="_blank">Einwilligung</a></u> kann ich jederzeit mit Wirkung für die Zukunft widerrufen.',
     'wd_wait_for_final_status' => 'Bitte warten Sie auf ein zusätzliches E-Mail mit dem finalen Bezahlstatus.',
     'wd_yes' => 'Ja',
 );

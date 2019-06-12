@@ -52,7 +52,7 @@ $aLang = array(
     'wd_config_message' => 'Your message',
     'wd_config_payment_action' => 'Payment Action',
     'wd_config_payment_action_desc' => 'Select between "Purchase" to capture/invoice your order automatically or "Authorization" to capture/invoice manually.',
-    'wd_config_payolution_terms_url' => 'payolution URL',
+    'wd_config_payolution_terms_url' => 'Payolution URL',
     'wd_config_reply_to' => 'Reply to (optionally)',
     'wd_config_shipping_countries' => 'Allowed Shipping Countries',
     'wd_config_shipping_countries_desc' => 'Payment method Guaranteed Invoice is only displayed if the consumer\'s shipping country is one of the countries selected here. CTRL-click to select. Default pre-selection: Austria and Germany.',
@@ -176,7 +176,7 @@ $aLang = array(
     'wd_transactionType' => 'Transaction Type',
     'wd_transaction_details_title' => 'Transaction Details',
     'wd_transaction_response_details' => 'Response Details',
-    'wd_trusted_shop_terms' => 'I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to payolution. My <u><a href="%s" target="_blank">consent</a></u> can be revoked at any time with effect for the future.',
+    'wd_trusted_shop_terms' => 'I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to Payolution. My <u><a href="%s" target="_blank">consent</a></u> can be revoked at any time with effect for the future.',
     'wd_wait_for_final_status' => 'Please, wait for additional email with the final status of your payment.',
     'wd_yes' => 'Yes',
 );
