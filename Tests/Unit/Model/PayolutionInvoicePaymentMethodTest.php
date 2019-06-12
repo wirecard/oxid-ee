@@ -156,11 +156,7 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
         $aDynvalues['saveCheckoutFieldspayolution-inv'] = '1';
         $this->getSession()->setVariable('dynvalue', $aDynvalues);
 
-        try {
-            $this->_oPaymentMethod->onBeforeOrderCreation();
-        } catch (InputException $exception) {
-            $this->fail("Exception thrown: " . get_class($exception));
-        }
+        $this->_oPaymentMethod->onBeforeOrderCreation();
     }
 
     public function onBeforeOrderCreationProvider()

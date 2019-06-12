@@ -248,10 +248,9 @@ class PayolutionInvoicePaymentMethod extends InvoicePaymentMethod
             foreach ($aFields as $sFieldName => $aConfigProps) {
                 $sConfigKey = sprintf($sFieldName, strtolower($sCurrency));
                 $aFieldProps = [
-                    'type' => $aConfigProps['fieldType'],
-                    'field' => $aConfigProps['dbFieldPrefix'] . '_' . strtolower($sCurrency),
+                    'type' => $aConfigProps['type'],
+                    'field' => sprintf($aConfigProps['field'], strtolower($sCurrency)),
                     'title' => $aConfigProps['title'],
-                    'required' => true,
                 ];
 
                 if (isset($aConfigProps['description'])) {
