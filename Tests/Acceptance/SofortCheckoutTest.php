@@ -43,8 +43,7 @@ class SofortCheckoutTest extends CheckoutTestCase
             $this->getConfig('payments.sofort.bank')
         );
         $this->fireEvent($this->getLocator('external.sofort.bank'), 'input');
-        $this->click($this->getLocator('external.sofort.nextStep'));
-        $this->waitForElement($this->getLocator('external.sofort.userId'), self::WAIT_TIME_EXTERNAL);
+        $this->clickAndWait($this->getLocator('external.sofort.nextStep'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.sofort.userId'),
             $this->getConfig('payments.sofort.userId')
@@ -53,11 +52,9 @@ class SofortCheckoutTest extends CheckoutTestCase
             $this->getLocator('external.sofort.password'),
             $this->getConfig('payments.sofort.password')
         );
-        $this->click($this->getLocator('external.sofort.nextStep'));
-        $this->waitForElement($this->getLocator('external.sofort.account'), self::WAIT_TIME_EXTERNAL);
+        $this->clickAndWait($this->getLocator('external.sofort.nextStep'), self::WAIT_TIME_EXTERNAL);
         $this->click($this->getLocator('external.sofort.account'));
-        $this->click($this->getLocator('external.sofort.nextStep'));
-        $this->waitForElement($this->getLocator('external.sofort.tan'), self::WAIT_TIME_EXTERNAL);
+        $this->clickAndWait($this->getLocator('external.sofort.nextStep'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.sofort.tan'),
             $this->getConfig('payments.sofort.tan')
