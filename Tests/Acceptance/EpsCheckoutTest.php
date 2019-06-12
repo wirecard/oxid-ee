@@ -32,20 +32,20 @@ class EpsCheckoutTest extends CheckoutTestCase
 
     private function goThroughExternalFlow()
     {
-        $this->waitForElement($this->getLocator('external.eps.bic'), 30);
+        $this->waitForElement($this->getLocator('external.eps.bic'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.eps.bic'),
             $this->getConfig('payments.eps.bic')
         );
-        $this->clickAndWait($this->getLocator('external.eps.submitBic'), 30);
+        $this->clickAndWait($this->getLocator('external.eps.submitBic'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.eps.id'),
             $this->getConfig('payments.eps.id')
         );
-        $this->clickAndWait($this->getLocator('external.eps.submitLogin'), 30);
-        $this->clickAndWait($this->getLocator('external.eps.submitSign'), 30);
-        $this->clickAndWait($this->getLocator('external.eps.submitFinalize'), 30);
-        $this->clickAndWait($this->getLocator('external.eps.submitConfirm'), 30);
+        $this->clickAndWait($this->getLocator('external.eps.submitLogin'), self::WAIT_TIME_EXTERNAL);
+        $this->clickAndWait($this->getLocator('external.eps.submitSign'), self::WAIT_TIME_EXTERNAL);
+        $this->clickAndWait($this->getLocator('external.eps.submitFinalize'), self::WAIT_TIME_EXTERNAL);
+        $this->clickAndWait($this->getLocator('external.eps.submitConfirm'), self::WAIT_TIME_EXTERNAL);
         $this->click($this->getLocator('external.eps.backToShop'));
     }
 }

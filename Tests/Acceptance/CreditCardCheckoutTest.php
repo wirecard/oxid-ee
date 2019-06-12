@@ -95,7 +95,7 @@ class CreditCardCheckoutTest extends CheckoutTestCase
         $this->continueToNextStep();
 
         // Step 4: Order
-        $this->waitForItemAppear($this->getLocator('external.creditcard.frame'), 30);
+        $this->waitForItemAppear($this->getLocator('external.creditcard.frame'), self::WAIT_TIME_EXTERNAL);
         $this->selectFrameBySelector($this->getLocator('external.creditcard.frame'));
         $this->type(
             $this->getLocator('external.creditcard.firstName'),
@@ -128,7 +128,7 @@ class CreditCardCheckoutTest extends CheckoutTestCase
 
     private function goThroughExternalFlow()
     {
-        $this->waitForElement($this->getLocator('external.creditcard.password'), 30);
+        $this->waitForElement($this->getLocator('external.creditcard.password'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.creditcard.password'),
             $this->getConfig('payments.creditcard.password')

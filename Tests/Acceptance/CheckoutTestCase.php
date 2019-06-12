@@ -17,6 +17,16 @@ use Wirecard\Oxid\Model\Transaction;
 abstract class CheckoutTestCase extends BaseAcceptanceTestCase
 {
     /**
+     * @var integer
+     */
+    const WAIT_TIME_INTERNAL = 10;
+
+    /**
+     * @var integer
+     */
+    const WAIT_TIME_EXTERNAL = 30;
+
+    /**
      * @inheritdoc
      */
     protected function setUp()
@@ -99,7 +109,7 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     /**
      * Navigates to the next step in the checkout.
      */
-    public function continueToNextStep($seconds = 10)
+    public function continueToNextStep($seconds = self::WAIT_TIME_INTERNAL)
     {
         $this->clickAndWait($this->getLocator('checkout.nextStep'), $seconds);
     }
@@ -135,7 +145,7 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
      *
      * @param int $seconds
      */
-    public function waitForRedirectConfirmation($seconds = 30)
+    public function waitForRedirectConfirmation($seconds = self::WAIT_TIME_EXTERNAL)
     {
         // there might be an insecure certificate warning that needs to be dismissed
         $this->getMinkSession()->getDriver()->getBrowser()->keyPressNative('10');
