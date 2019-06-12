@@ -16,6 +16,7 @@ use Wirecard\Oxid\Model\PaypalPaymentMethod;
  */
 class PaypalCheckoutTest extends CheckoutTestCase
 {
+    // catch possible A/B tests
     protected $retryTimes = 1;
 
     public function getPaymentMethodName()
@@ -58,7 +59,7 @@ class PaypalCheckoutTest extends CheckoutTestCase
         );
         $this->click($this->getLocator('external.paypal.login'));
         $this->waitForElement($this->getLocator('external.paypal.nextStep'), 30);
-        $this->clickAndWait($this->getLocator('external.paypal.nextStep'), 10);
+        $this->clickAndWait($this->getLocator('external.paypal.nextStep'), 3);
 
         // there might be a confirmation step here
         if ($this->isElementPresent($this->getLocator('external.paypal.nextStep'))) {
