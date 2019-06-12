@@ -68,6 +68,6 @@ class GiropayCheckoutTest extends CheckoutTestCase
             $this->getLocator('external.giropay.extensionSc'),
             $this->getConfig('payments.giropay.extensionSc')
         );
-        $this->clickAndWait($this->getLocator('external.giropay.nextStep'));
+        $this->click($this->getLocator('external.giropay.nextStep'));
     }
 }
