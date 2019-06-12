@@ -19,12 +19,12 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     /**
      * @var integer
      */
-    const WAIT_TIME_INTERNAL = 10;
+    const WAIT_TIME_INTERNAL = 20;
 
     /**
      * @var integer
      */
-    const WAIT_TIME_EXTERNAL = 30;
+    const WAIT_TIME_EXTERNAL = 40;
 
     /**
      * @inheritdoc
