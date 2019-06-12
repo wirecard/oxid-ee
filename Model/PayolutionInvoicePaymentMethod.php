@@ -9,9 +9,8 @@
 
 namespace Wirecard\Oxid\Model;
 
-use OxidEsales\Eshop\Core\Registry;
-
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\BasketHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
@@ -37,9 +36,7 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
     public function getConfig()
     {
         // get the currency-specific config values
-        $oSession = Registry::getSession();
-        $oBasket = $oSession->getBasket();
-        $sCurrency = strtolower($oBasket->getBasketCurrency()->name);
+        $sCurrency = BasketHelper::getCurrencyFromBasket();
 
         $sHttpUserField = 'oxpayments__httpuser_' . $sCurrency;
         $sHttpPassField = 'oxpayments__httppass_' . $sCurrency;
@@ -52,7 +49,7 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
             $this->_oPayment->$sHttpPassField->value
         );
 
-        self::_addAdditionalConfigInfo($oConfig);
+        self::_addAnalyticsShopInfo($oConfig);
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
             PayolutionInvoiceTransaction::NAME,

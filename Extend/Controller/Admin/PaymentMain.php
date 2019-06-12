@@ -48,8 +48,6 @@ class PaymentMain extends PaymentMain_parent
      *
      * @return string
      *
-     * @throws \Http\Client\Exception
-     *
      * @since 1.0.0
      */
     public function render()
@@ -75,6 +73,8 @@ class PaymentMain extends PaymentMain_parent
      * @inheritdoc
      *
      * @return void
+     *
+     * @throws \Http\Client\Exception
      *
      * @since 1.0.0
      */
@@ -273,6 +273,8 @@ class PaymentMain extends PaymentMain_parent
         $aRequiredFields = [
             'oxpayments__httpuser_',
             'oxpayments__httppass_',
+            'oxpayments__maid_',
+            'oxpayments__secret_',
         ];
 
         foreach ($aRequiredFields as $sFieldNamePrefix) {

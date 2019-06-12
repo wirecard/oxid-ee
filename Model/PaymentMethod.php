@@ -90,7 +90,7 @@ abstract class PaymentMethod
             $this->_oPayment->oxpayments__wdoxidee_httppass->value
         );
 
-        self::_addAdditionalConfigInfo($oConfig);
+        self::_addAnalyticsShopInfo($oConfig);
 
         return $oConfig;
     }
@@ -102,7 +102,7 @@ abstract class PaymentMethod
      *
      * @since 1.2.0
      */
-    protected static function _addAdditionalConfigInfo(&$oConfig)
+    protected static function _addAnalyticsShopInfo(&$oConfig)
     {
         $aShopInfoFields = Helper::getShopInfoFields();
         $oConfig->setShopInfo($aShopInfoFields[Helper::SHOP_SYSTEM_KEY], $aShopInfoFields[Helper::SHOP_VERSION_KEY]);
