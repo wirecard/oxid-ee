@@ -54,13 +54,13 @@
     },
     "eps": {
       "bic": "bankname",
-      "submitBic": "selectionSubmit",
       "id": "verfNr",
+      "submitBic": "selectionSubmit",
       "submitLogin": "sbtnLogin",
-      "signPayment": "sbtnSign",
-      "finalize": "sbtnSignSingle",
-      "ok": "sbtnOk",
-      "goBackToOxid": "//*[@id='content']/div[4]/div/form/div[2]/input"
+      "submitSign": "sbtnSign",
+      "submitFinalize": "sbtnSignSingle",
+      "submitConfirm": "sbtnOk",
+      "backToShop": "//input[@name='back2Shop']"
     }
   }
 }
