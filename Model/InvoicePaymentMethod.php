@@ -36,8 +36,6 @@ abstract class InvoicePaymentMethod extends PaymentMethod
      */
     public function getCheckoutFields()
     {
-        $aCheckoutFields = null;
-
         $aCheckoutFields = [
             'dateOfBirth' . self::getName() => [
                 'type' => $this->_getCheckoutFieldType(SessionHelper::isDateOfBirthSet(self::getName())),
@@ -132,7 +130,6 @@ abstract class InvoicePaymentMethod extends PaymentMethod
 
         return $bDataToSave && Registry::getSession()->getUser()->oxuser__oxpassword->value !== '';
     }
-
 
     /**
      * Returns 'hidden' if the field value is already valid, 'text' otherwise
@@ -268,6 +265,8 @@ abstract class InvoicePaymentMethod extends PaymentMethod
 
     /**
      * Validates the user input and throws a specific error if an input is wrong
+     *
+     * @throws InputException
      *
      * @since 1.2.0
      */

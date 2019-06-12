@@ -31,6 +31,8 @@ use Wirecard\PaymentSdk\Transaction\PayolutionInvoiceTransaction;
  */
 class PayolutionInvoicePaymentMethod extends InvoicePaymentMethod
 {
+    const MANDATORY_PHONE_COUNTRIES = ['NL'];
+
     /**
      * @inheritdoc
      *
@@ -394,6 +396,6 @@ class PayolutionInvoicePaymentMethod extends InvoicePaymentMethod
         $oBillingCountry = oxNew(Country::class);
         $oBillingCountry->load(Registry::getSession()->getUser()->oxuser__oxcountryid->value);
 
-        return $oBillingCountry->oxcountry__oxisoalpha2->value === 'NL';
+        return in_array($oBillingCountry->oxcountry__oxisoalpha2->value, self::MANDATORY_PHONE_COUNTRIES);
     }
 }

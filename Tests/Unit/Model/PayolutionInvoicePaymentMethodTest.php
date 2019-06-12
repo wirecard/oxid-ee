@@ -95,7 +95,6 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
             'billing_countries',
             'billing_shipping',
             'allowed_currencies',
-            'billing_shipping',
             'httpuser_eur',
             'httppass_eur',
             'maid_eur',
@@ -171,7 +170,7 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
                 'countryId' => 'a7c40f632cdd63c52.64272623',
                 'phone' => '65161651',
             ],
-            'user not from austria no pone set' => [
+            'user not from austria no phone set' => [
                 'countryId' => 'a7c40f6320aeb2ec2.72885259',
                 'phone' => '',
             ],
