@@ -65,17 +65,18 @@ class TransactionTab extends Tab
      *
      * @param array  $aArray
      * @param string $sTransactionState
+     * @param string $sTranslationPrefix
      * @return array
      *
      * @since 1.0.0
      */
-    protected function _getListDataFromArray($aArray, $sTransactionState = null)
+    protected function _getListDataFromArray($aArray, $sTransactionState = null, $sTranslationPrefix = 'wd_')
     {
         $aListData = [];
 
         foreach ($aArray as $sKey => $sValue) {
             $aListData[] = [
-                'title' => Helper::translate($sKey),
+                'title' => Helper::translate($sTranslationPrefix . $sKey),
                 'value' => $this->_getTransactionStateText($sKey, $sValue, $sTransactionState),
             ];
         }
