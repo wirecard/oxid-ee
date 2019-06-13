@@ -99,6 +99,8 @@ $aModule = [
             => \Wirecard\Oxid\Controller\Admin\Order\OrderTabTransactionDetails::class,
         'wcpg_order_sepa_mandate'
             => \Wirecard\Oxid\Controller\Admin\Order\OrderTabSepaMandate::class,
+        'wcpg_order_descriptor'
+            => \Wirecard\Oxid\Controller\Admin\Order\OrderTabDescriptor::class,
         'wcpg_notifyhandler'
             => \Wirecard\Oxid\Controller\NotifyHandler::class,
         'wcpg_form_interaction'
@@ -222,6 +224,7 @@ $aModule = [
         'tab_table.tpl'                     => 'wirecard/paymentgateway/views/admin/tpl/tab_table.tpl',
         'tab_post_processing.tpl'           => 'wirecard/paymentgateway/views/admin/tpl/tab_post_processing.tpl',
         'tab_sepa_mandate.tpl'              => 'wirecard/paymentgateway/views/admin/tpl/tab_sepa_mandate.tpl',
+        'tab_descriptor.tpl'                => 'wirecard/paymentgateway/views/admin/tpl/tab_descriptor.tpl',
         'form_interaction.tpl'              => 'wirecard/paymentgateway/views/form_interaction.tpl',
         'module_support.tpl'                => 'wirecard/paymentgateway/views/admin/tpl/module_support.tpl',
         'module_support_email.tpl'          => 'wirecard/paymentgateway/views/admin/tpl/email/module_support_email.tpl',

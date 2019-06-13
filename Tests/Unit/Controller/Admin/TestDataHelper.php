@@ -22,6 +22,7 @@ class TestDataHelper
                 'rows' => [
                     ['oxid 1', 2, 'wdpaypal', 'transaction 1', 'SEPA mandate test text'],
                     ['oxid 2', 3, 'wdpaypal', 'transaction 1', null],
+                    ['oxid 3', 4, 'wdratepay-invoice', 'transaction 1', null],
                 ]
             ],
             [

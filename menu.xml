@@ -14,6 +14,7 @@
         <TAB id="wd_text_list" cl="wcpg_order_transactions"/>
         <TAB id="wd_transaction_details_title" cl="wcpg_order_transaction_details"/>
         <TAB id="wd_sepa_mandate" cl="wcpg_order_sepa_mandate"/>
+        <TAB id="wd_config_descriptor" cl="wcpg_order_descriptor"/>
       </SUBMENU>
     </MAINMENU>
     <MAINMENU id="mxextensions">
