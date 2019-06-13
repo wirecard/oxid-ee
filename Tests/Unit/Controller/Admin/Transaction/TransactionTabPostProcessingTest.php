@@ -91,7 +91,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
     {
         return [
             'contains actions' => ['actions'],
-            'contains requestParameters' => ['requestParameters'],
+            'contains maxAmount' => ['maxAmount'],
             'contains alert' => ['message'],
             'contains currency' => ['currency'],
             'contains emptyText' => ['emptyText'],
@@ -139,10 +139,7 @@ class TransactionTabPostProcessingTest extends Wirecard\Test\WdUnitTestCase
         $this->_transactionTabPostProcessing->render();
 
         $aViewData = $this->_transactionTabPostProcessing->getViewData();
-        $this->assertArrayHasKey('requestParameters', $aViewData);
-        $this->assertArrayHasKey('amount', $aViewData['requestParameters']);
-
-        $this->assertEquals($aViewData['requestParameters']['amount'], '100');
+        $this->assertEquals($aViewData['maxAmount'], '100');
     }
 
     /**

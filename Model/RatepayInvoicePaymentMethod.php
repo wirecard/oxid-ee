@@ -32,7 +32,7 @@ use Wirecard\PaymentSdk\Transaction\Transaction;
 /**
  * Payment method implementation for Ratepay Invoice
  *
- * @since 1.2.0
+ * @since                      1.2.0
  *
  * @codingStandardsIgnoreStart Custom.Classes.ClassLinesOfCode.MaxExceeded
  * Will be fixed with https://github.com/wirecard/oxid-ee/pull/132
@@ -461,15 +461,15 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
         $oShippingCountry->load($sShippingCountryId ?? $sBillingCountryId);
 
         return in_array(
-            $oBillingCountry->oxcountry__oxisoalpha2->value,
-            $oPayment->oxpayments__billing_countries->value ?? []
-        ) && in_array(
-            $oShippingCountry->oxcountry__oxisoalpha2->value,
-            $oPayment->oxpayments__shipping_countries->value ?? []
-        ) && (
-            !$oPayment->oxpayments__billing_shipping->value ||
-            !$sShippingCountryId
-        );
+                $oBillingCountry->oxcountry__oxisoalpha2->value,
+                $oPayment->oxpayments__billing_countries->value ?? []
+            ) && in_array(
+                $oShippingCountry->oxcountry__oxisoalpha2->value,
+                $oPayment->oxpayments__shipping_countries->value ?? []
+            ) && (
+                !$oPayment->oxpayments__billing_shipping->value ||
+                !$sShippingCountryId
+            );
     }
 
     /**
@@ -487,16 +487,16 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     public function getPostProcessingTransaction($sAction, $oParentTransaction, $aOrderItems = null)
     {
         $oTransaction = new RatepayInvoiceTransaction();
-        $aBasketResult = $this->_createPostProcessingBasket($oParentTransaction, $aOrderItems);
 
-        /**
-         * @var $oBasket Basket
-         */
-        $oBasket = $aBasketResult[0];
-        $oTransaction->setBasket($oBasket);
+        $oPostProcBasket = new Basket();
+        $oPostProcBasket->setVersion(RatepayInvoiceTransaction::class);
+
+        $fAmount = $this->_addItemsToPostProcessingBasket($oParentTransaction, $aOrderItems, $oPostProcBasket);
+
+        $oTransaction->setBasket($oPostProcBasket);
         $oTransaction->setAmount(new Amount(
-            $aBasketResult[1],
-            $oBasket->getTotalAmount()->getCurrency()
+            $fAmount,
+            $oPostProcBasket->getTotalAmount()->getCurrency()
         ));
         return $oTransaction;
     }
@@ -504,22 +504,18 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     /**
      * @param \Wirecard\Oxid\Model\Transaction $oParentTransaction
      * @param array|null                       $aOrderItems
+     * @param Basket                           $oPostProcBasket
      *
-     * @return array
+     * @return float the amount of the items in the basket
      *
      * @since 1.2.0
      */
-    private function _createPostProcessingBasket($oParentTransaction, $aOrderItems)
+    private function _addItemsToPostProcessingBasket($oParentTransaction, $aOrderItems, &$oPostProcBasket)
     {
         $oBasket = new Basket();
+        $oBasket->parseFromXml(simplexml_load_string($oParentTransaction->getResponseXML()));
 
-        $oXmlBasket = simplexml_load_string($oParentTransaction->getResponseXML());
-        $oBasket->parseFromXml($oXmlBasket);
-
-        $aItemsToAdd = self::_getItemsToAddToBasket($oBasket, $oXmlBasket, $aOrderItems);
-
-        $oPostProcBasket = new Basket();
-        $oPostProcBasket->setVersion(RatepayInvoiceTransaction::class);
+        $aItemsToAdd = self::_getItemsToAddToBasket($oBasket, $aOrderItems);
 
         $iRoundPrecision = Helper::getCurrencyRoundPrecision($oBasket->getTotalAmount()->getCurrency());
 
@@ -539,19 +535,18 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
             );
         }
 
-        return [$oPostProcBasket, $fAmount];
+        return $fAmount;
     }
 
     /**
-     * @param Basket            $oBasket
-     * @param \SimpleXMLElement $oXmlBasket
-     * @param array             $aOrderItems
+     * @param Basket $oBasket
+     * @param array  $aOrderItems
      *
      * @return array
      *
      * @since 1.2.0
      */
-    private static function _getItemsToAddToBasket($oBasket, $oXmlBasket, $aOrderItems)
+    private static function _getItemsToAddToBasket($oBasket, $aOrderItems)
     {
         $aItemsToAdd = [];
 
@@ -560,7 +555,7 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
                 continue;
             }
 
-            $oItem = self::_getRecalculatedItem($oBasket, $oXmlBasket, $sArticleNumber, $iQuantity);
+            $oItem = self::_getRecalculatedItem($oBasket, $sArticleNumber, $iQuantity);
             if (!is_null($oItem)) {
                 $aItemsToAdd[] = $oItem;
             }
@@ -570,16 +565,15 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     }
 
     /**
-     * @param Basket            $oBasket
-     * @param \SimpleXMLElement $oXmlBasket
-     * @param string            $sArticleNumber
-     * @param int               $iQuantity
+     * @param Basket $oBasket
+     * @param string $sArticleNumber
+     * @param int    $iQuantity
      *
      * @return Item|null
      *
      * @since 1.2.0
      */
-    private static function _getRecalculatedItem($oBasket, $oXmlBasket, $sArticleNumber, $iQuantity)
+    private static function _getRecalculatedItem($oBasket, $sArticleNumber, $iQuantity)
     {
         foreach ($oBasket as $iIndex => $oBasketItem) {
 
@@ -588,11 +582,6 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
              */
             if ($oBasketItem->getArticleNumber() == $sArticleNumber) {
                 $oBasketItem->setQuantity($iQuantity);
-
-                //set Tax-rate ourselves. paymentSdk xml parser does not do that
-                $fTaxRate = (float) $oXmlBasket->{'order-items'}->children()[$iIndex]->{'tax-rate'};
-                $oBasketItem->setTaxRate($fTaxRate);
-
                 return $oBasketItem;
             }
         }

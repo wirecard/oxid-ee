@@ -81,7 +81,7 @@ class TransactionHandler
         $sParentTransactionId = $oParentTransaction->wdoxidee_ordertransactions__transactionid->value;
         $oTransaction->setParentTransactionId($sParentTransactionId);
 
-        if (!is_null($fAmount)) {
+        if ($fAmount) {
             $sCurrencyName = $oOrder->oxorder__oxcurrency->value;
             $oCurrency = Registry::getConfig()->getCurrencyObject($sCurrencyName);
 

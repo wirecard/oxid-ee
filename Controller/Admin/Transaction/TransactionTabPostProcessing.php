@@ -163,17 +163,12 @@ class TransactionTabPostProcessing extends TransactionTab
         }
 
         $aRequestParameters = $this->_getRequestParameters();
+        $sTransactionId = $this->_oTransaction->wdoxidee_ordertransactions__transactionid->value;
 
-        // use the maximum available amount of the transaction as default if there is no action to be processed
-        if (empty($aRequestParameters[self::KEY_ACTION])) {
-            $sTransactionId = $this->_oTransaction->wdoxidee_ordertransactions__transactionid->value;
-            $aRequestParameters[self::KEY_AMOUNT] =
-                $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId);
-        }
-
+        //setting the relevant data to render the tab
         Helper::addToViewData($this, [
             'actions' => $this->_aActions,
-            'requestParameters' => $aRequestParameters,
+            'maxAmount' => $this->_getTransactionHandler()->getTransactionMaxAmount($sTransactionId),
             'message' => $this->_processRequest($aRequestParameters),
             'currency' => $this->_oTransaction->wdoxidee_ordertransactions__currency->value,
             'emptyText' => Helper::translate('wd_text_no_further_operations_possible'),
@@ -204,16 +199,16 @@ class TransactionTabPostProcessing extends TransactionTab
             }
         }
 
-        $aOrderArticles = array_combine(
-            $oRequest->getRequestParameter('article-number') ?? [],
-            $oRequest->getRequestParameter('quantity') ?? []
-        );
-
+        //parsing the parameters from the request url
         return [
-            self::KEY_AMOUNT => $aOrderArticles ? null
-                : Helper::getFloatFromString($oRequest->getRequestParameter(self::KEY_AMOUNT) ?? ''),
+            self::KEY_AMOUNT => Helper::getFloatFromString(
+                $oRequest->getRequestParameter(self::KEY_AMOUNT) ?? ''
+            ),
             self::KEY_ACTION => $aActionConfig,
-            self::KEY_ORDER_ITEMS => $aOrderArticles,
+            self::KEY_ORDER_ITEMS => array_combine(
+                $oRequest->getRequestParameter('article-number') ?? [],
+                $oRequest->getRequestParameter('quantity') ?? []
+            ),
         ];
     }
 
@@ -221,6 +216,8 @@ class TransactionTabPostProcessing extends TransactionTab
      * Validates a request.
      *
      * @param array $aRequestParameters
+     *
+     * @return void
      *
      * @throws StandardException
      *
@@ -232,13 +229,12 @@ class TransactionTabPostProcessing extends TransactionTab
 
         if ($aOrderItems) {
             $this->_validateOrderItems($aOrderItems);
+            //if order items validation is okay, don't check amount.
+            return;
         }
 
         $fAmount = $aRequestParameters[self::KEY_AMOUNT];
-
-        if (!is_null($fAmount)) {
-            $this->_validateAmount($fAmount);
-        }
+        $this->_validateAmount($fAmount);
     }
 
     /**
@@ -279,6 +275,7 @@ class TransactionTabPostProcessing extends TransactionTab
     private function _validateOrderItems($aOrderItems)
     {
         foreach ($aOrderItems as $sArticleNumber => $iQuantity) {
+            // item are valid as soon as there is one item with a quantity
             if ($iQuantity > 0) {
                 return;
             }

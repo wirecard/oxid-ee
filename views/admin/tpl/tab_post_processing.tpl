@@ -33,7 +33,7 @@
     <table cellspacing="0" cellpadding="0" border="0" width="600">
       <tr>
         <td width="25%">[{oxmultilang ident="wd_amount"}] ([{$currency}])</td>
-        <td><input type="text" name="amount" pattern="^[0-9]*[\.,]?[0-9]+$" value="[{$requestParameters.amount}]"
+        <td><input type="text" name="amount" pattern="^[0-9]*[\.,]?[0-9]+$" value="[{$maxAmount}]"
                    size="25"></td>
       </tr>
     </table>
