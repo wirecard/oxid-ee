@@ -37,6 +37,7 @@ class SofortCheckoutTest extends CheckoutTestCase
             $this->getLocator('external.sofort.country'),
             $this->getConfig('payments.sofort.country')
         );
+        // wait time is specified in ms for `waitForPageToLoad`
         $this->waitForPageToLoad(self::WAIT_TIME_EXTERNAL * 1000);
         $this->type(
             $this->getLocator('external.sofort.bank'),
