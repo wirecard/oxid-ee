@@ -16,7 +16,11 @@ use Wirecard\Oxid\Model\PaypalPaymentMethod;
  */
 class PaypalCheckoutTest extends CheckoutTestCase
 {
-    // catch possible A/B tests
+    /**
+     * Catch possible A/B tests
+     * 
+     * @inheritdoc
+     */
     protected $retryTimes = 1;
 
     public function getPaymentMethodName()
