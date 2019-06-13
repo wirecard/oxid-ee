@@ -13,6 +13,7 @@ use Wirecard\Oxid\Controller\Admin\Tab;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\ResponseMapper;
 use Wirecard\Oxid\Model\Transaction;
+use Wirecard\Oxid\Extend\Language;
 
 use OxidEsales\Eshop\Application\Model\Payment;
 
@@ -70,8 +71,11 @@ class TransactionTab extends Tab
      *
      * @since 1.0.0
      */
-    protected function _getListDataFromArray($aArray, $sTransactionState = null, $sTranslationPrefix = 'wd_')
-    {
+    protected function _getListDataFromArray(
+        $aArray,
+        $sTransactionState = null,
+        $sTranslationPrefix = Language::TRANSLATION_KEY_PREFIX
+    ) {
         $aListData = [];
 
         foreach ($aArray as $sKey => $sValue) {
