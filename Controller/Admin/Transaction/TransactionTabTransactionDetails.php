@@ -25,6 +25,17 @@ class TransactionTabTransactionDetails extends TransactionTab
      */
     protected function _getData()
     {
+        /**
+         * Possible translation keys for the PhraseApp parsing script to pick up:
+         *
+         * translate('wd_maid')
+         * translate('wd_transactionID')
+         * translate('wd_requestId')
+         * translate('wd_transactionType')
+         * translate('wd_transactionState')
+         * translate('wd_requestedAmount')
+         * translate('wd_descriptor')
+         */
         return $this->_getListDataFromArray(
             $this->_oResponseMapper->getTransactionDetails(),
             $this->_oTransaction->wdoxidee_ordertransactions__state->value

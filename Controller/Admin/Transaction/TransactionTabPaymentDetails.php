@@ -32,6 +32,16 @@ class TransactionTabPaymentDetails extends TransactionTab
         $this->_setPanelOrderId($aPaymentDetails, $this->_oOrder->oxorder__oxid->value);
         $this->_setOrderNumber($aPaymentDetails, $this->_oOrder->oxorder__oxordernr->value);
 
+        /**
+         * Possible translation keys for the PhraseApp parsing script to pick up:
+         *
+         * translate('wd_paymentMethod')
+         * translate('wd_timeStamp')
+         * translate('wd_customerId')
+         * translate('wd_ip')
+         * translate('wd_orderNumber')
+         * translate('wd_panel_order_id')
+         */
         $aListData = $this->_getListDataFromArray($aPaymentDetails);
         $aListData[] = [
             'title' => Helper::translate('wd_panel_transaction_copy'),
