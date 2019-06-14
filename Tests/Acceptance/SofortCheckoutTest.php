@@ -32,18 +32,19 @@ class SofortCheckoutTest extends CheckoutTestCase
 
     private function goThroughExternalFlow()
     {
-        $this->waitForElement($this->getLocator('external.sofort.country'), 30);
+        $this->waitForElement($this->getLocator('external.sofort.country'), self::WAIT_TIME_EXTERNAL);
         $this->select(
             $this->getLocator('external.sofort.country'),
             $this->getConfig('payments.sofort.country')
         );
-        $this->waitForPageToLoad();
+        // wait time is specified in ms for `waitForPageToLoad`
+        $this->waitForPageToLoad(self::WAIT_TIME_EXTERNAL * 1000);
         $this->type(
             $this->getLocator('external.sofort.bank'),
             $this->getConfig('payments.sofort.bank')
         );
         $this->fireEvent($this->getLocator('external.sofort.bank'), 'input');
-        $this->clickAndWait($this->getLocator('external.sofort.nextStep'));
+        $this->clickAndWait($this->getLocator('external.sofort.nextStep'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.sofort.userId'),
             $this->getConfig('payments.sofort.userId')
@@ -52,13 +53,13 @@ class SofortCheckoutTest extends CheckoutTestCase
             $this->getLocator('external.sofort.password'),
             $this->getConfig('payments.sofort.password')
         );
-        $this->clickAndWait($this->getLocator('external.sofort.nextStep'));
+        $this->clickAndWait($this->getLocator('external.sofort.nextStep'), self::WAIT_TIME_EXTERNAL);
         $this->click($this->getLocator('external.sofort.account'));
-        $this->clickAndWait($this->getLocator('external.sofort.nextStep'));
+        $this->clickAndWait($this->getLocator('external.sofort.nextStep'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.sofort.tan'),
             $this->getConfig('payments.sofort.tan')
         );
-        $this->clickAndWait($this->getLocator('external.sofort.nextStep'));
+        $this->click($this->getLocator('external.sofort.nextStep'));
     }
 }

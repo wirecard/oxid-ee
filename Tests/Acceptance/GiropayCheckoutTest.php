@@ -59,7 +59,7 @@ class GiropayCheckoutTest extends CheckoutTestCase
 
     private function goThroughExternalFlow()
     {
-        $this->waitForElement($this->getLocator('external.giropay.sc'), 30);
+        $this->waitForElement($this->getLocator('external.giropay.sc'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.giropay.sc'),
             $this->getConfig('payments.giropay.sc')
@@ -68,6 +68,6 @@ class GiropayCheckoutTest extends CheckoutTestCase
             $this->getLocator('external.giropay.extensionSc'),
             $this->getConfig('payments.giropay.extensionSc')
         );
-        $this->clickAndWait($this->getLocator('external.giropay.nextStep'));
+        $this->click($this->getLocator('external.giropay.nextStep'));
     }
 }

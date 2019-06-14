@@ -32,28 +32,20 @@ class EpsCheckoutTest extends CheckoutTestCase
 
     private function goThroughExternalFlow()
     {
-        $this->waitForElement($this->getLocator('external.eps.bic'), 30);
+        $this->waitForElement($this->getLocator('external.eps.bic'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.eps.bic'),
             $this->getConfig('payments.eps.bic')
         );
-        $this->clickAndWait($this->getLocator('external.eps.submitBic'));
-
-        $this->waitForElement($this->getLocator('external.eps.id'), 30);
+        $this->clickAndWait($this->getLocator('external.eps.submitBic'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.eps.id'),
             $this->getConfig('payments.eps.id')
         );
-
-        $this->waitForElement($this->getLocator('external.eps.submitLogin'), 30);
-        $this->clickAndWait($this->getLocator('external.eps.submitLogin'));
-        $this->waitForElement($this->getLocator('external.eps.signPayment'), 30);
-        $this->clickAndWait($this->getLocator('external.eps.signPayment'));
-        $this->waitForElement($this->getLocator('external.eps.finalize'), 30);
-        $this->clickAndWait($this->getLocator('external.eps.finalize'));
-        $this->waitForElement($this->getLocator('external.eps.ok'), 30);
-        $this->clickAndWait($this->getLocator('external.eps.ok'));
-        $this->waitForElement($this->getLocator('external.eps.goBackToOxid'), 30);
-        $this->clickAndWait($this->getLocator('external.eps.goBackToOxid'));
+        $this->clickAndWait($this->getLocator('external.eps.submitLogin'), self::WAIT_TIME_EXTERNAL);
+        $this->clickAndWait($this->getLocator('external.eps.submitSign'), self::WAIT_TIME_EXTERNAL);
+        $this->clickAndWait($this->getLocator('external.eps.submitFinalize'), self::WAIT_TIME_EXTERNAL);
+        $this->clickAndWait($this->getLocator('external.eps.submitConfirm'), self::WAIT_TIME_EXTERNAL);
+        $this->click($this->getLocator('external.eps.backToShop'));
     }
 }

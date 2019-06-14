@@ -16,25 +16,32 @@ use Selenium\Exception;
  */
 abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\AcceptanceTestCase
 {
-    private $config;
-    private $locators;
-    private $mockData;
+    private $oConfig;
+    private $oLocators;
+    private $oMockData;
 
-    public function __construct($name = null, $data = [], $dataName = '')
+    /**
+     * @inheritdoc
+     */
+    public function __construct($sName = null, $aData = [], $sDataName = '')
     {
-        parent::__construct($name, $data, $dataName);
+        parent::__construct($sName, $aData, $sDataName);
 
-        $this->config = $this->getJsonFromFile(__DIR__ . '/inc/config.json');
-        $this->locators = $this->getJsonFromFile(__DIR__ . '/inc/locators.json');
-        $this->mockData = $this->getJsonFromFile(__DIR__ . '/inc/mock-data.json');
+        $this->oConfig = $this->getJsonFromFile(__DIR__ . '/inc/config.json');
+        $this->oLocators = $this->getJsonFromFile(__DIR__ . '/inc/locators.json');
+        $this->oMockData = $this->getJsonFromFile(__DIR__ . '/inc/mock-data.json');
     }
 
     /**
      * Parses JSON from a file and returns it if it is valid.
+     *
+     * @param string $sPath
+     *
+     * @return array
      */
-    private function getJsonFromFile($path)
+    private function getJsonFromFile($sPath)
     {
-        return json_decode(file_get_contents($path), true);
+        return json_decode(file_get_contents($sPath), true);
     }
 
     /**
@@ -60,6 +67,7 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
 
     /**
      * Do not fail tests on log messages.
+     *
      * @inheritdoc
      */
     protected function failOnLoggedExceptions()
@@ -68,70 +76,93 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
 
     /**
      * Returns a value in an array by a path in dot notation (e.g. "a.b.c").
-     * @param array $array
-     * @param string $path
+     *
+     * @param array $aArray
+     * @param string $sPath
+     *
      * @return mixed
      */
-    private function getArrayValueByPath($array, $path)
+    private function getArrayValueByPath($aArray, $sPath)
     {
-        $value = $array;
+        $mValue = $aArray;
 
-        foreach (explode('.', $path) as $pathPart) {
-            if (!isset($value[$pathPart])) {
+        foreach (explode('.', $sPath) as $sPathPart) {
+            if (!isset($mValue[$sPathPart])) {
                 return null;
             }
 
-            $value = $value[$pathPart];
+            $mValue = $mValue[$sPathPart];
         }
 
-        return $value;
+        return $mValue;
     }
 
     /**
      * Returns a config value by path.
-     * @param string $path
+     *
+     * @param string $sPath
+     *
      * @return mixed
      */
-    public function getConfig($path = null)
+    public function getConfig($sPath = null)
     {
-        return $path ? $this->getArrayValueByPath($this->config, $path) : $this->config;
+        return $sPath ? $this->getArrayValueByPath($this->oConfig, $sPath) : $this->oConfig;
     }
 
     /**
      * Returns a mock data value by path.
-     * @param string $path
+     *
+     * @param string $sPath
+     *
      * @return mixed
      */
-    public function getMockData($path = null)
+    public function getMockData($sPath = null)
     {
-        return $path ? $this->getArrayValueByPath($this->mockData, $path) : $this->mockData;
+        return $sPath ? $this->getArrayValueByPath($this->oMockData, $sPath) : $this->oMockData;
     }
 
     /**
      * Returns a locator by path.
-     * @param string $path
+     *
+     * @param string $sPath
+     *
      * @return mixed
      */
-    public function getLocator($path = null)
+    public function getLocator($sPath = null)
     {
-        return $path ? $this->getArrayValueByPath($this->locators, $path) : $this->locators;
+        return $sPath ? $this->getArrayValueByPath($this->oLocators, $sPath) : $this->oLocators;
     }
 
     /**
      * Patches the select method by ignoring an event exception thrown in Selenium RC.
+     *
      * @see https://github.com/seleniumhq/selenium-google-code-issue-archive/issues/8184
      * @inheritdoc
      */
-    public function select($selector, $optionSelector)
+    public function select($sSelector, $sOptionSelector)
     {
         try {
-            parent::select($selector, $optionSelector);
-        } catch (Exception $exception) {
-            if (strpos($exception->getMessage(), 'EventTarget.dispatchEvent') === false) {
-                throw $exception;
+            parent::select($sSelector, $sOptionSelector);
+        } catch (Exception $oException) {
+            if (strpos($oException->getMessage(), 'EventTarget.dispatchEvent') === false) {
+                throw $oException;
             }
 
-            $this->fireEvent($selector, 'change');
+            $this->fireEvent($sSelector, 'change');
         }
+    }
+
+    /**
+     * Selects a frame by selector.
+     *
+     * @param string $sSelector
+     */
+    public function selectFrameBySelector($sSelector)
+    {
+        $oElement = $this->getElement($sSelector);
+        $sElementName = $oElement->getAttribute('name');
+
+        $this->getMinkSession()->getDriver()->switchToIFrame($sElementName);
+        $this->selectedFrame = $sElementName;
     }
 }

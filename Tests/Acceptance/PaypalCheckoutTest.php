@@ -16,6 +16,13 @@ use Wirecard\Oxid\Model\PaypalPaymentMethod;
  */
 class PaypalCheckoutTest extends CheckoutTestCase
 {
+    /**
+     * Catch possible A/B tests
+     * 
+     * @inheritdoc
+     */
+    protected $retryTimes = 1;
+
     public function getPaymentMethodName()
     {
         return PaypalPaymentMethod::getName(true);
@@ -43,26 +50,22 @@ class PaypalCheckoutTest extends CheckoutTestCase
 
     private function goThroughExternalFlow()
     {
-        $this->waitForElement($this->getLocator('external.paypal.email'), 30);
+        $this->waitForElement($this->getLocator('external.paypal.email'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.paypal.email'),
             $this->getConfig('payments.paypal.email')
         );
+        $this->click($this->getLocator('external.paypal.login'));
+        $this->waitForItemAppear($this->getLocator('external.paypal.password'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.paypal.password'),
             $this->getConfig('payments.paypal.password')
         );
-        $this->clickAndWait($this->getLocator('external.paypal.login'), 3);
-
-        // there might be a confirmation step here
-        if ($this->isElementPresent($this->getLocator('external.paypal.login'))) {
-            $this->click($this->getLocator('external.paypal.login'));
-        }
-
-        $this->waitForElement($this->getLocator('external.paypal.nextStep'), 30);
+        $this->click($this->getLocator('external.paypal.login'));
+        $this->waitForElement($this->getLocator('external.paypal.nextStep'), self::WAIT_TIME_EXTERNAL);
         $this->clickAndWait($this->getLocator('external.paypal.nextStep'), 3);
 
-        // there might be another confirmation step here
+        // there might be a confirmation step here
         if ($this->isElementPresent($this->getLocator('external.paypal.nextStep'))) {
             $this->click($this->getLocator('external.paypal.nextStep'));
         }

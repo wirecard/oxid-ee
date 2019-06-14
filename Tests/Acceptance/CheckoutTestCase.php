@@ -17,6 +17,16 @@ use Wirecard\Oxid\Model\Transaction;
 abstract class CheckoutTestCase extends BaseAcceptanceTestCase
 {
     /**
+     * @var integer
+     */
+    const WAIT_TIME_INTERNAL = 20;
+
+    /**
+     * @var integer
+     */
+    const WAIT_TIME_EXTERNAL = 40;
+
+    /**
      * @inheritdoc
      */
     protected function setUp()
@@ -64,15 +74,15 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
      */
     public function insertMockData()
     {
-        foreach ($this->getMockData() as $table => $entries) {
-            foreach ($entries as $fields) {
-                $columns = '`' . implode('`, `', array_keys($fields)) . '`';
-                $valuesInsert = '\'' . implode('\', \'', array_values($fields)) . '\'';
-                $valuesUpdate = implode(', ', array_map(function ($column) {
-                    return "`{$column}`=VALUES(`{$column}`)";
-                }, array_keys($fields)));
+        foreach ($this->getMockData() as $sTableName => $aEntries) {
+            foreach ($aEntries as $oFields) {
+                $sColumns = '`' . implode('`, `', array_keys($oFields)) . '`';
+                $sValuesInsert = '\'' . implode('\', \'', array_values($oFields)) . '\'';
+                $sValuesUpdate = implode(', ', array_map(function ($sColumn) {
+                    return "`{$sColumn}`=VALUES(`{$sColumn}`)";
+                }, array_keys($oFields)));
 
-                $this->executeSql("INSERT INTO `{$table}` ({$columns}) VALUES ({$valuesInsert}) ON DUPLICATE KEY UPDATE {$valuesUpdate}");
+                $this->executeSql("INSERT INTO `{$sTableName}` ({$sColumns}) VALUES ({$sValuesInsert}) ON DUPLICATE KEY UPDATE {$sValuesUpdate}");
             }
         }
     }
@@ -82,10 +92,10 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
      */
     public function loginMockUserToFrontend()
     {
-        $userName = $this->getMockData('oxuser.0.OXUSERNAME');
-        $password = $userName; // username and password are equal for mock users
+        $sUserName = $this->getMockData('oxuser.0.OXUSERNAME');
+        $sPassword = $sUserName; // username and password are equal for mock users
 
-        $this->loginInFrontend($userName, $password);
+        $this->loginInFrontend($sUserName, $sPassword);
     }
 
     /**
@@ -99,9 +109,9 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     /**
      * Navigates to the next step in the checkout.
      */
-    public function continueToNextStep($seconds = 10)
+    public function continueToNextStep($iSeconds = self::WAIT_TIME_INTERNAL)
     {
-        $this->clickAndWait($this->getLocator('checkout.nextStep'), $seconds);
+        $this->clickAndWait($this->getLocator('checkout.nextStep'), $iSeconds);
     }
 
     /**
@@ -132,30 +142,33 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
 
     /**
      * Waits until the redirect process has finished.
-     * @param int $seconds
+     *
+     * @param int $iSeconds
      */
-    public function waitForRedirectConfirmation($seconds = 30)
+    public function waitForRedirectConfirmation($iSeconds = self::WAIT_TIME_EXTERNAL)
     {
         // there might be an insecure certificate warning that needs to be dismissed
         $this->getMinkSession()->getDriver()->getBrowser()->keyPressNative('10');
 
-        if ($seconds > 0 && strpos($this->getLocation(), shopURL) !== 0) {
+        if ($iSeconds > 0 && strpos($this->getLocation(), shopURL) !== 0) {
             sleep(1);
-            $this->waitForRedirectConfirmation($seconds - 1);
+            $this->waitForRedirectConfirmation($iSeconds - 1);
         }
     }
 
     /**
      * Checks if the given URL is pointing to the "Thank you" page.
-     * @param string $url
+     *
+     * @param string $sUrl
+     *
      * @return bool
      */
-    public function isThankYouPage($url)
+    public function isThankYouPage($sUrl)
     {
-        $queryString = parse_url($url, PHP_URL_QUERY);
+        $sQueryString = parse_url($sUrl, PHP_URL_QUERY);
 
-        return strpos($url, $this->_getShopUrl()) === 0 &&
-            (!$queryString || strpos($queryString, 'cl=thankyou') !== false);
+        return strpos($sUrl, $this->_getShopUrl()) === 0 &&
+            (!$sQueryString || strpos($sQueryString, 'cl=thankyou') !== false);
     }
 
     /**
