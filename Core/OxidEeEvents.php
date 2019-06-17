@@ -336,6 +336,9 @@ class OxidEeEvents
         self::_migrateFrom100To110();
         self::_migrateFrom110To120();
 
+        // view tables must be regenerated after modifying database table structure
+        Helper::regenerateViews();
+
         self::addPaymentMethods();
 
         self::_clearCache();
@@ -360,9 +363,6 @@ class OxidEeEvents
      */
     private static function _clearCache()
     {
-        // view tables must be regenerated after modifying database table structure
-        Helper::regenerateViews();
-
         $sTmpDir = getShopBasePath() . "/tmp/";
         $sSmartyDir = $sTmpDir . "smarty/";
 
