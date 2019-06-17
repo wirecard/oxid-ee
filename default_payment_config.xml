@@ -213,7 +213,7 @@
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
     </payment>
     <payment>
-        <oxid>wechat-qrpay</oxid>
+        <oxid>wdwechat-qrpay</oxid>
         <oxactive>0</oxactive>
         <oxtoamount>1000000</oxtoamount>
         <oxdesc>Wirecard WeChat QR Pay</oxdesc>

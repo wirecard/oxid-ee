@@ -438,4 +438,19 @@ class Helper
 
         return $oList->getArray();
     }
+
+    /**
+     * Returns the descriptor from a given order ID.
+     *
+     * @param string $sOrderId
+     * @param int    $iLength
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    public static function getDescriptor($sOrderId, $iLength = 27)
+    {
+        return substr(substr(self::getShop()->oxshops__oxname->value, 0, 9) . " " . $sOrderId, 0, $iLength);
+    }
 }

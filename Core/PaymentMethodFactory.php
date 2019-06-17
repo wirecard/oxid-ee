@@ -22,6 +22,7 @@ use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
 use Wirecard\Oxid\Model\IdealPaymentMethod;
 use Wirecard\Oxid\Model\EpsPaymentMethod;
+use Wirecard\Oxid\Model\WeChatQrPayPaymentMethod;
 
 /**
  * Class PaymentMethodFactory
@@ -54,6 +55,7 @@ class PaymentMethodFactory
             SepaCreditTransferPaymentMethod::class,
             SepaDirectDebitPaymentMethod::class,
             SofortPaymentMethod::class,
+            WeChatQrPayPaymentMethod::class,
         ] as $sClassName) {
             $aClasses[$sClassName::getName(true)] = $sClassName;
         }

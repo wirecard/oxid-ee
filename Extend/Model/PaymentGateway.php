@@ -83,17 +83,9 @@ class PaymentGateway extends BaseModel
      */
     private static function _addDescriptor(&$oTransaction, $sOrderId)
     {
-        $sShopId = Registry::getConfig()->getShopId();
-        $oShop = oxNew(Shop::class);
-        $oShop->load($sShopId);
+        $iDescriptorLength = $oTransaction instanceof SepaDirectDebitTransaction ? 100 : 27;
 
-        $iDescriptorLength = 27;
-        if ($oTransaction instanceof SepaDirectDebitTransaction) {
-            $iDescriptorLength = 100;
-        }
-        $oTransaction->setDescriptor(
-            substr(substr($oShop->oxshops__oxname->value, 0, 9) . " " . $sOrderId, 0, $iDescriptorLength)
-        );
+        $oTransaction->setDescriptor(Helper::getDescriptor($sOrderId, $iDescriptorLength));
     }
 
     /**
