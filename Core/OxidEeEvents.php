@@ -336,20 +336,9 @@ class OxidEeEvents
         self::_migrateFrom100To110();
         self::_migrateFrom110To120();
 
-        // view tables must be regenerated after modifying database table structure
-        Helper::regenerateViews();
-
         self::addPaymentMethods();
 
-        $sTmpDir = getShopBasePath() . "/tmp/";
-        $sSmartyDir = $sTmpDir . "smarty/";
-
-        foreach (glob($sTmpDir . "*.txt") as $sFileName) {
-            @unlink($sFileName);
-        }
-        foreach (glob($sSmartyDir . "*.php") as $sFileName) {
-            @unlink($sFileName);
-        }
+        self::_clearCache();
     }
 
     /**
@@ -361,6 +350,28 @@ class OxidEeEvents
     {
         self::$_oDb = DatabaseProvider::getDb();
         self::_disablePaymentMethods();
+        self::_clearCache();
+    }
+
+    /**
+     * Clears cache
+     *
+     * @since 1.2.0
+     */
+    private static function _clearCache()
+    {
+        // view tables must be regenerated after modifying database table structure
+        Helper::regenerateViews();
+
+        $sTmpDir = getShopBasePath() . "/tmp/";
+        $sSmartyDir = $sTmpDir . "smarty/";
+
+        foreach (glob($sTmpDir . "*.txt") as $sFileName) {
+            @unlink($sFileName);
+        }
+        foreach (glob($sSmartyDir . "*.php") as $sFileName) {
+            @unlink($sFileName);
+        }
     }
 
     /**
