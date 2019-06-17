@@ -212,6 +212,36 @@
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
     </payment>
+    <payment>
+        <oxid>wechat-qrpay</oxid>
+        <oxactive>0</oxactive>
+        <oxtoamount>1000000</oxtoamount>
+        <oxdesc>Wirecard WeChat QR Pay</oxdesc>
+        <oxdesc_1>Wirecard WeChat QR Pay</oxdesc_1>
+        <oxsort>130</oxsort>
+        <wdoxidee_logo>wechat.png</wdoxidee_logo>
+        <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
+        <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
+        <wdoxidee_maid>236d1c79-5146-496b-af00-3399c9097edc</wdoxidee_maid>
+        <wdoxidee_secret>024edfffae32c829b012c98a61686f3b</wdoxidee_secret>
+        <wdoxidee_httpuser>16390-testing</wdoxidee_httpuser>
+        <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
+        <wdoxidee_descriptor>1</wdoxidee_descriptor>
+        <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <!-- meta fields -->
+        <allowed_currencies>
+            <currency>GBP</currency>
+            <currency>HKD</currency>
+            <currency>USD</currency>
+            <currency>JPY</currency>
+            <currency>CAD</currency>
+            <currency>AUD</currency>
+            <currency>EUR</currency>
+            <currency>NZD</currency>
+            <currency>KRW</currency>
+            <currency>THB</currency>
+        </allowed_currencies>
+    </payment>
 
     <!-- only visible for the merchant -->
     <payment>
