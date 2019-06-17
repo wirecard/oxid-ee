@@ -341,7 +341,7 @@ class OxidEeEvents
 
         self::addPaymentMethods();
 
-        self::_clearCache();
+        self::_clearFileCache();
     }
 
     /**
@@ -353,15 +353,15 @@ class OxidEeEvents
     {
         self::$_oDb = DatabaseProvider::getDb();
         self::_disablePaymentMethods();
-        self::_clearCache();
+        self::_clearFileCache();
     }
 
     /**
-     * Clears cache
+     * Clears file cache
      *
      * @since 1.2.0
      */
-    private static function _clearCache()
+    private static function _clearFileCache()
     {
         $sTmpDir = getShopBasePath() . "/tmp/";
         $sSmartyDir = $sTmpDir . "smarty/";
