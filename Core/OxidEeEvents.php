@@ -171,7 +171,7 @@ class OxidEeEvents
         $oLogger = Registry::getLogger();
         $oConfig = Registry::getConfig();
         $sShopBaseURL = $oConfig->getShopUrl();
-        $oXmldata = simplexml_load_file($sShopBaseURL . "modules/wirecard/paymentgateway/default_payment_config.xml");
+        $oXmldata = simplexml_load_file(dirname(__DIR__) . "/default_payment_config.xml");
 
         if (!$oXmldata) {
             $oLogger->error("default_payment_config.xml could not be loaded.");
