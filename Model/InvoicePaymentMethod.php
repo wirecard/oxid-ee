@@ -16,9 +16,6 @@ use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\SessionHelper;
-use Wirecard\Oxid\Extend\Model\Order;
-
-use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Payment method implementation for Invoice payments
@@ -69,25 +66,6 @@ abstract class InvoicePaymentMethod extends PaymentMethod
         }
 
         return $aCheckoutFields;
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @param Transaction $oTransaction
-     * @param Order       $oOrder
-     *
-     * @since 1.2.0
-     */
-    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
-    {
-        $oSession = Registry::getSession();
-        $oBasket = $oSession->getBasket();
-        $oWdBasket = $oBasket->createTransactionBasket();
-
-        $oTransaction->setBasket($oWdBasket);
-        $oTransaction->setShipping($oOrder->getShippingAccountHolder());
-        $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
     }
 
     /**

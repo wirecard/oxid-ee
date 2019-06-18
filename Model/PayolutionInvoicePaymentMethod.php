@@ -352,8 +352,6 @@ class PayolutionInvoicePaymentMethod extends InvoicePaymentMethod
      */
     public function addMandatoryTransactionData(&$oTransaction, $oOrder)
     {
-        parent::addMandatoryTransactionData($oTransaction, $oOrder);
-
         $oAccountHolder = $oOrder->getAccountHolder();
         $oAccountHolder->setDateOfBirth(new DateTime(SessionHelper::getDbDateOfBirth(self::getName())));
 

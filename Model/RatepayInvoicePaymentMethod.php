@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Model;
 
 use DateTime;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
@@ -215,7 +216,13 @@ class RatepayInvoicePaymentMethod extends InvoicePaymentMethod
      */
     public function addMandatoryTransactionData(&$oTransaction, $oOrder)
     {
-        parent::addMandatoryTransactionData($oTransaction, $oOrder);
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+        $oWdBasket = $oBasket->createTransactionBasket();
+
+        $oTransaction->setBasket($oWdBasket);
+        $oTransaction->setShipping($oOrder->getShippingAccountHolder());
+        $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
 
         $oAccountHolder = $oOrder->getAccountHolder();
         $oAccountHolder->setDateOfBirth(new DateTime(SessionHelper::getDbDateOfBirth(self::getName())));
