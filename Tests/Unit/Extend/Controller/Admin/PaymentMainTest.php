@@ -67,7 +67,12 @@ class PaymentMainTest extends \Wirecard\Test\WdUnitTestCase
 
     public function testSave()
     {
-        $_POST['editval']['oxpayments__allowed_currencies'] = [];
+        $this->setRequestParameter(
+            'editval',
+            [
+                'oxpayments__allowed_currencies' => [],
+            ]
+        );
 
         try {
             $this->_controller->save();
@@ -80,12 +85,17 @@ class PaymentMainTest extends \Wirecard\Test\WdUnitTestCase
     {
         $this->_controller->setEditObjectId('wdpayolution-inv');
 
-        $_POST['editval']['oxpayments__allowed_currencies'] = ['EUR', 'CHF'];
-        $_POST['editval']['oxpayments__httpuser_eur'] = 'abcd';
-        $_POST['editval']['oxpayments__httppass_eur'] = 'efgh';
-        $_POST['editval']['oxpayments__wdoxidee_apiurl'] = 'http://api.url';
-        $_POST['editval']['oxpayments__wdoxidee_httpuser'] = 'user';
-        $_POST['editval']['oxpayments__wdoxidee_httppass'] = 'mysecretpasswordnooneknows';
+        $this->setRequestParameter(
+            'editval',
+            [
+                'oxpayments__allowed_currencies' => ['EUR', 'CHF'],
+                'oxpayments__httpuser_eur' => 'abcd',
+                'oxpayments__httppass_eur' => 'efgh',
+                'oxpayments__wdoxidee_apiurl' => 'http://api.url',
+                'oxpayments__wdoxidee_httpuser' => 'user',
+                'oxpayments__wdoxidee_httppass' => 'mysecretpasswordnooneknows',
+            ]
+        );
 
         $oTransactionServStub = $this->getMockBuilder(TransactionService::class)
             ->disableOriginalConstructor()
@@ -97,11 +107,7 @@ class PaymentMainTest extends \Wirecard\Test\WdUnitTestCase
 
         $this->_controller->setTransactionService($oTransactionServStub);
 
-        try {
-            $this->_controller->save();
-        } catch (\Exception $exc) {
-            $this->fail($exc->getMessage());
-        }
+        $this->_controller->save();
     }
 
     /**

@@ -9,24 +9,35 @@
 
 namespace Wirecard\Oxid\Model;
 
+use DateTime;
+use OxidEsales\Eshop\Application\Model\Country;
+use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\Exception\InputException;
+
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\BasketHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Core\SessionHelper;
+use Wirecard\Oxid\Extend\Model\Order;
+
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\PayolutionInvoiceTransaction;
 
-use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Core\Exception\InputException;
-
 /**
- * Payment method implementation for payolution Invoice
+ * Payment method implementation for Payolution Invoice
  *
  * @since 1.2.0
  */
-class PayolutionInvoicePaymentMethod extends PaymentMethod
+class PayolutionInvoicePaymentMethod extends InvoicePaymentMethod
 {
+    const MANDATORY_PHONE_COUNTRIES = ['NL'];
 
+    /**
+     * @inheritdoc
+     *
+     * @since 1.2.0
+     */
     protected static $_sName = "payolution-inv";
 
     /**
@@ -86,7 +97,7 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
      */
     public function getConfigFields()
     {
-        // the configuration from the parent class is not used because payolution should support
+        // the configuration from the parent class is not used because Payolution should support
         // MAID/secret/HTTP user & password per shop currency
         $aConfigFields = [
             'descriptor' => [
@@ -316,6 +327,8 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
     }
 
     /**
+     * @inheritdoc
+     *
      * @throws InputException
      *
      * @since 1.2.0
@@ -330,6 +343,26 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
     }
 
     /**
+     * @inheritdoc
+     *
+     * @param PayolutionInvoiceTransaction $oTransaction
+     * @param Order                        $oOrder
+     *
+     * @since 1.2.0
+     */
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
+    {
+        $oAccountHolder = $oOrder->getAccountHolder();
+        $oAccountHolder->setDateOfBirth(new DateTime(SessionHelper::getDbDateOfBirth(self::getName())));
+
+        if (SessionHelper::isPhoneValid(self::getName())) {
+            $oAccountHolder->setPhone(SessionHelper::getPhone(self::getName()));
+        }
+
+        $oTransaction->setAccountHolder($oAccountHolder);
+    }
+
+    /**
      * Checks if trusted shop terms are accepted
      *
      * @return bool
@@ -341,10 +374,25 @@ class PayolutionInvoicePaymentMethod extends PaymentMethod
         $oRequest = Registry::getRequest();
 
         if ($this->_oPayment->oxpayments__trusted_shop->value &&
-         !$oRequest->getRequestParameter('trustedshop_checkbox')) {
+            !$oRequest->getRequestParameter('trustedshop_checkbox')) {
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    protected function _isPhoneMandatory()
+    {
+        $oBillingCountry = oxNew(Country::class);
+        $oBillingCountry->load(Registry::getSession()->getUser()->oxuser__oxcountryid->value);
+
+        return in_array($oBillingCountry->oxcountry__oxisoalpha2->value, self::MANDATORY_PHONE_COUNTRIES);
     }
 }

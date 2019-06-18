@@ -48,8 +48,8 @@
       "nextStep": "//input[@type='submit']"
     },
     "ratepayInvoice": {
-      "dateOfBirth": "dateOfBirth",
-      "phone": "phone"
+      "dateOfBirth": "dateOfBirthratepay-invoice",
+      "phone": "phoneratepay-invoice"
     },
     "eps": {
       "bic": "bankname",

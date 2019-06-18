@@ -21,7 +21,6 @@ use OxidEsales\Eshop\Core\Exception\InputException;
 
 class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
-
     /**
      * @var RatepayInvoicePaymentMethod
      */
@@ -93,8 +92,8 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
         $oUser->save();
         $this->getSession()->setUser($oUser);
 
-        $aDynvalues['dateOfBirth'] = $aValues['dateOfBirth'];
-        $aDynvalues['phone'] = $aValues['phone'];
+        $aDynvalues['dateOfBirthratepay-invoice'] = $aValues['dateOfBirth'];
+        $aDynvalues['phoneratepay-invoice'] = $aValues['phone'];
         $this->getSession()->setVariable('dynvalue', $aDynvalues);
 
         $aFields = $this->_oPaymentMethod->getCheckoutFields();
@@ -113,17 +112,17 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
         return [
             'nothing set' => [
                 ['dateOfBirth' => '', 'phone' => ''],
-                ['dateOfBirth', 'phone', 'saveCheckoutFields'],
+                ['dateOfBirthratepay-invoice', 'phoneratepay-invoice', 'saveCheckoutFieldsratepay-invoice'],
                 false,
             ],
             'date of birth set' => [
                 ['dateOfBirth' => '12.12.1985', 'phone' => ''],
-                ['phone', 'saveCheckoutFields'],
+                ['phoneratepay-invoice', 'saveCheckoutFieldsratepay-invoice'],
                 false,
             ],
             'phone set' => [
                 ['dateOfBirth' => '', 'phone' => '324324234'],
-                ['dateOfBirth', 'saveCheckoutFields'],
+                ['dateOfBirthratepay-invoice', 'saveCheckoutFieldsratepay-invoice'],
                 false,
             ],
             'both set' => [
@@ -133,17 +132,17 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
             ],
             'guest user nothing set' => [
                 ['dateOfBirth' => '', 'phone' => ''],
-                ['dateOfBirth', 'phone'],
+                ['dateOfBirthratepay-invoice', 'phoneratepay-invoice'],
                 true,
             ],
             'guest user date of birth set' => [
                 ['dateOfBirth' => '12.12.1985', 'phone' => ''],
-                ['phone'],
+                ['phoneratepay-invoice'],
                 true,
             ],
             'guest user phone set' => [
                 ['dateOfBirth' => '', 'phone' => '324324234'],
-                ['dateOfBirth'],
+                ['dateOfBirthratepay-invoice'],
                 true,
             ],
             'guest user both set' => [
@@ -249,7 +248,7 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
 
         // set the user's date of birth to the session
         if ($sUserDateOfBirth) {
-            $this->setSessionParam('dynvalue', ['dateOfBirth' => $sUserDateOfBirth]);
+            $this->setSessionParam('dynvalue', ['dateOfBirthratepay-invoice' => $sUserDateOfBirth]);
         }
 
         // create a mock article and add it to the basket
@@ -302,9 +301,9 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
         $oUser->save();
         $this->getSession()->setUser($oUser);
 
-        $aDynvalues['dateOfBirth'] = '12.12.1985';
-        $aDynvalues['phone'] = '65161651';
-        $aDynvalues['saveCheckoutFields'] = '1';
+        $aDynvalues['dateOfBirthratepay-invoice'] = '12.12.1985';
+        $aDynvalues['phoneratepay-invoice'] = '65161651';
+        $aDynvalues['saveCheckoutFieldsratepay-invoice'] = '1';
         $this->getSession()->setVariable('dynvalue', $aDynvalues);
 
         try {
@@ -325,8 +324,8 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
         $oUser->save();
         $this->getSession()->setUser($oUser);
 
-        $aDynvalues['dateOfBirth'] = $aValues['dateOfBirth'];
-        $aDynvalues['phone'] = $aValues['phone'];
+        $aDynvalues['dateOfBirthratepay-invoice'] = $aValues['dateOfBirth'];
+        $aDynvalues['phoneratepay-invoice'] = $aValues['phone'];
         $this->getSession()->setVariable('dynvalue', $aDynvalues);
 
         $this->_oPaymentMethod->onBeforeOrderCreation();

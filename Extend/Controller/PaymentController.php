@@ -13,6 +13,7 @@ use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Model\InvoicePaymentMethod;
 
 /**
  * Class PaymentController
@@ -25,20 +26,6 @@ class PaymentController extends PaymentController_parent
 {
     const ERROR_CODE_CANCELED = '-100';
     const ERROR_CODE_FAILED = '-101';
-
-    /**
-     * @inheritdoc
-     *
-     * @since 1.2.0
-     */
-    public function init()
-    {
-        parent::init();
-
-        $this->_setDateOfBirthInput();
-        $this->_setPhoneInput();
-        SessionHelper::setSaveCheckoutFields(0);
-    }
 
     /**
      * @inheritdoc
@@ -67,17 +54,27 @@ class PaymentController extends PaymentController_parent
     /**
      * @inheritdoc
      *
-     * @return object
+     * @return array
      *
      * @since 1.2.0
      */
     public function getPaymentList()
     {
-        return array_filter(parent::getPaymentList(), [PaymentController::class, '_filterPaymentList']);
+        $aPaymentList = parent::getPaymentList();
+
+        foreach (parent::getPaymentList() as $sKey => $oPayment) {
+            if (!$this->_showPayment($oPayment)) {
+                unset($aPaymentList[$sKey]);
+            }
+
+            $this->_initializeInputFields($oPayment);
+        }
+
+        return $aPaymentList;
     }
 
     /**
-     * Filters the payment list for payment methods that should be shown
+     * Returns true if payment should be shown
      *
      * @param object $oPayment
      *
@@ -85,7 +82,7 @@ class PaymentController extends PaymentController_parent
      *
      * @since 1.2.0
      */
-    private function _filterPaymentList($oPayment)
+    private function _showPayment($oPayment)
     {
         if (!$oPayment->isCustomPaymentMethod()) {
             return true;
@@ -95,24 +92,27 @@ class PaymentController extends PaymentController_parent
     }
 
     /**
-     * Sets the date of birth input field for payment step
+     * Initializes the input fields for guaranteed invoice payment methods
+     *
+     * @param object $oPayment
+     *
+     * @return void
      *
      * @since 1.2.0
      */
-    private function _setDateOfBirthInput()
+    private function _initializeInputFields($oPayment)
     {
-        $oUser = Registry::getSession()->getUser();
-        SessionHelper::setDbDateOfBirth($oUser->oxuser__oxbirthdate->value);
-    }
+        if (!$oPayment->isCustomPaymentMethod()) {
+            return;
+        }
 
-    /**
-     * Sets the phone number input field for payment step
-     *
-     * @since 1.2.0
-     */
-    private function _setPhoneInput()
-    {
-        $oUser = Registry::getSession()->getUser();
-        SessionHelper::setPhone($oUser->oxuser__oxfon->value);
+        $oPaymentMethod = $oPayment->getPaymentMethod();
+        if ($oPaymentMethod instanceof InvoicePaymentMethod) {
+            $oUser = Registry::getSession()->getUser();
+
+            SessionHelper::setDbDateOfBirth($oUser->oxuser__oxbirthdate->value, $oPaymentMethod::getName());
+            SessionHelper::setPhone($oUser->oxuser__oxfon->value, $oPaymentMethod::getName());
+            SessionHelper::setSaveCheckoutFields(0, $oPaymentMethod::getName());
+        }
     }
 }
