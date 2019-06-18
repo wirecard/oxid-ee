@@ -350,33 +350,91 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
      */
     public function testGetPostProcessingTransaction($aOrderItems)
     {
-        $oParentTransaction = $this->getMockBuilder(Transaction::class)
-            ->setMethods(['getResponseXML'])
-            ->getMock();
-        $oParentTransaction
-            ->method('getResponseXML')
-            ->willReturn(file_get_contents(__DIR__ . '/../../resources/success_response.xml'));
+        $oParentTransaction = $this->getResponseXMLTransaction();
 
-        $sResult = $this->_oPaymentMethod->getPostProcessingTransaction(Transaction::ACTION_CREDIT, $oParentTransaction, $aOrderItems);
+        $oResult = $this->_oPaymentMethod->getPostProcessingTransaction(Transaction::ACTION_CREDIT, $oParentTransaction, $aOrderItems);
 
-        $this->assertInstanceOf(RatepayInvoiceTransaction::class, $sResult);
+        $this->assertInstanceOf(RatepayInvoiceTransaction::class, $oResult);
     }
 
     public function getPostProcessingTransactionProvider()
     {
         return [
-            'refund action' => [
+            'articles left' => [
                 ['Article Number' => 1],
-                RatepayInvoiceTransaction::class,
             ],
-            'nothing refunded' => [
+            'no articles left' => [
                 ['Article Number' => 0],
-                RatepayInvoiceTransaction::class,
             ],
-            'unknown article' => [
+            'other article left' => [
                 ['Other Article' => 1],
-                RatepayInvoiceTransaction::class,
             ],
         ];
+    }
+
+    /**
+     * @dataProvider getPostProcessingTransactionQuantityProvider
+     */
+    public function testGetPostProcessingTransactionQuantity($aOrderItems, $iExpected)
+    {
+        $oParentTransaction = $this->getResponseXMLTransaction();
+
+        $oResult = $this->_oPaymentMethod->getPostProcessingTransaction(Transaction::ACTION_CREDIT, $oParentTransaction, $aOrderItems);
+        $oResult->setOperation(Transaction::ACTION_CREDIT);
+
+        $this->assertEquals($iExpected, $oResult->mappedProperties()['order-items']['order-item'][0]['quantity']);
+    }
+
+    public function getPostProcessingTransactionQuantityProvider()
+    {
+        return [
+            'articles left' => [
+                ['Article Number' => 1],
+                1
+            ],
+            'no articles left' => [
+                ['Article Number' => 0],
+                null
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getPostProcessingTransactionArticleProvider
+     */
+    public function testGetPostProcessingTransactionArticle($aOrderItems, $sExpected)
+    {
+        $oParentTransaction = $this->getResponseXMLTransaction();
+
+        $oResult = $this->_oPaymentMethod->getPostProcessingTransaction(Transaction::ACTION_CREDIT, $oParentTransaction, $aOrderItems);
+        $oResult->setOperation(Transaction::ACTION_CREDIT);
+
+        $this->assertEquals($sExpected, $oResult->mappedProperties()['order-items']['order-item'][0]['article-number']);
+    }
+
+    public function getPostProcessingTransactionArticleProvider()
+    {
+        return [
+            'articles left' => [
+                ['Article Number' => 1],
+                'Article Number'
+            ],
+            'no articles left' => [
+                ['Article Number' => 0],
+                null
+            ],
+        ];
+    }
+
+    private function getResponseXMLTransaction()
+    {
+        $oTransaction = $this->getMockBuilder(RatepayInvoiceTransaction::class)
+            ->setMethods(['getResponseXML'])
+            ->getMock();
+        $oTransaction
+            ->method('getResponseXML')
+            ->willReturn(file_get_contents(__DIR__ . '/../../resources/success_response.xml'));
+
+        return $oTransaction;
     }
 }
