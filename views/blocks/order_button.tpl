@@ -33,7 +33,7 @@
             <div>
                 <input type="checkbox" name="trustedshop_checkbox" id="trusted-shop-checkbox" />
                 <label for="trusted-shop-checkbox" style="display: inline">
-                    [{oxmultilang ident="wd_trusted_shop_terms" args=$payment->oxpayments__payolution_terms_url->value}]
+                    [{oxmultilang ident="wd_payolution_terms" args=$payment->oxpayments__payolution_terms_url->value}]
                 </label>
             </div>
             [{block name="checkout_order_btn_submit_bottom"}]
