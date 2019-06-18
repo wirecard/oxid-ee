@@ -51,7 +51,7 @@ class ResponseMapper
      */
     public function getResponse()
     {
-        return $this->oResponse;
+        return $this->_oResponse;
     }
 
     /**

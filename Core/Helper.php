@@ -438,4 +438,21 @@ class Helper
 
         return $oList->getArray();
     }
+
+
+    /**
+     * Checks that the amount is in the range of the transaction
+     *
+     * @param float $fAmount
+     * @param float $fMaxAmount
+     *
+     * @return boolean true if $fAmount is in the specified range
+     *
+     * @since 1.2.0
+     */
+    public static function isPositiveBelowMax($fAmount, $fMaxAmount)
+    {
+        return $fAmount > 0 && $fMaxAmount > 0 &&
+            ((bcsub($fAmount, $fMaxAmount, self::BCSUB_SCALE) / $fMaxAmount) < self::FLOATING_POINT_EPSILON);
+    }
 }

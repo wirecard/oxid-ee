@@ -10,7 +10,6 @@
 namespace Wirecard\Oxid\Model;
 
 use Wirecard\Oxid\Core\PaymentMethodHelper;
-
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\SepaConfig;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
@@ -76,13 +75,15 @@ class SepaCreditTransferPaymentMethod extends PaymentMethod
     /**
      * @inheritdoc
      *
-     * @param string $sAction
+     * @param string                           $sAction
+     * @param \Wirecard\Oxid\Model\Transaction $oParentTransaction
+     * @param array|null                       $aOrderItems
      *
      * @return SepaCreditTransferTransaction
      *
      * @since 1.2.0
      */
-    public function getPostProcessingTransaction($sAction)
+    public function getPostProcessingTransaction($sAction, $oParentTransaction, $aOrderItems = null)
     {
         return new SepaCreditTransferTransaction();
     }

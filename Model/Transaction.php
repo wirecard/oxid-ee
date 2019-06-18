@@ -9,12 +9,15 @@
 
 namespace Wirecard\Oxid\Model;
 
-use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Core\OxidEeEvents;
-
+use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Model\MultiLanguageModel;
-use OxidEsales\Eshop\Application\Model\Order;
+
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\OxidEeEvents;
+use Wirecard\Oxid\Core\ResponseMapper;
+
+use Wirecard\PaymentSdk\Entity\Basket;
 
 /**
  * Transaction
@@ -74,8 +77,10 @@ class Transaction extends MultiLanguageModel
     /**
      * Loads a Transaction by transaction ID.
      *
-     * @see \OxidEsales\EshopCommunity\Core\Model\BaseModel::load
+     * @see   \OxidEsales\EshopCommunity\Core\Model\BaseModel::load
+     *
      * @param string $sTransactionId
+     *
      * @return bool
      *
      * @since 1.0.0
@@ -217,5 +222,17 @@ class Transaction extends MultiLanguageModel
     public function getPaymentType()
     {
         return $this->getTransactionOrder()->oxorder__oxpaymenttype->value;
+    }
+
+    /**
+     * Returns the Basket object
+     *
+     * @return Basket
+     *
+     * @since 1.2.0
+     */
+    public function getBasket()
+    {
+        return (new ResponseMapper($this->getResponseXML()))->getResponse()->getBasket();
     }
 }

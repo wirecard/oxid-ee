@@ -10,22 +10,33 @@
 namespace Wirecard\Oxid\Model;
 
 use DateTime;
+
+use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Core\Exception\InputException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Application\Model\Country;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Extend\Model\Order;
+
+use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Entity\Amount;
+use Wirecard\PaymentSdk\Entity\Basket;
+use Wirecard\PaymentSdk\Entity\Item;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Payment method implementation for Ratepay Invoice
  *
- * @since 1.2.0
+ * @since                      1.2.0
+ *
+ * @codingStandardsIgnoreStart Custom.Classes.ClassLinesOfCode.MaxExceeded
+ * Will be fixed with https://github.com/wirecard/oxid-ee/pull/132
+ *
  */
 class RatepayInvoicePaymentMethod extends PaymentMethod
 {
@@ -205,6 +216,32 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     /**
      * @inheritdoc
      *
+     * @param RatepayInvoiceTransaction $oTransaction
+     * @param Order                     $oOrder
+     *
+     * @throws \Exception
+     *
+     * @since 1.2.0
+     */
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
+    {
+        $oSession = Registry::getSession();
+        $oBasket = $oSession->getBasket();
+        $oWdBasket = $oBasket->createTransactionBasket();
+
+        $oTransaction->setBasket($oWdBasket);
+        $oTransaction->setShipping($oOrder->getShippingAccountHolder());
+        $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
+
+        $oAccountHolder = $oOrder->getAccountHolder();
+        $oAccountHolder->setDateOfBirth(new DateTime(SessionHelper::getDbDateOfBirth()));
+        $oAccountHolder->setPhone(SessionHelper::getPhone());
+        $oTransaction->setAccountHolder($oAccountHolder);
+    }
+
+    /**
+     * @inheritdoc
+     *
      * @return array
      *
      * @since 1.2.0
@@ -249,30 +286,6 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
     /**
      * @inheritdoc
      *
-     * @param RatepayInvoiceTransaction $oTransaction
-     * @param Order                     $oOrder
-     *
-     * @since 1.2.0
-     */
-    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
-    {
-        $oSession = Registry::getSession();
-        $oBasket = $oSession->getBasket();
-        $oWdBasket = $oBasket->createTransactionBasket();
-
-        $oTransaction->setBasket($oWdBasket);
-        $oTransaction->setShipping($oOrder->getShippingAccountHolder());
-        $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
-
-        $oAccountHolder = $oOrder->getAccountHolder();
-        $oAccountHolder->setDateOfBirth(new DateTime(SessionHelper::getDbDateOfBirth()));
-        $oAccountHolder->setPhone(SessionHelper::getPhone());
-        $oTransaction->setAccountHolder($oAccountHolder);
-    }
-
-    /**
-     * @inheritdoc
-     *
      * @return bool
      *
      * @since 1.2.0
@@ -310,7 +323,6 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
 
         return $bDataToSave && Registry::getSession()->getUser()->oxuser__oxpassword->value !== '';
     }
-
 
     /**
      * Returns 'hidden' if the field value is already valid, 'text' otherwise
@@ -449,14 +461,132 @@ class RatepayInvoicePaymentMethod extends PaymentMethod
         $oShippingCountry->load($sShippingCountryId ?? $sBillingCountryId);
 
         return in_array(
-            $oBillingCountry->oxcountry__oxisoalpha2->value,
-            $oPayment->oxpayments__billing_countries->value ?? []
-        ) && in_array(
-            $oShippingCountry->oxcountry__oxisoalpha2->value,
-            $oPayment->oxpayments__shipping_countries->value ?? []
-        ) && (
-            !$oPayment->oxpayments__billing_shipping->value ||
-            !$sShippingCountryId
-        );
+                $oBillingCountry->oxcountry__oxisoalpha2->value,
+                $oPayment->oxpayments__billing_countries->value ?? []
+            ) && in_array(
+                $oShippingCountry->oxcountry__oxisoalpha2->value,
+                $oPayment->oxpayments__shipping_countries->value ?? []
+            ) && (
+                !$oPayment->oxpayments__billing_shipping->value ||
+                !$sShippingCountryId
+            );
+    }
+
+    /**
+     *
+     * @inheritdoc
+     *
+     * @param string                           $sAction
+     * @param \Wirecard\Oxid\Model\Transaction $oParentTransaction
+     * @param array|null                       $aOrderItems
+     *
+     * @return Transaction
+     *
+     * @since 1.2.0
+     */
+    public function getPostProcessingTransaction($sAction, $oParentTransaction, $aOrderItems = null)
+    {
+        $oTransaction = new RatepayInvoiceTransaction();
+
+        $oPostProcBasket = new Basket();
+        $oPostProcBasket->setVersion(RatepayInvoiceTransaction::class);
+
+        $fAmount = $this->_addItemsToPostProcessingBasket($oParentTransaction, $aOrderItems, $oPostProcBasket);
+
+        $oTransaction->setBasket($oPostProcBasket);
+        $oTransaction->setAmount(new Amount(
+            $fAmount,
+            $oPostProcBasket->getTotalAmount()->getCurrency()
+        ));
+        return $oTransaction;
+    }
+
+    /**
+     * @param \Wirecard\Oxid\Model\Transaction $oParentTransaction
+     * @param array|null                       $aOrderItems
+     * @param Basket                           $oPostProcBasket
+     *
+     * @return float the amount of the items in the basket
+     *
+     * @since 1.2.0
+     */
+    private function _addItemsToPostProcessingBasket($oParentTransaction, $aOrderItems, &$oPostProcBasket)
+    {
+        $oBasket = new Basket();
+        $oBasket->parseFromXml(simplexml_load_string($oParentTransaction->getResponseXML()));
+
+        $aItemsToAdd = self::_getItemsToAddToBasket($oBasket, $aOrderItems);
+
+        $iRoundPrecision = Helper::getCurrencyRoundPrecision($oBasket->getTotalAmount()->getCurrency());
+
+        $fAmount = 0;
+        foreach ($aItemsToAdd as $oBasketItem) {
+            /**
+             * @var $oBasketItem Item
+             */
+            $oPostProcBasket->add($oBasketItem);
+            $fAmount = round(
+                bcadd(
+                    $fAmount,
+                    $oBasketItem->getPrice()->getValue() * $oBasketItem->getQuantity(),
+                    Helper::BCSUB_SCALE
+                ),
+                $iRoundPrecision
+            );
+        }
+
+        return $fAmount;
+    }
+
+    /**
+     * @param Basket $oBasket
+     * @param array  $aOrderItems
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    private static function _getItemsToAddToBasket($oBasket, $aOrderItems)
+    {
+        $aItemsToAdd = [];
+
+        foreach ($aOrderItems as $sArticleNumber => $iQuantity) {
+            if ($iQuantity < 1) {
+                continue;
+            }
+
+            $oItem = self::_getRecalculatedItem($oBasket, $sArticleNumber, $iQuantity);
+            if (!is_null($oItem)) {
+                $aItemsToAdd[] = $oItem;
+            }
+        }
+
+        return $aItemsToAdd;
+    }
+
+    /**
+     * @param Basket $oBasket
+     * @param string $sArticleNumber
+     * @param int    $iQuantity
+     *
+     * @return Item|null
+     *
+     * @since 1.2.0
+     */
+    private static function _getRecalculatedItem($oBasket, $sArticleNumber, $iQuantity)
+    {
+        foreach ($oBasket as $iIndex => $oBasketItem) {
+
+            /**
+             * @var $oBasketItem Item
+             */
+            if ($oBasketItem->getArticleNumber() == $sArticleNumber) {
+                $oBasketItem->setQuantity($iQuantity);
+                return $oBasketItem;
+            }
+        }
+
+        return null;
     }
 }
+// @codingStandardsIgnoreEnd

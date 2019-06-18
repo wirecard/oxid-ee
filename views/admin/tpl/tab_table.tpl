@@ -7,26 +7,7 @@
 *
 *}]
 
-<style>
-    .wd-table {
-        width: 100%;
-        border-spacing: 0;
-        border-collapse: collapse;
-        overflow: hidden;
-    }
-
-    .wd-table th,
-    .wd-table td {
-        padding: 4px 8px;
-        border: 1px solid #ddd;
-    }
-
-    .wd-table th {
-        font-size: 12px;
-        text-align: inherit;
-        text-transform: uppercase;
-    }
-</style>
+[{oxstyle include=$oViewConf->getPaymentGatewayUrl("out/css/wirecard_wdoxidee_table.css")}]
 
 [{include file="headitem.tpl" title="GENERAL_ADMIN_TITLE"|oxmultilangassign}]
 
@@ -37,36 +18,7 @@
 </form>
 
 [{if $data}]
-    <table class="wd-table">
-        [{if $data.head}]
-            <thead>
-                [{foreach from=$data.head item=cell}]
-                    <th [{if $cell.nowrap}]class="nowrap"[{/if}]>[{$cell.text}]</th>
-                [{/foreach}]
-            </thead>
-        [{/if}]
-
-        [{if $data.body}]
-            <tbody>
-                [{foreach from=$data.body item=row}]
-                    <tr>
-                        [{foreach from=$row item=cell}]
-                            [{assign var="indent" value=$cell.indent*30}]
-                            <td [{if $cell.nowrap}]class="nowrap"[{/if}] [{if $indent}]style="border-left-width:[{$indent}]px;"[{/if}]>[{$cell.text}]</td>
-                        [{/foreach}]
-                    </tr>
-                [{/foreach}]
-            </tbody>
-        [{/if}]
-
-        [{if $data.foot}]
-            <tfoot>
-                [{foreach from=$data.foot item=cell}]
-                    <td [{if $cell.nowrap}]class="nowrap"[{/if}]>[{$cell.text}]</td>
-                [{/foreach}]
-            </tfoot>
-        [{/if}]
-    </table>
+  [{include file="table.tpl"}]
 [{elseif $emptyText}]
     <em>[{$emptyText}]</em>
 [{/if}]
