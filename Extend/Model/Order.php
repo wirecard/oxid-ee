@@ -263,6 +263,7 @@ class Order extends Order_parent
             BackendService::TYPE_PROCESSING => Helper::translate('wd_order_status_purchased'),
             BackendService::TYPE_CANCELLED => Helper::translate('wd_order_status_cancelled'),
             BackendService::TYPE_REFUNDED => Helper::translate('wd_order_status_refunded'),
+            self::STATE_FAILED => Helper::translate('wd_order_status_failed'),
         ];
     }
 
@@ -500,6 +501,10 @@ class Order extends Order_parent
                 "Order `{$this->getId()}` could not be deleted as requested by the payment method config."
             );
         }
+        // Change order state if consumer cancelled the order, or if there was a payment error.
+        // This is done whenever consumer gets redirected back to a cancel or error redirect url.
+        $this->oxorder__wdoxidee_orderstate = new Field($sState);
+        $this->save();
     }
 
     /**

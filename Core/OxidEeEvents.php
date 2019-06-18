@@ -421,5 +421,11 @@ class OxidEeEvents
         if (!$oDbMetaDataHandler->tableExists(self::PAYMENT_METADATA_TABLE)) {
             self::createPaymentMethodMetaDataTable();
         }
+
+        // adds new enum to orderState field
+        $sQuery = "ALTER TABLE " . self::ORDER_TABLE .
+            " MODIFY `WDOXIDEE_ORDERSTATE` enum('" . implode("','", Order::getStates()) . "') default '" .
+            Order::getStates()[0] . "' NOT NULL";
+        self::$_oDb->execute($sQuery);
     }
 }
