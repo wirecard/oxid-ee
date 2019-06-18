@@ -14,6 +14,12 @@ module Const
   LOCALE_MAP = {
     en_US: ['en', 'English'],
     de_DE: ['de', 'Deutsch'],
+    fr_FR: ['fr', 'Français'],
+    ko_KR: ['kr', 'Korean'],
+    ja_JP: ['jp', '日本語'],
+    id_ID: ['id', 'Indonesia'],
+    zh_CN: ['zh_CN', '中文'],
+    zh_TW: ['zh_TW', '繁體中文'],
   }.freeze
 
   LOCALE_FILE_HEADER = <<-EOF
