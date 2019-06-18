@@ -9,6 +9,8 @@
 
 use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 use Wirecard\Oxid\Extend\Model\Payment;
+use Wirecard\Oxid\Model\Transaction;
+
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 
 use OxidEsales\Eshop\Core\Field;
@@ -339,6 +341,41 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
             ],
             'phone invalid' => [
                 ['dateOfBirth' => '12.12.1985', 'phone' => ''],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getPostProcessingTransactionProvider
+     */
+    public function testGetPostProcessingTransaction($aOrderItems)
+    {
+        $oParentTransaction = $this->getMockBuilder(Transaction::class)
+            ->setMethods(['getResponseXML'])
+            ->getMock();
+        $oParentTransaction
+            ->method('getResponseXML')
+            ->willReturn(file_get_contents(__DIR__ . '/../../resources/success_response.xml'));
+
+        $sResult = $this->_oPaymentMethod->getPostProcessingTransaction(Transaction::ACTION_CREDIT, $oParentTransaction, $aOrderItems);
+
+        $this->assertInstanceOf(RatepayInvoiceTransaction::class, $sResult);
+    }
+
+    public function getPostProcessingTransactionProvider()
+    {
+        return [
+            'refund action' => [
+                ['Article Number' => 1],
+                RatepayInvoiceTransaction::class,
+            ],
+            'nothing refunded' => [
+                ['Article Number' => 0],
+                RatepayInvoiceTransaction::class,
+            ],
+            'unknown article' => [
+                ['Other Article' => 1],
+                RatepayInvoiceTransaction::class,
             ],
         ];
     }
