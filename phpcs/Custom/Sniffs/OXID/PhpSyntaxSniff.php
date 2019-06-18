@@ -30,6 +30,12 @@ class Custom_Sniffs_OXID_PhpSyntaxSniff implements PHP_CodeSniffer_Sniff
         // check for type hints
         for ($i = $tokenFunction['parenthesis_opener']; $i < $tokenFunction['parenthesis_closer']; $i++) {
             if ($tokens[$i]['code'] === T_STRING || $tokens[$i]['code'] === T_ARRAY_HINT) {
+                $tokenNextPosition = $phpcsFile->findNext(T_WHITESPACE, $i + 1, null, true);
+
+                if (!$tokenNextPosition || $tokens[$tokenNextPosition]['code'] !== T_VARIABLE) {
+                    continue;
+                }
+
                 $fix = $phpcsFile->addFixableWarning('Type hints should not be used', $i, 'TypeHint');
 
                 if ($fix) {
