@@ -9,6 +9,8 @@
 
 use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 use Wirecard\Oxid\Extend\Model\Payment;
+use Wirecard\Oxid\Model\Transaction;
+
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 
 use OxidEsales\Eshop\Core\Field;
@@ -18,6 +20,8 @@ use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Exception\InputException;
+
+use Wirecard\Oxid\Tests\Unit\Controller\Admin\TestDataHelper;
 
 class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
@@ -341,5 +345,98 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
                 ['dateOfBirth' => '12.12.1985', 'phone' => ''],
             ],
         ];
+    }
+
+    /**
+     * @dataProvider getPostProcessingTransactionProvider
+     */
+    public function testGetPostProcessingTransaction($aOrderItems)
+    {
+        $oParentTransaction = $this->getResponseXMLTransaction();
+
+        $oResult = $this->_oPaymentMethod->getPostProcessingTransaction(Transaction::ACTION_CREDIT, $oParentTransaction, $aOrderItems);
+
+        $this->assertInstanceOf(RatepayInvoiceTransaction::class, $oResult);
+    }
+
+    public function getPostProcessingTransactionProvider()
+    {
+        return [
+            'articles left' => [
+                ['Article Number' => 1],
+            ],
+            'no articles left' => [
+                ['Article Number' => 0],
+            ],
+            'other article left' => [
+                ['Other Article' => 1],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getPostProcessingTransactionQuantityProvider
+     */
+    public function testGetPostProcessingTransactionQuantity($aOrderItems, $iExpected)
+    {
+        $oParentTransaction = $this->getResponseXMLTransaction();
+
+        $oResult = $this->_oPaymentMethod->getPostProcessingTransaction(Transaction::ACTION_CREDIT, $oParentTransaction, $aOrderItems);
+        $oResult->setOperation(Transaction::ACTION_CREDIT);
+
+        $this->assertEquals($iExpected, $oResult->mappedProperties()['order-items']['order-item'][0]['quantity']);
+    }
+
+    public function getPostProcessingTransactionQuantityProvider()
+    {
+        return [
+            'articles left' => [
+                ['Article Number' => 1],
+                1
+            ],
+            'no articles left' => [
+                ['Article Number' => 0],
+                null
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getPostProcessingTransactionArticleProvider
+     */
+    public function testGetPostProcessingTransactionArticle($aOrderItems, $sExpected)
+    {
+        $oParentTransaction = $this->getResponseXMLTransaction();
+
+        $oResult = $this->_oPaymentMethod->getPostProcessingTransaction(Transaction::ACTION_CREDIT, $oParentTransaction, $aOrderItems);
+        $oResult->setOperation(Transaction::ACTION_CREDIT);
+
+        $this->assertEquals($sExpected, $oResult->mappedProperties()['order-items']['order-item'][0]['article-number']);
+    }
+
+    public function getPostProcessingTransactionArticleProvider()
+    {
+        return [
+            'articles left' => [
+                ['Article Number' => 1],
+                'Article Number'
+            ],
+            'no articles left' => [
+                ['Article Number' => 0],
+                null
+            ],
+        ];
+    }
+
+    private function getResponseXMLTransaction()
+    {
+        $oTransaction = $this->getMockBuilder(RatepayInvoiceTransaction::class)
+            ->setMethods(['getResponseXML'])
+            ->getMock();
+        $oTransaction
+            ->method('getResponseXML')
+            ->willReturn(TestDataHelper::getSuccessXmlResponse());
+
+        return $oTransaction;
     }
 }

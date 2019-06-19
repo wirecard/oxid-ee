@@ -30,6 +30,7 @@ use Wirecard\PaymentSdk\Response\FormInteractionResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
 
 use Wirecard\Test\WdUnitTestCase;
+use Wirecard\Oxid\Tests\Unit\Controller\Admin\TestDataHelper;
 
 class OrderHelperTest extends WdUnitTestCase
 {
@@ -152,7 +153,7 @@ class OrderHelperTest extends WdUnitTestCase
 
     public function handleFormResponseProvider()
     {
-        $successResponse = file_get_contents(__DIR__ . '/../../resources/success_response.xml');
+        $successResponse = TestDataHelper::getSuccessXmlResponse();
         return [
             'empty post body' => [[]],
             'filled post body' => [["eppresponse" => "$successResponse"]],

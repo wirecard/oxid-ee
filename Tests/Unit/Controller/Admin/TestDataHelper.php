@@ -35,4 +35,8 @@ class TestDataHelper
             ],
         ];
     }
+
+    public static function getSuccessXmlResponse() {
+        return file_get_contents(dirname(__FILE__) . '/../../../resources/success_response.xml');
+    }
 }
