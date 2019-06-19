@@ -8,6 +8,7 @@
  */
 
 use Wirecard\Oxid\Core\ResponseMapper;
+use Wirecard\Oxid\Tests\Unit\Controller\Admin\TestDataHelper;
 
 class ResponseMapperTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
@@ -18,7 +19,7 @@ class ResponseMapperTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     protected function setUp()
     {
-        $sXml = file_get_contents(dirname(__FILE__) . '/../../resources/success_response.xml');
+        $sXml = TestDataHelper::getSuccessXmlResponse();
         $this->_oResponseMapper = new ResponseMapper($sXml);
 
         parent::setUp();

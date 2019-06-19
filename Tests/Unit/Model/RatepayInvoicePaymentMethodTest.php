@@ -21,6 +21,8 @@ use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Exception\InputException;
 
+use Wirecard\Oxid\Tests\Unit\Controller\Admin\TestDataHelper;
+
 class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
     /**
@@ -433,7 +435,7 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
             ->getMock();
         $oTransaction
             ->method('getResponseXML')
-            ->willReturn(file_get_contents(__DIR__ . '/../../resources/success_response.xml'));
+            ->willReturn(TestDataHelper::getSuccessXmlResponse());
 
         return $oTransaction;
     }
