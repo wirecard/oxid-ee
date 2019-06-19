@@ -157,9 +157,9 @@ class PaymentOnInvoicePaymentMethod extends SepaCreditTransferPaymentMethod
     public function addMandatoryTransactionData(&$oTransaction, $oOrder)
     {
         $oAccountHolder = new AccountHolder();
-        // todo: get values from shop base settings (merchant first and last name)
-        $oAccountHolder->setFirstName("John");
-        $oAccountHolder->setLastName("Doe");
+        $oShop = Helper::getShop();
+        $oAccountHolder->setFirstName($oShop->oxshops__oxfname->value);
+        $oAccountHolder->setLastName($oShop->oxshops__oxlname->value);
 
         $oTransaction->setAccountHolder($oAccountHolder);
     }
