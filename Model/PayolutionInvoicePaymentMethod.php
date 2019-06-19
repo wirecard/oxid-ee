@@ -166,14 +166,15 @@ class PayolutionInvoicePaymentMethod extends InvoicePaymentMethod
                 'title' => Helper::translate('wd_config_billing_shipping'),
                 'description' => Helper::translate('wd_config_billing_shipping_desc'),
             ],
-            'trustedShop' => [
+            'terms' => [
                 'type' => 'select',
-                'field' => 'oxpayments__trusted_shop',
+                'field' => 'oxpayments__terms',
                 'options' => [
                     '1' => Helper::translate('wd_yes'),
                     '0' => Helper::translate('wd_no'),
                 ],
-                'title' => Helper::translate('wd_config_trusted_shop_seal'),
+                'title' => Helper::translate('wd_config_require_consent'),
+                'description' => Helper::translate('wd_config_require_consent_desc'),
             ],
             'payolutionTermsUrl' => [
                 'type' => 'text',
@@ -290,7 +291,7 @@ class PayolutionInvoicePaymentMethod extends InvoicePaymentMethod
                 'shippingCountries',
                 'billingCountries',
                 'billingShipping',
-                'trustedShop',
+                'terms',
                 'payolutionTermsUrl',
             ]
         );
@@ -310,7 +311,7 @@ class PayolutionInvoicePaymentMethod extends InvoicePaymentMethod
             'shipping_countries',
             'billing_countries',
             'billing_shipping',
-            'trusted_shop',
+            'terms',
             'payolution_terms_url',
         ];
 
@@ -338,7 +339,7 @@ class PayolutionInvoicePaymentMethod extends InvoicePaymentMethod
         parent::onBeforeTransactionCreation();
 
         if (!$this->_isTermsAccepted()) {
-            throw new InputException('Trusted Shop terms were not accepted.');
+            throw new InputException('Terms were not accepted.');
         }
     }
 
@@ -363,7 +364,7 @@ class PayolutionInvoicePaymentMethod extends InvoicePaymentMethod
     }
 
     /**
-     * Checks if trusted shop terms are accepted
+     * Checks if the terms are accepted
      *
      * @return bool
      *
@@ -373,8 +374,8 @@ class PayolutionInvoicePaymentMethod extends InvoicePaymentMethod
     {
         $oRequest = Registry::getRequest();
 
-        if ($this->_oPayment->oxpayments__trusted_shop->value &&
-            !$oRequest->getRequestParameter('trustedshop_checkbox')) {
+        if ($this->_oPayment->oxpayments__terms->value &&
+            !$oRequest->getRequestParameter('terms_checkbox')) {
             return false;
         }
 

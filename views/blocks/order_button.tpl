@@ -9,7 +9,7 @@
         </button>
         <div class="clearfix"></div>
     </div>
-[{elseif $payment->oxpayments__oxid->value == "wdpayolution-inv" && $payment->oxpayments__trusted_shop->value}]
+[{elseif $payment->oxpayments__oxid->value == "wdpayolution-inv" && $payment->oxpayments__terms->value}]
     <form action="[{$oViewConf->getSslSelfLink()}]" method="post" id="orderConfirmAgbBottom" class="form-horizontal">
 
         <div class="hidden">
@@ -31,8 +31,8 @@
 
         <div class="well well-sm cart-buttons">
             <div>
-                <input type="checkbox" name="trustedshop_checkbox" id="trusted-shop-checkbox" />
-                <label for="trusted-shop-checkbox" style="display: inline">
+                <input type="checkbox" name="terms_checkbox" id="terms-checkbox" />
+                <label for="terms-checkbox" style="display: inline">
                     [{oxmultilang ident="wd_payolution_terms" args=$payment->oxpayments__payolution_terms_url->value}]
                 </label>
             </div>
@@ -51,9 +51,9 @@
 
 [{include file="sepa_mandate_modal.tpl"}]
 
-[{if $payment->oxpayments__oxid->value == "wdpayolution-inv" && $payment->oxpayments__trusted_shop->value}]
+[{if $payment->oxpayments__oxid->value == "wdpayolution-inv" && $payment->oxpayments__terms->value}]
     <script>
-        var checkbox = document.getElementById("trusted-shop-checkbox");
+        var checkbox = document.getElementById("terms-checkbox");
         var button = document.getElementById("payolution-inv-order-button");
 
         checkbox.onclick = function(){
