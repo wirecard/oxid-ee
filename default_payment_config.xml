@@ -229,6 +229,23 @@
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
     </payment>
+    <payment>
+        <oxid>wdpaymentoninvoice</oxid>
+        <oxactive>0</oxactive>
+        <oxtoamount>10000</oxtoamount>
+        <oxdesc>Wirecard Payment on Invoice</oxdesc>
+        <oxdesc_1>Wirecard Payment on Invoice</oxdesc_1>
+        <oxsort>80</oxsort>
+        <wdoxidee_logo>paymentoninvoice.png</wdoxidee_logo>
+        <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
+        <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
+        <wdoxidee_maid>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</wdoxidee_maid>
+        <wdoxidee_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</wdoxidee_secret>
+        <wdoxidee_httpuser>70000-APITEST-AP</wdoxidee_httpuser>
+        <wdoxidee_httppass>qD2wzQ_hrc!8</wdoxidee_httppass>
+        <wdoxidee_descriptor>1</wdoxidee_descriptor>
+        <wdoxidee_additional_info>1</wdoxidee_additional_info>
+    </payment>
 
     <!-- only visible for the merchant -->
     <payment>
