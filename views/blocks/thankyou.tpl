@@ -17,9 +17,15 @@
                 [{oxmultilang ident="MESSAGE_YOU_RECEIVED_ORDER_CONFIRM"}]<br>
             [{/if}]
             [{oxmultilang ident="wd_wait_for_final_status"}]<br><br>
+        [{elseif $order->isPaymentSuccess() }]
+            [{oxmultilang ident="wd_payment_success_text"}]<br><br>
         [{else}]
-            [{ oxmultilang ident="wd_payment_success_text" }]<br><br>
-        [{/if}]
+            [{oxmultilang ident="wd_payment_awaiting" }]<br>
+            [{if $sendPendingEmailsSettings }]
+                [{oxmultilang ident="MESSAGE_YOU_RECEIVED_ORDER_CONFIRM"}]<br>
+            [{/if}]
+            [{oxmultilang ident="wd_wait_for_final_status"}]<br><br>
+      [{/if}]
     </strong>
     [{oxmultilang ident="MESSAGE_WE_WILL_INFORM_YOU"}]<br><br>
 [{else}]
