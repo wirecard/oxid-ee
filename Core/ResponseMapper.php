@@ -165,7 +165,7 @@ class ResponseMapper
 
         foreach ($aSortedKeys as $sKey) {
             $aList[] = [
-                'title' => $sKey,
+                'title' => Helper::translate($this->_mapReponseKey($sKey)),
                 'value' => $aResponseData[$sKey] ?? null,
             ];
         }
@@ -210,5 +210,34 @@ class ResponseMapper
         }
 
         return $aFields;
+    }
+
+    /**
+     * Maps the response key to PhraseApp key for a nice display of the transaction response details.
+     *
+     * @param string $sKey
+     *
+     * @return string
+     *
+     * @since 1.2.0
+     */
+    private function _mapReponseKey($sKey)
+    {
+        $aMappedKeys = [
+            'currency' => 'wd_panel_currency',
+            'descriptor' => 'wd_config_descriptor',
+            'merchant-account-id' => 'wd_maid',
+            'order-number' => 'wd_orderNumber',
+            'parent-transaction-id' => 'wd_panel_parent_transaction_id',
+            'payment-methods.0.name' => 'wd_panel_payment_method',
+            'request-id' => 'wd_requestId',
+            'requested-amount' => 'wd_requestedAmount',
+            'statuses.0.provider-transaction-id' => 'wd_panel_provider_transaction_id',
+            'transaction-id' => 'wd_transactionID',
+            'transaction-state' => 'wd_transactionState',
+            'transaction-type' => 'wd_transactionType',
+        ];
+
+        return $aMappedKeys[$sKey] ?? $sKey;
     }
 }
