@@ -40,6 +40,12 @@
     "eps": {
       "bic": "BWFBATW1XXX",
       "id": "123456"
+    },
+    "alipay": {
+      "accountName": "alipaytest20091@gmail.com",
+      "password": "111111",
+      "paymentPassword": "111111",
+      "captcha": "8888"
     }
   }
 }
