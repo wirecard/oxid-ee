@@ -141,7 +141,7 @@
     </tr>
   [{/if}]
 
-  [{if $bCurrencySettings}]
+  [{if $bShowCurrencyHelp}]
     <tr>
       <td colspan="1">
         <div class="wdoxidee-messagebox wdoxidee-messagebox--info">

@@ -50,7 +50,7 @@ class PaymentMain extends PaymentMain_parent
      *
      * @since 1.2.0
      */
-    private $_bCurSettingInfo;
+    private $_bShowCurrencyHelp;
 
     /**
      * @inheritdoc
@@ -72,7 +72,7 @@ class PaymentMain extends PaymentMain_parent
             // and an error message shown in the frontend
             Helper::addToViewData($this, [
                 'bConfigNotValid' => ($sFnc === 'save' || $sFnc === 'addfield') && !$this->_bIsSavePossible,
-                'bCurrencySettings' => $this->_bCurSettingInfo,
+                'bShowCurrencyHelp' => $this->_bShowCurrencyHelp,
             ]);
         }
 
@@ -275,7 +275,7 @@ class PaymentMain extends PaymentMain_parent
         foreach ($aNewCurrencyValue as $sCurrency) {
             // it is only necessary to check this currency at this point if it was already saved before
             if (!in_array($sCurrency, $aOldCurrencyValue)) {
-                $this->_bCurSettingInfo = true;
+                $this->_bShowCurrencyHelp = true;
                 continue;
             }
 
