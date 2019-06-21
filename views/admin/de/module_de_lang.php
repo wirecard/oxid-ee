@@ -54,6 +54,7 @@ $aLang = array(
     'wd_config_payment_action' => 'Zahlungsaktion',
     'wd_config_payment_action_desc' => 'Wählen Sie "Buchung", um automatisch eine Buchung durchzuführen, oder "Genehmigung", um eine manuelle Buchung zu ermöglichen.',
     'wd_config_payolution_terms_url' => 'Payolution URL',
+    'wd_config_payolution_terms_url_desc' => 'Erforderlich wenn Zustimmung einfordern aktiviert ist',
     'wd_config_reply_to' => 'Antwort an (optional)',
     'wd_config_require_consent' => 'Zustimmung einfordern',
     'wd_config_require_consent_desc' => 'Der Konsument muss den Bedingungen zustimmen um mit dem Bezahlvorgang fortzufahren.',

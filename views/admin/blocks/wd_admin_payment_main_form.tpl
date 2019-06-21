@@ -207,6 +207,7 @@
             size="38"
             name="editval[[{$fieldName}]]"
             value="[{$edit->$fieldName->value}]"
+            [{if $configField.placeholder}]placeholder="[{$configField.placeholder}]"[{/if}]
             [{if $configField.required}]required[{/if}]
             [{if $configField.onchange}]onchange="[{$configField.onchange}]"[{/if}]
           >

@@ -54,6 +54,7 @@ $aLang = array(
     'wd_config_payment_action' => 'Payment Action',
     'wd_config_payment_action_desc' => 'Select between "Purchase" to capture/invoice your order automatically or "Authorization" to capture/invoice manually.',
     'wd_config_payolution_terms_url' => 'Payolution URL',
+    'wd_config_payolution_terms_url_desc' => 'Mandatory if require consent is set to yes',
     'wd_config_reply_to' => 'Reply to (optionally)',
     'wd_config_require_consent' => 'Require consent',
     'wd_config_require_consent_desc' => 'Consumer must agree with the terms before proceeding with the checkout process.',
