@@ -75,6 +75,7 @@ $aLang = array(
     'wd_credit' => 'Refund',
     'wd_creditor' => 'Creditor',
     'wd_creditor_mandate_id' => 'Mandate ID',
+    'wd_currency_config' => 'Each currency configuration has to be filled out.',
     'wd_customerId' => 'Customer ID',
     'wd_date-of-birth' => 'Date of Birth',
     'wd_date_format_php_code' => 'm/d/Y',

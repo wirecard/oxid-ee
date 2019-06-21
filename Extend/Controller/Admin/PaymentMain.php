@@ -45,6 +45,14 @@ class PaymentMain extends PaymentMain_parent
     private $_bIsSavePossible;
 
     /**
+     * Tells if information about currency settings should be shown.
+     * The information is shown any time merchant adds a currency which has empty configuration fields.
+     *
+     * @since 1.2.0
+     */
+    private $_bCurSettingInfo;
+
+    /**
      * @inheritdoc
      *
      * @return string
@@ -64,6 +72,7 @@ class PaymentMain extends PaymentMain_parent
             // and an error message shown in the frontend
             Helper::addToViewData($this, [
                 'bConfigNotValid' => ($sFnc === 'save' || $sFnc === 'addfield') && !$this->_bIsSavePossible,
+                'bCurrencySettings' => $this->_bCurSettingInfo,
             ]);
         }
 
@@ -266,8 +275,7 @@ class PaymentMain extends PaymentMain_parent
         foreach ($aNewCurrencyValue as $sCurrency) {
             // it is only necessary to check this currency at this point if it was already saved before
             if (!in_array($sCurrency, $aOldCurrencyValue)) {
-                // todo: message should be displayed (blue box, saying configuration for individual currencies
-                // should be filled)
+                $this->_bCurSettingInfo = true;
                 continue;
             }
 

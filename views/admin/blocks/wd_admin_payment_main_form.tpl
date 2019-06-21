@@ -141,6 +141,16 @@
     </tr>
   [{/if}]
 
+  [{if $bCurrencySettings}]
+    <tr>
+      <td colspan="1">
+        <div class="wdoxidee-messagebox wdoxidee-messagebox--info">
+          [{oxmultilang ident="wd_currency_config"}]
+        </div>
+      </td>
+    </tr>
+  [{/if}]
+
   [{assign var="logoUrl" value=$edit->getLogoUrl()}]
   [{if $logoUrl}]
   <tr>

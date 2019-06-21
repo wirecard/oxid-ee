@@ -75,6 +75,7 @@ $aLang = array(
     'wd_credit' => 'Rückerstatten',
     'wd_creditor' => 'Creditor',
     'wd_creditor_mandate_id' => 'Mandate ID',
+    'wd_currency_config' => 'Jede Währung muss konfiguriert werden.',
     'wd_customerId' => 'Kunden-ID',
     'wd_date-of-birth' => 'Geburtsdatum',
     'wd_date_format_php_code' => 'd.m.Y',
