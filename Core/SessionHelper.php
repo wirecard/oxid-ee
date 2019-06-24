@@ -11,8 +11,8 @@ namespace Wirecard\Oxid\Core;
 
 use DateTime;
 
-use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Application\Model\Address;
+use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Helper class to handle session values
@@ -92,8 +92,8 @@ class SessionHelper
     /**
      * Sets date of birth
      *
-     * @param string $sDbDateOfBirth     formated for db (format 'Y-m-d')
-     * @param string $sPaymentMethodName
+     * @param string $sDbDateOfBirth     formatted for db (format 'Y-m-d')
+     * @param string $sPaymentMethodName the name of the payment method
      *
      * @since 1.2.0
      */
@@ -116,26 +116,14 @@ class SessionHelper
     }
 
     /**
-     * Returns true if a valid date of birth is available
-     *
-     * @param string $sPaymentMethodName
-     *
-     * @return bool
-     *
-     * @since 1.2.0
-     */
-    public static function isDateOfBirthSet($sPaymentMethodName)
-    {
-        return self::getDbDateOfBirth($sPaymentMethodName) !== self::DEFAULT_DATE_OF_BIRTH;
-    }
-
-    /**
      * Returns true if user is min $iAge years old, false if not or date of birth is not set
      *
      * @param int    $iAge
      * @param string $sPaymentMethodName
      *
      * @return bool
+     *
+     * @throws \Exception
      *
      * @since 1.2.0
      */
@@ -157,6 +145,20 @@ class SessionHelper
         $oDateInterval = $oDateOfBirth->diff($oToday);
 
         return $oDateInterval->invert === 0 && $oDateInterval->y >= $iAge;
+    }
+
+    /**
+     * Returns true if a valid date of birth is available
+     *
+     * @param string $sPaymentMethodName
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    public static function isDateOfBirthSet($sPaymentMethodName)
+    {
+        return self::getDbDateOfBirth($sPaymentMethodName) !== self::DEFAULT_DATE_OF_BIRTH;
     }
 
     /**
@@ -228,7 +230,7 @@ class SessionHelper
      * Sets the saveCheckoutFields flag
      *
      * @param int    $iSave              value 1 if checkout data should be saved 0 if not
-     * @param string $sPaymentMethodName
+     * @param string $sPaymentMethodName the name of the payment method
      *
      * @since 1.2.0
      */
@@ -275,5 +277,47 @@ class SessionHelper
         }
 
         return null;
+    }
+
+    /**
+     * Set the company name in the user's session
+     *
+     * @param string $sCompanyName
+     *
+     * @since 1.3.0
+     */
+    public static function setCompanyName($sCompanyName)
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+        $aDynvalues['wdCompanyName'] = $sCompanyName;
+
+        $oSession->setVariable('dynvalue', $aDynvalues);
+    }
+
+    /**
+     * Get the company name saved in the user's session
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    public static function getCompanyName()
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+        return $aDynvalues['wdCompanyName'];
+    }
+
+    /**
+     * Check if company name is set in the users session
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    public static function isCompanyNameSet()
+    {
+        return !is_null(self::getCompanyName());
     }
 }

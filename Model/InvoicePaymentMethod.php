@@ -128,6 +128,8 @@ abstract class InvoicePaymentMethod extends PaymentMethod
      *
      * @return bool
      *
+     * @throws \Exception
+     *
      * @since 1.2.0
      */
     private function _checkDateOfBirth()
