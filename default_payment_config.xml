@@ -236,7 +236,7 @@
         <oxdesc>Wirecard Payment on Invoice</oxdesc>
         <oxdesc_1>Wirecard Payment on Invoice</oxdesc_1>
         <oxsort>80</oxsort>
-        <wdoxidee_logo>poipia.png</wdoxidee_logo>
+        <wdoxidee_logo>invoice.png</wdoxidee_logo>
         <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
         <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
         <wdoxidee_maid>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</wdoxidee_maid>
