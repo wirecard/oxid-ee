@@ -56,7 +56,7 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
             'shippingCountries',
             'billingCountries',
             'billingShipping',
-            'trustedShop',
+            'terms',
             'payolutionTermsUrl',
             'allowedCurrencies',
             'apiUrl',
@@ -83,7 +83,7 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
             'shippingCountries',
             'billingCountries',
             'billingShipping',
-            'trustedShop',
+            'terms',
             'payolutionTermsUrl',
         ], $aFieldNames);
     }
@@ -99,7 +99,7 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
             'httppass_eur',
             'maid_eur',
             'secret_eur',
-            'trusted_shop',
+            'terms',
             'payolution_terms_url',
         ];
 
@@ -110,7 +110,7 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
 
     public function testOnBeforeTransactionCreationWithRequestParameter()
     {
-        $this->setRequestParameter('trustedshop_checkbox', true);
+        $this->setRequestParameter('terms_checkbox', true);
 
         $this->assertNull($this->_oPaymentMethod->onBeforeTransactionCreation());
     }
