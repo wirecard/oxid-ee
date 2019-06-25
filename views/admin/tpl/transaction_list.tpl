@@ -162,7 +162,11 @@ window.onload = function ()
                     <td class="[{$listclass}]">
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__state->value}]
                           [{if $listitem->isPoiPiaPaymentMethod()}]
-                            ([{if !$listitem->wdoxidee_ordertransactions__parenttransactionid->value}]un[{/if}]matched)
+                            [{if $listitem->wdoxidee_ordertransactions__parenttransactionid->value}]
+                                (matched)
+                            [{else}]
+                                (unmatched)
+                            [{/if}]
                           [{/if}]
                         </a>
                     </td>

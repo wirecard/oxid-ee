@@ -65,6 +65,6 @@ class BasePoiPiaPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
             'deleteCanceledOrder',
             'deleteFailedOrder',
         ];
-        $this->assertEquals($aExpected, $aPublicFieldNames, '', 0.0, 1, true);
+        $this->assertEquals($aExpected, $aPublicFieldNames);
     }
 }

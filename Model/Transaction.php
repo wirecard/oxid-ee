@@ -15,7 +15,9 @@ use OxidEsales\Eshop\Core\Model\MultiLanguageModel;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OxidEeEvents;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\ResponseMapper;
+use Wirecard\Oxid\Model\BasePoiPiaPaymentMethod;
 
 use Wirecard\PaymentSdk\Entity\Basket;
 
@@ -116,11 +118,8 @@ class Transaction extends MultiLanguageModel
     public function isPoiPiaPaymentMethod()
     {
         $sPaymentId = $this->getPaymentType();
-        if ($sPaymentId === 'wdpaymentoninvoice' || $sPaymentId === 'wdpaymentinadvance') {
-            return true;
-        }
-
-        return false;
+        $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
+        return is_subclass_of($oPayment->getPaymentMethod(), BasePoiPiaPaymentMethod::class);
     }
 
     /**
