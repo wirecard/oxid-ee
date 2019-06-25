@@ -200,15 +200,15 @@ abstract class InvoicePaymentMethod extends PaymentMethod
         $oShippingCountry->load($sShippingCountryId ?? $sBillingCountryId);
 
         return in_array(
-                $oBillingCountry->oxcountry__oxisoalpha2->value,
-                $oPayment->oxpayments__billing_countries->value ?? []
-            ) && in_array(
-                $oShippingCountry->oxcountry__oxisoalpha2->value,
-                $oPayment->oxpayments__shipping_countries->value ?? []
-            ) && (
-                !$oPayment->oxpayments__billing_shipping->value ||
-                !$sShippingCountryId
-            );
+            $oBillingCountry->oxcountry__oxisoalpha2->value,
+            $oPayment->oxpayments__billing_countries->value ?? []
+        ) && in_array(
+            $oShippingCountry->oxcountry__oxisoalpha2->value,
+            $oPayment->oxpayments__shipping_countries->value ?? []
+        ) && (
+            !$oPayment->oxpayments__billing_shipping->value ||
+            !$sShippingCountryId
+        );
     }
 
     /**

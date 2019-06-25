@@ -10,9 +10,11 @@
 namespace Wirecard\Oxid\Extend\Controller;
 
 use Exception;
+
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
@@ -23,6 +25,7 @@ use Wirecard\Oxid\Model\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PayolutionBtwobPaymentMethod;
 use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
@@ -527,11 +530,18 @@ class OrderController extends OrderController_parent
         return 'authorization';
     }
 
+    /**
+     * Checks if terms consent is needed
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
     public function isConsentNeeded()
     {
-        $oPayment = $this->getPayment();
-        return ($oPayment->oxpayments__oxid->value == PayolutionInvoicePaymentMethod::getName(true) ||
-                $oPayment->oxpayments__oxid->value == PayolutionBtwobPaymentMethod::getName(true)) &&
+        $oPayment = $this->getBasket()->getPaymentId();
+        return ($oPayment == PayolutionInvoicePaymentMethod::getName(true) ||
+                $oPayment == PayolutionBtwobPaymentMethod::getName(true)) &&
             $oPayment->oxpayments__terms->value;
     }
 }

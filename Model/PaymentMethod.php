@@ -353,6 +353,13 @@ abstract class PaymentMethod
         return true;
     }
 
+    /**
+     * Get the keys that should not be included for this payment method
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
     public function hiddenAccountHolderFields()
     {
         return [];

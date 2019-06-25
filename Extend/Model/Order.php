@@ -281,12 +281,9 @@ class Order extends Order_parent
     public function getAccountHolder()
     {
         $oCountry = $this->getOrderBillingCountry();
-        $oUser = $this->getOrderUser();
 
-        $oAccHolderHelper = new AccountHolderHelper();
-
-        $oPaymentMethod = PaymentMethodFactory::create($this->oxorder__oxpaymenttype->value);
-        $aHiddenFields = $oPaymentMethod->hiddenAccountHolderFields();
+        $aHiddenFields = PaymentMethodFactory::create($this->oxorder__oxpaymenttype->value)
+            ->hiddenAccountHolderFields();
 
         $aAccountHolderData = array_filter(
             [
@@ -300,15 +297,17 @@ class Order extends Order_parent
                 'phone' => $this->oxorder__oxbillfon->value,
                 'email' => $this->oxorder__oxbillemail->value,
                 'gender' => Helper::getGenderCodeForSalutation($this->oxorder__oxbillsal->value),
-                'dateOfBirth' => Helper::getDateTimeFromString($oUser->oxuser__oxbirthdate->value),
+                'dateOfBirth' => Helper::getDateTimeFromString($this->getOrderUser()->oxuser__oxbirthdate->value),
             ],
-            function ($key) use ($aHiddenFields) {
-                return !in_array($key, $aHiddenFields);
-            }, ARRAY_FILTER_USE_KEY);
+            function ($sKey) use ($aHiddenFields) {
+                return !in_array($sKey, $aHiddenFields);
+            },
+            ARRAY_FILTER_USE_KEY
+        );
 
         Registry::getLogger()->debug(print_r($aAccountHolderData, true));
 
-        return $oAccHolderHelper->createAccountHolder($aAccountHolderData);
+        return AccountHolderHelper::createAccountHolder($aAccountHolderData);
     }
 
     /**
@@ -320,12 +319,10 @@ class Order extends Order_parent
      */
     public function getShippingAccountHolder()
     {
-        $oAccHolderHelper = new AccountHolderHelper();
-
         // use shipping info if available
         $oCountry = $this->getOrderShippingCountry();
         if (!empty($oCountry->oxcountry__oxisoalpha2->value)) {
-            return $oAccHolderHelper->createAccountHolder([
+            return AccountHolderHelper::createAccountHolder([
                 'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
                 'city' => $this->oxorder__oxdelcity->value,
                 'street' => $this->oxorder__oxdelstreet->value . ' ' . $this->oxorder__oxdelstreetnr->value,
@@ -339,7 +336,7 @@ class Order extends Order_parent
 
         // fallback to billing info
         $oCountry = $this->getOrderBillingCountry();
-        return $oAccHolderHelper->createAccountHolder([
+        return AccountHolderHelper::createAccountHolder([
             'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
             'city' => $this->oxorder__oxbillcity->value,
             'street' => $this->oxorder__oxbillstreet->value . ' ' . $this->oxorder__oxbillstreetnr->value,
