@@ -146,7 +146,7 @@ abstract class PayolutionBasePaymentMethod extends InvoicePaymentMethod
             'payolutionTermsUrl' => [
                 'type' => 'text',
                 'field' => 'oxpayments__payolution_terms_url',
-                'title' => Helper::translate('wd_config_require_consent'),
+                'title' => Helper::translate('wd_config_payolution_terms_url'),
             ],
             'allowedCurrencies' => [
                 'type' => 'multiselect',
