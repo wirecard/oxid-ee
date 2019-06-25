@@ -82,7 +82,15 @@ class PayolutionBtwobPaymentMethod extends PayolutionBasePaymentMethod
      */
     public function addMandatoryTransactionData(&$oTransaction, $oOrder)
     {
-        //TODO add company name
+        $oTransaction->setAccountHolder($oOrder->getAccountHolder());
+        $oCompanyInfo = new CompanyInfo(SessionHelper::getCompanyName());
+
+        $sUid = $oOrder->getOrderUser()->oxuser__oxustid;
+        if ($sUid) {
+            $oCompanyInfo->setCompanyUid($sUid);
+        }
+
+        $oTransaction->setCompanyInfo($oCompanyInfo);
     }
 
     /**
@@ -94,9 +102,12 @@ class PayolutionBtwobPaymentMethod extends PayolutionBasePaymentMethod
      */
     public function getCheckoutFields()
     {
-        //TODO add company name field
         return [
-
+            'wdCompanyName' => [
+                'type' => $this->_getCheckoutFieldType(SessionHelper::isCompanyNameSet()),
+                'title' => Helper::translate('wd_company_name_input'),
+                'required' => true,
+            ],
         ];
     }
 }
