@@ -23,6 +23,7 @@ use Psr\Log\LoggerInterface;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\FormInteractionResponseFields;
+use Wirecard\Oxid\Model\PaymentInAdvancePaymentInformation;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Response\FailureResponse;
@@ -119,6 +120,22 @@ class OrderHelper
     {
         if ($oResponse instanceof FailureResponse) {
             return self::_handleFailureResponse($oResponse, $oLogger, $oOrder);
+        }
+
+        if ($oOrder->oxorder__oxpaymenttype->value === "wdpaymentinadvance") {
+
+            $oResponseXml = simplexml_load_string($oResponse->getRawData());
+
+            $oSession = Registry::getSession();
+            $oSession->setVariable(
+                "wdPaymentInAdvancePaymentInformation",
+                new PaymentInAdvancePaymentInformation(
+                    (string)$oResponseXml->{'requested-amount'} . ' ' . $oResponse->getRequestedAmount()->getCurrency(),
+                    (string)$oResponseXml->{'merchant-bank-account'}->{'iban'},
+                    (string)$oResponseXml->{'merchant-bank-account'}->{'bic'},
+                    (string)$oResponseXml->{'provider-transaction-reference-id'}
+                )
+            );
         }
 
         // set the transaction ID on the order
