@@ -341,15 +341,7 @@ class OxidEeEvents
 
         self::addPaymentMethods();
 
-        $sTmpDir = getShopBasePath() . "/tmp/";
-        $sSmartyDir = $sTmpDir . "smarty/";
-
-        foreach (glob($sTmpDir . "*.txt") as $sFileName) {
-            @unlink($sFileName);
-        }
-        foreach (glob($sSmartyDir . "*.php") as $sFileName) {
-            @unlink($sFileName);
-        }
+        self::_clearFileCache();
     }
 
     /**
@@ -361,6 +353,25 @@ class OxidEeEvents
     {
         self::$_oDb = DatabaseProvider::getDb();
         self::_disablePaymentMethods();
+        self::_clearFileCache();
+    }
+
+    /**
+     * Clears file cache
+     *
+     * @since 1.2.0
+     */
+    private static function _clearFileCache()
+    {
+        $sTmpDir = getShopBasePath() . "/tmp/";
+        $sSmartyDir = $sTmpDir . "smarty/";
+
+        foreach (glob($sTmpDir . "*.txt") as $sFileName) {
+            @unlink($sFileName);
+        }
+        foreach (glob($sSmartyDir . "*.php") as $sFileName) {
+            @unlink($sFileName);
+        }
     }
 
     /**
