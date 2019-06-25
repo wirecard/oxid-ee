@@ -10,11 +10,9 @@
 namespace Wirecard\Oxid\Extend\Controller;
 
 use Exception;
-
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Registry;
-
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
@@ -22,8 +20,9 @@ use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Extend\Model\PaymentGateway;
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\PayolutionBtwobPaymentMethod;
+use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
-
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
@@ -526,5 +525,13 @@ class OrderController extends OrderController_parent
         }
 
         return 'authorization';
+    }
+
+    public function isConsentNeeded()
+    {
+        $oPayment = $this->getPayment();
+        return ($oPayment->oxpayments__oxid->value == PayolutionInvoicePaymentMethod::getName(true) ||
+                $oPayment->oxpayments__oxid->value == PayolutionBtwobPaymentMethod::getName(true)) &&
+            $oPayment->oxpayments__terms->value;
     }
 }

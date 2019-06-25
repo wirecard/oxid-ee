@@ -9,6 +9,7 @@
 
 namespace Wirecard\Oxid\Model;
 
+use OxidEsales\Eshop\Core\Exception\InputException;
 use Wirecard\Oxid\Core\BasketHelper;
 use Wirecard\Oxid\Extend\Model\Order;
 
@@ -85,7 +86,7 @@ class PayolutionBtwobPaymentMethod extends PayolutionBasePaymentMethod
         $oTransaction->setAccountHolder($oOrder->getAccountHolder());
         $oCompanyInfo = new CompanyInfo(SessionHelper::getCompanyName());
 
-        $sUid = $oOrder->getOrderUser()->oxuser__oxustid;
+        $sUid = $oOrder->getOrderUser()->oxuser__oxustid->value;
         if ($sUid) {
             $oCompanyInfo->setCompanyUid($sUid);
         }
@@ -109,5 +110,38 @@ class PayolutionBtwobPaymentMethod extends PayolutionBasePaymentMethod
                 'required' => true,
             ],
         ];
+    }
+
+    /**
+     * Checks if the user is older than 18 or the date of birth needs to be entered
+     *
+     * @return bool
+     *
+     * @throws \Exception
+     *
+     * @since 1.2.0
+     */
+    protected function _checkDateOfBirth()
+    {
+        if (!SessionHelper::isDateOfBirthSet(self::getName())) {
+            //only check birthdate if set
+            return true;
+        }
+
+        return SessionHelper::isUserOlderThan(18, self::getName());
+    }
+
+    /**
+     * Validates the user input and throws a specific error if an input is wrong
+     *
+     * @throws /Exception
+     *
+     * @since  1.2.0
+     */
+    protected function _validateUserInput()
+    {
+        if (!SessionHelper::isCompanyNameSet()) {
+            throw new InputException(Helper::translate('wd_text_generic_error'));
+        }
     }
 }

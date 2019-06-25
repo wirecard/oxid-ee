@@ -73,6 +73,8 @@ abstract class InvoicePaymentMethod extends PaymentMethod
      *
      * @return bool
      *
+     * @throws \Exception
+     *
      * @since 1.2.0
      */
     public function isPaymentPossible()
@@ -132,7 +134,7 @@ abstract class InvoicePaymentMethod extends PaymentMethod
      *
      * @since 1.2.0
      */
-    private function _checkDateOfBirth()
+    protected function _checkDateOfBirth()
     {
         return !SessionHelper::isDateOfBirthSet(self::getName()) || SessionHelper::isUserOlderThan(18, self::getName());
     }
@@ -198,19 +200,21 @@ abstract class InvoicePaymentMethod extends PaymentMethod
         $oShippingCountry->load($sShippingCountryId ?? $sBillingCountryId);
 
         return in_array(
-            $oBillingCountry->oxcountry__oxisoalpha2->value,
-            $oPayment->oxpayments__billing_countries->value ?? []
-        ) && in_array(
-            $oShippingCountry->oxcountry__oxisoalpha2->value,
-            $oPayment->oxpayments__shipping_countries->value ?? []
-        ) && (
-            !$oPayment->oxpayments__billing_shipping->value ||
-            !$sShippingCountryId
-        );
+                $oBillingCountry->oxcountry__oxisoalpha2->value,
+                $oPayment->oxpayments__billing_countries->value ?? []
+            ) && in_array(
+                $oShippingCountry->oxcountry__oxisoalpha2->value,
+                $oPayment->oxpayments__shipping_countries->value ?? []
+            ) && (
+                !$oPayment->oxpayments__billing_shipping->value ||
+                !$sShippingCountryId
+            );
     }
 
     /**
      * @inheritdoc
+     *
+     * @throws InputException
      *
      * @since 1.2.0
      */
@@ -221,6 +225,8 @@ abstract class InvoicePaymentMethod extends PaymentMethod
 
     /**
      * Checks the user data if mandatory fields are set correctly for guaranteed invoice and saves them if needed
+     *
+     * @throws InputException
      *
      * @since 1.2.0
      */
@@ -247,10 +253,11 @@ abstract class InvoicePaymentMethod extends PaymentMethod
      * Validates the user input and throws a specific error if an input is wrong
      *
      * @throws InputException
+     * @throws \Exception
      *
      * @since 1.2.0
      */
-    private function _validateUserInput()
+    protected function _validateUserInput()
     {
         if (!SessionHelper::isUserOlderThan(18, self::getName())) {
             throw new InputException(Helper::translate('wd_ratepayinvoice_fields_error'));
