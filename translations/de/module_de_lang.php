@@ -20,6 +20,7 @@ $aLang = array(
     'wd_canceled_payment_process' => 'Sie haben den Bezahlprozess abgebrochen.',
     'wd_capture' => 'Buchen',
     'wd_city' => 'Stadt',
+    'wd_company_name_input' => 'Firma',
     'wd_config_additional_info' => 'Zusätzliche Informationen mitsenden',
     'wd_config_additional_info_desc' => 'Zum Schutz vor Betrug werden zusätzliche Daten mitgesendet. Zu diesen zusätzlichen Daten gehören Rechnungs-/Lieferadresse, Warenkorb und Deskriptor.',
     'wd_config_allowed_currencies' => 'Erlaubte Währungen',

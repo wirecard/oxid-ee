@@ -20,6 +20,7 @@ $aLang = array(
     'wd_canceled_payment_process' => 'You have canceled the payment process.',
     'wd_capture' => 'Capture',
     'wd_city' => 'City',
+    'wd_company_name_input' => 'Company',
     'wd_config_additional_info' => 'Send Additional Information',
     'wd_config_additional_info_desc' => 'Additional data will be sent for the purpose of fraud protection. This additional data includes billing/shipping address, shopping basket and descriptor.',
     'wd_config_allowed_currencies' => 'Allowed Currencies',
