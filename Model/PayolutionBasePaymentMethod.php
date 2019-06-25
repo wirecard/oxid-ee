@@ -305,7 +305,7 @@ abstract class PayolutionBasePaymentMethod extends InvoicePaymentMethod
     {
         parent::onBeforeTransactionCreation();
 
-        if (!$this::_isTermsAccepted()) {
+        if (!$this::_areTermsAccepted()) {
             throw new InputException('Terms were not accepted.');
         }
     }
@@ -317,7 +317,7 @@ abstract class PayolutionBasePaymentMethod extends InvoicePaymentMethod
      *
      * @since 1.3.0
      */
-    protected function _isTermsAccepted()
+    protected function _areTermsAccepted()
     {
         $oRequest = Registry::getRequest();
 

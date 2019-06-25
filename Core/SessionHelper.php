@@ -10,7 +10,6 @@
 namespace Wirecard\Oxid\Core;
 
 use DateTime;
-
 use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Core\Registry;
 
@@ -34,8 +33,7 @@ class SessionHelper
      */
     public static function getAccountHolder()
     {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
+        $aDynvalues = self::_getDynValues();
         return $aDynvalues['accountHolder'];
     }
 
@@ -48,8 +46,7 @@ class SessionHelper
      */
     public static function getIban()
     {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
+        $aDynvalues = self::_getDynValues();
         return $aDynvalues['iban'];
     }
 
@@ -62,8 +59,7 @@ class SessionHelper
      */
     public static function getBic()
     {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
+        $aDynvalues = self::_getDynValues();
         return $aDynvalues['bic'];
     }
 
@@ -78,8 +74,7 @@ class SessionHelper
      */
     public static function getDbDateOfBirth($sPaymentMethodName)
     {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
+        $aDynvalues = self::_getDynValues();
         $sDateOfBirth = $aDynvalues['dateOfBirth' . $sPaymentMethodName];
         //To change the format string add a translation for another language on phrase app
         $oDateOfBirth = DateTime::createFromFormat(Helper::translate('wd_date_format_php_code'), $sDateOfBirth);
@@ -99,20 +94,17 @@ class SessionHelper
      */
     public static function setDbDateOfBirth($sDbDateOfBirth, $sPaymentMethodName)
     {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
-        $aDynvalues['dateOfBirth' . $sPaymentMethodName] = '';
+        $sDynDateOfBirth = '';
 
         if ($sDbDateOfBirth !== self::DEFAULT_DATE_OF_BIRTH) {
             $oDateOfBirth = DateTime::createFromFormat(self::DB_DATE_FORMAT, $sDbDateOfBirth);
 
             if ($oDateOfBirth) {
-                $aDynvalues['dateOfBirth' . $sPaymentMethodName] =
-                    $oDateOfBirth->format(Helper::translate('wd_date_format_php_code'));
+                $sDynDateOfBirth = $oDateOfBirth->format(Helper::translate('wd_date_format_php_code'));
             }
         }
 
-        $oSession->setVariable('dynvalue', $aDynvalues);
+        self::_setDynValues(['dateOfBirth' . $sPaymentMethodName => $sDynDateOfBirth]);
     }
 
     /**
@@ -129,8 +121,7 @@ class SessionHelper
      */
     public static function isUserOlderThan($iAge, $sPaymentMethodName)
     {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
+        $aDynvalues = self::_getDynValues();
 
         $oDateOfBirth = DateTime::createFromFormat(
             Helper::translate('wd_date_format_php_code'),
@@ -172,11 +163,10 @@ class SessionHelper
      */
     public static function getPhone($sPaymentMethodName)
     {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
+        $aDynvalues = self::_getDynValues();
         $sPhone = $aDynvalues['phone' . $sPaymentMethodName];
 
-        return $sPhone ? $sPhone : '';
+        return $sPhone ?? '';
     }
 
     /**
@@ -189,11 +179,7 @@ class SessionHelper
      */
     public static function setPhone($sPhone, $sPaymentMethodName)
     {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
-        $aDynvalues['phone' . $sPaymentMethodName] = $sPhone;
-
-        $oSession->setVariable('dynvalue', $aDynvalues);
+        self::_setDynValues(['phone' . $sPaymentMethodName => $sPhone]);
     }
 
     /**
@@ -221,8 +207,7 @@ class SessionHelper
      */
     public static function getSaveCheckoutFields($sPaymentMethodName)
     {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
+        $aDynvalues = self::_getDynValues();
         return $aDynvalues['saveCheckoutFields' . $sPaymentMethodName];
     }
 
@@ -236,11 +221,7 @@ class SessionHelper
      */
     public static function setSaveCheckoutFields($iSave, $sPaymentMethodName)
     {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
-        $aDynvalues['saveCheckoutFields' . $sPaymentMethodName] = $iSave;
-
-        $oSession->setVariable('dynvalue', $aDynvalues);
+        self::_setDynValues(['saveCheckoutFields' . $sPaymentMethodName => $iSave]);
     }
 
     /**
@@ -253,7 +234,6 @@ class SessionHelper
     public static function getBillingCountryId()
     {
         $oSession = Registry::getSession();
-
         return $oSession->getUser()->oxuser__oxcountryid->value ?? null;
     }
 
@@ -288,11 +268,7 @@ class SessionHelper
      */
     public static function setCompanyName($sCompanyName)
     {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
-        $aDynvalues['wdCompanyName'] = $sCompanyName;
-
-        $oSession->setVariable('dynvalue', $aDynvalues);
+        self::_setDynValues(['wdCompanyName' => $sCompanyName]);
     }
 
     /**
@@ -304,8 +280,7 @@ class SessionHelper
      */
     public static function getCompanyName()
     {
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
+        $aDynvalues = self::_getDynValues();
         return $aDynvalues['wdCompanyName'];
     }
 
@@ -318,6 +293,34 @@ class SessionHelper
      */
     public static function isCompanyNameSet()
     {
-        return !is_null(self::getCompanyName());
+        return !empty(self::getCompanyName());
+    }
+
+    /**
+     * Get the `dynvalues` from the session
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private static function _getDynValues()
+    {
+        $oSession = Registry::getConfig()->getSession();
+        return $oSession->getVariable('dynvalue');
+    }
+
+    /**
+     * Set the `dynvalues` in the session
+     *
+     * @param $aValuesMap
+     */
+    private static function _setDynValues($aValuesMap)
+    {
+        $aDynvalues = self::_getDynValues();
+        foreach ($aValuesMap as $key => $value) {
+            $aDynvalues[$key] = $value;
+        }
+
+        Registry::getConfig()->getSession()->setVariable('dynvalue', $aDynvalues);
     }
 }
