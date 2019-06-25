@@ -17,7 +17,6 @@ use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OxidEeEvents;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\ResponseMapper;
-use Wirecard\Oxid\Model\BasePoiPiaPaymentMethod;
 
 use Wirecard\PaymentSdk\Entity\Basket;
 
