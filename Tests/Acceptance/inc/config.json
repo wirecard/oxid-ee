@@ -40,6 +40,12 @@
     "eps": {
       "bic": "BWFBATW1XXX",
       "id": "123456"
+    },
+    "payolutionInv": {
+      "dateOfBirth": "12/12/1999"
+    },
+    "payolutionB2B": {
+      "companyName": "My Awesome Company Inc."
     }
   }
 }

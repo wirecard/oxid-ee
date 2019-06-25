@@ -60,6 +60,14 @@
       "submitFinalize": "sbtnSignSingle",
       "submitConfirm": "sbtnOk",
       "backToShop": "//input[@name='back2Shop']"
+    },
+    "payolutionInv":{
+      "dateOfBirth": "//input[@id='dateOfBirthpayolution-inv']",
+      "termsCheckbox": "//input[@name='terms_checkbox']"
+    },
+    "payolutionB2B":{
+      "companyName": "//input[@id='wdCompanyName']",
+      "termsCheckbox": "//input[@name='terms_checkbox']"
     }
   }
 }
