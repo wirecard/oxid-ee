@@ -9,23 +9,25 @@
 
 namespace Wirecard\Oxid\Extend\Model;
 
+use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\OrderArticle;
 use OxidEsales\Eshop\Application\Model\User;
-use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 
-use Wirecard\PaymentSdk\BackendService;
-use Wirecard\PaymentSdk\Entity\AccountHolder;
-use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Model\Transaction;
-use Wirecard\Oxid\Model\TransactionList;
+use Psr\Log\LoggerInterface;
+
 use Wirecard\Oxid\Core\AccountHolderHelper;
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Extend\Core\Email;
+use Wirecard\Oxid\Model\Transaction;
+use Wirecard\Oxid\Model\TransactionList;
 
-use Psr\Log\LoggerInterface;
+use Wirecard\PaymentSdk\BackendService;
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 /**
  * Class Order
@@ -272,6 +274,8 @@ class Order extends Order_parent
      *
      * @return AccountHolder
      *
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
+     *
      * @since 1.0.0
      */
     public function getAccountHolder()
@@ -281,19 +285,30 @@ class Order extends Order_parent
 
         $oAccHolderHelper = new AccountHolderHelper();
 
-        return $oAccHolderHelper->createAccountHolder([
-            'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
-            'city' => $this->oxorder__oxbillcity->value,
-            'street' => $this->oxorder__oxbillstreet->value . ' ' . $this->oxorder__oxbillstreetnr->value,
-            'state' => $this->oxorder__oxbillstateid->value,
-            'postalCode' => $this->oxorder__oxbillzip->value,
-            'firstName' => $this->oxorder__oxbillfname->value,
-            'lastName' => $this->oxorder__oxbilllname->value,
-            'phone' => $this->oxorder__oxbillfon->value,
-            'email' => $this->oxorder__oxbillemail->value,
-            'gender' => Helper::getGenderCodeForSalutation($this->oxorder__oxbillsal->value),
-            'dateOfBirth' => Helper::getDateTimeFromString($oUser->oxuser__oxbirthdate->value),
-        ]);
+        $oPaymentMethod = PaymentMethodFactory::create($this->oxorder__oxpaymenttype->value);
+        $aHiddenFields = $oPaymentMethod->hiddenAccountHolderFields();
+
+        $aAccountHolderData = array_filter(
+            [
+                'countryCode' => $oCountry->oxcountry__oxisoalpha2->value,
+                'city' => $this->oxorder__oxbillcity->value,
+                'street' => $this->oxorder__oxbillstreet->value . ' ' . $this->oxorder__oxbillstreetnr->value,
+                'state' => $this->oxorder__oxbillstateid->value,
+                'postalCode' => $this->oxorder__oxbillzip->value,
+                'firstName' => $this->oxorder__oxbillfname->value,
+                'lastName' => $this->oxorder__oxbilllname->value,
+                'phone' => $this->oxorder__oxbillfon->value,
+                'email' => $this->oxorder__oxbillemail->value,
+                'gender' => Helper::getGenderCodeForSalutation($this->oxorder__oxbillsal->value),
+                'dateOfBirth' => Helper::getDateTimeFromString($oUser->oxuser__oxbirthdate->value),
+            ],
+            function ($key) use ($aHiddenFields) {
+                return !in_array($key, $aHiddenFields);
+            }, ARRAY_FILTER_USE_KEY);
+
+        Registry::getLogger()->debug(print_r($aAccountHolderData, true));
+
+        return $oAccHolderHelper->createAccountHolder($aAccountHolderData);
     }
 
     /**
@@ -464,7 +479,7 @@ class Order extends Order_parent
 
         // Dont send pending emails if not enabled in module settings
         if ($this->isPaymentPending() && !$bSendPendingEmails) {
-            $this->_oLogger->debug('Prevent sending pending order by email with id: '. $this->getId());
+            $this->_oLogger->debug('Prevent sending pending order by email with id: ' . $this->getId());
             return true;
         }
 

@@ -352,4 +352,9 @@ abstract class PaymentMethod
     {
         return true;
     }
+
+    public function hiddenAccountHolderFields()
+    {
+        return [];
+    }
 }

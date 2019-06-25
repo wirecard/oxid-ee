@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Model;
 
 use OxidEsales\Eshop\Core\Exception\InputException;
+
 use Wirecard\Oxid\Core\BasketHelper;
 use Wirecard\Oxid\Extend\Model\Order;
 
@@ -83,7 +84,9 @@ class PayolutionBtwobPaymentMethod extends PayolutionBasePaymentMethod
      */
     public function addMandatoryTransactionData(&$oTransaction, $oOrder)
     {
-        $oTransaction->setAccountHolder($oOrder->getAccountHolder());
+        $aAccountHolder = $oOrder->getAccountHolder();
+
+        $oTransaction->setAccountHolder($aAccountHolder);
         $oCompanyInfo = new CompanyInfo(SessionHelper::getCompanyName());
 
         $sUid = $oOrder->getOrderUser()->oxuser__oxustid->value;
@@ -143,5 +146,12 @@ class PayolutionBtwobPaymentMethod extends PayolutionBasePaymentMethod
         if (!SessionHelper::isCompanyNameSet()) {
             throw new InputException(Helper::translate('wd_text_generic_error'));
         }
+    }
+
+    public function hiddenAccountHolderFields()
+    {
+        return [
+            'dateOfBirth',
+        ];
     }
 }
