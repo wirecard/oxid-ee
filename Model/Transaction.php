@@ -107,6 +107,23 @@ class Transaction extends MultiLanguageModel
     }
 
     /**
+     * Returns true is transaction's payment method is Payment on Invoice or Payment in Advance
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    public function isPoiPiaPaymentMethod()
+    {
+        $sPaymentId = $this->getPaymentType();
+        if ($sPaymentId === 'wdpaymentoninvoice' || $sPaymentId === 'wdpaymentinadvance') {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * Returns the order associated with the transaction.
      *
      * @return Order
