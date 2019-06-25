@@ -310,7 +310,7 @@ class SessionHelper
     }
 
     /**
-     * Check if company name is set in the users session
+     * Check if company name is set in the user's session
      *
      * @return bool
      *

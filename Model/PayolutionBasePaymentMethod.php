@@ -278,7 +278,7 @@ abstract class PayolutionBasePaymentMethod extends InvoicePaymentMethod
             'shipping_countries',
             'billing_countries',
             'billing_shipping',
-            'trusted_shop',
+            'terms',
             'payolution_terms_url',
         ];
 
