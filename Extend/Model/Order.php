@@ -304,9 +304,6 @@ class Order extends Order_parent
             },
             ARRAY_FILTER_USE_KEY
         );
-
-        Registry::getLogger()->debug(print_r($aAccountHolderData, true));
-
         return AccountHolderHelper::createAccountHolder($aAccountHolderData);
     }
 

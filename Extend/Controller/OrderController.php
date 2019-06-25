@@ -13,6 +13,7 @@ use Exception;
 
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
@@ -108,8 +109,7 @@ class OrderController extends OrderController_parent
 
             $sParamStr = http_build_query($aParams);
 
-            $sNewUrl = $sShopBaseUrl . 'index.php?' . $sParamStr;
-            return Registry::getUtils()->redirect($sNewUrl, false);
+            return Registry::getUtils()->redirect($sShopBaseUrl . 'index.php?' . $sParamStr, false);
         }
 
         return true;
@@ -127,9 +127,7 @@ class OrderController extends OrderController_parent
         // after calling parent::render() we are sure we will have order id stored in the session
         // order id is needed in sepa mandate
         $sTemplateName = parent::render();
-
-        $oSession = Registry::getSession();
-        $oBasket = $oSession->getBasket();
+        $oBasket = Registry::getSession()->getBasket();
 
         if ($oBasket->getPaymentId() === SepaDirectDebitPaymentMethod::getName(true)) {
             $sSepaMandate = PaymentMethodHelper::getSepaMandateHtml($oBasket, $this->getUser());
@@ -442,6 +440,7 @@ class OrderController extends OrderController_parent
          * @var $oOrder Order
          */
         $oOrder = oxNew(Order::class);
+        $oOrder->oxorder__oxpaymenttype = new Field(CreditCardPaymentMethod::getName(true));
         $oOrder->createTemp($oBasket, $this->getUser());
 
         $oTransaction = $oPaymentGateway->createTransaction($oBasket, $oOrder);
@@ -452,12 +451,10 @@ class OrderController extends OrderController_parent
         ));
         $oTransaction->setConfig($this->_getCreditCardPaymentMethodConfig()->get(CreditCardTransaction::NAME));
 
-        $oSession = $this->getSession();
-        $sSid = Helper::getSidQueryString();
-
-        $sModuleToken = PaymentGateway::getModuleToken($oSession);
+        $sModuleToken = PaymentGateway::getModuleToken($this->getSession());
         $oTransaction->setTermUrl(
-            Registry::getConfig()->getCurrentShopUrl() . "index.php?cl=order&" . $sModuleToken . $sSid
+            Registry::getConfig()->getCurrentShopUrl() . "index.php?cl=order&" . $sModuleToken
+            . Helper::getSidQueryString()
         );
 
         return $oTransaction;
