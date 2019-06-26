@@ -180,6 +180,7 @@ class PayolutionInvoicePaymentMethod extends InvoicePaymentMethod
                 'type' => 'text',
                 'field' => 'oxpayments__payolution_terms_url',
                 'title' => Helper::translate('wd_config_payolution_terms_url'),
+                'placeholder' => Helper::translate('wd_config_payolution_terms_url_desc'),
             ],
             'allowedCurrencies' => [
                 'type' => 'multiselect',

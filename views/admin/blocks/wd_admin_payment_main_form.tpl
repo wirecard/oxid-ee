@@ -141,6 +141,16 @@
     </tr>
   [{/if}]
 
+  [{if $bShowCurrencyHelp}]
+    <tr>
+      <td colspan="1">
+        <div class="wdoxidee-messagebox wdoxidee-messagebox--info">
+          [{oxmultilang ident="wd_currency_config"}]
+        </div>
+      </td>
+    </tr>
+  [{/if}]
+
   [{assign var="logoUrl" value=$edit->getLogoUrl()}]
   [{if $logoUrl}]
   <tr>
@@ -207,6 +217,7 @@
             size="38"
             name="editval[[{$fieldName}]]"
             value="[{$edit->$fieldName->value}]"
+            [{if $configField.placeholder}]placeholder="[{$configField.placeholder}]"[{/if}]
             [{if $configField.required}]required[{/if}]
             [{if $configField.onchange}]onchange="[{$configField.onchange}]"[{/if}]
           >
