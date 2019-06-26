@@ -13,6 +13,7 @@ use OxidEsales\Eshop\Core\Exception\SystemComponentException;
 
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\GiropayPaymentMethod;
+use Wirecard\Oxid\Model\MasterpassPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod;
 use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
@@ -48,6 +49,7 @@ class PaymentMethodFactory
             EpsPaymentMethod::class,
             GiropayPaymentMethod::class,
             IdealPaymentMethod::class,
+            MasterpassPaymentMethod::class,
             PaypalPaymentMethod::class,
             PayolutionInvoicePaymentMethod::class,
             RatepayInvoicePaymentMethod::class,

@@ -212,6 +212,23 @@
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
     </payment>
+    <payment>
+        <oxid>wdmasterpass</oxid>
+        <oxactive>0</oxactive>
+        <oxtoamount>10000</oxtoamount>
+        <oxdesc>Wirecard Masterpass</oxdesc>
+        <oxdesc_1>Wirecard Masterpass</oxdesc_1>
+        <oxsort>60</oxsort>
+        <wdoxidee_logo>masterpass.png</wdoxidee_logo>
+        <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
+        <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
+        <wdoxidee_maid>8bc8ed6d-81a8-43be-bd7b-75b008f89fa6</wdoxidee_maid>
+        <wdoxidee_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</wdoxidee_secret>
+        <wdoxidee_httpuser>70000-APITEST-AP</wdoxidee_httpuser>
+        <wdoxidee_httppass>qD2wzQ_hrc!8</wdoxidee_httppass>
+        <wdoxidee_descriptor>1</wdoxidee_descriptor>
+        <wdoxidee_additional_info>1</wdoxidee_additional_info>
+    </payment>
 
     <!-- only visible for the merchant -->
     <payment>
