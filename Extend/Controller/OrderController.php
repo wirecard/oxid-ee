@@ -536,9 +536,9 @@ class OrderController extends OrderController_parent
      */
     public function isConsentNeeded()
     {
-        $oPayment = $this->getBasket()->getPaymentId();
-        return ($oPayment == PayolutionInvoicePaymentMethod::getName(true) ||
-                $oPayment == PayolutionBtwobPaymentMethod::getName(true)) &&
-            $oPayment->oxpayments__terms->value;
+        $sPaymentId = $this->getBasket()->getPaymentId();
+        return ($sPaymentId == PayolutionInvoicePaymentMethod::getName(true) ||
+                $sPaymentId == PayolutionBtwobPaymentMethod::getName(true)) &&
+            $this->getPayment()->oxpayments__terms->value;
     }
 }
