@@ -29,7 +29,7 @@ class ThankYouController extends ThankYouController_parent
      *
      * @since 1.3.0
      */
-    private $_oPaymentInAdvanceInfo;
+    private $_oPiaInfo;
 
     /**
      * Extends the parent init method
@@ -46,9 +46,9 @@ class ThankYouController extends ThankYouController_parent
             'sendPendingEmailsSettings' => $this->getConfig()->getConfigParam('wd_email_on_pending_orders'),
         ]);
 
-        $this->_oPaymentInAdvanceInfo = $oSession->getVariable('wdPaymentInAdvancePaymentInformation');
+        $this->_oPiaInfo = $oSession->getVariable('wdPaymentInAdvancePaymentInformation');
 
-        if ($this->_oPaymentInAdvanceInfo) {
+        if ($this->_oPiaInfo) {
             $oSession->deleteVariable("wdPaymentInAdvancePaymentInformation");
         }
 
@@ -56,11 +56,14 @@ class ThankYouController extends ThankYouController_parent
     }
 
     /**
-     * Getter for _oPaymentInAdvanceInfo (amount, IBAN, BIC, Provider Transaction Reference ID)
+     * Getter for _oPiaInfo (amount, IBAN, BIC, Provider Transaction Reference ID)
+     *
+     * @return PaymentInAdvancePaymentInformation
      *
      * @since 1.3.0
      */
-    public function getPaymentInAdvanceInfo() {
-        return $this->_oPaymentInAdvanceInfo;
+    public function getPaymentInAdvanceInfo()
+    {
+        return $this->_oPiaInfo;
     }
 }

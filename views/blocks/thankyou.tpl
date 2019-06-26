@@ -11,18 +11,18 @@
 
 [{if $paymentInAdvanceInfo && $paymentInAdvanceInfo->sIban}]
     <style>
-      #pia-payment-info {
-        margin-bottom: 20px;
-      }
-      #pia-payment-info, #pia-payment-info td {
-        border: 1px solid lightgray;
-      }
-      #pia-payment-info td {
-        padding: 5px 10px;
-      }
-      #pia-payment-info tr > td:first-child {
-        font-weight: 600;
-      }
+        #pia-payment-info {
+            margin-bottom: 20px;
+        }
+        #pia-payment-info, #pia-payment-info td {
+            border: 1px solid lightgray;
+        }
+        #pia-payment-info td {
+            padding: 8px 10px;
+        }
+        #pia-payment-info tr > td:first-child {
+            font-weight: 600;
+        }
     </style>
 [{/if}]
 
