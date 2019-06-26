@@ -10,13 +10,10 @@
 namespace Wirecard\Oxid\Model;
 
 use Wirecard\Oxid\Core\BasketHelper;
-use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Extend\Model\Order;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use Wirecard\PaymentSdk\Entity\CompanyInfo;
 use Wirecard\PaymentSdk\Transaction\PayolutionBtwobTransaction;
 
 /**

@@ -312,15 +312,17 @@ class SessionHelper
     /**
      * Set the `dynvalues` in the session
      *
-     * @param $aValuesMap
+     * @param array $aValuesMap
+     *
+     * @since 1.3.0
      */
     private static function _setDynValues($aValuesMap)
     {
-        $aDynvalues = self::_getDynValues();
-        foreach ($aValuesMap as $key => $value) {
-            $aDynvalues[$key] = $value;
+        $aDynValues = self::_getDynValues();
+        foreach ($aValuesMap as $sKey => $mValue) {
+            $aDynValues[$sKey] = $mValue;
         }
 
-        Registry::getConfig()->getSession()->setVariable('dynvalue', $aDynvalues);
+        Registry::getConfig()->getSession()->setVariable('dynvalue', $aDynValues);
     }
 }
