@@ -233,7 +233,7 @@
         <oxid>wdpaymentoninvoice</oxid>
         <oxactive>0</oxactive>
         <oxtoamount>10000</oxtoamount>
-        <oxdesc>Wirecard Payment on Invoice</oxdesc>
+        <oxdesc>Wirecard Kauf auf Rechnung</oxdesc>
         <oxdesc_1>Wirecard Payment on Invoice</oxdesc_1>
         <oxsort>80</oxsort>
         <wdoxidee_logo>invoice.png</wdoxidee_logo>
