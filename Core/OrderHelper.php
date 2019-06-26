@@ -123,17 +123,17 @@ class OrderHelper
         }
 
         if ($oOrder->oxorder__oxpaymenttype->value === "wdpaymentinadvance") {
-
             $oResponseXml = simplexml_load_string($oResponse->getRawData());
 
             $oSession = Registry::getSession();
             $oSession->setVariable(
                 "wdPaymentInAdvancePaymentInformation",
                 new PaymentInAdvancePaymentInformation(
-                    (string)$oResponseXml->{'requested-amount'} . ' ' . $oResponse->getRequestedAmount()->getCurrency(),
-                    (string)$oResponseXml->{'merchant-bank-account'}->{'iban'},
-                    (string)$oResponseXml->{'merchant-bank-account'}->{'bic'},
-                    (string)$oResponseXml->{'provider-transaction-reference-id'}
+                    (string) $oResponseXml->{'requested-amount'} . ' ' .
+                        $oResponse->getRequestedAmount()->getCurrency(),
+                    (string) $oResponseXml->{'merchant-bank-account'}->{'iban'},
+                    (string) $oResponseXml->{'merchant-bank-account'}->{'bic'},
+                    (string) $oResponseXml->{'provider-transaction-reference-id'}
                 )
             );
         }
