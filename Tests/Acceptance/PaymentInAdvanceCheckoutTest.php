@@ -25,6 +25,7 @@ class PaymentInAdvanceCheckoutTest extends CheckoutTestCase
     {
         $this->goThroughCheckout();
         $this->waitForRedirectConfirmation();
+        $this->waitForElement($this->getLocator('checkout.piaTableId'), self::WAIT_TIME_INTERNAL);
 
         $this->assertPaymentSuccessful();
     }
