@@ -360,7 +360,7 @@ abstract class PaymentMethod
      *
      * @since 1.3.0
      */
-    public function hiddenAccountHolderFields()
+    public function getHiddenAccountHolderFields()
     {
         return [];
     }

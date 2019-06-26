@@ -10,7 +10,7 @@
     </button>
     <div class="clearfix"></div>
   </div>
-  [{elseif $isConsentNeeded}]
+[{elseif $isConsentNeeded}]
   <form action="[{$oViewConf->getSslSelfLink()}]" method="post" id="orderConfirmAgbBottom" class="form-horizontal">
 
     <div class="hidden">
@@ -21,11 +21,11 @@
       <input type="hidden" name="challenge" value="[{$challenge}]">
       <input type="hidden" name="sDeliveryAddressMD5" value="[{$oView->getDeliveryAddressMD5()}]">
 
-      [{if $oView->isActive('PsLogin') || !$oView->isConfirmAGBActive()}]
+    [{if $oView->isActive('PsLogin') || !$oView->isConfirmAGBActive()}]
     <input type="hidden" name="ord_agb" value="1">
-      [{else}]
+    [{else}]
     <input type="hidden" name="ord_agb" value="0">
-      [{/if}]
+    [{/if}]
       <input type="hidden" name="oxdownloadableproductsagreement" value="0">
       <input type="hidden" name="oxserviceproductsagreement" value="0">
     </div>
@@ -47,9 +47,9 @@
       <div class="clearfix"></div>
     </div>
   </form>
-  [{else}]
+[{else}]
   [{$smarty.block.parent}]
-  [{/if}]
+[{/if}]
 
 [{include file="sepa_mandate_modal.tpl"}]
 
@@ -62,4 +62,4 @@
       button.disabled = !checkbox.checked;
     };
   </script>
-  [{/if}]
+[{/if}]

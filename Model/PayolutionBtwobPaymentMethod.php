@@ -122,7 +122,7 @@ class PayolutionBtwobPaymentMethod extends PayolutionBasePaymentMethod
      *
      * @throws \Exception
      *
-     * @since 1.2.0
+     * @since 1.3.0
      */
     protected function _checkDateOfBirth()
     {
@@ -139,7 +139,7 @@ class PayolutionBtwobPaymentMethod extends PayolutionBasePaymentMethod
      *
      * @throws /Exception
      *
-     * @since  1.2.0
+     * @since  1.3.0
      */
     protected function _validateUserInput()
     {
@@ -155,7 +155,7 @@ class PayolutionBtwobPaymentMethod extends PayolutionBasePaymentMethod
      *
      * @since 1.3.0
      */
-    public function hiddenAccountHolderFields()
+    public function getHiddenAccountHolderFields()
     {
         return [
             'dateOfBirth',

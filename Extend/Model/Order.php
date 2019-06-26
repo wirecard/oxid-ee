@@ -283,7 +283,7 @@ class Order extends Order_parent
         $oCountry = $this->getOrderBillingCountry();
 
         $aHiddenFields = PaymentMethodFactory::create($this->oxorder__oxpaymenttype->value)
-            ->hiddenAccountHolderFields();
+            ->getHiddenAccountHolderFields();
 
         $aAccountHolderData = array_filter(
             [
