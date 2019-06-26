@@ -11,10 +11,10 @@ use Wirecard\Oxid\Model\PaymentInAdvancePaymentInformation;
 
 class PaymentInAdvancePaymentInformationTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
-    const AMOUNT = "130";
-    const IBAN = "DE82512308000005599148";
-    const BIC = "WIREDEMMXXX";
-    const TRANSACTION_REF_ID = "B0F6E7A153";
+    private $_sAmount = "130";
+    private $_sIban = "DE82512308000005599148";
+    private $_sBic = "WIREDEMMXXX";
+    private $_sTransactionRefId = "B0F6E7A153";
 
     protected function setUp()
     {
@@ -24,12 +24,15 @@ class PaymentInAdvancePaymentInformationTest extends OxidEsales\TestingLibrary\U
     public function testCorrectConstructor()
     {
         $oPiaPaymentInfo = new PaymentInAdvancePaymentInformation(
-            self::AMOUNT,
-            self::IBAN,
-            self::BIC,
-            self::TRANSACTION_REF_ID
+            $this->_sAmount,
+            $this->_sIban,
+            $this->_sBic,
+            $this->_sTransactionRefId
         );
-        $this->assertTrue($oPiaPaymentInfo->sAmount === self::AMOUNT);
+        $this->assertNotEmpty($oPiaPaymentInfo->sAmount);
+        $this->assertNotEmpty($oPiaPaymentInfo->sIban);
+        $this->assertNotEmpty($oPiaPaymentInfo->sBic);
+        $this->assertNotEmpty($oPiaPaymentInfo->sTransactionRefId);
     }
 
 }

@@ -14,7 +14,8 @@
         #pia-payment-info {
             margin-bottom: 20px;
         }
-        #pia-payment-info, #pia-payment-info td {
+        #pia-payment-info,
+        #pia-payment-info td {
             border: 1px solid lightgray;
         }
         #pia-payment-info td {

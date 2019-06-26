@@ -217,8 +217,7 @@ class OrderHelper
             $oSession->setVariable(
                 "wdPaymentInAdvancePaymentInformation",
                 new PaymentInAdvancePaymentInformation(
-                    (string) $oResponseXml->{'requested-amount'} . ' ' .
-                        $oResponse->getRequestedAmount()->getCurrency(),
+                    $oResponseXml->{'requested-amount'} . ' ' . $oResponse->getRequestedAmount()->getCurrency(),
                     (string) $oResponseXml->{'merchant-bank-account'}->{'iban'},
                     (string) $oResponseXml->{'merchant-bank-account'}->{'bic'},
                     (string) $oResponseXml->{'provider-transaction-reference-id'}

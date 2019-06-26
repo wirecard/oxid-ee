@@ -2,7 +2,7 @@
   "checkout": {
     "nextStep": "//button[contains(@class, 'nextStep')]",
     "paymentMethod": "payment_%s",
-    "piaTableId": "pia-payment-info"
+    "piaTable": "pia-payment-info"
   },
   "external": {
     "paypal": {
