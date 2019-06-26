@@ -16,6 +16,7 @@ use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
@@ -44,6 +45,14 @@ class PaymentMain extends PaymentMain_parent
     private $_bIsSavePossible;
 
     /**
+     * Tells if information about currency settings should be shown.
+     * The information is shown any time merchant adds a currency which has empty configuration fields.
+     *
+     * @since 1.2.0
+     */
+    private $_bShowCurrencyHelp;
+
+    /**
      * @inheritdoc
      *
      * @return string
@@ -63,6 +72,7 @@ class PaymentMain extends PaymentMain_parent
             // and an error message shown in the frontend
             Helper::addToViewData($this, [
                 'bConfigNotValid' => ($sFnc === 'save' || $sFnc === 'addfield') && !$this->_bIsSavePossible,
+                'bShowCurrencyHelp' => $this->_bShowCurrencyHelp,
             ]);
         }
 
@@ -105,7 +115,25 @@ class PaymentMain extends PaymentMain_parent
 
         $bCredentialsValid = $this->_validateRequestParameters($aParams);
 
-        return $bCredentialsValid && $this->_isCountryCodeValid($aParams) && $this->_isCreditorIdValid($aParams);
+        return $bCredentialsValid && $this->_isCountryCodeValid($aParams) && $this->_isCreditorIdValid($aParams)
+            && $this->_isPayolutionUrlSettingsValid($aParams);
+    }
+
+    /**
+     * Checks if Payolution URL setting is valid.
+     * If require consent is enabled, Payolution URL has to be set. Otherwise it can be empty.
+     *
+     * @param array $aParams
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _isPayolutionUrlSettingsValid($aParams)
+    {
+        return $aParams['oxpayments__oxid'] !== PayolutionInvoicePaymentMethod::getName(true)
+            || ($aParams['oxpayments__terms'] && strlen(trim($aParams['oxpayments__payolution_terms_url']))
+            || !$aParams['oxpayments__terms']);
     }
 
     /**
@@ -247,6 +275,7 @@ class PaymentMain extends PaymentMain_parent
         foreach ($aNewCurrencyValue as $sCurrency) {
             // it is only necessary to check this currency at this point if it was already saved before
             if (!in_array($sCurrency, $aOldCurrencyValue)) {
+                $this->_bShowCurrencyHelp = true;
                 continue;
             }
 
