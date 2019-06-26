@@ -60,7 +60,7 @@
         <country>CH</country>
       </billing_countries>
       <billing_shipping>1</billing_shipping>
-      <trusted_shop>1</trusted_shop>
+      <terms>1</terms>
       <allowed_currencies>
         <currency>EUR</currency>
       </allowed_currencies>
