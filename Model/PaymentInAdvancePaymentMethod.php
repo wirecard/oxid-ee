@@ -10,7 +10,7 @@
 namespace Wirecard\Oxid\Model;
 
 /**
- * Payment method implementation for Payment on Invoice
+ * Payment method implementation for Payment in Advance
  *
  * @since 1.3.0
  */
