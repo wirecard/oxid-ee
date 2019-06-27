@@ -22,7 +22,7 @@ use Wirecard\Oxid\Model\Transaction as TransactionModel;
  *
  * @since 1.3.0
  */
-class MasterpassPaymentMethod extends SepaCreditTransferPaymentMethod
+class MasterpassPaymentMethod extends PaymentMethod
 {
     /**
      * @inheritdoc
