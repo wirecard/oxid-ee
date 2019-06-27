@@ -23,6 +23,7 @@ use Wirecard\Oxid\Model\SofortPaymentMethod;
 use Wirecard\Oxid\Model\IdealPaymentMethod;
 use Wirecard\Oxid\Model\EpsPaymentMethod;
 use Wirecard\Oxid\Model\AlipayCrossBorderPaymentMethod;
+use Wirecard\Oxid\Model\PaymentOnInvoicePaymentMethod;
 
 /**
  * Class PaymentMethodFactory
@@ -50,6 +51,7 @@ class PaymentMethodFactory
             EpsPaymentMethod::class,
             GiropayPaymentMethod::class,
             IdealPaymentMethod::class,
+            PaymentOnInvoicePaymentMethod::class,
             PaypalPaymentMethod::class,
             PayolutionInvoicePaymentMethod::class,
             RatepayInvoicePaymentMethod::class,

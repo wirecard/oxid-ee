@@ -15,6 +15,7 @@ use OxidEsales\Eshop\Core\Model\MultiLanguageModel;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OxidEeEvents;
+use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\ResponseMapper;
 
 use Wirecard\PaymentSdk\Entity\Basket;
@@ -104,6 +105,20 @@ class Transaction extends MultiLanguageModel
     public function getChildTransactions()
     {
         return $this->_aChildTransactions;
+    }
+
+    /**
+     * Returns true if transaction's payment method is Payment on Invoice or Payment in Advance
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    public function isPoiPiaPaymentMethod()
+    {
+        $sPaymentId = $this->getPaymentType();
+        $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
+        return is_subclass_of($oPayment->getPaymentMethod(), BasePoiPiaPaymentMethod::class);
     }
 
     /**
