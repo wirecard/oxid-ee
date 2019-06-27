@@ -46,10 +46,10 @@ class ThankYouController extends ThankYouController_parent
             'sendPendingEmailsSettings' => $this->getConfig()->getConfigParam('wd_email_on_pending_orders'),
         ]);
 
-        $this->_oPiaInfo = $oSession->getVariable('wdPaymentInAdvancePaymentInformation');
+        $this->_oPiaInfo = $oSession->getVariable(PaymentInAdvancePaymentInformation::PIA_PAYMENT_INFORMATION);
 
         if ($this->_oPiaInfo) {
-            $oSession->deleteVariable("wdPaymentInAdvancePaymentInformation");
+            $oSession->deleteVariable(PaymentInAdvancePaymentInformation::PIA_PAYMENT_INFORMATION);
         }
 
         parent::init();

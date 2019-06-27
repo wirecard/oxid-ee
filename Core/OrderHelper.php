@@ -22,6 +22,7 @@ use Psr\Log\LoggerInterface;
 
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
+use Wirecard\Oxid\Model\PaymentInAdvancePaymentMethod;
 use Wirecard\Oxid\Model\FormInteractionResponseFields;
 use Wirecard\Oxid\Model\PaymentInAdvancePaymentInformation;
 use Wirecard\PaymentSdk\BackendService;
@@ -210,14 +211,15 @@ class OrderHelper
      */
     private static function _managePiaPaymentInformation($oResponse, $oOrder)
     {
-        if ($oOrder->oxorder__oxpaymenttype->value === "wdpaymentinadvance") {
+        if ($oOrder->oxorder__oxpaymenttype->value === PaymentInAdvancePaymentMethod::getName(true)) {
             $oResponseXml = simplexml_load_string($oResponse->getRawData());
 
             $oSession = Registry::getSession();
             $oSession->setVariable(
-                "wdPaymentInAdvancePaymentInformation",
+                PaymentInAdvancePaymentInformation::PIA_PAYMENT_INFORMATION,
                 new PaymentInAdvancePaymentInformation(
-                    $oResponseXml->{'requested-amount'} . ' ' . $oResponse->getRequestedAmount()->getCurrency(),
+                    $oResponse->getRequestedAmount()->getValue() . ' ' .
+                     $oResponse->getRequestedAmount()->getCurrency(),
                     (string) $oResponseXml->{'merchant-bank-account'}->{'iban'},
                     (string) $oResponseXml->{'merchant-bank-account'}->{'bic'},
                     (string) $oResponseXml->{'provider-transaction-reference-id'}

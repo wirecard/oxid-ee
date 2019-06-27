@@ -16,6 +16,8 @@ namespace Wirecard\Oxid\Model;
  */
 class PaymentInAdvancePaymentInformation
 {
+    const PIA_PAYMENT_INFORMATION = 'wdPaymentInAdvancePaymentInformation';
+
     /**
      * @var string
      *
