@@ -25,7 +25,6 @@ use Wirecard\Oxid\Model\EpsPaymentMethod;
 use Wirecard\Oxid\Model\AlipayCrossBorderPaymentMethod;
 use Wirecard\Oxid\Model\PaymentOnInvoicePaymentMethod;
 
-
 /**
  * Class PaymentMethodFactory
  *
