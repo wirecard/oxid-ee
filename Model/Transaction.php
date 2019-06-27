@@ -108,7 +108,7 @@ class Transaction extends MultiLanguageModel
     }
 
     /**
-     * Returns true is transaction's payment method is Payment on Invoice or Payment in Advance
+     * Returns true if transaction's payment method is Payment on Invoice or Payment in Advance
      *
      * @return bool
      *
