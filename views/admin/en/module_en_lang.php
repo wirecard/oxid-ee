@@ -20,6 +20,7 @@ $aLang = array(
     'wd_canceled_payment_process' => 'You have canceled the payment process.',
     'wd_capture' => 'Capture',
     'wd_city' => 'City',
+    'wd_company_name_input' => 'Company',
     'wd_config_additional_info' => 'Send Additional Information',
     'wd_config_additional_info_desc' => 'Additional data will be sent for the purpose of fraud protection. This additional data includes billing/shipping address, shopping basket and descriptor.',
     'wd_config_allowed_currencies' => 'Allowed Currencies',
@@ -140,6 +141,7 @@ $aLang = array(
     'wd_payolution_terms' => 'I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to Payolution. My <u><a href="%s" target="_blank">consent</a></u> can be revoked at any time with effect for the future.',
     'wd_phone' => 'Phone',
     'wd_postal-code' => 'Postal Code',
+    'wd_ptrid' => 'Provider Transaction Reference ID',
     'wd_ratepayinvoice_fields_error' => 'Minimum age to pay with Guaranteed Invoice: 18.',
     'wd_redirect_text' => 'You are being redirected. Please wait.',
     'wd_refund' => 'Refund',
@@ -203,6 +205,7 @@ $aLang = array(
     'wd_transactionType' => 'Transaction Type',
     'wd_transaction_details_title' => 'Transaction Details',
     'wd_transaction_response_details' => 'Response Details',
+    'wd_transfer_notice' => 'Please transfer the amount using the following data:',
     'wd_wait_for_final_status' => 'Please, wait for additional email with the final status of your payment.',
     'wd_yes' => 'Yes',
 );

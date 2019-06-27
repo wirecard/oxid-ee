@@ -20,6 +20,7 @@ $aLang = array(
     'wd_canceled_payment_process' => 'Sie haben den Bezahlprozess abgebrochen.',
     'wd_capture' => 'Buchen',
     'wd_city' => 'Stadt',
+    'wd_company_name_input' => 'Firma',
     'wd_config_additional_info' => 'Zusätzliche Informationen mitsenden',
     'wd_config_additional_info_desc' => 'Zum Schutz vor Betrug werden zusätzliche Daten mitgesendet. Zu diesen zusätzlichen Daten gehören Rechnungs-/Lieferadresse, Warenkorb und Deskriptor.',
     'wd_config_allowed_currencies' => 'Erlaubte Währungen',
@@ -140,6 +141,7 @@ $aLang = array(
     'wd_payolution_terms' => 'Mit der Übermittlung der für die Abwicklung des Rechnungskaufes und einer Identitäts- und Bonitätsprüfung erforderlichen Daten an Payolution bin ich einverstanden. Meine <u><a href="%s" target="_blank">Einwilligung</a></u> kann ich jederzeit mit Wirkung für die Zukunft widerrufen.',
     'wd_phone' => 'Telefon',
     'wd_postal-code' => 'Postleitzahl',
+    'wd_ptrid' => 'Provider Transaction Reference ID',
     'wd_ratepayinvoice_fields_error' => 'Für die Nutzung dieses Zahlungmittels müssen Sie mindestens 18 Jahre alt sein.',
     'wd_redirect_text' => 'Sie werden weitergeleitet. Bitte warten.',
     'wd_refund' => 'Rückerstatten',
@@ -203,6 +205,7 @@ $aLang = array(
     'wd_transactionType' => 'Transaktionstyp',
     'wd_transaction_details_title' => 'Transaktionsdetails',
     'wd_transaction_response_details' => 'Antwort-Details',
+    'wd_transfer_notice' => 'Verwenden Sie für die Überweisung die folgenden Daten:',
     'wd_wait_for_final_status' => 'Bitte warten Sie auf ein zusätzliches E-Mail mit dem finalen Bezahlstatus.',
     'wd_yes' => 'Ja',
 );
