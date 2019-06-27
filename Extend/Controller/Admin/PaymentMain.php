@@ -10,13 +10,13 @@
 namespace Wirecard\Oxid\Extend\Controller\Admin;
 
 use OxidEsales\Eshop\Core\Registry;
-
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Extend\Model\Payment;
-use Wirecard\Oxid\Model\SofortPaymentMethod;
+use Wirecard\Oxid\Model\PayolutionBtwobPaymentMethod;
+use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
-
+use Wirecard\Oxid\Model\SofortPaymentMethod;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
 
@@ -44,6 +44,14 @@ class PaymentMain extends PaymentMain_parent
     private $_bIsSavePossible;
 
     /**
+     * Tells if information about currency settings should be shown.
+     * The information is shown any time merchant adds a currency which has empty configuration fields.
+     *
+     * @since 1.2.0
+     */
+    private $_bShowCurrencyHelp;
+
+    /**
      * @inheritdoc
      *
      * @return string
@@ -63,6 +71,7 @@ class PaymentMain extends PaymentMain_parent
             // and an error message shown in the frontend
             Helper::addToViewData($this, [
                 'bConfigNotValid' => ($sFnc === 'save' || $sFnc === 'addfield') && !$this->_bIsSavePossible,
+                'bShowCurrencyHelp' => $this->_bShowCurrencyHelp,
             ]);
         }
 
@@ -105,7 +114,40 @@ class PaymentMain extends PaymentMain_parent
 
         $bCredentialsValid = $this->_validateRequestParameters($aParams);
 
-        return $bCredentialsValid && $this->_isCountryCodeValid($aParams) && $this->_isCreditorIdValid($aParams);
+        return $bCredentialsValid && $this->_isCountryCodeValid($aParams) && $this->_isCreditorIdValid($aParams)
+            && $this->_isPayolutionUrlSettingsValid($aParams);
+    }
+
+    /**
+     * Checks if Payolution URL setting is valid.
+     * If require consent is enabled, Payolution URL has to be set. Otherwise it can be empty.
+     *
+     * @param array $aParams
+     *
+     * @return bool
+     *
+     * @since 1.2.0
+     */
+    private function _isPayolutionUrlSettingsValid($aParams)
+    {
+        return !$this->_isPayolutionPaymentMethod($aParams['oxpayments__oxid'])
+            || ($aParams['oxpayments__terms'] && strlen(trim($aParams['oxpayments__payolution_terms_url']))
+                || !$aParams['oxpayments__terms']);
+    }
+
+    /**
+     * Checks for a Payolution payment method (B2C or B2B)
+     *
+     * @param string $sPaymentId
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private function _isPayolutionPaymentMethod($sPaymentId)
+    {
+        return $sPaymentId === PayolutionInvoicePaymentMethod::getName(true)
+            || $sPaymentId === PayolutionBtwobPaymentMethod::getName(true);
     }
 
     /**
@@ -156,7 +198,7 @@ class PaymentMain extends PaymentMain_parent
     {
         //explanation for creditor id validation: https://www.iban.de/iban-pruefsumme.html
 
-        $sCreditorId =  strtolower(str_replace(' ', '', $sCreditorId));
+        $sCreditorId = strtolower(str_replace(' ', '', $sCreditorId));
         if (preg_match('/^[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{0,31}$/', $sCreditorId) !== 1 || strlen($sCreditorId) > 35) {
             return false;
         }
@@ -247,6 +289,7 @@ class PaymentMain extends PaymentMain_parent
         foreach ($aNewCurrencyValue as $sCurrency) {
             // it is only necessary to check this currency at this point if it was already saved before
             if (!in_array($sCurrency, $aOldCurrencyValue)) {
+                $this->_bShowCurrencyHelp = true;
                 continue;
             }
 

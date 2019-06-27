@@ -9,36 +9,33 @@
 
 namespace Wirecard\Oxid\Model;
 
-use DateTime;
-
 use Wirecard\Oxid\Core\BasketHelper;
-use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Extend\Model\Order;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use Wirecard\PaymentSdk\Transaction\PayolutionInvoiceTransaction;
+use Wirecard\PaymentSdk\Transaction\PayolutionBtwobTransaction;
 
 /**
- * Payment method implementation for Payolution Invoice
+ * Payment method implementation for Payolution B2B
  *
- * @since 1.2.0
+ * @since 1.3.0
  */
-class PayolutionInvoicePaymentMethod extends PayolutionBasePaymentMethod
+class PayolutionBtwobPaymentMethod extends PayolutionBasePaymentMethod
 {
     /**
      * @inheritdoc
      *
-     * @since 1.2.0
+     * @since 1.3.0
      */
-    protected static $_sName = "payolution-inv";
+    protected static $_sName = "payolution-b2b";
 
     /**
      * @inheritdoc
      *
      * @return Config
      *
-     * @since 1.2.0
+     * @since 1.3.0
      */
     public function getConfig()
     {
@@ -51,7 +48,7 @@ class PayolutionInvoicePaymentMethod extends PayolutionBasePaymentMethod
         $sSecretField = 'oxpayments__secret_' . $sCurrency;
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
-            PayolutionInvoiceTransaction::NAME,
+            PayolutionBtwobTransaction::NAME,
             $this->_oPayment->$sMaidField->value,
             $this->_oPayment->$sSecretField->value
         );
@@ -66,32 +63,40 @@ class PayolutionInvoicePaymentMethod extends PayolutionBasePaymentMethod
      *
      * @return \Wirecard\PaymentSdk\Transaction\Transaction
      *
-     * @since 1.2.0
+     * @since 1.3.0
      */
     public function getTransaction()
     {
-        return new PayolutionInvoiceTransaction();
+        return new PayolutionBtwobTransaction();
     }
 
     /**
      * @inheritdoc
      *
-     * @param PayolutionInvoiceTransaction $oTransaction
-     * @param Order                        $oOrder
+     * @param PayolutionBtwobTransaction $oTransaction
+     * @param Order                      $oOrder
      *
      * @throws \Exception
      *
-     * @since 1.2.0
+     * @since 1.3.0
      */
     public function addMandatoryTransactionData(&$oTransaction, $oOrder)
     {
-        $oAccountHolder = $oOrder->getAccountHolder();
-        $oAccountHolder->setDateOfBirth(new DateTime(SessionHelper::getDbDateOfBirth(self::getName())));
+        //TODO add company name
+    }
 
-        if (SessionHelper::isPhoneValid(self::getName())) {
-            $oAccountHolder->setPhone(SessionHelper::getPhone(self::getName()));
-        }
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    public function getCheckoutFields()
+    {
+        //TODO add company name field
+        return [
 
-        $oTransaction->setAccountHolder($oAccountHolder);
+        ];
     }
 }
