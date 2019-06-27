@@ -22,6 +22,7 @@ use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
 use Wirecard\Oxid\Model\IdealPaymentMethod;
 use Wirecard\Oxid\Model\EpsPaymentMethod;
+use Wirecard\Oxid\Model\AlipayCrossBorderPaymentMethod;
 
 /**
  * Class PaymentMethodFactory
@@ -44,6 +45,7 @@ class PaymentMethodFactory
         $aClasses = [];
 
         foreach ([
+            AlipayCrossBorderPaymentMethod::class,
             CreditCardPaymentMethod::class,
             EpsPaymentMethod::class,
             GiropayPaymentMethod::class,

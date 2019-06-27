@@ -314,7 +314,9 @@ class OrderHelper
     private static function _handleInteractionResponse($oResponse)
     {
         $sPageUrl = $oResponse->getRedirectUrl();
-        return Registry::getUtils()->redirect($sPageUrl);
+
+        // do NOT add the "redirected" query parameter here as some payment methods might not work if it is present
+        return Registry::getUtils()->redirect($sPageUrl, false);
     }
 
     /**

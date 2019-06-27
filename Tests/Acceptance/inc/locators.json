@@ -60,6 +60,14 @@
       "submitFinalize": "sbtnSignSingle",
       "submitConfirm": "sbtnOk",
       "backToShop": "//input[@name='back2Shop']"
+    },
+    "alipay": {
+      "accountName": "//input[@name='loginId']",
+      "password": "//input[@name='payPasswd_rsainput']",
+      "paymentPassword": "//input[@name='payPassword_rsainput']",
+      "captcha": "//input[@name='checkCode']",
+      "nextStep": "//a[@data-role='submitBtn']",
+      "submit": "//input[@type='submit']"
     }
   }
 }
