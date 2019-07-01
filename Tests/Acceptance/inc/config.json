@@ -40,6 +40,10 @@
     "eps": {
       "bic": "BWFBATW1XXX",
       "id": "123456"
+    },
+    "masterpass": {
+      "username": "amehic@parkside.at",
+      "password": "test123456"
     }
   }
 }
