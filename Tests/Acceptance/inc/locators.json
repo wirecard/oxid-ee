@@ -62,11 +62,11 @@
       "backToShop": "//input[@name='back2Shop']"
     },
     "payolutionInv":{
-      "dateOfBirth": "//input[@id='dateOfBirthpayolution-inv']",
+      "dateOfBirth": "dateOfBirthpayolution-inv",
       "termsCheckbox": "//input[@name='terms_checkbox']"
     },
     "payolutionB2B":{
-      "companyName": "//input[@id='wdCompanyName']",
+      "companyName": "wdCompanyName",
       "termsCheckbox": "//input[@name='terms_checkbox']"
     }
   }
