@@ -9,15 +9,16 @@
 
 namespace Wirecard\Oxid\Core;
 
-use OxidEsales\Eshop\Core\Field;
-use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
-use OxidEsales\Eshop\Core\Registry;
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\DbMetaDataHandler;
+use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
+use OxidEsales\Eshop\Core\Field;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Extend\Model\Order;
-use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\Transaction;
 
 /**
  * Class handles module behaviour on shop installation events
@@ -31,6 +32,7 @@ class OxidEeEvents
     const PAYMENT_TABLE = "oxpayments";
     const TRANSACTION_TABLE = "wdoxidee_ordertransactions";
     const PAYMENT_METADATA_TABLE = "wdoxidee_oxpayments_metadata";
+    const VAULT_TABLE = "wdoxidee_vault";
 
     /**
      * @var DatabaseInterface
@@ -317,6 +319,9 @@ class OxidEeEvents
     /**
      * Handle OXID's onActivate event
      *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws DatabaseErrorException
+     *
      * @since 1.0.0
      */
     public static function onActivate()
@@ -335,6 +340,7 @@ class OxidEeEvents
         // needs to be executed before _addPaymentMethods()
         self::_migrateFrom100To110();
         self::_migrateFrom110To120();
+        self::_migrateFrom120To130();
 
         // view tables must be regenerated after modifying database table structure
         Helper::regenerateViews();
@@ -387,6 +393,29 @@ class OxidEeEvents
     }
 
     /**
+     * Create the Vault table to store Credit Card Information
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseErrorException
+     *
+     * @since 1.3.0
+     */
+    private static function _createVaultTable()
+    {
+        $sQuery = "CREATE TABLE IF NOT EXISTS " . self::VAULT_TABLE . "(
+            `OXID` int NOT NULL AUTO_INCREMENT,
+            `USERID` varchar(32) NOT NULL,
+            `ADDRESSID` varchar(32) NOT NULL,
+            `TOKEN` VARCHAR(20) NOT NULL,
+			`MASKEDPAN` VARCHAR(30) NOT NULL,
+			`EXPIRATIONMONTH` INT NOT NULL,
+			`EXPIRATIONYEAR` INT NOT NULL,
+            PRIMARY KEY (`OXID`)
+        ) Engine=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
+
+        self::$_oDb->execute($sQuery);
+    }
+
+    /**
      * Migration steps from version 1.0.0 to 1.1.0
      *
      * @since 1.1.0
@@ -423,6 +452,8 @@ class OxidEeEvents
     /**
      * Migration steps from version 1.1.0 to 1.2.0
      *
+     * @throws DatabaseErrorException
+     *
      * @since 1.2.0
      */
     private static function _migrateFrom110To120()
@@ -438,5 +469,21 @@ class OxidEeEvents
             " MODIFY `WDOXIDEE_ORDERSTATE` enum('" . implode("','", Order::getStates()) . "') default '" .
             Order::getStates()[0] . "' NOT NULL";
         self::$_oDb->execute($sQuery);
+    }
+
+    /**
+     * Migration steps from version 1.2.0 to 1.3.0
+     *
+     * @throws DatabaseErrorException
+     *
+     * @since 1.3.0
+     */
+    private static function _migrateFrom120To130()
+    {
+        $oDbMetaDataHandler = oxNew(DbMetaDataHandler::class);
+
+        if (!$oDbMetaDataHandler->tableExists(self::VAULT_TABLE)) {
+            self::_createVaultTable();
+        }
     }
 }
