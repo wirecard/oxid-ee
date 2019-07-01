@@ -36,6 +36,28 @@ class Transaction extends MultiLanguageModel
     const STATE_CLOSED = 'closed';
     const STATE_ERROR = 'error';
 
+    // transaction types
+    const TYPE_AUTHORIZATION = 'authorization';
+    const TYPE_AUTHORIZATION_ONLY = 'authorization-only';
+    const TYPE_REFERENCED_AUTHORIZATION = 'referenced-authorization';
+    const TYPE_CAPTURE_AUTHORIZATION = 'capture-authorization';
+    const TYPE_CHECK_ENROLLMENT = 'check-enrollment';
+    const TYPE_VOID_AUTHORIZATION = 'void-authorization';
+    const TYPE_PENDING_CREDIT = 'pending-credit';
+    const TYPE_CREDIT = 'credit';
+    const TYPE_PENDING_DEBIT = 'pending-debit';
+    const TYPE_DEBIT = 'debit';
+    const TYPE_REFUND_CAPTURE = 'refund-capture';
+    const TYPE_REFUND_DEBIT = 'refund-debit';
+    const TYPE_REFUND_REQUEST = 'refund-request';
+    const TYPE_VOID_CAPTURE = 'void-capture';
+    const TYPE_PURCHASE = 'purchase';
+    const TYPE_REFUND_PURCHASE = 'refund-purchase';
+    const TYPE_REFERENCED_PURCHASE = 'referenced-purchase';
+    const TYPE_VOID_PURCHASE = 'void-purchase';
+    const TYPE_VOID_DEBIT= 'void-debit';
+    const TYPE_DEPOSIT = 'deposit';
+
     /**
      * @inheritdoc
      *
@@ -197,6 +219,51 @@ class Transaction extends MultiLanguageModel
     }
 
     /**
+     * Returns an array of translated transaction types.
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    public static function getTranslatedTransactionTypes()
+    {
+        return [
+            self::TYPE_AUTHORIZATION => Helper::translate('wd_authorization'),
+            self::TYPE_AUTHORIZATION_ONLY => Helper::translate('wd_authorization-only'),
+            self::TYPE_REFERENCED_AUTHORIZATION => Helper::translate('wd_referenced-authorization'),
+            self::TYPE_CAPTURE_AUTHORIZATION => Helper::translate('wd_capture-authorization'),
+            self::TYPE_CHECK_ENROLLMENT => Helper::translate('wd_check-enrollment'),
+            self::TYPE_VOID_AUTHORIZATION => Helper::translate('wd_void-authorization'),
+            self::TYPE_PENDING_CREDIT => Helper::translate('wd_pending-credit'),
+            self::TYPE_CREDIT => Helper::translate('wd_type_credit'),
+            self::TYPE_PENDING_DEBIT => Helper::translate('wd_pending-debit'),
+            self::TYPE_DEBIT => Helper::translate('wd_debit'),
+            self::TYPE_REFUND_CAPTURE => Helper::translate('wd_refund-capture'),
+            self::TYPE_REFUND_DEBIT => Helper::translate('wd_refund-debit'),
+            self::TYPE_REFUND_REQUEST => Helper::translate('wd_refund-request'),
+            self::TYPE_VOID_CAPTURE => Helper::translate('wd_void-capture'),
+            self::TYPE_PURCHASE => Helper::translate('wd_purchase'),
+            self::TYPE_REFUND_PURCHASE => Helper::translate('wd_refund-purchase'),
+            self::TYPE_REFERENCED_PURCHASE => Helper::translate('wd_referenced-purchase'),
+            self::TYPE_VOID_PURCHASE => Helper::translate('wd_void-purchase'),
+            self::TYPE_VOID_DEBIT=> Helper::translate('wd_void-debit'),
+            self::TYPE_DEPOSIT => Helper::translate('wd_deposit'),
+        ];
+    }
+
+    /**
+     * Returns the translation for the transaction's type.
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    public function getTranslatedTransactionType()
+    {
+        return self::getTranslatedTransactionTypes()[$this->wdoxidee_ordertransactions__type->value] ?? '';
+    }
+
+    /**
      * Returns an array of available actions.
      *
      * @return array
@@ -227,6 +294,35 @@ class Transaction extends MultiLanguageModel
             self::STATE_AWAITING,
             self::STATE_CLOSED,
         ];
+    }
+
+    /**
+     * Returns an array of translated states.
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    public static function getTranslatedStates()
+    {
+        return [
+            self::STATE_SUCCESS => Helper::translate('wd_state_success'),
+            self::STATE_ERROR => Helper::translate('wd_state_error'),
+            self::STATE_AWAITING => Helper::translate('wd_state_awaiting'),
+            self::STATE_CLOSED => Helper::translate('wd_state_closed'),
+        ];
+    }
+
+    /**
+     * Returns the translation for the transaction's state.
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    public function getTranslatedState()
+    {
+        return self::getTranslatedStates()[$this->wdoxidee_ordertransactions__state->value] ?? '';
     }
 
     /**

@@ -153,19 +153,19 @@ window.onload = function ()
                     <td class="[{$listclass}]">
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__parenttransactionid->value}]</a>
                     </td>
-                    <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__type->value}]</a>
+                    <td class="[{$listclass}]"><a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->getTranslatedTransactionType()}]
+                        </a>
                     </td>
                     <td class="[{$listclass}]">
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$payment->oxpayments__oxdesc->value}]</a>
                     </td>
                     <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__state->value}]
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->getTranslatedState()}]
                           [{if $listitem->isPoiPiaPaymentMethod()}]
                             [{if $listitem->wdoxidee_ordertransactions__parenttransactionid->value}]
-                                (matched)
+                                ([{oxmultilang ident="wd_matched"}])
                             [{else}]
-                                (unmatched)
+                                ([{oxmultilang ident="wd_unmatched"}])
                             [{/if}]
                           [{/if}]
                         </a>
