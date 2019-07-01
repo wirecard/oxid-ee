@@ -90,24 +90,23 @@ class Vault
      *
      * @since 1.3.0
      */
-    public static function saveCard($oResponse, $aCard)
+    public static function saveCard($oResponse, $aCard, $oOrder)
     {
-        $aVaultCard = [];
-        $aVaultCard['token'] = $oResponse->getCardTokenId();
-        $aVaultCard['maskedPan'] = $oResponse->getMaskedAccountNumber();
-        $aVaultCard['exporationMonth'] = $aCard['expiration-month'];
-        $aVaultCard['expirationYear'] = $aCard['expiration-year'];
-        $oUser = Registry::getSession()->getUser();
-        $aVaultCard['userId'] = $oUser->getId();
-        $aVaultCard['addressId'] = $oUser->getSelectedAddressId();
+        $aVaultCard = [
+            'token' => $oResponse->getCardTokenId(),
+            'maskedPan' => $oResponse->getMaskedAccountNumber(),
+            'exporationMonth' => $aCard['expiration-month'],
+            'expirationYear' => $aCard['expiration-year'],
+            'userId' => Registry::getSession()->getUser()->getId(),
+            'addressId' => self::_getAddressId($oOrder),
+        ];
 
-        $aExistingCards = self::getCards();
+        $aExistingCards = self::getCards($oOrder);
         foreach ($aExistingCards as $aCard) {
             if ($aCard['TOKEN'] === $aVaultCard['token'] && $aCard['ADDRESSID'] === $aVaultCard['addressId']) {
                 return;
             }
         }
-
         self::_insertCard($aVaultCard);
     }
 
@@ -174,5 +173,17 @@ class Vault
     private static function _getDb()
     {
         return DatabaseProvider::getDb(DatabaseProvider::FETCH_MODE_ASSOC);
+    }
+
+    /**
+     * @param Order $oOrder
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    private static function _getAddressId($oOrder)
+    {
+        return sha1(implode($oOrder->getShippingAccountHolder()->mappedProperties()));
     }
 }
