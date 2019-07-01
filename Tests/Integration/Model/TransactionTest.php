@@ -80,7 +80,7 @@ class TransactionTest extends Wirecard\Test\WdUnitTestCase
     public function testGetTranslatedStates()
     {
         $oTransaction = oxNew(Transaction::class);
-        $aTransactionTypes = $oTransaction->getTranslatedStates();
-        $this->assertCount(4, $aTransactionTypes);
+        $aTransactionStates = $oTransaction->getTranslatedStates();
+        $this->assertCount(4, $aTransactionStates);
     }
 }
