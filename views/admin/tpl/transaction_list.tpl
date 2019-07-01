@@ -153,8 +153,7 @@ window.onload = function ()
                     <td class="[{$listclass}]">
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__parenttransactionid->value}]</a>
                     </td>
-                    <td class="[{$listclass}]"><a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->getTranslatedTransactionType()}]
-                        </a>
+                    <td class="[{$listclass}]"><a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->getTranslatedTransactionType()}]</a>
                     </td>
                     <td class="[{$listclass}]">
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$payment->oxpayments__oxdesc->value}]</a>

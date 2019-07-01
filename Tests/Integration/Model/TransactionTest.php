@@ -76,4 +76,18 @@ class TransactionTest extends Wirecard\Test\WdUnitTestCase
 
         $this->assertEquals($oTransaction->getResponseXML(), '<?xml version="1.0" encoding="UTF-8"?>');
     }
+
+    public function testGetTranslatedTransactionTypes()
+    {
+        $oTransaction = oxNew(Transaction::class);
+        $aTransactionTypes = $oTransaction->getTranslatedTransactionTypes();
+        $this->assertCount(20, $aTransactionTypes);
+    }
+
+    public function testGetTranslatedStates()
+    {
+        $oTransaction = oxNew(Transaction::class);
+        $aTransactionTypes = $oTransaction->getTranslatedStates();
+        $this->assertCount(4, $aTransactionTypes);
+    }
 }
