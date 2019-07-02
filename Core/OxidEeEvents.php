@@ -197,7 +197,7 @@ class OxidEeEvents
             "OXID" => $oPayment->oxid,
         ];
 
-        $sOxdescKey = $oPayment->oxdesc['id'];
+        $sOxdescKey = (string) $oPayment->oxdesc['id'];
         $sOxdesc = Helper::translate($sOxdescKey, 0);
         $sOxdesc1 = Helper::translate($sOxdescKey, 1);
 
