@@ -33,7 +33,14 @@ class Vault
      * @param string $sUserId
      * @param string $sAddressId
      *
-     * @return array
+     * @return array of cards with keys
+     * 'OXID'
+     * 'USERID'
+     * 'ADDRESSID'
+     * 'TOKEN'
+     * 'MASKEDPAN'
+     * 'EXPIRATIONMONTH'
+     * 'EXPIRATIONYEAR'
      *
      * @throws DatabaseConnectionException
      *
@@ -51,7 +58,7 @@ class Vault
         }
 
         return array_filter($aCards, function ($aCard) {
-            $oDateExpiration = new DateTime($aCard['expiration_year'] . '-' . $aCard['expiration_month'] . '-01');
+            $oDateExpiration = new DateTime($aCard['EXPIRATIONYEAR'] . '-' . $aCard['EXPIRATIONMONTH'] . '-01');
             $oDateExpiration->add(new DateInterval('P6M'));
 
             $oDateToday = new DateTime();
@@ -90,7 +97,6 @@ class Vault
         }
 
         $sQuery = "INSERT INTO " . OxidEeEvents::VAULT_TABLE . " SET
-            `OXID`=?,
             `USERID`=?,
             `ADDRESSID`=?,
             `TOKEN`=?,
@@ -99,7 +105,6 @@ class Vault
             `EXPIRATIONYEAR`=?";
 
         self::_getDb()->execute($sQuery, [
-            Registry::getUtilsObject()->generateUId(),
             $sUserId,
             $sAddressId,
             $sToken,

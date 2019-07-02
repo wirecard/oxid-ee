@@ -402,14 +402,15 @@ class OxidEeEvents
     private static function _createVaultTable()
     {
         $sQuery = "CREATE TABLE IF NOT EXISTS " . self::VAULT_TABLE . "(
-            `OXID` int NOT NULL AUTO_INCREMENT,
-            `USERID` varchar(32) NOT NULL,
-            `ADDRESSID` varchar(32) NOT NULL,
+            `OXID` INT NOT NULL AUTO_INCREMENT,
+            `USERID` VARCHAR(32) NOT NULL,
+            `ADDRESSID` VARCHAR(32) NOT NULL,
             `TOKEN` VARCHAR(20) NOT NULL,
 			`MASKEDPAN` VARCHAR(30) NOT NULL,
 			`EXPIRATIONMONTH` INT NOT NULL,
 			`EXPIRATIONYEAR` INT NOT NULL,
-            PRIMARY KEY (`OXID`)
+            PRIMARY KEY (`OXID`),
+            INDEX ids (`USERID`, `ADDRESSID`)
         ) Engine=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
 
         self::$_oDb->execute($sQuery);
