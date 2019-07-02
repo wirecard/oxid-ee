@@ -42,7 +42,7 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
             ->disableOriginalConstructor()
             ->getMock();
         $oSuccessResponse->method('getCardTokenId')
-            ->willReturn("Card Token ID");
+            ->willReturn('Card Token ID');
         $oSuccessResponse->method('getMaskedAccountNumber')
             ->willReturn('Masked Account Number');
 
@@ -56,7 +56,7 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
             ->getMock();
 
         $oUser->method('getId')
-            ->willReturn("User ID save card");
+            ->willReturn('User ID save card');
         $oUser->method('getSelectedAddressId')
             ->willReturn('Selected Address ID');
 
@@ -142,5 +142,23 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
                 [],
             ],
         ];
+    }
+
+    public function testDeleteCard()
+    {
+        $oUser = $this->getMockBuilder(\OxidEsales\EshopCommunity\Application\Model\User::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $oUser->method('getId')
+            ->willReturn('User ID 2');
+
+        $this->getSession()->setUser($oUser);
+        Vault::deleteCard(4);
+        $aResult = $this->getDb(DatabaseInterface::FETCH_MODE_ASSOC)->getAll(
+            "SELECT * FROM " . OxidEeEvents::VAULT_TABLE . " WHERE `OXID` = 4");
+
+        $this->assertEmpty($aResult);
+
     }
 }
