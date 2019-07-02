@@ -141,6 +141,7 @@ $aLang = array(
     'wd_payolution_terms' => 'Mit der Übermittlung der für die Abwicklung des Rechnungskaufes und einer Identitäts- und Bonitätsprüfung erforderlichen Daten an Payolution bin ich einverstanden. Meine <u><a href="%s" target="_blank">Einwilligung</a></u> kann ich jederzeit mit Wirkung für die Zukunft widerrufen.',
     'wd_phone' => 'Telefon',
     'wd_postal-code' => 'Postleitzahl',
+    'wd_ptrid' => 'Provider Transaction Reference ID',
     'wd_ratepayinvoice_fields_error' => 'Für die Nutzung dieses Zahlungmittels müssen Sie mindestens 18 Jahre alt sein.',
     'wd_redirect_text' => 'Sie werden weitergeleitet. Bitte warten.',
     'wd_refund' => 'Rückerstatten',
@@ -204,6 +205,7 @@ $aLang = array(
     'wd_transactionType' => 'Transaktionstyp',
     'wd_transaction_details_title' => 'Transaktionsdetails',
     'wd_transaction_response_details' => 'Antwort-Details',
+    'wd_transfer_notice' => 'Verwenden Sie für die Überweisung die folgenden Daten:',
     'wd_wait_for_final_status' => 'Bitte warten Sie auf ein zusätzliches E-Mail mit dem finalen Bezahlstatus.',
     'wd_yes' => 'Ja',
 );

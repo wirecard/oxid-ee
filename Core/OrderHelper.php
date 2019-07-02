@@ -22,7 +22,9 @@ use Psr\Log\LoggerInterface;
 
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
+use Wirecard\Oxid\Model\PaymentInAdvancePaymentMethod;
 use Wirecard\Oxid\Model\FormInteractionResponseFields;
+use Wirecard\Oxid\Model\PaymentInAdvancePaymentInformation;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Response\FailureResponse;
@@ -121,6 +123,8 @@ class OrderHelper
             return self::_handleFailureResponse($oResponse, $oLogger, $oOrder);
         }
 
+        self::_managePiaPaymentInformation($oResponse, $oOrder);
+
         // set the transaction ID on the order
         $oOrder->oxorder__wdoxidee_transactionid = new Field($oResponse->getTransactionId());
         $oOrder->save();
@@ -195,6 +199,33 @@ class OrderHelper
         $sUpdatedOrderState = $oBackendService->getOrderState($oResponse->getTransactionType());
         $oOrder->oxorder__wdoxidee_orderstate = new Field($sUpdatedOrderState);
         $oOrder->save();
+    }
+
+    /**
+     * Manages Pia Payment Information, for the later use on Thank You page
+     *
+     * @param Response $oResponse
+     * @param Order    $oOrder
+     *
+     * @since 1.3.0
+     */
+    private static function _managePiaPaymentInformation($oResponse, $oOrder)
+    {
+        if ($oOrder->oxorder__oxpaymenttype->value === PaymentInAdvancePaymentMethod::getName(true)) {
+            $oResponseXml = simplexml_load_string($oResponse->getRawData());
+
+            $oSession = Registry::getSession();
+            $oSession->setVariable(
+                PaymentInAdvancePaymentInformation::PIA_PAYMENT_INFORMATION,
+                new PaymentInAdvancePaymentInformation(
+                    $oResponse->getRequestedAmount()->getValue() . ' ' .
+                     $oResponse->getRequestedAmount()->getCurrency(),
+                    (string) $oResponseXml->{'merchant-bank-account'}->{'iban'},
+                    (string) $oResponseXml->{'merchant-bank-account'}->{'bic'},
+                    (string) $oResponseXml->{'provider-transaction-reference-id'}
+                )
+            );
+        }
     }
 
     /**
@@ -314,7 +345,9 @@ class OrderHelper
     private static function _handleInteractionResponse($oResponse)
     {
         $sPageUrl = $oResponse->getRedirectUrl();
-        return Registry::getUtils()->redirect($sPageUrl);
+
+        // do NOT add the "redirected" query parameter here as some payment methods might not work if it is present
+        return Registry::getUtils()->redirect($sPageUrl, false);
     }
 
     /**

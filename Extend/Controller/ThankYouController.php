@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Extend\Controller;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Model\PaymentInAdvancePaymentInformation;
 
 use OxidEsales\Eshop\Core\Registry;
 
@@ -22,6 +23,14 @@ use OxidEsales\Eshop\Core\Registry;
  */
 class ThankYouController extends ThankYouController_parent
 {
+
+     /**
+     * @var PaymentInAdvancePaymentInformation
+     *
+     * @since 1.3.0
+     */
+    private $_oPiaInfo;
+
     /**
      * Extends the parent init method
      * deletes a wdtoken and updates the order number in the transaction table
@@ -30,12 +39,31 @@ class ThankYouController extends ThankYouController_parent
      */
     public function init()
     {
-        Registry::getSession()->deleteVariable("wdtoken");
+        $oSession = Registry::getSession();
+        $oSession->deleteVariable("wdtoken");
 
         Helper::addToViewData($this, [
             'sendPendingEmailsSettings' => $this->getConfig()->getConfigParam('wd_email_on_pending_orders'),
         ]);
 
+        $this->_oPiaInfo = $oSession->getVariable(PaymentInAdvancePaymentInformation::PIA_PAYMENT_INFORMATION);
+
+        if ($this->_oPiaInfo) {
+            $oSession->deleteVariable(PaymentInAdvancePaymentInformation::PIA_PAYMENT_INFORMATION);
+        }
+
         parent::init();
+    }
+
+    /**
+     * Getter for _oPiaInfo (amount, IBAN, BIC, Provider Transaction Reference ID)
+     *
+     * @return PaymentInAdvancePaymentInformation
+     *
+     * @since 1.3.0
+     */
+    public function getPaymentInAdvanceInfo()
+    {
+        return $this->_oPiaInfo;
     }
 }

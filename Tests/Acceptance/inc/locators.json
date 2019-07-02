@@ -1,7 +1,8 @@
 {
   "checkout": {
     "nextStep": "//button[contains(@class, 'nextStep')]",
-    "paymentMethod": "payment_%s"
+    "paymentMethod": "payment_%s",
+    "piaTable": "pia-payment-info"
   },
   "external": {
     "paypal": {
@@ -65,9 +66,17 @@
       "dateOfBirth": "dateOfBirthpayolution-inv",
       "termsCheckbox": "//input[@name='terms_checkbox']"
     },
-    "payolutionB2B":{
+    "payolutionB2B": {
       "companyName": "wdCompanyName",
       "termsCheckbox": "//input[@name='terms_checkbox']"
+    },
+    "alipay": {
+      "accountName": "//input[@name='loginId']",
+      "password": "//input[@name='payPasswd_rsainput']",
+      "paymentPassword": "//input[@name='payPassword_rsainput']",
+      "captcha": "//input[@name='checkCode']",
+      "nextStep": "//a[@data-role='submitBtn']",
+      "submit": "//input[@type='submit']"
     }
   }
 }

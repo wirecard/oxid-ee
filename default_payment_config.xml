@@ -250,6 +250,57 @@
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
     </payment>
+    <payment>
+        <oxid>wdalipay-xborder</oxid>
+        <oxactive>0</oxactive>
+        <oxtoamount>1000000</oxtoamount>
+        <oxdesc>Wirecard Alipay Cross-border</oxdesc>
+        <oxdesc_1>Wirecard Alipay Cross-border</oxdesc_1>
+        <oxsort>20</oxsort>
+        <wdoxidee_logo>alipay.png</wdoxidee_logo>
+        <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
+        <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
+        <wdoxidee_maid>47cd4edf-b13c-4298-9344-53119ab8b9df</wdoxidee_maid>
+        <wdoxidee_secret>94fe4f40-16c5-4019-9c6c-bc33ec858b1d</wdoxidee_secret>
+        <wdoxidee_httpuser>16390-testing</wdoxidee_httpuser>
+        <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
+        <wdoxidee_descriptor>1</wdoxidee_descriptor>
+        <wdoxidee_additional_info>1</wdoxidee_additional_info>
+    </payment>
+    <payment>
+        <oxid>wdpaymentoninvoice</oxid>
+        <oxactive>0</oxactive>
+        <oxtoamount>10000</oxtoamount>
+        <oxdesc>Wirecard Kauf auf Rechnung</oxdesc>
+        <oxdesc_1>Wirecard Payment on Invoice</oxdesc_1>
+        <oxsort>80</oxsort>
+        <wdoxidee_logo>invoice.png</wdoxidee_logo>
+        <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
+        <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
+        <wdoxidee_maid>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</wdoxidee_maid>
+        <wdoxidee_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</wdoxidee_secret>
+        <wdoxidee_httpuser>70000-APITEST-AP</wdoxidee_httpuser>
+        <wdoxidee_httppass>qD2wzQ_hrc!8</wdoxidee_httppass>
+        <wdoxidee_descriptor>1</wdoxidee_descriptor>
+        <wdoxidee_additional_info>1</wdoxidee_additional_info>
+    </payment>
+    <payment>
+        <oxid>wdpaymentinadvance</oxid>
+        <oxactive>0</oxactive>
+        <oxtoamount>10000</oxtoamount>
+        <oxdesc>Wirecard Vorauskasse</oxdesc>
+        <oxdesc_1>Wirecard Payment in Advance</oxdesc_1>
+        <oxsort>70</oxsort>
+        <wdoxidee_logo>invoice.png</wdoxidee_logo>
+        <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
+        <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
+        <wdoxidee_maid>105ab3e8-d16b-4fa0-9f1f-18dd9b390c94</wdoxidee_maid>
+        <wdoxidee_secret>2d96596b-9d10-4c98-ac47-4d56e22fd878</wdoxidee_secret>
+        <wdoxidee_httpuser>70000-APITEST-AP</wdoxidee_httpuser>
+        <wdoxidee_httppass>qD2wzQ_hrc!8</wdoxidee_httppass>
+        <wdoxidee_descriptor>1</wdoxidee_descriptor>
+        <wdoxidee_additional_info>1</wdoxidee_additional_info>
+    </payment>
 
     <!-- only visible for the merchant -->
     <payment>

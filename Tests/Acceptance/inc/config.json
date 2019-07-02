@@ -46,6 +46,12 @@
     },
     "payolutionB2B": {
       "companyName": "My Awesome Company Inc."
+    },
+    "alipay": {
+      "accountName": "alipaytest20091@gmail.com",
+      "password": "111111",
+      "paymentPassword": "111111",
+      "captcha": "8888"
     }
   }
 }
