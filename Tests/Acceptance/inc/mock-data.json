@@ -15,7 +15,8 @@
       "OXZIP": "8020",
       "OXSAL": "MR",
       "OXFON": "123456",
-      "OXBIRTHDATE": "1999-12-12"
+      "OXBIRTHDATE": "1999-12-12",
+      "OXCOMPANY": "My Awesome Company Inc."
     }
   ],
   "oxarticles": [

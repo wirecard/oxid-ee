@@ -39,6 +39,8 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
 
     /**
      * Payment method name getter.
+     *
+     * @return string
      */
     abstract public function getPaymentMethodName();
 
