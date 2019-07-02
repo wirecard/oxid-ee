@@ -46,8 +46,11 @@ class Vault
      *
      * @since 1.3.0
      */
-    public static function getCards($sUserId, $sAddressId)
+    public static function getCards()
     {
+        $oUser = Registry::getSession()->getUser();
+        $sUserId = $oUser->getId();
+        $sAddressId = $oUser->getSelectedAddressId();
         $aCards = [];
         try {
             $sQuery = "SELECT * from " . OxidEeEvents::VAULT_TABLE . " " .
