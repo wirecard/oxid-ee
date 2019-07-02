@@ -178,4 +178,18 @@ abstract class CheckoutTestCase extends BaseAcceptanceTestCase
     {
         $this->assertTrue($this->isThankYouPage($this->getLocation()), 'Payment was not successful.');
     }
+
+    /**
+     * Checks if the given URL is pointing to the Masterpass redirect page.
+     *
+     * @param string $sUrl
+     *
+     * @return bool
+     */
+    public function isMasterpassRedirectPage($sUrl)
+    {
+        $sQueryString = parse_url($sUrl, PHP_URL_QUERY);
+
+        return strpos($sQueryString, 'masterpass') !== false;
+    }
 }

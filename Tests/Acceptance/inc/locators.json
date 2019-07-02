@@ -62,12 +62,7 @@
       "backToShop": "//input[@name='back2Shop']"
     },
     "masterpass": {
-      "usernameConfirm": "formly_1_input_username_0",
-      "username": "formly_1_fieldUsername_username_0",
-      "password": "formly_1_fieldPasswordWithShowToggle_password_1",
-      "signIn": "//input[@type='submit']",
-      "continue": "/html/body/shell/main/div/verify-payment/div/div[2]/div/div[2]/button",
-      "continueToWallet": "/html/body/div[1]/main/div/div/div/div[2]/div[2]/div/div/button"
+      "form": "MasterPass_container"
     }
   }
 }

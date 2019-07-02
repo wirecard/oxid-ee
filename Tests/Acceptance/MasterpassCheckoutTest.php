@@ -26,32 +26,11 @@ class MasterpassCheckoutTest extends CheckoutTestCase
         $this->goThroughCheckout();
         $this->goThroughExternalFlow();
 
-        $this->waitForRedirectConfirmation(self::WAIT_TIME_EXTERNAL);
-
-        $this->assertPaymentSuccessful();
+        $this->assertTrue($this->isMasterpassRedirectPage($this->getLocation()), 'Payment was not successful.');
     }
 
     private function goThroughExternalFlow()
     {
-
-        $this->waitForElement($this->getLocator('external.masterpass.username'), self::WAIT_TIME_EXTERNAL * 3);
-        $this->type(
-            $this->getLocator('external.masterpass.username'),
-            $this->getConfig('payments.masterpass.username')
-        );
-        $this->clickAndWait($this->getLocator('external.masterpass.signIn'), self::WAIT_TIME_EXTERNAL);
-
-        $this->waitForElement($this->getLocator('external.masterpass.continueToWallet'), self::WAIT_TIME_EXTERNAL * 2);
-        $this->clickAndWait($this->getLocator('external.masterpass.continueToWallet'), self::WAIT_TIME_EXTERNAL);
-
-        $this->waitForElement($this->getLocator('external.masterpass.password'), self::WAIT_TIME_EXTERNAL * 2);
-        $this->type(
-            $this->getLocator('external.masterpass.password'),
-            $this->getConfig('payments.masterpass.password')
-        );
-
-        $this->clickAndWait($this->getLocator('external.masterpass.signIn'), self::WAIT_TIME_EXTERNAL);
-        $this->waitForElement($this->getLocator('external.masterpass.continue'), self::WAIT_TIME_EXTERNAL);
-        $this->clickAndWait($this->getLocator('external.masterpass.continue'), self::WAIT_TIME_EXTERNAL);
+        $this->waitForElement($this->getLocator('external.masterpass.form'), self::WAIT_TIME_EXTERNAL);
     }
 }
