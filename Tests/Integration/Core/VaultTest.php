@@ -13,6 +13,19 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 class VaultTest extends \Wirecard\Test\WdUnitTestCase
 {
+
+    protected function dbData()
+    {
+        //TODO add credit card for get/delete
+//        return [
+//            'table' => OxidEeEvents::VAULT_TABLE,
+//            'columns' => ['OXID', 'USERID', 'ADDRESSID', 'TOKEN', 'MASKEDPAN', 'EXPIRATIONMONTH', 'EXPIRATIONYEAR'],
+//            'rows' => [
+//                ['oxid 1', 'User ID 1', 'Address ID 1', 'Token 1', 'Masked****Pan', 1, ],
+//            ]
+//        ];
+    }
+
     public function testSaveCard()
     {
         $oSuccessResponse = $this->getMockBuilder(SuccessResponse::class)
@@ -33,7 +46,7 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
             ->getMock();
 
         $oUser->method('getId')
-            ->willReturn("User ID");
+            ->willReturn("User ID save card");
         $oUser->method('getSelectedAddressId')
             ->willReturn('Selected Address ID');
 
@@ -42,11 +55,11 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
         Vault::saveCard($oSuccessResponse, $aCard);
 
         $aResult = $this->getDb(DatabaseInterface::FETCH_MODE_ASSOC)->getAll(
-            "SELECT * FROM " . OxidEeEvents::VAULT_TABLE
+            "SELECT * FROM " . OxidEeEvents::VAULT_TABLE . " WHERE `USERID` = 'User ID save card'"
         );
 
         $this->assertArraySubset([
-            'USERID' => 'User ID',
+            'USERID' => 'User ID save card',
             'ADDRESSID' => 'Selected Address ID',
             'TOKEN' => 'Card Token ID',
             'MASKEDPAN' => 'Masked Account Number',
