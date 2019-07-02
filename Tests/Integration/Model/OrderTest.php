@@ -9,9 +9,11 @@
 
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\Order;
+use OxidEsales\Eshop\Core\Field;
 
 use Wirecard\Oxid\Extend\Model\Order as WdOrder;
 use Wirecard\Oxid\Extend\Model\Payment;
+use Wirecard\Oxid\Model\PaypalPaymentMethod;
 use Wirecard\Oxid\Model\TransactionList;
 
 use Wirecard\PaymentSdk\BackendService;
@@ -242,6 +244,7 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
     public function testGetAccountHolder()
     {
         $oOrder = oxNew(Order::class);
+        $oOrder->oxorder__oxpaymenttype = new Field(PaypalPaymentMethod::getName(true));
 
         $this->assertInstanceOf(AccountHolder::class, $oOrder->getAccountHolder());
     }

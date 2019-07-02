@@ -161,6 +161,7 @@ class RatepayInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTest
     {
         $oTransaction = $this->_oPaymentMethod->getTransaction();
         $oOrder = oxNew(Order::class);
+        $oOrder->oxorder__oxpaymenttype = new Field(RatepayInvoicePaymentMethod::getName(true));
         $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction, $oOrder);
 
         $this->assertObjectHasAttribute('shipping', $oTransaction);

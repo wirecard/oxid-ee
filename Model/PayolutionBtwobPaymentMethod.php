@@ -9,11 +9,16 @@
 
 namespace Wirecard\Oxid\Model;
 
+use OxidEsales\Eshop\Core\Exception\InputException;
+
 use Wirecard\Oxid\Core\BasketHelper;
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Extend\Model\Order;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
+use Wirecard\PaymentSdk\Entity\CompanyInfo;
 use Wirecard\PaymentSdk\Transaction\PayolutionBtwobTransaction;
 
 /**
@@ -82,7 +87,17 @@ class PayolutionBtwobPaymentMethod extends PayolutionBasePaymentMethod
      */
     public function addMandatoryTransactionData(&$oTransaction, $oOrder)
     {
-        //TODO add company name
+        $aAccountHolder = $oOrder->getAccountHolder();
+
+        $oTransaction->setAccountHolder($aAccountHolder);
+        $oCompanyInfo = new CompanyInfo(SessionHelper::getCompanyName());
+
+        $sUid = $oOrder->getOrderUser()->oxuser__oxustid->value;
+        if ($sUid) {
+            $oCompanyInfo->setCompanyUid($sUid);
+        }
+
+        $oTransaction->setCompanyInfo($oCompanyInfo);
     }
 
     /**
@@ -94,9 +109,59 @@ class PayolutionBtwobPaymentMethod extends PayolutionBasePaymentMethod
      */
     public function getCheckoutFields()
     {
-        //TODO add company name field
         return [
+            'wdCompanyName' => [
+                'type' => $this->_getCheckoutFieldType(SessionHelper::isCompanyNameSet()),
+                'title' => Helper::translate('wd_company_name_input'),
+                'required' => true,
+            ],
+        ];
+    }
 
+    /**
+     * Checks if the user is older than 18 or the date of birth needs to be entered
+     *
+     * @return bool
+     *
+     * @throws \Exception
+     *
+     * @since 1.3.0
+     */
+    protected function _checkDateOfBirth()
+    {
+        if (!SessionHelper::isDateOfBirthSet(self::getName())) {
+            //only check birthdate if set
+            return true;
+        }
+
+        return SessionHelper::isUserOlderThan(18, self::getName());
+    }
+
+    /**
+     * Validates the user input and throws a specific error if an input is wrong
+     *
+     * @throws /Exception
+     *
+     * @since  1.3.0
+     */
+    protected function _validateUserInput()
+    {
+        if (!SessionHelper::isCompanyNameSet()) {
+            throw new InputException(Helper::translate('wd_text_generic_error'));
+        }
+    }
+
+    /**
+     * Get the keys that should not be included for this payment method
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    public function getHiddenAccountHolderFields()
+    {
+        return [
+            'dateOfBirth',
         ];
     }
 }
