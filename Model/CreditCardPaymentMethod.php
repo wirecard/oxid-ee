@@ -252,7 +252,7 @@ class CreditCardPaymentMethod extends PaymentMethod
                     '0' => Helper::translate('wd_no'),
                 ],
                 'title' => Helper::translate('wd_config_allow_changed_shipping'),
-                'description' => Helper::translate('wd_onfig_allow_changed_shipping_desc')
+                'description' => Helper::translate('wd_config_allow_changed_shipping_desc')
             ],
         ];
 
