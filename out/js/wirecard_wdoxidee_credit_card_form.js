@@ -5,7 +5,7 @@
  * - License can be found under:
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
-/* global ElasticPaymentPage */
+/* global PaymentPage */
 var ModuleCreditCardForm = (function($) {
   var debug = false;
 
@@ -18,7 +18,7 @@ var ModuleCreditCardForm = (function($) {
   function callback(response) {
     $(".loader").fadeOut(200,function() {
       $("#creditcard-form-div")
-        .height(350)
+        .height(400)
         .fadeIn(200);
       getOrderButton().prop("disabled", false);
     });
@@ -52,12 +52,12 @@ var ModuleCreditCardForm = (function($) {
   }
 
   function initSeamlessRenderForm() {
-    ElasticPaymentPage.seamlessRenderForm({
+    PaymentPage.seamlessRender({
       requestData: requestData,
       wrappingDivId: "creditcard-form-div",
       onSuccess: callback,
       onError: function(error) {
-        logError("seamlessRenderForm", error);
+        logError("seamlessRender", error);
       },
     });
   }
@@ -101,7 +101,7 @@ var ModuleCreditCardForm = (function($) {
   function submitPaymentForm(event) {
     if (!$("#wirecard-cc-form input#jsresponse").length) {
       event.preventDefault();
-      ElasticPaymentPage.seamlessSubmitForm({
+      PaymentPage.seamlessSubmit({
         onSuccess: setParentTransactionId,
         onError: function(error) {
           logError("seamlessSubmitForm", error);

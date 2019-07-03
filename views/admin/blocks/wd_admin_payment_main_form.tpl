@@ -153,9 +153,9 @@
 
   [{assign var="logoUrl" value=$edit->getLogoUrl()}]
   [{if $logoUrl}]
-  <tr>
-    <td><img src="[{$logoUrl}]" alt="[{$edit->oxpayments__oxdesc->value}]"></td>
-  </tr>
+    <tr>
+      <td><img src="[{$logoUrl}]" alt="[{$edit->oxpayments__oxdesc->value}]"></td>
+    </tr>
   [{/if}]
 
   <tr>

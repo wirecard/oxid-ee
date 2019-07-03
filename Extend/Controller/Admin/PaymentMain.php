@@ -15,9 +15,10 @@ use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\PayolutionBtwobPaymentMethod;
-use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
-use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
+use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
@@ -31,6 +32,8 @@ use Wirecard\PaymentSdk\TransactionService;
  */
 class PaymentMain extends PaymentMain_parent
 {
+    const TEST_STRING = 'test';
+
     /**
      * @var TransactionService
      *
@@ -117,7 +120,37 @@ class PaymentMain extends PaymentMain_parent
         $bCredentialsValid = $this->_validateRequestParameters($aParams);
 
         return $bCredentialsValid && $this->_isCountryCodeValid($aParams) && $this->_isCreditorIdValid($aParams)
-            && $this->_isPayolutionUrlSettingsValid($aParams);
+            && $this->_isSavePossibleForSpecialPaymentMethods($aParams);
+    }
+
+    /**
+     * Validates payment method specific checks
+     *
+     * @param array $aParams
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private function _isSavePossibleForSpecialPaymentMethods($aParams)
+    {
+        return $this->_isPayolutionUrlSettingsValid($aParams) && $this->_isCreditCardUrlsValid($aParams);
+    }
+
+    /**
+     * Checks if Credit Card URL settings are valid.
+     *
+     * @param array $aParams
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private function _isCreditCardUrlsValid($aParams)
+    {
+        return $aParams['oxpayments__oxid'] !== CreditCardPaymentMethod::getName(true)
+            || $this->_bothCreditCardUrlsAreTest($aParams)
+            || $this->_noCreditCardUrlIsTest($aParams);
     }
 
     /**
@@ -263,7 +296,7 @@ class PaymentMain extends PaymentMain_parent
         $sUser = $aParams['oxpayments__wdoxidee_httpuser'];
         $sPass = $aParams['oxpayments__wdoxidee_httppass'];
 
-        if ($sUrl && $sUser && $sPass) {
+        if ($this->_isCredentialsSet($sUrl, $sUser, $sPass)) {
             $oConfig = new Config($sUrl, $sUser, $sPass);
             $oTransactionService = $this->_getTransactionService($oConfig);
             return $oTransactionService->checkCredentials();
@@ -271,7 +304,8 @@ class PaymentMain extends PaymentMain_parent
 
         // handle the case of different configuration per currency (currently only Payolution)
         // there it's only checked if config values are entered on the frontend but no validation is done on the backend
-        return $this->_checkCurrencyConfigFields($aParams);
+        return $aParams['oxpayments__oxid'] === PayolutionInvoicePaymentMethod::getName(true)
+            && $this->_checkCurrencyConfigFields($aParams);
     }
 
     /**
@@ -385,5 +419,77 @@ class PaymentMain extends PaymentMain_parent
         }
 
         return $this->_oTransactionService;
+    }
+
+    /**
+     * Checks if both Credit Card URL's include test string.
+     *
+     * @param array $aParams
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private function _bothCreditCardUrlsAreTest($aParams)
+    {
+        return $this->_isTestApiUrl($aParams) && $this->_isTestApiUrlWpp($aParams);
+    }
+
+    /**
+     * Checks if Credit Card URL's do not include test string.
+     *
+     * @param array $aParams
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private function _noCreditCardUrlIsTest($aParams)
+    {
+        return !($this->_isTestApiUrl($aParams) || $this->_isTestApiUrlWpp($aParams));
+    }
+
+    /**
+     * Returns if api url is a test url.
+     *
+     * @param array $aParams
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private function _isTestApiUrl($aParams)
+    {
+        return $bTestApiUrl = strpos($aParams['oxpayments__wdoxidee_apiurl'], self::TEST_STRING) !== false;
+    }
+
+    /**
+     * Returns if api url wpp is a test url.
+     *
+     * @param array $aParams
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private function _isTestApiUrlWpp($aParams)
+    {
+        return $bTestApiUrlWpp = strpos($aParams['oxpayments__apiurl_wpp'], self::TEST_STRING) !== false;
+    }
+
+    /**
+     * Returns credential parameters are set.
+     *
+     * @param string $sUrl
+     * @param string $sUser
+     * @param string $sPass
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private function _isCredentialsSet($sUrl, $sUser, $sPass)
+    {
+        return $sUrl && $sUser && $sPass;
     }
 }

@@ -148,47 +148,24 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     public function getConfigFields()
     {
-        $aAdditionalFields = [
-            'apiUrl' => [
-                'type' => 'text',
-                'field' => 'oxpayments__wdoxidee_apiurl',
-                'title' => Helper::translate('wd_config_base_url'),
-                'description' => Helper::translate('wd_config_base_url_desc'),
-            ],
+        $iUrlFieldsOffset = 1;
+        $aParentFields = parent::getConfigFields();
+
+        $aFirstFields = array_slice($aParentFields, 0, $iUrlFieldsOffset, true);
+        $aFirstFields = array_merge($aFirstFields, [
             'apiUrlWpp' => [
                 'type' => 'text',
                 'field' => 'oxpayments__apiurl_wpp',
                 'title' => Helper::translate('wd_config_wpp_url'),
                 'description' => Helper::translate('wd_config_wpp_url_desc'),
             ],
-            'httpUser' => [
-                'type' => 'text',
-                'field' => 'oxpayments__wdoxidee_httpuser',
-                'title' => Helper::translate('wd_config_http_user'),
-            ],
-            'httpPassword' => [
-                'type' => 'text',
-                'field' => 'oxpayments__wdoxidee_httppass',
-                'title' => Helper::translate('wd_config_http_password'),
-            ],
-            'testCredentials' => [
-                'type' => 'button',
-                'onclick' => 'wdTestPaymentMethodCredentials()',
-                'text' => Helper::translate('wd_test_credentials'),
-                'colspan' => '2',
-            ],
-            'maid' => [
-                'type' => 'text',
-                'field' => 'oxpayments__wdoxidee_maid',
-                'title' => Helper::translate('wd_config_merchant_account_id'),
-                'description' => Helper::translate('wd_config_merchant_account_id_desc'),
-            ],
-            'secret' => [
-                'type' => 'text',
-                'field' => 'oxpayments__wdoxidee_secret',
-                'title' => Helper::translate('wd_config_merchant_secret'),
-                'description' => Helper::translate('wd_config_merchant_secret_desc'),
-            ],
+        ]);
+        $aFirstFields = array_merge(
+            $aFirstFields,
+            array_slice($aParentFields, $iUrlFieldsOffset, count($aParentFields) - 1, true)
+        );
+
+        $aAdditionalFields = [
             'threeDMaid' => [
                 'type' => 'text',
                 'field' => 'oxpayments__wdoxidee_three_d_maid',
@@ -274,7 +251,7 @@ class CreditCardPaymentMethod extends PaymentMethod
             ],
         ];
 
-        return $aAdditionalFields;
+        return array_merge($aFirstFields, $aAdditionalFields);
     }
 
     /**
@@ -298,7 +275,7 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'paymentAction',
                 'deleteCanceledOrder',
                 'deleteFailedOrder',
-                'apiUrlWpp'
+                'apiUrlWpp',
             ]
         );
     }
