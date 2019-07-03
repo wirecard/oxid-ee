@@ -44,8 +44,8 @@ class Vault
         $sAddressId = $oUser->getSelectedAddressId();
         $aCards = [];
         try {
-            $sQuery = "SELECT * from " . OxidEeEvents::VAULT_TABLE . " " .
-                "WHERE `USERID`=? AND `ADDRESSID`=?";
+            $sQuery = "SELECT * from " . OxidEeEvents::VAULT_TABLE . " 
+                WHERE `USERID`=? AND `ADDRESSID`=?";
             $aCards = self::_getDb()->getAll($sQuery, [$sUserId, $sAddressId]);
         } catch (DatabaseErrorException $oExc) {
             Registry::getLogger()->error("Error getting cards", [$oExc]);
@@ -83,9 +83,9 @@ class Vault
         $sUserId = $oUser->getId();
         $sAddressId = $oUser->getSelectedAddressId();
 
-        $aExistingCards = self::getCards($sUserId, $sAddressId);
+        $aExistingCards = self::getCards();
         foreach ($aExistingCards as $aCard) {
-            if ($aCard['TOKEN'] == $sToken && $aCard['ADDRESSID'] == $sAddressId) {
+            if ($aCard['TOKEN'] === $sToken && $aCard['ADDRESSID'] === $sAddressId) {
                 return;
             }
         }
