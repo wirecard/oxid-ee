@@ -11,9 +11,11 @@ namespace Wirecard\Oxid\Model\PaymentMethod;
 
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
+
 use Wirecard\PaymentSdk\Config\Config as PaymentSdkConfig;
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -314,7 +316,7 @@ class CreditCardPaymentMethod extends PaymentMethod
         return [
             'apiurl_wpp',
             'oneclick_enabled',
-            'oneclick_changed_shipping'
+            'oneclick_changed_shipping',
         ];
     }
 }
