@@ -31,6 +31,7 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
                     [3, 'User ID 2', 'Address ID 2', 'Token 3', 'Masked****Pan', 2, (int) $oFutureDate->format('y')],
                     [4, 'User ID 2', 'Address ID 2', 'Token 4', 'Masked****Pan', 3, (int) $oFutureDate->format('y')],
                     [5, 'User ID 3', 'Address ID 3', 'Token 5', 'Masked****Pan', 2, (int) $oPastDate->format('y')],
+                    [6, 'User ID 4', 'Address ID 4', 'Token 6', 'Masked****Pan', 2, (int) $oFutureDate->format('y')],
                 ]
             ],
         ];
@@ -56,10 +57,11 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
 
         $oUser = $this->getMockBuilder(\OxidEsales\EshopCommunity\Application\Model\User::class)
             ->disableOriginalConstructor()
+            ->setMethods(['getId', 'getSelectedAddressId'])
             ->getMock();
 
         $oUser->method('getId')
-            ->willReturn('User ID save card');
+            ->willReturn($sUserId);
         $oUser->method('getSelectedAddressId')
             ->willReturn($sAddressId);
 
@@ -76,15 +78,14 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
 
     public function saveCardProvider()
     {
-
-        $oPastDate = new DateTime();
-        $oPastDate->sub(new DateInterval('P1Y'));
+        $oFutureDate = new DateTime();
+        $oFutureDate->add(new DateInterval('P1Y'));
 
         return [
             'new card' => ['New token', 'Selected Address ID', 'User ID save card',
                 [
                     [
-                        'OXID' => 6,
+                        'OXID' => 7,
                         'USERID' => 'User ID save card',
                         'ADDRESSID' => 'Selected Address ID',
                         'TOKEN' => 'New token',
@@ -94,16 +95,16 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
                     ],
                 ],
             ],
-            'exiting token' => ['Token 5', 'Address ID 3', 'User ID 3',
+            'exiting token' => ['Token 6', 'Address ID 4', 'User ID 4',
                 [
                     [
-                        'OXID' => 5,
-                        'USERID' => 'User ID 3',
-                        'ADDRESSID' => 'Address ID 3',
-                        'TOKEN' => 'Token 5',
+                        'OXID' => 6,
+                        'USERID' => 'User ID 4',
+                        'ADDRESSID' => 'Address ID 4',
+                        'TOKEN' => 'Token 6',
                         'MASKEDPAN' => 'Masked****Pan',
                         'EXPIRATIONMONTH' => 2,
-                        'EXPIRATIONYEAR' => (int) $oPastDate->format('y'),
+                        'EXPIRATIONYEAR' => (int) $oFutureDate->format('y'),
                     ],
                 ],
             ],
@@ -181,9 +182,9 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
                 'Address ID 3',
                 [],
             ],
-            'User 4 without saved card' => [
-                'User ID 4',
-                'Address ID 4',
+            'User 5 without saved card' => [
+                'User ID 5',
+                'Address ID 5',
                 [],
             ],
         ];
