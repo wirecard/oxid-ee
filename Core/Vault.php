@@ -30,17 +30,8 @@ class Vault
     /**
      * Get all cards associated with the user and address
      *
-     * @param string $sUserId
-     * @param string $sAddressId
-     *
-     * @return array of cards with keys
-     * 'OXID'
-     * 'USERID'
-     * 'ADDRESSID'
-     * 'TOKEN'
-     * 'MASKEDPAN'
-     * 'EXPIRATIONMONTH'
-     * 'EXPIRATIONYEAR'
+     * @return array of cards with keys 'OXID', 'USERID', 'ADDRESSID', 'TOKEN', 'MASKEDPAN', 'EXPIRATIONMONTH',
+     *         'EXPIRATIONYEAR'
      *
      * @throws DatabaseConnectionException
      *
