@@ -101,10 +101,13 @@ class CreditCardCheckoutTest extends CheckoutTestCase
             $this->getLocator('external.creditcard.firstName'),
             $this->getConfig('payments.creditcard.firstName')
         );
+        $this->fireEvent($this->getLocator('external.creditcard.firstName'), 'input');
         $this->type(
             $this->getLocator('external.creditcard.lastName'),
             $this->getConfig('payments.creditcard.lastName')
         );
+        $this->fireEvent($this->getLocator('external.creditcard.lastName'), 'input');
+
         $this->type(
             $this->getLocator('external.creditcard.cardNumber'),
             $this->getConfig('payments.creditcard.cardNumber')
@@ -114,13 +117,14 @@ class CreditCardCheckoutTest extends CheckoutTestCase
             $this->getLocator('external.creditcard.cvv'),
             $this->getConfig('payments.creditcard.cvv')
         );
-        $this->select(
-            $this->getLocator('external.creditcard.expiryMonth'),
-            $this->getConfig('payments.creditcard.expiryMonth')
+        $this->fireEvent($this->getLocator('external.creditcard.cvv'), 'input');
+        $this->type(
+            $this->getLocator('external.creditcard.expiryDate'),
+            $this->getConfig('payments.creditcard.expiryDate')
         );
-        $this->select(
-            $this->getLocator('external.creditcard.expiryYear'),
-            $this->getConfig('payments.creditcard.expiryYear')
+        $this->typeKeys(
+        $this->getLocator('external.creditcard.expiryDate'),
+        ' '
         );
         $this->selectWindow(null);
         $this->continueToNextStep(self::WAIT_TIME_EXTERNAL);
