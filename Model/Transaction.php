@@ -230,6 +230,35 @@ class Transaction extends MultiLanguageModel
     }
 
     /**
+     * Returns an array of translated states.
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    public static function getTranslatedStates()
+    {
+        return [
+            self::STATE_SUCCESS => Helper::translate('wd_state_success'),
+            self::STATE_ERROR => Helper::translate('wd_state_error'),
+            self::STATE_AWAITING => Helper::translate('wd_state_awaiting'),
+            self::STATE_CLOSED => Helper::translate('wd_state_closed'),
+        ];
+    }
+
+    /**
+     * Returns the translation for the transaction's state.
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    public function getTranslatedState()
+    {
+        return self::getTranslatedStates()[$this->wdoxidee_ordertransactions__state->value] ?? '';
+    }
+
+    /**
      * @return string
      *
      * @since 1.1.0
