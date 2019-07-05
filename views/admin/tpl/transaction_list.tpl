@@ -160,13 +160,9 @@ window.onload = function ()
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$payment->oxpayments__oxdesc->value}]</a>
                     </td>
                     <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__state->value}]
-                          [{if $listitem->isPoiPiaPaymentMethod()}]
-                            [{if $listitem->wdoxidee_ordertransactions__parenttransactionid->value}]
-                                (matched)
-                            [{else}]
-                                (unmatched)
-                            [{/if}]
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->getTranslatedState()}]
+                          [{if $listitem->isPoiPiaPaymentMethod() && !$listitem->wdoxidee_ordertransactions__parenttransactionid->value}]
+                              ([{oxmultilang ident="wd_unmatched"}])
                           [{/if}]
                         </a>
                     </td>

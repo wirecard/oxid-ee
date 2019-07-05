@@ -115,7 +115,7 @@ class TranslationBuilder
 
   # Returns an array of absolute paths to XML files that should be parsed for keys
   def get_needed_xml_files
-    Dir.glob(File.join(Dir.pwd, 'menu.xml'))
+    Dir.glob(File.join(Dir.pwd, @plugin_dir, '**', '*.xml'))
   end
 
   # Writes translations (key-value pairs) to the given file, using valid PHP array syntax

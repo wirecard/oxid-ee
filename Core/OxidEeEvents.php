@@ -72,6 +72,8 @@ class OxidEeEvents
             'WDOXIDEE_CREDITORID' => "varchar(35) default '' NOT NULL",
             'WDOXIDEE_SEPAMANDATECUSTOM' => "text default '' NOT NULL",
             'WDOXIDEE_SEPAMANDATECUSTOM_1' => "text default '' NOT NULL",
+            'WDOXIDEE_SEPAMANDATECUSTOM_2' => "text default '' NOT NULL",
+            'WDOXIDEE_SEPAMANDATECUSTOM_3' => "text default '' NOT NULL",
         ];
 
         foreach ($aColumnSettings as $sColumnName => $sSetting) {
@@ -169,8 +171,6 @@ class OxidEeEvents
     public static function addPaymentMethods()
     {
         $oLogger = Registry::getLogger();
-        $oConfig = Registry::getConfig();
-        $sShopBaseURL = $oConfig->getShopUrl();
         $oXmldata = simplexml_load_file(dirname(__DIR__) . "/default_payment_config.xml");
 
         if (!$oXmldata) {
@@ -197,8 +197,12 @@ class OxidEeEvents
             "OXID" => $oPayment->oxid,
         ];
 
+        $sOxdescKey = (string) $oPayment->oxdesc['id'];
+        $sOxdesc = Helper::translate($sOxdescKey, 0);
+        $sOxdesc1 = Helper::translate($sOxdescKey, 1);
+
         $sQuery = "INSERT INTO " . self::PAYMENT_TABLE . "(`OXID`, `OXACTIVE`, `OXFROMAMOUNT`, `OXTOAMOUNT`, `OXDESC`,
-         `OXDESC_1`,`OXSORT`, `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONACTION`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`,
+         `OXDESC_1`, `OXSORT`, `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONACTION`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`,
          `WDOXIDEE_SECRET`, `WDOXIDEE_THREE_D_MAID`, `WDOXIDEE_THREE_D_SECRET`, `WDOXIDEE_NON_THREE_D_MAX_LIMIT`,
          `WDOXIDEE_THREE_D_MIN_LIMIT`, `WDOXIDEE_LIMITS_CURRENCY`, `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`,
          `WDOXIDEE_ISOURS`, `WDOXIDEE_BASKET`, `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`,
@@ -207,8 +211,8 @@ class OxidEeEvents
              '{$oPayment->oxactive}',
              '{$oPayment->oxfromamount}',
              '{$oPayment->oxtoamount}',
-             '{$oPayment->oxdesc}',
-             '{$oPayment->oxdesc_1}',
+             '{$sOxdesc}',
+             '{$sOxdesc1}',
              '{$oPayment->oxsort}',
              '{$oPayment->wdoxidee_logo}',
              '{$oPayment->wdoxidee_transactionaction}',
@@ -273,11 +277,11 @@ class OxidEeEvents
                 $sOxidFieldName = self::PAYMENT_TABLE . '__' . $sFieldName;
 
                 $mParsedFieldValue = Helper::parseXmlNode($oPaymentXml->$sFieldName);
-                $oPaymentMethod->getPayment()->$sOxidFieldName = new Field($mParsedFieldValue);
+                $oPayment->$sOxidFieldName = new Field($mParsedFieldValue);
             }
         }
 
-        $oPaymentMethod->getPayment()->save();
+        $oPayment->save();
     }
 
     /**
@@ -290,8 +294,9 @@ class OxidEeEvents
         $sSepaMandate = self::_prepareSepaMandate(0);
         $sSepaMandate1 = self::_prepareSepaMandate(1);
         $sPaymentId = SepaDirectDebitPaymentMethod::getName(true);
-        $sQuery = "UPDATE oxpayments SET `WDOXIDEE_SEPAMANDATECUSTOM` = '$sSepaMandate', `WDOXIDEE_SEPAMANDATECUSTOM_1`
-            = '$sSepaMandate1' WHERE `OXID` LIKE " . "'" . $sPaymentId . "'";
+        $sQuery = "UPDATE oxpayments SET `WDOXIDEE_SEPAMANDATECUSTOM` = '$sSepaMandate', 
+                                         `WDOXIDEE_SEPAMANDATECUSTOM_1` = '$sSepaMandate1' 
+                   WHERE `OXID` LIKE " . "'" . $sPaymentId . "'";
         self::$_oDb->execute($sQuery);
     }
 

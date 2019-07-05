@@ -13,8 +13,7 @@
         <oxactive>0</oxactive>
         <oxfromamount>0</oxfromamount>
         <oxtoamount>1000000</oxtoamount>
-        <oxdesc>Wirecard Kreditkarte</oxdesc>
-        <oxdesc_1>Wirecard Credit Card</oxdesc_1>
+        <oxdesc id="wd_heading_title_creditcard"/>
         <oxsort>10</oxsort>
         <wdoxidee_logo>creditcard.png</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
@@ -36,8 +35,7 @@
       <oxactive>0</oxactive>
       <oxfromamount>10</oxfromamount>
       <oxtoamount>3500</oxtoamount>
-      <oxdesc>Wirecard Garantierter Kauf auf Rechnung (Payolution B2B)</oxdesc>
-      <oxdesc_1>Wirecard Guaranteed Invoice (Payolution B2B)</oxdesc_1>
+      <oxdesc id="wd_heading_title_payolution_b2b"/>
       <oxsort>35</oxsort>
       <wdoxidee_logo>invoice.png</wdoxidee_logo>
       <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
@@ -74,8 +72,7 @@
         <oxactive>0</oxactive>
         <oxfromamount>25</oxfromamount>
         <oxtoamount>3500</oxtoamount>
-        <oxdesc>Wirecard Garantierter Kauf auf Rechnung (Payolution B2C)</oxdesc>
-        <oxdesc_1>Wirecard Guaranteed Invoice (Payolution B2C)</oxdesc_1>
+        <oxdesc id="wd_heading_title_payolution_invoice"/>
         <oxsort>36</oxsort>
         <wdoxidee_logo>invoice.png</wdoxidee_logo>
         <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
@@ -113,8 +110,7 @@
         <oxid>wdideal</oxid>
         <oxactive>0</oxactive>
         <oxtoamount>1000000</oxtoamount>
-        <oxdesc>Wirecard iDEAL</oxdesc>
-        <oxdesc_1>Wirecard iDEAL</oxdesc_1>
+        <oxdesc id="wd_heading_title_ideal"/>
         <oxsort>50</oxsort>
         <wdoxidee_logo>ideal.png</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
@@ -130,8 +126,7 @@
         <oxid>wdeps</oxid>
         <oxactive>0</oxactive>
         <oxtoamount>1000000</oxtoamount>
-        <oxdesc>Wirecard eps-Überweisung</oxdesc>
-        <oxdesc_1>Wirecard eps-Überweisung</oxdesc_1>
+        <oxdesc id="wd_heading_title_eps"/>
         <oxsort>30</oxsort>
         <wdoxidee_logo>eps.png</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
@@ -148,8 +143,7 @@
         <oxactive>0</oxactive>
         <oxfromamount>0</oxfromamount>
         <oxtoamount>1000000</oxtoamount>
-        <oxdesc>Wirecard PayPal</oxdesc>
-        <oxdesc_1>Wirecard PayPal</oxdesc_1>
+        <oxdesc id="wd_heading_title_paypal"/>
         <oxsort>90</oxsort>
         <wdoxidee_logo>paypal.png</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
@@ -167,8 +161,7 @@
         <oxactive>0</oxactive>
         <oxfromamount>0</oxfromamount>
         <oxtoamount>1000000</oxtoamount>
-        <oxdesc>Wirecard SEPA-Lastschrift</oxdesc>
-        <oxdesc_1>Wirecard SEPA Direct Debit</oxdesc_1>
+        <oxdesc id="wd_heading_title_sepadd"/>
         <oxsort>100</oxsort>
         <wdoxidee_logo>sepa.png</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
@@ -187,8 +180,7 @@
         <oxactive>0</oxactive>
         <oxfromamount>0</oxfromamount>
         <oxtoamount>1000000</oxtoamount>
-        <oxdesc>Wirecard Sofort.</oxdesc>
-        <oxdesc_1>Wirecard Sofort.</oxdesc_1>
+        <oxdesc id="wd_heading_title_sofortbanking"/>
         <oxsort>110</oxsort>
         <wdoxidee_logo>https://cdn.klarna.com/1.0/shared/image/generic/badge/%s/pay_now/%s/pink.svg</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
@@ -207,8 +199,7 @@
         <oxactive>0</oxactive>
         <oxfromamount>20</oxfromamount>
         <oxtoamount>3500</oxtoamount>
-        <oxdesc>Wirecard Garantierter Kauf auf Rechnung</oxdesc>
-        <oxdesc_1>Wirecard Guaranteed Invoice by Wirecard</oxdesc_1>
+        <oxdesc id="wd_heading_title_ratepayinvoice"/>
         <oxsort>40</oxsort>
         <wdoxidee_logo>invoice.png</wdoxidee_logo>
         <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
@@ -237,8 +228,7 @@
         <oxid>wdgiropay</oxid>
         <oxactive>0</oxactive>
         <oxtoamount>10000</oxtoamount>
-        <oxdesc>Wirecard giropay</oxdesc>
-        <oxdesc_1>Wirecard giropay</oxdesc_1>
+        <oxdesc id="wd_heading_title_giropay"/>
         <oxsort>33</oxsort>
         <wdoxidee_logo>giropay.png</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
@@ -254,8 +244,7 @@
         <oxid>wdalipay-xborder</oxid>
         <oxactive>0</oxactive>
         <oxtoamount>1000000</oxtoamount>
-        <oxdesc>Wirecard Alipay Cross-border</oxdesc>
-        <oxdesc_1>Wirecard Alipay Cross-border</oxdesc_1>
+        <oxdesc id="wd_heading_title_alipay_crossborder"/>
         <oxsort>20</oxsort>
         <wdoxidee_logo>alipay.png</wdoxidee_logo>
         <wdoxidee_transactionaction>pay</wdoxidee_transactionaction>
@@ -271,8 +260,7 @@
         <oxid>wdpaymentoninvoice</oxid>
         <oxactive>0</oxactive>
         <oxtoamount>10000</oxtoamount>
-        <oxdesc>Wirecard Kauf auf Rechnung</oxdesc>
-        <oxdesc_1>Wirecard Payment on Invoice</oxdesc_1>
+        <oxdesc id="wd_heading_title_poi"/>
         <oxsort>80</oxsort>
         <wdoxidee_logo>invoice.png</wdoxidee_logo>
         <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
@@ -288,8 +276,7 @@
         <oxid>wdpaymentinadvance</oxid>
         <oxactive>0</oxactive>
         <oxtoamount>10000</oxtoamount>
-        <oxdesc>Wirecard Vorauskasse</oxdesc>
-        <oxdesc_1>Wirecard Payment in Advance</oxdesc_1>
+        <oxdesc id="wd_heading_title_pia"/>
         <oxsort>70</oxsort>
         <wdoxidee_logo>invoice.png</wdoxidee_logo>
         <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
@@ -308,8 +295,7 @@
         <oxactive>0</oxactive>
         <oxfromamount>0</oxfromamount>
         <oxtoamount>0</oxtoamount>
-        <oxdesc>Wirecard SEPA-Überweisung</oxdesc>
-        <oxdesc_1>Wirecard SEPA Credit Transfer</oxdesc_1>
+        <oxdesc id="wd_heading_title_sepact"/>
         <wdoxidee_logo>sepa.png</wdoxidee_logo>
         <wdoxidee_transactionaction>credit</wdoxidee_transactionaction>
         <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
