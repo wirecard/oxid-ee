@@ -6,6 +6,7 @@
 * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
 *
 *}]
+[{oxstyle include=$oViewConf->getPaymentGatewayUrl("out/css/wirecard_wdoxidee_table.css")}]
 
 [{assign var="paymentMethod" value=$paymentmethod->getPaymentMethod()}]
 
