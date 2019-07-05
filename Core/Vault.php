@@ -42,14 +42,7 @@ class Vault
         $oUser = Registry::getSession()->getUser();
         $sUserId = $oUser->getId();
         $sAddressId = $oUser->getSelectedAddressId();
-        $aCards = [];
-        try {
-            $sQuery = "SELECT * from " . OxidEeEvents::VAULT_TABLE . " 
-                WHERE `USERID`=? AND `ADDRESSID`=?";
-            $aCards = self::_getDb()->getAll($sQuery, [$sUserId, $sAddressId]);
-        } catch (DatabaseErrorException $oExc) {
-            Registry::getLogger()->error("Error getting cards", [$oExc]);
-        }
+        $aCards = self::_getCardsFromDb($sUserId, $sAddressId);
 
         return array_filter($aCards, function ($aCard) {
             $oDateExpiration = new DateTime($aCard['EXPIRATIONYEAR'] . '-' . $aCard['EXPIRATIONMONTH'] . '-01');
@@ -59,6 +52,19 @@ class Vault
 
             return $oDateToday < $oDateExpiration;
         });
+    }
+
+    private static function _getCardsFromDb($sUserId, $sAddressId)
+    {
+        try {
+            $sQuery = "SELECT * from " . OxidEeEvents::VAULT_TABLE . " 
+                WHERE `USERID`=? AND `ADDRESSID`=?";
+            return self::_getDb()->getAll($sQuery, [$sUserId, $sAddressId]);
+        } catch (DatabaseErrorException $oExc) {
+            Registry::getLogger()->error("Error getting cards", [$oExc]);
+        }
+
+        return [];
     }
 
     /**
@@ -75,21 +81,33 @@ class Vault
      */
     public static function saveCard($oResponse, $aCard)
     {
-        $sToken = $oResponse->getCardTokenId();
-        $sMaskedPan = $oResponse->getMaskedAccountNumber();
-        $iExporationMonth = $aCard['expiration-month'];
-        $iExpirationYear = $aCard['expiration-year'];
+        $aVaultCard = [];
+        $aVaultCard['token'] = $oResponse->getCardTokenId();
+        $aVaultCard['maskedPan'] = $oResponse->getMaskedAccountNumber();
+        $aVaultCard['exporationMonth'] = $aCard['expiration-month'];
+        $aVaultCard['expirationYear'] = $aCard['expiration-year'];
         $oUser = Registry::getSession()->getUser();
-        $sUserId = $oUser->getId();
-        $sAddressId = $oUser->getSelectedAddressId();
+        $aVaultCard['userId'] = $oUser->getId();
+        $aVaultCard['addressId'] = $oUser->getSelectedAddressId();
 
         $aExistingCards = self::getCards();
         foreach ($aExistingCards as $aCard) {
-            if ($aCard['TOKEN'] === $sToken && $aCard['ADDRESSID'] === $sAddressId) {
+            if ($aCard['TOKEN'] === $aVaultCard['token'] && $aCard['ADDRESSID'] === $aVaultCard['addressId']) {
                 return;
             }
         }
 
+        self::_insertCard($aVaultCard);
+    }
+
+    /**
+     * @param array $aCard
+     *
+     * @throws DatabaseConnectionException
+     * @throws DatabaseErrorException
+     */
+    private static function _insertCard($aCard)
+    {
         $sQuery = "INSERT INTO " . OxidEeEvents::VAULT_TABLE . " SET
             `USERID`=?,
             `ADDRESSID`=?,
@@ -99,12 +117,12 @@ class Vault
             `EXPIRATIONYEAR`=?";
 
         self::_getDb()->execute($sQuery, [
-            $sUserId,
-            $sAddressId,
-            $sToken,
-            $sMaskedPan,
-            $iExporationMonth,
-            $iExpirationYear,
+            $aCard['userId'],
+            $aCard['addressId'],
+            $aCard['token'],
+            $aCard['maskedPan'],
+            $aCard['exporationMonth'],
+            $aCard['expirationYear'],
         ]);
     }
 
