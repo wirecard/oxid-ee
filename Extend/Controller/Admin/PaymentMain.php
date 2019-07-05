@@ -134,7 +134,7 @@ class PaymentMain extends PaymentMain_parent
      */
     private function _isSavePossibleForSpecialPaymentMethods($aParams)
     {
-        return $this->_isPayolutionUrlSettingsValid($aParams) && $this->_isCreditCardUrlsValid($aParams);
+        return $this->_isPayolutionUrlSettingsValid($aParams) && $this->_areCreditCardUrlsValid($aParams);
     }
 
     /**
@@ -146,7 +146,7 @@ class PaymentMain extends PaymentMain_parent
      *
      * @since 1.3.0
      */
-    private function _isCreditCardUrlsValid($aParams)
+    private function _areCreditCardUrlsValid($aParams)
     {
         return $aParams['oxpayments__oxid'] !== CreditCardPaymentMethod::getName(true)
             || $this->_bothCreditCardUrlsAreTest($aParams)
@@ -296,16 +296,19 @@ class PaymentMain extends PaymentMain_parent
         $sUser = $aParams['oxpayments__wdoxidee_httpuser'];
         $sPass = $aParams['oxpayments__wdoxidee_httppass'];
 
-        if ($this->_isCredentialsSet($sUrl, $sUser, $sPass)) {
+        if ($aParams['oxpayments__oxid'] === PayolutionInvoicePaymentMethod::getName(true)) {
+            // handle the case of different configuration per currency (currently only Payolution)
+            // it's only checked if config values are entered on the frontend but no validation is done on the backend
+            return $this->_checkCurrencyConfigFields($aParams);
+        }
+
+        if ($this->_areCredentialsSet($sUrl, $sUser, $sPass)) {
             $oConfig = new Config($sUrl, $sUser, $sPass);
             $oTransactionService = $this->_getTransactionService($oConfig);
             return $oTransactionService->checkCredentials();
         }
 
-        // handle the case of different configuration per currency (currently only Payolution)
-        // there it's only checked if config values are entered on the frontend but no validation is done on the backend
-        return $aParams['oxpayments__oxid'] === PayolutionInvoicePaymentMethod::getName(true)
-            && $this->_checkCurrencyConfigFields($aParams);
+        return false;
     }
 
     /**
@@ -422,7 +425,7 @@ class PaymentMain extends PaymentMain_parent
     }
 
     /**
-     * Checks if both Credit Card URL's include test string.
+     * Checks if both Credit Card URLs include test string.
      *
      * @param array $aParams
      *
@@ -432,11 +435,12 @@ class PaymentMain extends PaymentMain_parent
      */
     private function _bothCreditCardUrlsAreTest($aParams)
     {
-        return $this->_isTestApiUrl($aParams) && $this->_isTestApiUrlWpp($aParams);
+        return $this->_isTestUrl($aParams['oxpayments__wdoxidee_apiurl'])
+            && $this->_isTestUrl($aParams['oxpayments__apiurl_wpp']);
     }
 
     /**
-     * Checks if Credit Card URL's do not include test string.
+     * Checks if Credit Card URLs do not include test string.
      *
      * @param array $aParams
      *
@@ -446,35 +450,22 @@ class PaymentMain extends PaymentMain_parent
      */
     private function _noCreditCardUrlIsTest($aParams)
     {
-        return !($this->_isTestApiUrl($aParams) || $this->_isTestApiUrlWpp($aParams));
+        return !($this->_isTestUrl($aParams['oxpayments__wdoxidee_apiurl'])
+            || $this->_isTestUrl($aParams['oxpayments__apiurl_wpp']));
     }
 
     /**
-     * Returns if api url is a test url.
+     * Returns if the url is a test url.
      *
-     * @param array $aParams
+     * @param string $sUrl
      *
      * @return bool
      *
      * @since 1.3.0
      */
-    private function _isTestApiUrl($aParams)
+    private function _isTestUrl($sUrl)
     {
-        return $bTestApiUrl = strpos($aParams['oxpayments__wdoxidee_apiurl'], self::TEST_STRING) !== false;
-    }
-
-    /**
-     * Returns if api url wpp is a test url.
-     *
-     * @param array $aParams
-     *
-     * @return bool
-     *
-     * @since 1.3.0
-     */
-    private function _isTestApiUrlWpp($aParams)
-    {
-        return $bTestApiUrlWpp = strpos($aParams['oxpayments__apiurl_wpp'], self::TEST_STRING) !== false;
+        return strpos($sUrl, self::TEST_STRING) !== false;
     }
 
     /**
@@ -488,7 +479,7 @@ class PaymentMain extends PaymentMain_parent
      *
      * @since 1.3.0
      */
-    private function _isCredentialsSet($sUrl, $sUser, $sPass)
+    private function _areCredentialsSet($sUrl, $sUser, $sPass)
     {
         return $sUrl && $sUser && $sPass;
     }

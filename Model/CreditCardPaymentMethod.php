@@ -148,21 +148,19 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     public function getConfigFields()
     {
-        $iUrlFieldsOffset = 1;
-        $aParentFields = parent::getConfigFields();
-
-        $aFirstFields = array_slice($aParentFields, 0, $iUrlFieldsOffset, true);
-        $aFirstFields = array_merge($aFirstFields, [
-            'apiUrlWpp' => [
-                'type' => 'text',
-                'field' => 'oxpayments__apiurl_wpp',
-                'title' => Helper::translate('wd_config_wpp_url'),
-                'description' => Helper::translate('wd_config_wpp_url_desc'),
-            ],
-        ]);
-        $aFirstFields = array_merge(
+        $iUrlFieldOffset = 1;
+        $aFirstFields = parent::getConfigFields();
+        Helper::insertToArrayAtPosition(
             $aFirstFields,
-            array_slice($aParentFields, $iUrlFieldsOffset, count($aParentFields) - 1, true)
+            [
+                'apiUrlWpp' => [
+                    'type' => 'text',
+                    'field' => 'oxpayments__apiurl_wpp',
+                    'title' => Helper::translate('wd_config_wpp_url'),
+                    'description' => Helper::translate('wd_config_wpp_url_desc'),
+                ],
+            ],
+            $iUrlFieldOffset
         );
 
         $aAdditionalFields = [
