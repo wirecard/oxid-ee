@@ -46,6 +46,7 @@ class AlipayCrossBorderPaymentMethodTest extends OxidEsales\TestingLibrary\UnitT
     {
         $oTransaction = $this->_oPaymentMethod->getTransaction();
         $oOrder = oxNew(Order::class);
+        $oOrder->oxorder__oxpaymenttype = new \OxidEsales\Eshop\Core\Field('wdalipay-xborder');
         $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction, $oOrder);
 
         $this->assertObjectHasAttribute('accountHolder', $oTransaction);
