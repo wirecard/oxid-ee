@@ -54,6 +54,16 @@ class Vault
         });
     }
 
+    /**
+     * @param string $sUserId
+     * @param string $sAddressId
+     *
+     * @return array
+     *
+     * @throws DatabaseConnectionException
+     *
+     * @since 1.3.0
+     */
     private static function _getCardsFromDb($sUserId, $sAddressId)
     {
         try {
@@ -77,6 +87,7 @@ class Vault
      * @throws DatabaseErrorException
      *
      * @return void
+     *
      * @since 1.3.0
      */
     public static function saveCard($oResponse, $aCard)
@@ -105,6 +116,8 @@ class Vault
      *
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
+     *
+     * @since 1.3.0
      */
     private static function _insertCard($aCard)
     {
