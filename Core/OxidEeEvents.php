@@ -72,6 +72,8 @@ class OxidEeEvents
             'WDOXIDEE_CREDITORID' => "varchar(35) default '' NOT NULL",
             'WDOXIDEE_SEPAMANDATECUSTOM' => "text default '' NOT NULL",
             'WDOXIDEE_SEPAMANDATECUSTOM_1' => "text default '' NOT NULL",
+            'WDOXIDEE_SEPAMANDATECUSTOM_2' => "text default '' NOT NULL",
+            'WDOXIDEE_SEPAMANDATECUSTOM_3' => "text default '' NOT NULL",
         ];
 
         foreach ($aColumnSettings as $sColumnName => $sSetting) {
@@ -290,8 +292,9 @@ class OxidEeEvents
         $sSepaMandate = self::_prepareSepaMandate(0);
         $sSepaMandate1 = self::_prepareSepaMandate(1);
         $sPaymentId = SepaDirectDebitPaymentMethod::getName(true);
-        $sQuery = "UPDATE oxpayments SET `WDOXIDEE_SEPAMANDATECUSTOM` = '$sSepaMandate', `WDOXIDEE_SEPAMANDATECUSTOM_1`
-            = '$sSepaMandate1' WHERE `OXID` LIKE " . "'" . $sPaymentId . "'";
+        $sQuery = "UPDATE oxpayments SET `WDOXIDEE_SEPAMANDATECUSTOM` = '$sSepaMandate', 
+                                         `WDOXIDEE_SEPAMANDATECUSTOM_1` = '$sSepaMandate1' 
+                   WHERE `OXID` LIKE " . "'" . $sPaymentId . "'";
         self::$_oDb->execute($sQuery);
     }
 
