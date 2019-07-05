@@ -44,6 +44,7 @@ class Vault
         $sAddressId = $oUser->getSelectedAddressId();
         $aCards = self::_getCardsFromDb($sUserId, $sAddressId);
 
+
         return array_filter($aCards, function ($aCard) {
             $oDateExpiration = new DateTime($aCard['EXPIRATIONYEAR'] . '-' . $aCard['EXPIRATIONMONTH'] . '-01');
             $oDateExpiration->add(new DateInterval('P6M'));

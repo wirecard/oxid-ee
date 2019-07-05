@@ -13,6 +13,7 @@ use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Registry;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Core\Vault;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
 use Wirecard\PaymentSdk\Config\Config as PaymentSdkConfig;
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
@@ -316,5 +317,45 @@ class CreditCardPaymentMethod extends PaymentMethod
             'oneclick_enabled',
             'oneclick_changed_shipping',
         ];
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     *
+     * @since 1.3.0
+     */
+    public function getCheckoutFields()
+    {
+        return [
+            [
+                'type' => 'list',
+                'data' => $this->_mapCardsToList(),
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     *
+     * @since 1.3.0
+     */
+    private function _mapCardsToList()
+    {
+        $aTableMapping = [];
+
+        foreach (Vault::getCards() as $aCard) {
+            $aTableMapping[] = [
+                ['text' => '<input type="radio" name="dynvalue[wd_selected_card]" value="' . $aCard['OXID'] .'" />'],
+                ['text' => $aCard['MASKEDPAN'] . " " . $aCard['EXPIRATIONMONTH'] . '-' . $aCard['EXPIRATIONYEAR']],
+                ['text' => '<input type="submit" name="delete" value="Delete" />']
+            ];
+        }
+
+        return ["body" => $aTableMapping];
     }
 }
