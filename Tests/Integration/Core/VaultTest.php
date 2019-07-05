@@ -7,6 +7,8 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use OxidEsales\EshopCommunity\Application\Model\User;
+
 use Wirecard\Oxid\Core\OxidEeEvents;
 use Wirecard\Oxid\Core\Vault;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
@@ -55,7 +57,7 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
             'expiration-year' => 21,
         ];
 
-        $oUser = $this->getMockBuilder(\OxidEsales\EshopCommunity\Application\Model\User::class)
+        $oUser = $this->getMockBuilder(User::class)
             ->disableOriginalConstructor()
             ->setMethods(['getId', 'getSelectedAddressId'])
             ->getMock();
@@ -69,11 +71,16 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
 
         Vault::saveCard($oSuccessResponse, $aCard);
 
-        $aResult = $this->getDb(DatabaseInterface::FETCH_MODE_ASSOC)->getAll(
-            "SELECT * FROM " . OxidEeEvents::VAULT_TABLE . " WHERE `USERID` = '{$sUserId}'"
-        );
+        $aResult = $this->_getCardsForUser($sUserId);
 
         $this->assertEquals($aExpected, $aResult);
+    }
+
+    private function _getCardsForUser($sUserId)
+    {
+        return $this->getDb(DatabaseInterface::FETCH_MODE_ASSOC)->getAll(
+            "SELECT * FROM " . OxidEeEvents::VAULT_TABLE . " WHERE `USERID` = '{$sUserId}'"
+        );
     }
 
     public function saveCardProvider()
@@ -192,7 +199,7 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
 
     public function testDeleteCard()
     {
-        $oUser = $this->getMockBuilder(\OxidEsales\EshopCommunity\Application\Model\User::class)
+        $oUser = $this->getMockBuilder(User::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -200,11 +207,16 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
             ->willReturn('User ID 2');
 
         $this->getSession()->setUser($oUser);
-        Vault::deleteCard(4);
-        $aResult = $this->getDb(DatabaseInterface::FETCH_MODE_ASSOC)->getAll(
-            "SELECT * FROM " . OxidEeEvents::VAULT_TABLE . " WHERE `OXID` = 4");
+        $iVaultId = 4;
+        Vault::deleteCard($iVaultId);
+        $aResult = $this->_getCardsWithId($iVaultId);
 
         $this->assertEmpty($aResult);
+    }
 
+    private function _getCardsWithId($iOxid)
+    {
+        return $this->getDb(DatabaseInterface::FETCH_MODE_ASSOC)->getAll(
+            "SELECT * FROM " . OxidEeEvents::VAULT_TABLE . " WHERE `OXID` = {$iOxid}");
     }
 }
