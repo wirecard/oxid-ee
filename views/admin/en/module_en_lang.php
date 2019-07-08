@@ -208,6 +208,7 @@ $aLang = array(
     'wd_text_article_name' => 'Product Name',
     'wd_text_article_number' => 'Article Number',
     'wd_text_backend_operations' => 'Possible Post-Processing Operations',
+    'wd_text_delete' => 'Delete',
     'wd_text_generic_error' => 'Action could not be performed.',
     'wd_text_generic_success' => 'Action performed successfully.',
     'wd_text_list' => 'Transactions',
