@@ -364,7 +364,7 @@ class CreditCardPaymentMethod extends PaymentMethod
         foreach ($aCards as $aCard) {
             $aTableMapping[] = [
                 ['text' => self::_createRadioButton($aCard['OXID'])],
-                ['text' => $aCard['MASKEDPAN'] . " " . $aCard['EXPIRATIONMONTH'] . '-' . $aCard['EXPIRATIONYEAR']],
+                ['text' => self::_createDescription($aCard['MASKEDPAN'], $aCard['EXPIRATIONMONTH'], $aCard['EXPIRATIONYEAR'])],
                 ['text' => self::_createDeleteButton($aCard['OXID'])]
             ];
         }
@@ -397,6 +397,11 @@ class CreditCardPaymentMethod extends PaymentMethod
     {
         return '<button class="btn btn-error" type="submit" name="wd_delete_id" value="' . $iCardId . '" />' .
             Helper::translate('wd_text_delete') . '</button>';
+    }
+
+    private static function _createDescription($sMaskedPan, $iExpMonth, $iExpYear)
+    {
+        return "<b>" . $sMaskedPan . "</b><i style='margin-left: 2em'>" . sprintf("%02d", $iExpMonth) . '-' . $iExpYear . "</i>";
     }
 
     /**
