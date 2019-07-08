@@ -13,6 +13,7 @@ use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Registry;
 
+use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Core\Vault;
 use Wirecard\Oxid\Extend\Model\Order;
@@ -133,8 +134,6 @@ class PaymentController extends PaymentController_parent
     {
         $iDeleteId = Registry::getRequest()->getRequestParameter('wd_delete_id');
 
-        Registry::getLogger()->debug($iDeleteId);
-
         if (is_null($iDeleteId)) {
             return parent::validatePayment();
         }
@@ -144,5 +143,4 @@ class PaymentController extends PaymentController_parent
 
         return;
     }
-
 }

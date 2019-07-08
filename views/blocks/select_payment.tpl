@@ -43,6 +43,10 @@
                             <input id="[{$fieldKey}]" type="[{$checkoutField.type}]" class="form-control" name="dynvalue[[{$fieldKey}]]" value="[{$dynvalue.$fieldKey}]" [{if $checkoutField.required}]required[{/if}]/>
                         [{/if}]
 
+                        [{if $checkoutField.type === 'info' }]
+                          [{$checkoutField.text}]
+                        [{/if}]
+
                         [{if $checkoutField.type === 'select'}]
                             <select class="form-control" name="dynvalue[[{$fieldKey}]]" [{if $checkoutField.required}]required[{/if}]>
                                 [{foreach from=$checkoutField.options key=optionKey item=optionValue}]

@@ -12,8 +12,10 @@ namespace Wirecard\Oxid\Model\PaymentMethod;
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Registry;
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\Vault;
+use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
 use Wirecard\PaymentSdk\Config\Config as PaymentSdkConfig;
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
@@ -329,26 +331,37 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     public function getCheckoutFields()
     {
+        $aCards = Vault::getCards();
+
+        if ($aCards && self::_hasShippingAddressChanged() && !$this->_oPayment->oxpayments__oneclick_changed_shipping->value) {
+            return [
+                [
+                    'type' => 'info',
+                    'text' => Helper::translate('vault_changed_shipping_text'),
+                ]
+            ];
+        }
+
         return [
             [
                 'type' => 'list',
-                'data' => $this->_mapCardsToList(),
+                'data' => $this->_mapCardsToList($aCards),
             ],
         ];
     }
 
     /**
-     * @return array
+     * @param $aCards
      *
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @return array
      *
      * @since 1.3.0
      */
-    private function _mapCardsToList()
+    private function _mapCardsToList($aCards)
     {
         $aTableMapping = [];
 
-        foreach (Vault::getCards() as $aCard) {
+        foreach ($aCards as $aCard) {
             $aTableMapping[] = [
                 ['text' => self::_createRadioButton($aCard['OXID'])],
                 ['text' => $aCard['MASKEDPAN'] . " " . $aCard['EXPIRATIONMONTH'] . '-' . $aCard['EXPIRATIONYEAR']],
@@ -384,5 +397,21 @@ class CreditCardPaymentMethod extends PaymentMethod
     {
         return '<button class="btn btn-error" type="submit" name="wd_delete_id" value="' . $iCardId . '" />' .
             Helper::translate('wd_text_delete') . '</button>';
+    }
+
+    /**
+     * @return bool
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     *
+     * @since 1.3.0
+     */
+    private static function _hasShippingAddressChanged()
+    {
+        $oLastAddress = OrderHelper::getLastOrderShippingAddress(Registry::getSession()->getUser()->getId());
+        $oOrder = oxNew(Order::class);
+
+        $oCurrentAddress = $oOrder->getDelAddressInfo();
+        return $oCurrentAddress !== $oLastAddress;
     }
 }
