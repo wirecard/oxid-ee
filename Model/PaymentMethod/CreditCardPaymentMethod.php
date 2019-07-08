@@ -363,7 +363,6 @@ class CreditCardPaymentMethod extends PaymentMethod
     private function _mapCardsToList($aCards)
     {
         $aTableMapping = [];
-
         foreach ($aCards as $aCard) {
             $aTableMapping[] = [
                 ['text' => self::_createRadioButton($aCard['TOKEN'])],
@@ -377,14 +376,12 @@ class CreditCardPaymentMethod extends PaymentMethod
                 ['text' => self::_createDeleteButton($aCard['OXID'])],
             ];
         }
-
         if ($aCards) {
             $aTableMapping[] = [
                 ['text' => self::_createRadioButton(self::NEW_CARD_TOKEN, true)],
                 ['text' => Helper::translate('wd_vault_use_new_text')],
             ];
         }
-
         return [
             'body' => $aTableMapping,
         ];

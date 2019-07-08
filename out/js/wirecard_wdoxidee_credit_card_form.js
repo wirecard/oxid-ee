@@ -7,7 +7,7 @@
  */
 /* global PaymentPage */
 var ModuleCreditCardForm = (function($) {
-  var debug = true;
+  var debug = false;
 
   var requestData = null;
 
