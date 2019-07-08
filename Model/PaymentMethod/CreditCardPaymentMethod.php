@@ -259,7 +259,7 @@ class CreditCardPaymentMethod extends PaymentMethod
                     '0' => Helper::translate('wd_no'),
                 ],
                 'title' => Helper::translate('wd_config_vault'),
-                'description' => Helper::translate('wd_config_vault_desc')
+                'description' => Helper::translate('wd_config_vault_desc'),
             ],
             'oneClickChangedShipping' => [
                 'type' => 'select',
@@ -269,7 +269,7 @@ class CreditCardPaymentMethod extends PaymentMethod
                     '0' => Helper::translate('wd_no'),
                 ],
                 'title' => Helper::translate('wd_config_allow_changed_shipping'),
-                'description' => Helper::translate('wd_config_allow_changed_shipping_desc')
+                'description' => Helper::translate('wd_config_allow_changed_shipping_desc'),
             ],
         ];
 
