@@ -350,12 +350,39 @@ class CreditCardPaymentMethod extends PaymentMethod
 
         foreach (Vault::getCards() as $aCard) {
             $aTableMapping[] = [
-                ['text' => '<input type="radio" name="dynvalue[wd_selected_card]" value="' . $aCard['OXID'] .'" />'],
+                ['text' => self::_createRadioButton($aCard['OXID'])],
                 ['text' => $aCard['MASKEDPAN'] . " " . $aCard['EXPIRATIONMONTH'] . '-' . $aCard['EXPIRATIONYEAR']],
-                ['text' => '<input type="submit" name="delete" value="Delete" />']
+                ['text' => self::_createDeleteButton($aCard['OXID'])]
             ];
         }
 
-        return ["body" => $aTableMapping];
+        return [
+            'body' => $aTableMapping,
+        ];
+    }
+
+    /**
+     * @param int $iCardId
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    private static function _createRadioButton($iCardId)
+    {
+        return '<input type="radio" name="dynvalue[wd_selected_card]" value="' . $iCardId . '" />';
+    }
+
+    /**
+     * @param int $iCardId
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    private static function _createDeleteButton($iCardId)
+    {
+        return '<button class="btn btn-error" type="submit" name="wd_delete_id" value="' . $iCardId . '" />' .
+            Helper::translate('wd_text_delete') . '</button>';
     }
 }
