@@ -278,8 +278,8 @@ abstract class PaymentMethod
     /**
      * Adds all mandatory transaction data
      *
-     * @param Transaction $oTransaction
-     * @param Order       $oOrder
+     * @param \Wirecard\PaymentSdk\Transaction\Transaction $oTransaction
+     * @param Order                                        $oOrder
      *
      * @since 1.1.0
      */

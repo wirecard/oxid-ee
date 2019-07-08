@@ -11,12 +11,14 @@ namespace Wirecard\Oxid\Model\PaymentMethod;
 
 use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\Vault;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
+
 use Wirecard\PaymentSdk\Config\Config as PaymentSdkConfig;
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
 use Wirecard\PaymentSdk\Entity\Amount;
@@ -29,6 +31,8 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
  */
 class CreditCardPaymentMethod extends PaymentMethod
 {
+
+    const NEW_CARD_TOKEN = '-1';
     /**
      * @inheritdoc
      *
@@ -332,13 +336,14 @@ class CreditCardPaymentMethod extends PaymentMethod
     public function getCheckoutFields()
     {
         $aCards = Vault::getCards();
-
-        if ($aCards && self::_hasShippingAddressChanged() && !$this->_oPayment->oxpayments__oneclick_changed_shipping->value) {
+        if ($aCards &&
+            self::_hasShippingAddressChanged() &&
+            !$this->_oPayment->oxpayments__oneclick_changed_shipping->value) {
             return [
                 [
                     'type' => 'info',
                     'text' => Helper::translate('vault_changed_shipping_text'),
-                ]
+                ],
             ];
         }
 
@@ -351,7 +356,7 @@ class CreditCardPaymentMethod extends PaymentMethod
     }
 
     /**
-     * @param $aCards
+     * @param array $aCards
      *
      * @return array
      *
@@ -363,11 +368,22 @@ class CreditCardPaymentMethod extends PaymentMethod
 
         foreach ($aCards as $aCard) {
             $aTableMapping[] = [
-                ['text' => self::_createRadioButton($aCard['OXID'])],
-                ['text' => self::_createDescription($aCard['MASKEDPAN'], $aCard['EXPIRATIONMONTH'], $aCard['EXPIRATIONYEAR'])],
-                ['text' => self::_createDeleteButton($aCard['OXID'])]
+                ['text' => self::_createRadioButton($aCard['TOKEN'])],
+                ['text' =>
+                    self::_createDescription(
+                        $aCard['MASKEDPAN'],
+                        $aCard['EXPIRATIONMONTH'],
+                        $aCard['EXPIRATIONYEAR']
+                    ),
+                ],
+                ['text' => self::_createDeleteButton($aCard['OXID'])],
             ];
         }
+
+        $aTableMapping[] = [
+            ['text' => self::_createRadioButton(self::NEW_CARD_TOKEN, true)],
+            ['text' => Helper::translate('wd_vault_use_new_text')],
+        ];
 
         return [
             'body' => $aTableMapping,
@@ -375,15 +391,24 @@ class CreditCardPaymentMethod extends PaymentMethod
     }
 
     /**
-     * @param int $iCardId
+     * @param string $sToken
+     * @param bool   $bCheked
      *
      * @return string
      *
      * @since 1.3.0
      */
-    private static function _createRadioButton($iCardId)
+    private static function _createRadioButton($sToken, $bCheked = false)
     {
-        return '<input type="radio" name="dynvalue[wd_selected_card]" value="' . $iCardId . '" />';
+        $sResult = '<input type="radio" name="dynvalue[wd_selected_card]" value="' . $sToken . '"';
+
+        if ($bCheked) {
+            $sResult .= ' checked';
+        }
+
+        $sResult .= ' />';
+
+        return $sResult;
     }
 
     /**
@@ -395,13 +420,23 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     private static function _createDeleteButton($iCardId)
     {
-        return '<button class="btn btn-error" type="submit" name="wd_delete_id" value="' . $iCardId . '" />' .
-            Helper::translate('wd_text_delete') . '</button>';
+        return '<button class="btn btn-error" type = "submit" name = "wd_delete_id" value = "' . $iCardId . '" />' .
+            Helper::translate('wd_text_delete') . ' </button > ';
     }
 
+    /**
+     * @param string $sMaskedPan
+     * @param int    $iExpMonth
+     * @param int    $iExpYear
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
     private static function _createDescription($sMaskedPan, $iExpMonth, $iExpYear)
     {
-        return "<b>" . $sMaskedPan . "</b><i style='margin-left: 2em'>" . sprintf("%02d", $iExpMonth) . '-' . $iExpYear . "</i>";
+        return '<b>' . $sMaskedPan . '</b><i style="margin-left: 2em">' .
+            sprintf("%02d", $iExpMonth) . ' - ' . $iExpYear . '</i>';
     }
 
     /**
@@ -418,5 +453,39 @@ class CreditCardPaymentMethod extends PaymentMethod
 
         $oCurrentAddress = $oOrder->getDelAddressInfo();
         return $oCurrentAddress !== $oLastAddress;
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @param CreditCardTransaction $oTransaction
+     * @param Order                 $oOrder
+     *
+     * @since 1.3.0
+     */
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
+    {
+        $aDynValue = Registry::getSession()->getVariable('dynvalue');
+
+        if (self::isCardTokenSet($aDynValue)) {
+            $oTransaction->setTokenId($aDynValue['wd_selected_card']);
+        }
+
+        parent::addMandatoryTransactionData($oTransaction, $oOrder);
+    }
+
+    /**
+     * Checks if a valid card token is set
+     *
+     * @param array $aDynValue
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    public static function isCardTokenSet($aDynValue)
+    {
+        return isset($aDynValue['wd_selected_card']) &&
+            $aDynValue['wd_selected_card'] !== CreditCardPaymentMethod::NEW_CARD_TOKEN;
     }
 }
