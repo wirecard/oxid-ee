@@ -9,6 +9,8 @@
 
 namespace Wirecard\Oxid\Core;
 
+use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
+use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\SystemComponentException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
@@ -17,9 +19,11 @@ use Psr\Log\LoggerInterface;
 
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Transaction;
+
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Response\Response;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
 /**
  * Class ResponseHandler
@@ -51,6 +55,8 @@ class ResponseHandler
         //if (!$oResponse->isValidSignature()) {
         //    $oLogger->warning('Transaction was possibly manipulated');
         //}
+
+        self::_handleCreditCard($oResponse, $oBackendService, $oOrder);
 
         self::_saveTransaction($oResponse, $oOrder, $oBackendService);
 
@@ -194,5 +200,46 @@ class ResponseHandler
             = new Field($oBackendService->getOrderState($oResponse->getTransactionType()));
         $oOrder->oxorder__wdoxidee_final = new Field(1);
         $oOrder->save();
+    }
+
+    /**
+     * @param SuccessResponse $oResponse
+     * @param BackendService  $oBackendService
+     * @param Order           $oOrder
+     */
+    private static function _handleCreditCard($oResponse, $oBackendService, $oOrder)
+    {
+        $oLogger = Registry::getLogger();
+
+        if (!self::_shouldSaveCard($oResponse, $oOrder)) {
+            return;
+        }
+
+        try {
+            $aTransaction = $oBackendService->getTransactionByTransactionId(
+                $oResponse->getTransactionId(),
+                CreditCardTransaction::NAME
+            );
+
+            $oVault = new Vault();
+            $oVault->saveCard($oResponse, $aTransaction['payment']['card'], $oOrder->getShippingAccountHolder());
+        } catch (DatabaseConnectionException $e) {
+            $oLogger->error("Cannot save card", [$e]);
+        } catch (DatabaseErrorException $e) {
+            $oLogger->error("Cannot save card", [$e]);
+        }
+    }
+
+    /**
+     * @param SuccessResponse $oResponse
+     * @param Order           $oOrder
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private static function _shouldSaveCard($oResponse, $oOrder)
+    {
+        return $oResponse->getPaymentMethod() === CreditCardTransaction::NAME && $oOrder->getUser()->hasAccount();
     }
 }

@@ -11,13 +11,12 @@ namespace Wirecard\Oxid\Core;
 
 use DateInterval;
 use DateTime;
-
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Registry;
-
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
@@ -41,9 +40,9 @@ class Vault
     {
         $oUser = Registry::getSession()->getUser();
         $sUserId = $oUser->getId();
-        $sAddressId = $oUser->getSelectedAddressId();
+        //FIXME get shipping address
+        $sAddressId = 'TODO';//$oUser->getSelectedAddressId();
         $aCards = self::_getCardsFromDb($sUserId, $sAddressId);
-
 
         return array_filter($aCards, function ($aCard) {
             $oDateExpiration = new DateTime($aCard['EXPIRATIONYEAR'] . '-' . $aCard['EXPIRATIONMONTH'] . '-01');
@@ -69,7 +68,7 @@ class Vault
     {
         try {
             $sQuery = "SELECT * from " . OxidEeEvents::VAULT_TABLE . " 
-                WHERE `USERID`=? AND `ADDRESSID`=?";
+                WHERE `USERID`=? AND `ADDRESSID`=? ORDER BY `OXID` DESC";
             return self::_getDb()->getAll($sQuery, [$sUserId, $sAddressId]);
         } catch (DatabaseErrorException $oExc) {
             Registry::getLogger()->error("Error getting cards", [$oExc]);
@@ -83,11 +82,12 @@ class Vault
      *
      * @param SuccessResponse $oResponse
      * @param array           $aCard
+     * @param Order           $oOrder
+     *
+     * @return void
      *
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
-     *
-     * @return void
      *
      * @since 1.3.0
      */

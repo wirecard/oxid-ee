@@ -380,10 +380,12 @@ class CreditCardPaymentMethod extends PaymentMethod
             ];
         }
 
-        $aTableMapping[] = [
-            ['text' => self::_createRadioButton(self::NEW_CARD_TOKEN, true)],
-            ['text' => Helper::translate('wd_vault_use_new_text')],
-        ];
+        if ($aCards) {
+            $aTableMapping[] = [
+                ['text' => self::_createRadioButton(self::NEW_CARD_TOKEN, true)],
+                ['text' => Helper::translate('wd_vault_use_new_text')],
+            ];
+        }
 
         return [
             'body' => $aTableMapping,
@@ -436,7 +438,7 @@ class CreditCardPaymentMethod extends PaymentMethod
     private static function _createDescription($sMaskedPan, $iExpMonth, $iExpYear)
     {
         return '<b>' . $sMaskedPan . '</b><i style="margin-left: 2em">' .
-            sprintf("%02d", $iExpMonth) . ' - ' . $iExpYear . '</i>';
+            sprintf("%02d", $iExpMonth) . '-' . $iExpYear . '</i>';
     }
 
     /**
