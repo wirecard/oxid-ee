@@ -11,13 +11,12 @@ namespace Wirecard\Oxid\Core;
 
 use DateInterval;
 use DateTime;
-
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Registry;
-
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
@@ -37,14 +36,12 @@ class Vault
      *
      * @since 1.3.0
      */
-    public static function getCards()
+    public static function getCards($oOrder)
     {
         $oUser = Registry::getSession()->getUser();
         $sUserId = $oUser->getId();
-        //FIXME get shipping address
-        $sAddressId = 'TODO';//$oUser->getSelectedAddressId();
-        $aCards = self::_getCardsFromDb($sUserId, $sAddressId);
 
+        $aCards = self::_getCardsFromDb($sUserId, self::_getAddressId($oOrder));
 
         return array_filter($aCards, function ($aCard) {
             $oDateExpiration = new DateTime($aCard['EXPIRATIONYEAR'] . '-' . $aCard['EXPIRATIONMONTH'] . '-01');
