@@ -11,18 +11,6 @@ use Wirecard\Oxid\Core\AccountHolderHelper;
 
 class AccountHolderHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
-    /**
-     * @var AccountHolderHelper
-     */
-    private $_oAccountHolderHelper;
-
-    protected function setUp()
-    {
-        parent::setUp();
-        $this->_oAccountHolderHelper = new AccountHolderHelper();
-
-    }
-
     public function testCreateAccountHolderWithAllDataSet()
     {
         $aArgs = [
@@ -39,7 +27,7 @@ class AccountHolderHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
             'state' => 'State'
         ];
 
-        $oAccountHolder = $this->_oAccountHolderHelper->createAccountHolder($aArgs);
+        $oAccountHolder = AccountHolderHelper::createAccountHolder($aArgs);
         $aResult = $oAccountHolder->mappedProperties();
 
         $aExpected = [
@@ -69,7 +57,7 @@ class AccountHolderHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
             'email' => 'test@test.com',
         ];
 
-        $oAccountHolder = $this->_oAccountHolderHelper->createAccountHolder($aArgs);
+        $oAccountHolder = AccountHolderHelper::createAccountHolder($aArgs);
         $aResult = $oAccountHolder->mappedProperties();
 
         $aExpected = [

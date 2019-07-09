@@ -204,7 +204,11 @@ class PaymentGateway extends BaseModel
     {
         $aShopInfoFields = Helper::getShopInfoFields();
 
-        $oCustomFields = new CustomFieldCollection();
+        $oCustomFields = $oTransaction->getCustomFields();
+        if (is_null($oCustomFields)) {
+            $oCustomFields = new CustomFieldCollection();
+        }
+
         $oCustomFields->add(new CustomField(Helper::SHOP_NAME_KEY, $aShopInfoFields[HELPER::SHOP_NAME_KEY]));
         $oCustomFields->add(new CustomField(Helper::SHOP_VERSION_KEY, $aShopInfoFields[Helper::SHOP_VERSION_KEY]));
 

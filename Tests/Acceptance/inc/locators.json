@@ -62,6 +62,14 @@
       "submitConfirm": "sbtnOk",
       "backToShop": "//input[@name='back2Shop']"
     },
+    "payolutionInv":{
+      "dateOfBirth": "dateOfBirthpayolution-inv",
+      "termsCheckbox": "//input[@name='terms_checkbox']"
+    },
+    "payolutionB2B": {
+      "companyName": "wdCompanyName",
+      "termsCheckbox": "//input[@name='terms_checkbox']"
+    },
     "alipay": {
       "accountName": "//input[@name='loginId']",
       "password": "//input[@name='payPasswd_rsainput']",

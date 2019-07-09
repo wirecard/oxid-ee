@@ -106,9 +106,13 @@ class PaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     public function getPublicFieldNames()
     {
         $aPublicFieldNames = $this->_oPaymentMethodsStub->getPublicFieldNames();
-        $this->assertCount(2, $aPublicFieldNames);
-        $this->assertContains('apiUrl', $aPublicFieldNames);
-        $this->assertContains('maid', $aPublicFieldNames);
+
+        $aExpected = [
+            'apiUrl',
+            'maid',
+        ];
+
+        $this->assertEquals($aExpected, $aPublicFieldNames);
     }
 
     public function testGetSupportConfigFields()
@@ -121,5 +125,17 @@ class PaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     {
         $aCheckoutFields = $this->_oPaymentMethodsStub->getCheckoutFields();
         $this->assertEmpty($aCheckoutFields);
+    }
+
+    public function testOnBeforeOrderCreation()
+    {
+        $aResult = $this->_oPaymentMethodsStub->onBeforeTransactionCreation();
+        $this->assertNull($aResult);
+    }
+
+    public function testGetHiddenAccountHolderFields()
+    {
+        $aResult = $this->_oPaymentMethodsStub->getHiddenAccountHolderFields();
+        $this->assertEmpty($aResult);
     }
 }

@@ -113,6 +113,7 @@ class PaymentController extends PaymentController_parent
             SessionHelper::setDbDateOfBirth($oUser->oxuser__oxbirthdate->value, $oPaymentMethod::getName());
             SessionHelper::setPhone($oUser->oxuser__oxfon->value, $oPaymentMethod::getName());
             SessionHelper::setSaveCheckoutFields(0, $oPaymentMethod::getName());
+            SessionHelper::setCompanyName($oUser->oxuser__oxcompany->value);
         }
     }
 }

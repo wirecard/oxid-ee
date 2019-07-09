@@ -27,11 +27,11 @@ class AccountHolderHelper
      *
      * @since 1.0.0
      */
-    public function createAccountHolder($aArgs)
+    public static function createAccountHolder($aArgs)
     {
         $oAccountHolder = new AccountHolder();
 
-        $oAccountHolder->setAddress($this->_createAddress($aArgs));
+        $oAccountHolder->setAddress(self::_createAddress($aArgs));
         $oAccountHolder->setFirstName($aArgs['firstName']);
         $oAccountHolder->setLastName($aArgs['lastName']);
         $oAccountHolder->setEmail($aArgs['email']);
@@ -59,7 +59,7 @@ class AccountHolderHelper
      *
      * @since 1.0.0
      */
-    private function _createAddress($aArgs)
+    private static function _createAddress($aArgs)
     {
         $oAddress = new Address(
             $aArgs['countryCode'] ?? '',

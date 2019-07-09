@@ -11,27 +11,28 @@ namespace Wirecard\Oxid\Core;
 
 use OxidEsales\Eshop\Core\Exception\SystemComponentException;
 
+use Wirecard\Oxid\Model\AlipayCrossBorderPaymentMethod;
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\EpsPaymentMethod;
 use Wirecard\Oxid\Model\GiropayPaymentMethod;
+use Wirecard\Oxid\Model\IdealPaymentMethod;
+use Wirecard\Oxid\Model\PaymentInAdvancePaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod;
+use Wirecard\Oxid\Model\PaymentOnInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PayolutionBtwobPaymentMethod;
 use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
 use Wirecard\Oxid\Model\PaypalPaymentMethod;
 use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
 use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
 use Wirecard\Oxid\Model\SofortPaymentMethod;
-use Wirecard\Oxid\Model\IdealPaymentMethod;
-use Wirecard\Oxid\Model\EpsPaymentMethod;
-use Wirecard\Oxid\Model\AlipayCrossBorderPaymentMethod;
-use Wirecard\Oxid\Model\PaymentOnInvoicePaymentMethod;
-use Wirecard\Oxid\Model\PaymentInAdvancePaymentMethod;
 
 /**
  * Class PaymentMethodFactory
  *
  * @package Wirecard\Core
  *
- * @since 1.0.0
+ * @since   1.0.0
  */
 class PaymentMethodFactory
 {
@@ -47,20 +48,21 @@ class PaymentMethodFactory
         $aClasses = [];
 
         foreach ([
-            AlipayCrossBorderPaymentMethod::class,
-            CreditCardPaymentMethod::class,
-            EpsPaymentMethod::class,
-            GiropayPaymentMethod::class,
-            IdealPaymentMethod::class,
-            PaymentOnInvoicePaymentMethod::class,
-            PaymentInAdvancePaymentMethod::class,
-            PaypalPaymentMethod::class,
-            PayolutionInvoicePaymentMethod::class,
-            RatepayInvoicePaymentMethod::class,
-            SepaCreditTransferPaymentMethod::class,
-            SepaDirectDebitPaymentMethod::class,
-            SofortPaymentMethod::class,
-        ] as $sClassName) {
+                     AlipayCrossBorderPaymentMethod::class,
+                     CreditCardPaymentMethod::class,
+                     EpsPaymentMethod::class,
+                     GiropayPaymentMethod::class,
+                     IdealPaymentMethod::class,
+                     PaymentOnInvoicePaymentMethod::class,
+                     PaymentInAdvancePaymentMethod::class,
+                     PaypalPaymentMethod::class,
+                     PayolutionInvoicePaymentMethod::class,
+                     PayolutionBtwobPaymentMethod::class,
+                     RatepayInvoicePaymentMethod::class,
+                     SepaCreditTransferPaymentMethod::class,
+                     SepaDirectDebitPaymentMethod::class,
+                     SofortPaymentMethod::class,
+                 ] as $sClassName) {
             $aClasses[$sClassName::getName(true)] = $sClassName;
         }
 

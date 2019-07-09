@@ -14,9 +14,10 @@ use OxidEsales\Eshop\Core\Registry;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Extend\Model\Payment;
-use Wirecard\Oxid\Model\SofortPaymentMethod;
-use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\PayolutionBtwobPaymentMethod;
 use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
+use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\SofortPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
@@ -131,9 +132,24 @@ class PaymentMain extends PaymentMain_parent
      */
     private function _isPayolutionUrlSettingsValid($aParams)
     {
-        return $aParams['oxpayments__oxid'] !== PayolutionInvoicePaymentMethod::getName(true)
+        return !$this->_isPayolutionPaymentMethod($aParams['oxpayments__oxid'])
             || ($aParams['oxpayments__terms'] && strlen(trim($aParams['oxpayments__payolution_terms_url']))
-            || !$aParams['oxpayments__terms']);
+                || !$aParams['oxpayments__terms']);
+    }
+
+    /**
+     * Checks for a Payolution payment method (B2C or B2B)
+     *
+     * @param string $sPaymentId
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private function _isPayolutionPaymentMethod($sPaymentId)
+    {
+        return $sPaymentId === PayolutionInvoicePaymentMethod::getName(true)
+            || $sPaymentId === PayolutionBtwobPaymentMethod::getName(true);
     }
 
     /**
@@ -184,7 +200,7 @@ class PaymentMain extends PaymentMain_parent
     {
         //explanation for creditor id validation: https://www.iban.de/iban-pruefsumme.html
 
-        $sCreditorId =  strtolower(str_replace(' ', '', $sCreditorId));
+        $sCreditorId = strtolower(str_replace(' ', '', $sCreditorId));
         if (preg_match('/^[a-zA-Z]{2}[0-9]{2}[a-zA-Z0-9]{0,31}$/', $sCreditorId) !== 1 || strlen($sCreditorId) > 35) {
             return false;
         }
