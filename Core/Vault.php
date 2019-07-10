@@ -30,11 +30,12 @@ class Vault
     /**
      * Get all cards associated with the user and address
      *
+     * @param Order $oOrder
+     *
      * @return array of cards with keys 'OXID', 'USERID', 'ADDRESSID', 'TOKEN', 'MASKEDPAN', 'EXPIRATIONMONTH',
      *         'EXPIRATIONYEAR'
      *
      * @throws DatabaseConnectionException
-     *
      * @since 1.3.0
      */
     public static function getCards($oOrder)
@@ -66,6 +67,9 @@ class Vault
      */
     private static function _getCardsFromDb($sUserId, $sAddressId)
     {
+
+        Registry::getLogger()->debug($sAddressId);
+
         try {
             $sQuery = "SELECT * from " . OxidEeEvents::VAULT_TABLE . " 
                 WHERE `USERID`=? AND `ADDRESSID`=? ORDER BY `OXID` DESC";
@@ -88,7 +92,6 @@ class Vault
      *
      * @throws DatabaseConnectionException
      * @throws DatabaseErrorException
-     *
      * @since 1.3.0
      */
     public static function saveCard($oResponse, $aCard, $oOrder)

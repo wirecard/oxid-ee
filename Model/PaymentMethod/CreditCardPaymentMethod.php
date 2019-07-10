@@ -335,7 +335,9 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     public function getCheckoutFields()
     {
-        $aCards = Vault::getCards();
+        $oOrder = oxNew(Order::class);
+        $oOrder->createTemp(Registry::getSession()->getBasket(), Registry::getSession()->getUser());
+        $aCards = Vault::getCards($oOrder);
         if ($aCards &&
             self::_hasShippingAddressChanged() &&
             !$this->_oPayment->oxpayments__oneclick_changed_shipping->value) {
