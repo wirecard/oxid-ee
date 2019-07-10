@@ -342,7 +342,7 @@ class CreditCardPaymentMethod extends PaymentMethod
             return [
                 [
                     'type' => 'info',
-                    'text' => Helper::translate('vault_changed_shipping_text'),
+                    'text' => Helper::translate('wd_vault_changed_shipping_text'),
                 ],
             ];
         }
@@ -450,11 +450,10 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     private static function _hasShippingAddressChanged()
     {
-        $oLastAddress = OrderHelper::getLastOrderShippingAddress(Registry::getSession()->getUser()->getId());
-        $oOrder = oxNew(Order::class);
+        $aLastAddress = OrderHelper::getLastOrderShippingAddress(Registry::getSession()->getUser()->getId());
+        $aCurrentAddress = OrderHelper::getSelectedShippingAddress();
 
-        $oCurrentAddress = $oOrder->getDelAddressInfo();
-        return $oCurrentAddress !== $oLastAddress;
+        return $aCurrentAddress != $aLastAddress;
     }
 
     /**

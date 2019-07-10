@@ -11,7 +11,6 @@ namespace Wirecard\Oxid\Core;
 
 use Exception;
 
-use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\DatabaseProvider;
@@ -401,7 +400,7 @@ class OrderHelper
      *
      * @param string $sUserId
      *
-     * @return Address|null
+     * @return array|null
      *
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      *
@@ -409,10 +408,37 @@ class OrderHelper
      */
     public static function getLastOrderShippingAddress($sUserId)
     {
-        $sOrderId = self::_getLastOrderIdFromDb($sUserId);
         $oOrder = oxNew(Order::class);
-        $oOrder->load($sOrderId);
-        return $oOrder->getDelAddressInfo();
+
+        if (!$oOrder->load(self::_getLastOrderIdFromDb($sUserId))) {
+            return null;
+        };
+
+        if (!empty($oOrder->oxorder__oxdelcountryid->value)) {
+            return [
+                'first_name' => $oOrder->oxorder__oxdelfname->value,
+                'last_name' => $oOrder->oxorder__oxdellname->value,
+                'company' => $oOrder->oxorder__oxdelcompany->value,
+                'street' => $oOrder->oxorder__oxdelstreet->value,
+                'street_nr' => $oOrder->oxorder__oxdelstreetnr->value,
+                'zip' => $oOrder->oxorder__oxdelzip->value,
+                'city' => $oOrder->oxorder__oxdelcity->value,
+                'country_id' => $oOrder->oxorder__oxdelcountryid->value,
+                'state_id' => $oOrder->oxorder__oxdelstateid->value,
+            ];
+        }
+
+        return [
+            'first_name' => $oOrder->oxorder__oxbillfname->value,
+            'last_name' => $oOrder->oxorder__oxbilllname->value,
+            'company' => $oOrder->oxorder__oxbillcompany->value,
+            'street' => $oOrder->oxorder__oxbillstreet->value,
+            'street_nr' => $oOrder->oxorder__oxbillstreetnr->value,
+            'zip' => $oOrder->oxorder__oxbillzip->value,
+            'city' => $oOrder->oxorder__oxbillcity->value,
+            'country_id' => $oOrder->oxorder__oxbillcountryid->value,
+            'state_id' => $oOrder->oxorder__oxbillstateid->value,
+        ];
     }
 
     /**
@@ -428,5 +454,45 @@ class OrderHelper
     {
         $sQuery = "SELECT `OXID` from oxorder WHERE `OXUSERID`=? ORDER BY `OXORDERDATE` DESC LIMIT 1";
         return DatabaseProvider::getDb()->getOne($sQuery, [$sUserId]);
+    }
+
+    /**
+     * Get the current shipping address selected for the order
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    public static function getSelectedShippingAddress()
+    {
+        $oOrder = oxNew(\OxidEsales\Eshop\Application\Model\Order::class);
+        $oCurrentAddress =  $oOrder->getDelAddressInfo();
+
+        if (!is_null($oCurrentAddress)) {
+            return [
+                'first_name' => $oCurrentAddress->oxaddress__oxfname->value,
+                'last_name' => $oCurrentAddress->oxaddress__oxlname->value,
+                'company' => $oCurrentAddress->oxaddress__oxcompany->value,
+                'street' => $oCurrentAddress->oxaddress__oxstreet->value,
+                'street_nr' => $oCurrentAddress->oxaddress__oxstreetnr->value,
+                'zip' => $oCurrentAddress->oxaddress__oxzip->value,
+                'city' => $oCurrentAddress->oxaddress__oxcity->value,
+                'country_id' => $oCurrentAddress->oxaddress__oxcountryid->value,
+                'state_id' => $oCurrentAddress->oxaddress__oxstateid->value,
+            ];
+        }
+
+        $oUser = Registry::getSession()->getUser();
+        return [
+            'first_name' => $oUser->oxuser__oxfname->value,
+            'last_name' => $oUser->oxuser__oxlname->value,
+            'company' => $oUser->oxuser__oxcompany->value,
+            'street' => $oUser->oxuser__oxstreet->value,
+            'street_nr' => $oUser->oxuser__oxstreetnr->value,
+            'zip' => $oUser->oxuser__oxzip->value,
+            'city' => $oUser->oxuser__oxcity->value,
+            'country_id' => $oUser->oxuser__oxcountryid->value,
+            'state_id' => $oUser->oxuser__oxstateid->value,
+        ];
     }
 }
