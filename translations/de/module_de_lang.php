@@ -125,7 +125,6 @@ $aLang = array(
     'wd_last-name' => 'Nachname',
     'wd_maid' => 'MAID',
     'wd_manipulated' => 'manipuliert',
-    'wd_matched' => 'zugeordnet',
     'wd_merchant-crm-id' => 'Händler-CRM-ID',
     'wd_message_empty_error' => 'Nachricht darf nicht leer sein.',
     'wd_more_info' => 'Nähere Informationen',
