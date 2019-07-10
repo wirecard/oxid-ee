@@ -203,9 +203,15 @@ class ResponseHandler
     }
 
     /**
+     * Handle credit card
+     *
      * @param SuccessResponse $oResponse
      * @param BackendService  $oBackendService
      * @param Order           $oOrder
+     *
+     * @return void
+     *
+     * @since 1.3.0
      */
     private static function _handleCreditCard($oResponse, $oBackendService, $oOrder)
     {
