@@ -229,10 +229,10 @@ class ResponseHandler
 
             $oVault = new Vault();
             $oVault->saveCard($oResponse, $aTransaction['payment']['card'], $oOrder->getShippingAccountHolder());
-        } catch (DatabaseConnectionException $e) {
-            $oLogger->error("Cannot save card", [$e]);
-        } catch (DatabaseErrorException $e) {
-            $oLogger->error("Cannot save card", [$e]);
+        } catch (DatabaseConnectionException $oExc) {
+            $oLogger->error("Cannot save card", [$oExc]);
+        } catch (DatabaseErrorException $oExc) {
+            $oLogger->error("Cannot save card", [$oExc]);
         }
     }
 
