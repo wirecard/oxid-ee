@@ -12,12 +12,13 @@
       "nextStep": "//*[contains(@class, 'continueButton')]"
     },
     "creditcard": {
-      "frame": "wirecard-integrated-payment-page-frame",
-      "firstName": "pp-cc-first-name",
-      "lastName": "pp-cc-last-name",
-      "cardNumber": "pp-cc-account-number",
-      "cvv": "pp-cc-cvv",
-      "expiryDate": "pp-cc-expiration-date",
+      "frame": "//iframe[@class='wirecard-seamless-frame']",
+      "firstName": "first_name",
+      "lastName": "last_name",
+      "cardNumber": "account_number",
+      "cvv": "card_security_code",
+      "expiryMonth": "expiration_month_list",
+      "expiryYear": "expiration_year_list",
       "password": "password",
       "continueButton": "//input[@name='authenticate']"
     },
