@@ -439,7 +439,6 @@ class Helper
         return $oList->getArray();
     }
 
-
     /**
      * Checks that the amount is in the range of the transaction
      *
@@ -455,7 +454,6 @@ class Helper
         return $fAmount > 0 && $fMaxAmount > 0 &&
             ((bcsub($fAmount, $fMaxAmount, self::BCSUB_SCALE) / $fMaxAmount) < self::FLOATING_POINT_EPSILON);
     }
-
 
     /**
      * Inserts an entry into an array at a specified position
