@@ -196,12 +196,14 @@ class RatepayInvoicePaymentMethod extends InvoicePaymentMethod
      */
     public function getMetaDataFieldNames()
     {
-        return [
+        $aMetaDataFields = [
             'allowed_currencies',
             'shipping_countries',
             'billing_countries',
             'billing_shipping',
         ];
+
+        return array_merge(parent::getMetaDataFieldNames(), $aMetaDataFields);
     }
 
     /**
