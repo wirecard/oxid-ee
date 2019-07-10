@@ -282,6 +282,8 @@ abstract class PayolutionBasePaymentMethod extends InvoicePaymentMethod
             'payolution_terms_url',
         ];
 
+        $aReturn = array_merge(parent::getMetaDataFieldNames(), $aReturn);
+
         $aCurrencies = PaymentMethodHelper::getCurrencyOptions();
         $aFieldNames = ['httpuser', 'httppass', 'maid', 'secret'];
 

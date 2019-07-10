@@ -263,7 +263,7 @@ abstract class PaymentMethod
      */
     public function getMetaDataFieldNames()
     {
-        return [];
+        return ['initial_title'];
     }
 
     /**
