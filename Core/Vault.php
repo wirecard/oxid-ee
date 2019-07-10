@@ -67,9 +67,6 @@ class Vault
      */
     private static function _getCardsFromDb($sUserId, $sAddressId)
     {
-
-        Registry::getLogger()->debug($sAddressId);
-
         try {
             $sQuery = "SELECT * from " . OxidEeEvents::VAULT_TABLE . " 
                 WHERE `USERID`=? AND `ADDRESSID`=? ORDER BY `OXID` DESC";
