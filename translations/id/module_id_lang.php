@@ -233,6 +233,8 @@ $aLang = array(
     'wd_transaction_response_details' => 'Response Details',
     'wd_transfer_notice' => 'Harap transfer jumlah tersebut menggunakan data berikut ini:',
     'wd_unmatched' => 'unmatched',
+    'wd_vault_changed_shipping_text' => 'Alamat pengiriman Anda telah berubah sejak pesanan terakhir. Untuk tujuan keamanan, kami mewajibkan Anda memasukkan detail kartu kredit baru.',
+    'wd_vault_use_new_text' => 'Gunakan Kartu Kredit baru',
     'wd_wait_for_final_status' => 'Please, wait for additional email with the final status of your payment.',
     'wd_yes' => 'Yes',
 );

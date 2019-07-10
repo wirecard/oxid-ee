@@ -122,7 +122,6 @@ $aLang = array(
     'wd_last-name' => 'Last Name',
     'wd_maid' => 'MAID',
     'wd_manipulated' => 'manipulated',
-    'wd_matched' => 'matched',
     'wd_merchant-crm-id' => 'Merchant CRM ID',
     'wd_message_empty_error' => 'Message cannot be empty.',
     'wd_more_info' => 'More info',
@@ -234,6 +233,8 @@ $aLang = array(
     'wd_transaction_response_details' => 'Response Details',
     'wd_transfer_notice' => 'Please transfer the amount using the following data:',
     'wd_unmatched' => 'unmatched',
+    'wd_vault_changed_shipping_text' => 'Your shipping address has changed since your last order. For security purposes we require you to enter the new credit card details.',
+    'wd_vault_use_new_text' => 'Use new credit card',
     'wd_wait_for_final_status' => 'Please, wait for additional email with the final status of your payment.',
     'wd_yes' => 'Yes',
 );

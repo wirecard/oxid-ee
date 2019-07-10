@@ -233,6 +233,8 @@ $aLang = array(
     'wd_transaction_response_details' => 'Response Details',
     'wd_transfer_notice' => 'Veuillez transférer le montant en utilisant les données suivantes :',
     'wd_unmatched' => 'unmatched',
+    'wd_vault_changed_shipping_text' => 'Votre adresse de livraison a changé depuis votre dernière commande. Pour des raisons de sécurité, vous devez saisir vos nouvelles données de carte de crédit.',
+    'wd_vault_use_new_text' => 'Utiliser une nouvelle carte de crédit',
     'wd_wait_for_final_status' => 'Please, wait for additional email with the final status of your payment.',
     'wd_yes' => 'Yes',
 );

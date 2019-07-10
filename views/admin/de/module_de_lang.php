@@ -122,7 +122,6 @@ $aLang = array(
     'wd_last-name' => 'Nachname',
     'wd_maid' => 'MAID',
     'wd_manipulated' => 'manipuliert',
-    'wd_matched' => 'zugeordnet',
     'wd_merchant-crm-id' => 'Händler-CRM-ID',
     'wd_message_empty_error' => 'Nachricht darf nicht leer sein.',
     'wd_more_info' => 'Nähere Informationen',
@@ -234,6 +233,8 @@ $aLang = array(
     'wd_transaction_response_details' => 'Antwort-Details',
     'wd_transfer_notice' => 'Verwenden Sie für die Überweisung die folgenden Daten:',
     'wd_unmatched' => 'nicht zugeordnet',
+    'wd_vault_changed_shipping_text' => 'Ihre Lieferadresse hat sich seit Ihrer letzten Bestellung geändert. Aus Sicherheitsgründen müssen Sie Ihre Kreditkartendaten erneut eingeben.',
+    'wd_vault_use_new_text' => 'Neue Kreditkarte verwenden',
     'wd_wait_for_final_status' => 'Bitte warten Sie auf ein zusätzliches E-Mail mit dem finalen Bezahlstatus.',
     'wd_yes' => 'Ja',
 );

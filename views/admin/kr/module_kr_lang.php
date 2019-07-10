@@ -233,6 +233,8 @@ $aLang = array(
     'wd_transaction_response_details' => 'Response Details',
     'wd_transfer_notice' => '다음 데이터를 이용하여 금액을 이체하십시오:',
     'wd_unmatched' => 'unmatched',
+    'wd_vault_changed_shipping_text' => '지난 번 주문할 때의 배송지 주소와 다릅니다. 보안상의 이유로 새로운 신용 카드 정보를 입력해주실 것을 요청드립니다.',
+    'wd_vault_use_new_text' => '새 신용카드 사용',
     'wd_wait_for_final_status' => 'Please, wait for additional email with the final status of your payment.',
     'wd_yes' => 'Yes',
 );

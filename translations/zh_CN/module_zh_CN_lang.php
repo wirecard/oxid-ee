@@ -233,6 +233,8 @@ $aLang = array(
     'wd_transaction_response_details' => 'Response Details',
     'wd_transfer_notice' => '请使用以下数据转账：',
     'wd_unmatched' => 'unmatched',
+    'wd_vault_changed_shipping_text' => '与上个订单相比，您的发货地址发生了变动。出于安全，您需要输入新的信用卡详细信息。',
+    'wd_vault_use_new_text' => '使用新信用卡',
     'wd_wait_for_final_status' => 'Please, wait for additional email with the final status of your payment.',
     'wd_yes' => 'Yes',
 );

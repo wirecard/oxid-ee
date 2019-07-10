@@ -233,6 +233,8 @@ $aLang = array(
     'wd_transaction_response_details' => 'Response Details',
     'wd_transfer_notice' => '請使用以下資料轉賬該金額：',
     'wd_unmatched' => 'unmatched',
+    'wd_vault_changed_shipping_text' => '自您上次訂購以來，您的寄送地址已有更改。出於安全考慮，我們需要您輸入新的信用卡資料。',
+    'wd_vault_use_new_text' => '使用新的信用卡',
     'wd_wait_for_final_status' => 'Please, wait for additional email with the final status of your payment.',
     'wd_yes' => 'Yes',
 );
