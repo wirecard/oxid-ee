@@ -465,7 +465,7 @@ class OrderHelper
      */
     public static function getSelectedShippingAddress()
     {
-        $oOrder = oxNew(\OxidEsales\Eshop\Application\Model\Order::class);
+        $oOrder = oxNew(Order::class);
         $oCurrentAddress =  $oOrder->getDelAddressInfo();
 
         if (!is_null($oCurrentAddress)) {
