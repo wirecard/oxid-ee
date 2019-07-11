@@ -112,7 +112,7 @@ class OrderControllerTest extends \Wirecard\Test\WdUnitTestCase
     public function testGetPaymentPageLoaderScriptUrl()
     {
         $sLinkText = $this->_controller->getPaymentPageLoaderScriptUrl();
-        $this->assertContains('/engine/hpp/paymentPageLoader.js', $sLinkText);
+        $this->assertContains('/loader/paymentPage.js', $sLinkText);
     }
 
     public function testGetCreditCardFormRequestDataAjax()
