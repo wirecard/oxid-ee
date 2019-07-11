@@ -29,6 +29,8 @@
         <wdoxidee_httppass>qD2wzQ_hrc!8</wdoxidee_httppass>
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <!-- meta fields -->
+        <apiurl_wpp>https://wpp-test.wirecard.com</apiurl_wpp>
     </payment>
     <payment>
       <oxid>wdpayolution-b2b</oxid>

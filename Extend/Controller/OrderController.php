@@ -416,7 +416,7 @@ class OrderController extends OrderController_parent
     {
         $oPayment = $this->getPayment();
 
-        return $oPayment->oxpayments__wdoxidee_apiurl . '/engine/hpp/paymentPageLoader.js';
+        return $oPayment->oxpayments__apiurl_wpp . '/loader/paymentPage.js';
     }
 
     /**
