@@ -5,7 +5,7 @@
  * - License can be found under:
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
-/* global ElasticPaymentPage */
+/* global PaymentPage */
 var ModuleCreditCardForm = (function($) {
   var debug = false;
 
@@ -15,17 +15,17 @@ var ModuleCreditCardForm = (function($) {
     return $("#orderConfirmAgbBottom button[type = 'submit']");
   }
 
-  function callback(response) {
+  function callback() {
     $(".loader").fadeOut(200,function() {
       $("#creditcard-form-div")
-        .height(350)
+        .height(400)
         .fadeIn(200);
       getOrderButton().prop("disabled", false);
     });
 
     if (debug) {
       // eslint-disable-next-line no-console
-      console.log(response);
+      console.log("callback called");
     }
   }
 
@@ -52,12 +52,12 @@ var ModuleCreditCardForm = (function($) {
   }
 
   function initSeamlessRenderForm() {
-    ElasticPaymentPage.seamlessRenderForm({
+    PaymentPage.seamlessRender({
       requestData: requestData,
       wrappingDivId: "creditcard-form-div",
       onSuccess: callback,
       onError: function(error) {
-        logError("seamlessRenderForm", error);
+        logError("seamlessRender", error);
       },
     });
   }
@@ -101,13 +101,13 @@ var ModuleCreditCardForm = (function($) {
   function submitPaymentForm(event) {
     if (!$("#wirecard-cc-form input#jsresponse").length) {
       event.preventDefault();
-      ElasticPaymentPage.seamlessSubmitForm({
+      PaymentPage.seamlessSubmit({
         onSuccess: setParentTransactionId,
         onError: function(error) {
           logError("seamlessSubmitForm", error);
           document.getElementById("wirecard-cc-error").scrollIntoView();
           // if it was not just a local form validation error, reload the seamless credit card form to create a new transaction
-          if (!error["form_validation_result"]) {
+          if (!error.error_1 === "Form validation failed.") {
             loadCCForm();
           }
         },

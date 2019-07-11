@@ -148,6 +148,21 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     public function getConfigFields()
     {
+        $iUrlFieldOffset = 1;
+        $aFirstFields = parent::getConfigFields();
+        Helper::insertToArrayAtPosition(
+            $aFirstFields,
+            [
+                'apiUrlWpp' => [
+                    'type' => 'text',
+                    'field' => 'oxpayments__apiurl_wpp',
+                    'title' => Helper::translate('wd_config_wpp_url'),
+                    'description' => Helper::translate('wd_config_wpp_url_desc'),
+                ],
+            ],
+            $iUrlFieldOffset
+        );
+
         $aAdditionalFields = [
             'threeDMaid' => [
                 'type' => 'text',
@@ -234,7 +249,7 @@ class CreditCardPaymentMethod extends PaymentMethod
             ],
         ];
 
-        return parent::getConfigFields() + $aAdditionalFields;
+        return array_merge($aFirstFields, $aAdditionalFields);
     }
 
     /**
@@ -258,7 +273,22 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'paymentAction',
                 'deleteCanceledOrder',
                 'deleteFailedOrder',
+                'apiUrlWpp',
             ]
         );
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public function getMetaDataFieldNames()
+    {
+        return [
+            'apiurl_wpp',
+        ];
     }
 }

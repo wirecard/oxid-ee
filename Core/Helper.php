@@ -439,7 +439,6 @@ class Helper
         return $oList->getArray();
     }
 
-
     /**
      * Checks that the amount is in the range of the transaction
      *
@@ -454,5 +453,23 @@ class Helper
     {
         return $fAmount > 0 && $fMaxAmount > 0 &&
             ((bcsub($fAmount, $fMaxAmount, self::BCSUB_SCALE) / $fMaxAmount) < self::FLOATING_POINT_EPSILON);
+    }
+
+    /**
+     * Inserts an entry into an array at a specified position
+     *
+     * @param array $aArray
+     * @param array $aContents
+     * @param int   $iIndex
+     *
+     * @since 1.3.0
+     */
+    public static function insertToArrayAtPosition(&$aArray, $aContents, $iIndex)
+    {
+        $aArray = array_merge(
+            array_slice($aArray, 0, $iIndex, true),
+            $aContents,
+            array_slice($aArray, $iIndex, count($aArray) - 1, true)
+        );
     }
 }
