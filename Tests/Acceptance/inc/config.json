@@ -9,7 +9,8 @@
       "lastName": "Last",
       "cardNumber": "4012000300001003",
       "cvv": "003",
-      "expiryDate": "01 / 23",
+      "expiryMonth": "01",
+      "expiryYear": "2023",
       "password": "wirecard"
     },
     "sofort": {

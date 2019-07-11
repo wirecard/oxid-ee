@@ -146,10 +146,9 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     public function testGetPublicFieldNames()
     {
         $aPublicFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
-        $this->assertCount(12, $aPublicFieldNames);
+        $this->assertCount(11, $aPublicFieldNames);
         $aExpected = [
             "apiUrl",
-            "apiUrlWpp",
             "maid",
             "threeDMaid",
             "nonThreeDMaxLimit",
