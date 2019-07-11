@@ -83,6 +83,7 @@ class MetaDataModelTest extends WdUnitTestCase
             'foo' => 'Lorem',
             'bar' => 1337,
             'baz' => [1, 2, 3],
+            'initial_title' => 'wd_heading_title_paypal',
         ];
 
         $this->assertEquals(2, $this->_oMetaDataModelStub->saveMetaData($aInput));
@@ -107,7 +108,7 @@ class MetaDataModelTest extends WdUnitTestCase
     public function testDeleteMetaData($aInput)
     {
         $this->_oMetaDataModelStub->deleteMetaData(['foo']);
-        $this->assertCount(2, $this->_oMetaDataModelStub->loadMetaData());
+        $this->assertCount(3, $this->_oMetaDataModelStub->loadMetaData());
 
         $this->_oMetaDataModelStub->deleteMetaData();
         $this->assertEmpty($this->_oMetaDataModelStub->loadMetaData());
