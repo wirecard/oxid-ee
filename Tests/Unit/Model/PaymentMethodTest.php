@@ -84,7 +84,7 @@ class PaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testDefaultMetaDataFieldNames()
     {
-        $this->assertEquals([], $this->_oPaymentMethodsStub->getMetaDataFieldNames());
+        $this->assertEquals(['initial_title'], $this->_oPaymentMethodsStub->getMetaDataFieldNames());
     }
 
     public function testDefaultSupportConfigFields()

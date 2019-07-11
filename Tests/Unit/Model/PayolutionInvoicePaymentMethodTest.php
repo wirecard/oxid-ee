@@ -91,6 +91,7 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
     public function testGetMetaDataFieldNames()
     {
         $aMinimumExpectedKeys = [
+            'initial_title',
             'shipping_countries',
             'billing_countries',
             'billing_shipping',
