@@ -252,6 +252,21 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'title' => Helper::translate('wd_config_payment_action'),
                 'description' => Helper::translate('wd_config_payment_action_desc'),
             ],
+        ];
+
+        return array_merge($aFirstFields, $aAdditionalFields, $this->_getOneClickConfigFields());
+    }
+
+    /**
+     * Returns an array with the needed config fields for one click payment
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private function _getOneClickConfigFields()
+    {
+        return [
             'oneClickTitle' => [
                 'type' => 'separator',
                 'title' => Helper::translate('wd_text_vault'),
@@ -277,8 +292,6 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'description' => Helper::translate('wd_config_allow_changed_shipping_desc'),
             ],
         ];
-
-        return array_merge($aFirstFields, $aAdditionalFields);
     }
 
     /**
