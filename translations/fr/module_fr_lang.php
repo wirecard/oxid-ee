@@ -163,7 +163,7 @@ $aLang = array(
     'wd_payment_success_text' => 'Payment process successful.',
     'wd_payolution_terms' => 'I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to Payolution. My <u><a href="%s" target="_blank">consent</a></u> can be revoked at any time with effect for the future.',
     'wd_phone' => 'Téléphone',
-    'wd_pia_ptrid' => 'Provider Transaction Reference ID',
+    'wd_pia_ptrid' => 'Reference',
     'wd_postal-code' => 'Code postal',
     'wd_ptrid' => 'Identifiant de référence du fournisseur de transactions',
     'wd_ratepayinvoice_fields_error' => 'Âge minimum requis pour le mode de paiement Facture avec garantie de paiement : 18.',

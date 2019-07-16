@@ -163,7 +163,7 @@ $aLang = array(
     'wd_payment_success_text' => 'Payment process successful.',
     'wd_payolution_terms' => 'I agree that the data which are necessary for the liquidation of purchase on account and which are used to complete the identity and credit check are transmitted to Payolution. My <u><a href="%s" target="_blank">consent</a></u> can be revoked at any time with effect for the future.',
     'wd_phone' => 'Telepon',
-    'wd_pia_ptrid' => 'Provider Transaction Reference ID',
+    'wd_pia_ptrid' => 'Reference',
     'wd_postal-code' => 'Kode Pos',
     'wd_ptrid' => 'Identitas referensi transaksi provider',
     'wd_ratepayinvoice_fields_error' => 'Anda harus berusia 18 tahun ke atas untuk memesan.',
