@@ -9,15 +9,14 @@
 
 namespace Wirecard\Oxid\Model;
 
+use OxidEsales\Eshop\Core\Registry;
+
+use Wirecard\Oxid\Core\Helper;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Entity\IdealBic;
 use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
-
-use Wirecard\Oxid\Core\Helper;
-
-use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Payment method implementation for iDEAL

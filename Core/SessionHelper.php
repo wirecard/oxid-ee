@@ -10,6 +10,7 @@
 namespace Wirecard\Oxid\Core;
 
 use DateTime;
+
 use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Core\Registry;
 

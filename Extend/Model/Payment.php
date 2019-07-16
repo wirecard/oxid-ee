@@ -9,12 +9,12 @@
 
 namespace Wirecard\Oxid\Extend\Model;
 
+use OxidEsales\Eshop\Core\Exception\SystemComponentException;
+
 use Wirecard\Oxid\Core\OxidEeEvents;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Model\MetaDataModel;
 use Wirecard\Oxid\Model\PaymentMethod;
-
-use OxidEsales\Eshop\Core\Exception\SystemComponentException;
 
 /**
  * Extends the Payment model.

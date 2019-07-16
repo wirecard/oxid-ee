@@ -12,9 +12,8 @@ namespace Wirecard\Oxid\Core;
 use OxidEsales\Eshop\Core\Model\ListModel;
 use OxidEsales\Eshop\Core\Registry;
 
-use Wirecard\PaymentSdk\Entity\Mandate;
-
 use Wirecard\Oxid\Extend\Model\Payment;
+use Wirecard\PaymentSdk\Entity\Mandate;
 
 /**
  * Helper class to handle payment methods

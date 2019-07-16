@@ -9,9 +9,9 @@
 
 namespace Wirecard\Oxid\Extend\Controller\Admin;
 
-use Wirecard\Oxid\Core\Helper;
-
 use OxidEsales\Eshop\Application\Model\Order;
+
+use Wirecard\Oxid\Core\Helper;
 
 /**
  * Controls the order list view.

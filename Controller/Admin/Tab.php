@@ -9,11 +9,11 @@
 
 namespace Wirecard\Oxid\Controller\Admin;
 
-use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Model\Transaction;
-
 use OxidEsales\Eshop\Application\Controller\Admin\AdminDetailsController;
 use OxidEsales\Eshop\Application\Model\Order;
+
+use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Model\Transaction;
 
 /**
  * Controls the view for a single tab in the admin details.

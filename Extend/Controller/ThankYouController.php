@@ -9,10 +9,10 @@
 
 namespace Wirecard\Oxid\Extend\Controller;
 
+use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Model\PaymentInAdvancePaymentInformation;
-
-use OxidEsales\Eshop\Core\Registry;
 
 /**
  * Class ThankYouController

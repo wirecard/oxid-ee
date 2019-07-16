@@ -14,12 +14,11 @@ use OxidEsales\Eshop\Core\Registry;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Extend\Model\Payment;
-use Wirecard\Oxid\Model\PayolutionBtwobPaymentMethod;
 use Wirecard\Oxid\Model\CreditCardPaymentMethod;
-use Wirecard\Oxid\Model\SofortPaymentMethod;
-use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\PayolutionBtwobPaymentMethod;
 use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
-
+use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\SofortPaymentMethod;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
 

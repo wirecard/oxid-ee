@@ -10,13 +10,13 @@
 namespace Wirecard\Oxid\Model;
 
 use DateTime;
+
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Extend\Model\Order;
-
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Entity\Amount;

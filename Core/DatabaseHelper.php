@@ -9,9 +9,9 @@
 
 namespace Wirecard\Oxid\Core;
 
-use OxidEsales\Eshop\Core\DatabaseProvider;
-
 use Exception;
+
+use OxidEsales\Eshop\Core\DatabaseProvider;
 
 /**
  * Collection of helper methods to interact with the database.

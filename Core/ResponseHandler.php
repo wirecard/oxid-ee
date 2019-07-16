@@ -9,16 +9,16 @@
 
 namespace Wirecard\Oxid\Core;
 
+use OxidEsales\Eshop\Core\Exception\SystemComponentException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
-use OxidEsales\Eshop\Core\Exception\SystemComponentException;
 
 use Psr\Log\LoggerInterface;
 
+use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Response\Response;
-use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**

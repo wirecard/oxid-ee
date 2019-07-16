@@ -11,13 +11,12 @@ namespace Wirecard\Oxid\Model;
 
 use OxidEsales\Eshop\Core\Registry;
 
+use Wirecard\Oxid\Core\Helper;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Entity\BankAccount;
 use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
-
-use Wirecard\Oxid\Core\Helper;
 
 /**
  * Payment method implementation for giropay.

@@ -9,12 +9,11 @@
 
 namespace Wirecard\Oxid\Model;
 
+use Wirecard\Oxid\Core\Helper;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
-
-use Wirecard\Oxid\Core\Helper;
 
 /**
  * Payment method implementation for Sofort.
