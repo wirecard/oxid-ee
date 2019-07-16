@@ -67,7 +67,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "PHPMD\\OXMD\\": "phpmd/oxmd"
+      "PHPMD\\OXMD\\": "CodeAnalysis/PHPMD/OXMD"
     }
   }
 }
