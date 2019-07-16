@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<ruleset name="WirecardOxid">
+  <description>Wirecard coding standard for OXID.</description>
+
+  <!-- Inherit from OXID & WirecardBase -->
+  <rule ref="Oxid"/>
+  <rule ref="WirecardBase">
+    <exclude name="Generic.Commenting.DocComment"/>
+    <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
+    <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
+    <exclude name="Zend.NamingConventions.ValidVariableName.NotCamelCaps"/>
+  </rule>
+
+  <!-- Additional rules -->
+  <rule ref="Generic.Metrics.CyclomaticComplexity">
+    <properties>
+      <property name="complexity" value="5"/>
+      <property name="absoluteComplexity" value="5"/>
+    </properties>
+  </rule>
+</ruleset>
