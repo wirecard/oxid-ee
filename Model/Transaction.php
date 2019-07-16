@@ -43,6 +43,11 @@ class Transaction extends MultiLanguageModel
      */
     protected $_sClassName = 'transaction';
 
+    /**
+     * @var array
+     *
+     * @since 1.0.0
+     */
     protected $_aChildTransactions = [];
 
     /**

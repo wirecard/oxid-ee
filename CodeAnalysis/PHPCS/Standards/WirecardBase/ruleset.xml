@@ -7,9 +7,6 @@
 
   <!-- Additional rules -->
   <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-  <rule ref="Generic.Commenting.DocComment">
-    <exclude name="Generic.Commenting.DocComment.MissingShort"/>
-  </rule>
   <rule ref="Generic.Files.LineLength">
     <properties>
       <property name="lineLimit" value="120"/>
