@@ -49,7 +49,7 @@
                 <td>[{$paymentInAdvanceInfo->sBic}]</td>
             </tr>
             <tr>
-                <td>[{oxmultilang ident="wd_ptrid"}]</td>
+                <td>[{oxmultilang ident="wd_pia_ptrid"}]</td>
                 <td>[{$paymentInAdvanceInfo->sTransactionRefId}]</td>
             </tr>
         </table>
