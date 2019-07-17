@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\SofortPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\SofortPaymentMethod;
 
 /**
  * Acceptance tests for the Sofort. checkout flow.
@@ -18,7 +18,7 @@ class SofortCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return SofortPaymentMethod::getName(true);
+        return SofortPaymentMethod::getName();
     }
 
     public function testCheckout()

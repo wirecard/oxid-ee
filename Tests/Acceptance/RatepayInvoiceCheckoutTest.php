@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\RatepayInvoicePaymentMethod;
 
 /**
  * Acceptance tests for the Ratepay Invoice checkout flow.
@@ -18,7 +18,7 @@ class RatepayInvoiceCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return RatepayInvoicePaymentMethod::getName(true);
+        return RatepayInvoicePaymentMethod::getName();
     }
 
     public function testCheckoutWithRequiredProfileData()

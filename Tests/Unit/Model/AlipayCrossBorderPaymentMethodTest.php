@@ -7,7 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use Wirecard\Oxid\Model\AlipayCrossBorderPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\AlipayCrossBorderPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
@@ -34,7 +34,7 @@ class AlipayCrossBorderPaymentMethodTest extends OxidEsales\TestingLibrary\UnitT
         $oConfig = $this->_oPaymentMethod->getConfig();
 
         $this->assertInstanceOf(Config::class, $oConfig);
-        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get(AlipayCrossBorderPaymentMethod::getName()));
+        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get('alipay-xborder'));
     }
 
     public function testGetTransaction()

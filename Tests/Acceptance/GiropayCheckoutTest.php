@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\GiropayPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\GiropayPaymentMethod;
 
 /**
  * Acceptance tests for the giropay checkout flow.
@@ -18,7 +18,7 @@ class GiropayCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return GiropayPaymentMethod::getName(true);
+        return GiropayPaymentMethod::getName();
     }
 
     public function testCheckout()

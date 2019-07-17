@@ -7,7 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use Wirecard\Oxid\Model\PaypalPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaypalPaymentMethod;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 
 class PaypalPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
@@ -49,21 +49,10 @@ class PaypalPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertCount(12, $aConfigFields);
     }
 
-    /**
-     * @dataProvider getNameProvider
-     */
-    public function testGetName($bForOxid, $sExpected)
+    public function testGetName()
     {
-        $sName = PaypalPaymentMethod::getName($bForOxid);
-        $this->assertEquals($sExpected, $sName);
-    }
-
-    public function getNameProvider()
-    {
-        return [
-            'for oxid' => [true, 'wdpaypal'],
-            'not for oxid' => [false, 'paypal'],
-        ];
+        $sName = PaypalPaymentMethod::getName();
+        $this->assertEquals('wdpaypal', $sName);
     }
 
     public function testGetPublicFieldNames()

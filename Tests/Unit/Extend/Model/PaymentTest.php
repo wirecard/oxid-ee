@@ -8,9 +8,9 @@
  */
 
 use Wirecard\Oxid\Extend\Model\Payment;
-use Wirecard\Oxid\Model\CreditCardPaymentMethod;
-use Wirecard\Oxid\Model\PaypalPaymentMethod;
-use Wirecard\Oxid\Model\SofortPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaypalPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\SofortPaymentMethod;
 
 class PaymentTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
