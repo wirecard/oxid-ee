@@ -39,7 +39,7 @@ class WirecardBase_Sniffs_Classes_ClassLinesOfCodeSniff implements PHP_CodeSniff
         $tokens = $phpcsFile->getTokens();
         $tokenBlock = $tokens[$stackPtr];
 
-        if (empty($tokenBlock['scope_opener']) || empty($tokenBlock['scope_closer'])) {
+        if (!isset($tokenBlock['scope_opener']) || !isset($tokenBlock['scope_closer'])) {
             return;
         }
 
