@@ -50,24 +50,23 @@ class WirecardBase_Sniffs_Formatting_ImportSniff implements PHP_CodeSniffer_Snif
 
         // run fixer
         if ($fix) {
+            $content = '';
+
             foreach ($importTokenList as $i => $listItem) {
                 $j = 0;
 
                 foreach ($listItem['tokens'] as $stackPtr => $token) {
-                    $content = '';
-
-                    // remove all tokens except for the very last one, which is replaced to maintain positions
-                    if ($i === count($importTokenList) - 1 && $j === count($listItem['tokens']) - 1) {
-                        foreach ($importTokenList as $listItem) {
-                            if ($listItem['newline']) {
-                                $content .= "\n";
-                            }
-
-                            $content .= "use {$listItem['path']};\n";
-                        }
+                    if ($listItem['newline']) {
+                        $content .= "\n";
                     }
 
-                    $phpcsFile->fixer->replaceToken($stackPtr, $content);
+                    $content .= $token['content'];
+
+                    // remove all tokens except for the very last one, which is replaced to maintain positions
+                    $phpcsFile->fixer->replaceToken(
+                        $stackPtr,
+                        $i === count($importTokenList) - 1 && $j === count($listItem['tokens']) - 1 ? $content : ''
+                    );
 
                     $j++;
                 }
@@ -132,6 +131,10 @@ class WirecardBase_Sniffs_Formatting_ImportSniff implements PHP_CodeSniffer_Snif
         foreach ($tokens as $token) {
             if (in_array($token['code'], [T_USE, T_WHITESPACE, T_SEMICOLON])) {
                 continue;
+            }
+
+            if ($token['code'] === T_AS) {
+                break;
             }
 
             $path .= $token['content'];
