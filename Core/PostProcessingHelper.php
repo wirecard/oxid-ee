@@ -9,8 +9,8 @@
 
 namespace Wirecard\Oxid\Core;
 
-use Wirecard\Oxid\Model\PaymentMethod;
-use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\RatepayInvoicePaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
 
 /**
@@ -33,7 +33,7 @@ class PostProcessingHelper
     public static function shouldUseOrderItems($oTransaction)
     {
         return in_array($oTransaction->getPaymentType(), [
-            RatepayInvoicePaymentMethod::getName(true),
+            RatepayInvoicePaymentMethod::getName(),
         ]);
     }
 

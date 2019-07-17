@@ -7,31 +7,28 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Model;
-
-use OxidEsales\Eshop\Core\Registry;
+namespace Wirecard\Oxid\Model\PaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use Wirecard\PaymentSdk\Entity\BankAccount;
-use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
+use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 use Wirecard\Oxid\Core\Helper;
 
 /**
- * Payment method implementation for giropay.
+ * Payment method implementation for Sofort.
  *
- * @since 1.2.0
+ * @since 1.0.0
  */
-class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
+class SofortPaymentMethod extends SepaCreditTransferPaymentMethod
 {
     /**
      * @inheritdoc
      *
-     * @since 1.2.0
+     * @since 1.0.0
      */
-    protected static $_sName = 'giropay';
+    protected static $_sName = "sofortbanking";
 
     /**
      * @inheritdoc
@@ -47,19 +44,19 @@ class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
      *
      * @return Config
      *
-     * @since 1.2.0
+     * @since 1.0.0
      */
     public function getConfig()
     {
         $oConfig = parent::getConfig();
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
-            GiropayTransaction::NAME,
+            SofortTransaction::NAME,
             $this->_oPayment->oxpayments__wdoxidee_maid->value,
             $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
-
         $oConfig->add($oPaymentMethodConfig);
+
         return $oConfig;
     }
 
@@ -68,29 +65,31 @@ class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
      *
      * @return Transaction
      *
-     * @since 1.2.0
+     * @since 1.0.0
      */
     public function getTransaction()
     {
-        return new GiropayTransaction();
+        return new SofortTransaction();
     }
 
     /**
-     * @inheritdoc
+     * Sofort has a variable logo depending on the shop language
      *
-     * @param GiropayTransaction $oTransaction
-     * @param Order              $oOrder
+     * @return string
      *
-     * @since 1.2.0
+     * @since 1.0.0
      */
-    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
+    public function getLogoPath()
     {
-        $oBankAccount = new BankAccount();
-        $oSession = Registry::getConfig()->getSession();
-        $aDynvalues = $oSession->getVariable('dynvalue');
+        $sLogoPath = $this->_oPayment->oxpayments__wdoxidee_logo->value;
+        $sCountryCode = $this->_oPayment->oxpayments__wdoxidee_countrycode->value;
+        $sLogoVariant = $this->_oPayment->oxpayments__wdoxidee_logovariant->value;
 
-        $oBankAccount->setBic($aDynvalues['bic'] ?? '');
-        $oTransaction->setBankAccount($oBankAccount);
+        return sprintf(
+            $sLogoPath,
+            $sCountryCode,
+            $sLogoVariant
+        );
     }
 
     /**
@@ -98,29 +97,19 @@ class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
      *
      * @return array
      *
-     * @since 1.2.0
+     * @since 1.0.0
      */
     public function getConfigFields()
     {
         $aAdditionalFields = [
-            'descriptor' => [
-                'type'  => 'select',
-                'field' => 'oxpayments__wdoxidee_descriptor',
-                'options' => [
-                    '1' => Helper::translate('wd_yes'),
-                    '0' => Helper::translate('wd_no'),
-                ],
-                'title' => Helper::translate('wd_config_descriptor'),
-                'description' => Helper::translate('wd_config_descriptor_desc'),
-            ],
             'additionalInfo' => [
-                'type'  => 'select',
-                'field' => 'oxpayments__wdoxidee_additional_info',
-                'options' => [
-                    '1' => Helper::translate('wd_yes'),
-                    '0' => Helper::translate('wd_no'),
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_additional_info',
+                'options'     => [
+                    '1'       => Helper::translate('wd_yes'),
+                    '0'       => Helper::translate('wd_no'),
                 ],
-                'title' => Helper::translate('wd_config_additional_info'),
+                'title'       => Helper::translate('wd_config_additional_info'),
                 'description' => Helper::translate('wd_config_additional_info_desc'),
             ],
             'deleteCanceledOrder' => [
@@ -143,27 +132,26 @@ class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
                 'title' => Helper::translate('wd_config_delete_failure_order'),
                 'description' => Helper::translate('wd_config_delete_failure_order_desc'),
             ],
-        ];
-
-        return array_merge(parent::getConfigFields(), $aAdditionalFields);
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @return array
-     *
-     * @since 1.2.0
-     */
-    public function getCheckoutFields()
-    {
-        return [
-            'bic' => [
-                'type' => 'text',
-                'title' => Helper::translate('wd_bic'),
-                'required' => true,
+            'countryCode' => [
+                'type'        => 'text',
+                'field'       => 'oxpayments__wdoxidee_countrycode',
+                'title'       => Helper::translate('wd_config_country_code'),
+                'description' => Helper::translate('wd_config_country_code_desc'),
+                'onchange'    => 'wdCheckCountryCode()',
+            ],
+            'logoType' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_logovariant',
+                'options'     => [
+                    'standard'      => Helper::translate('wd_text_logo_variant_standard'),
+                    'descriptive'   => Helper::translate('wd_text_logo_variant_descriptive'),
+                ],
+                'title'       => Helper::translate('wd_config_logo_variant'),
+                'description' => Helper::translate('wd_config_logo_variant_desc'),
             ],
         ];
+
+        return parent::getConfigFields() + $aAdditionalFields;
     }
 
     /**
@@ -171,15 +159,13 @@ class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
      *
      * @return array
      *
-     * @since 1.2.0
+     * @since 1.0.0
      */
     public function getPublicFieldNames()
     {
-        return array_merge(parent::getPublicFieldNames(), [
-            'descriptor',
-            'additionalInfo',
-            'deleteCanceledOrder',
-            'deleteFailedOrder',
-        ]);
+        return array_merge(
+            parent::getPublicFieldNames(),
+            ['additionalInfo', 'countryCode', 'logoType', 'deleteCanceledOrder', 'deleteFailedOrder']
+        );
     }
 }

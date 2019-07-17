@@ -13,7 +13,7 @@ namespace Wirecard\Oxid\Extend;
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\RatepayInvoicePaymentMethod;
 
 /**
  * Extends the OXID ViewConfig

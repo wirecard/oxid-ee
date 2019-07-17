@@ -12,7 +12,7 @@ namespace Wirecard\Oxid\Extend\Model;
 use Wirecard\Oxid\Core\OxidEeEvents;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Model\MetaDataModel;
-use Wirecard\Oxid\Model\PaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaymentMethod;
 
 use OxidEsales\Eshop\Core\Exception\SystemComponentException;
 

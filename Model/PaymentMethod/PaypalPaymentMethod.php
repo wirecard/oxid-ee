@@ -7,7 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Model;
+namespace Wirecard\Oxid\Model\PaymentMethod;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
