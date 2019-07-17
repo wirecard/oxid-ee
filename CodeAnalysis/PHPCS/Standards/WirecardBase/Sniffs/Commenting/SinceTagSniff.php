@@ -5,18 +5,12 @@
  */
 class WirecardBase_Sniffs_Commenting_SinceTagSniff implements PHP_CodeSniffer_Sniff
 {
-    /**
-     * Returns token types required to have a @since tag.
-     */
-    public function getRequiredTypes()
-    {
-        return [
-            T_CLASS,
-            T_PUBLIC,
-            T_PROTECTED,
-            T_PRIVATE,
-        ];
-    }
+    const REQUIRED_TOKEN_TYPES = [
+        T_CLASS,
+        T_PUBLIC,
+        T_PROTECTED,
+        T_PRIVATE,
+    ];
 
     /**
      * @inheritdoc
@@ -37,7 +31,7 @@ class WirecardBase_Sniffs_Commenting_SinceTagSniff implements PHP_CodeSniffer_Sn
         $hasSinceTag = false;
 
         // bail if there is no next token or it is not one of the required types
-        if (!$tokenNext || !in_array($tokenNext['code'], $this->getRequiredTypes())) {
+        if (!$tokenNext || !in_array($tokenNext['code'], self::REQUIRED_TOKEN_TYPES)) {
             return;
         }
 

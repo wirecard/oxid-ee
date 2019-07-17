@@ -16,7 +16,4 @@
   <rule ref="Generic.Formatting.SpaceAfterCast"/>
   <rule ref="Squiz.Classes.ClassFileName"/>
   <rule ref="Squiz.Classes.ValidClassName"/>
-  <rule ref="Zend.NamingConventions.ValidVariableName">
-    <exclude name="Zend.NamingConventions.ValidVariableName.PrivateNoUnderscore"/>
-  </rule>
 </ruleset>

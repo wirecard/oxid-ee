@@ -7,7 +7,7 @@
   <rule ref="WirecardBase">
     <exclude name="PSR2.Classes.PropertyDeclaration.Underscore"/>
     <exclude name="PSR2.Methods.MethodDeclaration.Underscore"/>
-    <exclude name="Zend.NamingConventions.ValidVariableName.NotCamelCaps"/>
+    <exclude name="Zend.NamingConventions.ValidVariableName.PublicHasUnderscore"/>
   </rule>
 
   <!-- Additional rules -->
