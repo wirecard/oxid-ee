@@ -18,7 +18,7 @@ class IdealCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return IdealPaymentMethod::getName(true);
+        return IdealPaymentMethod::getName();
     }
 
     public function testCheckout()
@@ -45,7 +45,7 @@ class IdealCheckoutTest extends CheckoutTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->paymentMethod::getName()
+            $this->getPaymentMethodName()
         ));
         $this->select(
             $this->getLocator('external.ideal.bank'),

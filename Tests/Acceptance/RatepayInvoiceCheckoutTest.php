@@ -18,7 +18,7 @@ class RatepayInvoiceCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return RatepayInvoicePaymentMethod::getName(true);
+        return RatepayInvoicePaymentMethod::getName();
     }
 
     public function testCheckoutWithRequiredProfileData()
@@ -53,7 +53,7 @@ class RatepayInvoiceCheckoutTest extends CheckoutTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->paymentMethod::getName()
+            $this->getPaymentMethodName()
         ));
         $this->type(
             $this->getLocator('external.ratepayInvoice.dateOfBirth'),

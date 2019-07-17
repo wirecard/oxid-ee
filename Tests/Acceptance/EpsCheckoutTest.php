@@ -18,7 +18,7 @@ class EpsCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return EpsPaymentMethod::getName(true);
+        return EpsPaymentMethod::getName();
     }
 
     public function testCheckout()

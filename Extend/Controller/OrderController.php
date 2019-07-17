@@ -441,7 +441,7 @@ class OrderController extends OrderController_parent
          * @var $oOrder Order
          */
         $oOrder = oxNew(Order::class);
-        $oOrder->oxorder__oxpaymenttype = new Field(CreditCardPaymentMethod::getName(true));
+        $oOrder->oxorder__oxpaymenttype = new Field(CreditCardPaymentMethod::getName());
         $oOrder->createTemp($oBasket, $this->getUser());
 
         $oTransaction = $oPaymentGateway->createTransaction($oBasket, $oOrder);
@@ -538,8 +538,8 @@ class OrderController extends OrderController_parent
     public function isConsentNeeded()
     {
         $sPaymentId = $this->getBasket()->getPaymentId();
-        return ($sPaymentId == PayolutionInvoicePaymentMethod::getName(true) ||
-                $sPaymentId == PayolutionBtwobPaymentMethod::getName(true)) &&
+        return ($sPaymentId == PayolutionInvoicePaymentMethod::getName() ||
+                $sPaymentId == PayolutionBtwobPaymentMethod::getName()) &&
             $this->getPayment()->oxpayments__terms->value;
     }
 }

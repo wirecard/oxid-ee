@@ -18,7 +18,7 @@ class SepaDirectDebitCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return SepaDirectDebitPaymentMethod::getName(true);
+        return SepaDirectDebitPaymentMethod::getName();
     }
 
     public function testCheckoutForPurchase()
@@ -63,7 +63,7 @@ class SepaDirectDebitCheckoutTest extends CheckoutTestCase
     {
         $this->executeSql("UPDATE `oxpayments`
             SET `WDOXIDEE_BIC` = '1'
-            WHERE `OXID` = '{$this->paymentMethod::getName()}'");
+            WHERE `OXID` = '{$this->getPaymentMethodName()}'");
     }
 
     public function goThroughCheckout()
@@ -81,7 +81,7 @@ class SepaDirectDebitCheckoutTest extends CheckoutTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->paymentMethod::getName()
+            $this->getPaymentMethodName()
         ));
         $this->type(
             $this->getLocator('external.sepadd.accountHolder'),

@@ -7,19 +7,19 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Model;
+namespace Wirecard\Oxid\Model\PaymentMethod;
 
 /**
- * Payment method implementation for Payment on Invoice
+ * Payment method implementation for Payment in Advance
  *
  * @since 1.3.0
  */
-class PaymentOnInvoicePaymentMethod extends BasePoiPiaPaymentMethod
+class PaymentInAdvancePaymentMethod extends BasePoiPiaPaymentMethod
 {
     /**
      * @inheritdoc
      *
      * @since 1.3.0
      */
-    protected static $_sName = "paymentoninvoice";
+    protected static $_sName = "paymentinadvance";
 }

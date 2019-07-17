@@ -150,7 +150,7 @@ class PaymentMain extends PaymentMain_parent
      */
     private function _areCreditCardUrlsValid($aParams)
     {
-        return $aParams['oxpayments__oxid'] !== CreditCardPaymentMethod::getName(true)
+        return $aParams['oxpayments__oxid'] !== CreditCardPaymentMethod::getName()
             || $this->_bothCreditCardUrlsAreTest($aParams)
             || $this->_noCreditCardUrlIsTest($aParams);
     }
@@ -183,8 +183,8 @@ class PaymentMain extends PaymentMain_parent
      */
     private function _isPayolutionPaymentMethod($sPaymentId)
     {
-        return $sPaymentId === PayolutionInvoicePaymentMethod::getName(true)
-            || $sPaymentId === PayolutionBtwobPaymentMethod::getName(true);
+        return $sPaymentId === PayolutionInvoicePaymentMethod::getName()
+            || $sPaymentId === PayolutionBtwobPaymentMethod::getName();
     }
 
     /**
@@ -298,7 +298,7 @@ class PaymentMain extends PaymentMain_parent
         $sUser = $aParams['oxpayments__wdoxidee_httpuser'];
         $sPass = $aParams['oxpayments__wdoxidee_httppass'];
 
-        if ($aParams['oxpayments__oxid'] === PayolutionInvoicePaymentMethod::getName(true)) {
+        if ($aParams['oxpayments__oxid'] === PayolutionInvoicePaymentMethod::getName()) {
             // handle the case of different configuration per currency (currently only Payolution)
             // it's only checked if config values are entered on the frontend but no validation is done on the backend
             return $this->_checkCurrencyConfigFields($aParams);

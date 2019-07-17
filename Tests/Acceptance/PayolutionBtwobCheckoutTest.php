@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\PayolutionBtwobPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PayolutionBtwobPaymentMethod;
 
 class PayolutionBtowbCheckoutTest extends CheckoutTestCase
 {
@@ -22,7 +22,7 @@ class PayolutionBtowbCheckoutTest extends CheckoutTestCase
      */
     public function getPaymentMethodName()
     {
-        return PayolutionBtwobPaymentMethod::getName(true);
+        return PayolutionBtwobPaymentMethod::getName();
     }
 
     public function testCheckoutWithRequiredProfileData()

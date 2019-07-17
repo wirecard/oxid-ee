@@ -7,7 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use Wirecard\Oxid\Model\PaymentOnInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaymentOnInvoicePaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 
@@ -24,20 +24,9 @@ class PaymentOnInvoicePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTe
         $this->_oPaymentMethod = new PaymentOnInvoicePaymentMethod();
     }
 
-    /**
-     * @dataProvider getNameProvider
-     */
-    public function testGetName($bForOxid, $sExpected)
+    public function testGetName()
     {
-        $sName = PaymentOnInvoicePaymentMethod::getName($bForOxid);
-        $this->assertEquals($sExpected, $sName);
-    }
-
-    public function getNameProvider()
-    {
-        return [
-            'for oxid' => [true, 'wdpaymentoninvoice'],
-            'not for oxid' => [false, 'paymentoninvoice'],
-        ];
+        $sName = PaymentOnInvoicePaymentMethod::getName();
+        $this->assertEquals('wdpaymentoninvoice', $sName);
     }
 }

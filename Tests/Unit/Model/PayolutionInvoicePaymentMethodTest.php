@@ -37,7 +37,7 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
     {
         $oConfig = $this->_oPaymentMethod->getConfig();
 
-        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get(PayolutionInvoicePaymentMethod::getName()));
+        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get('payolution-inv'));
     }
 
     public function testGetTransaction()
@@ -133,12 +133,12 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
         $oUser->save();
         $this->getSession()->setUser($oUser);
 
-        $aDynvalues['phonepayolution-inv'] = '4512543425';
+        $aDynvalues['phonewdpayolution-inv'] = '4512543425';
         $this->getSession()->setVariable('dynvalue', $aDynvalues);
 
         $oTransaction = $this->_oPaymentMethod->getTransaction();
         $oOrder = oxNew(Order::class);
-        $oOrder->oxorder__oxpaymenttype = new Field(PayolutionInvoicePaymentMethod::getName(true));
+        $oOrder->oxorder__oxpaymenttype = new Field(PayolutionInvoicePaymentMethod::getName());
         $this->_oPaymentMethod->addMandatoryTransactionData($oTransaction, $oOrder);
 
         $this->assertObjectHasAttribute('shipping', $oTransaction);
@@ -154,9 +154,9 @@ class PayolutionInvoicePaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
         $oUser->save();
         $this->getSession()->setUser($oUser);
 
-        $aDynvalues['dateOfBirthpayolution-inv'] = '12.12.1985';
-        $aDynvalues['phonepayolution-inv'] = $sPhone;
-        $aDynvalues['saveCheckoutFieldspayolution-inv'] = '1';
+        $aDynvalues['dateOfBirthwdpayolution-inv'] = '12.12.1985';
+        $aDynvalues['phonewdpayolution-inv'] = $sPhone;
+        $aDynvalues['saveCheckoutFieldswdpayolution-inv'] = '1';
         $this->getSession()->setVariable('dynvalue', $aDynvalues);
 
         $this->_oPaymentMethod->onBeforeOrderCreation();

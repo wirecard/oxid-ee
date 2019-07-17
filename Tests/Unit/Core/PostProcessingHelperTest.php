@@ -65,7 +65,7 @@ class PostProcessingHelperTest extends \Wirecard\Test\WdUnitTestCase
             ->getMock();
         $result = PostProcessingHelper::filterPostProcessingActions(
             $aPossibleOperations,
-            new \Wirecard\Oxid\Model\PaypalPaymentMethod()
+            new Wirecard\Oxid\Model\PaymentMethod\PaypalPaymentMethod()
             , $oTransactionStub);
 
         $this->assertEquals($aPossibleOperations, $result);

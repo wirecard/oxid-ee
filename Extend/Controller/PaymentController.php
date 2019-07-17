@@ -13,7 +13,7 @@ use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\SessionHelper;
 use Wirecard\Oxid\Extend\Model\Order;
-use Wirecard\Oxid\Model\InvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\InvoicePaymentMethod;
 
 /**
  * Class PaymentController

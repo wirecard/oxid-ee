@@ -18,7 +18,7 @@ class SofortCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return SofortPaymentMethod::getName(true);
+        return SofortPaymentMethod::getName();
     }
 
     public function testCheckout()

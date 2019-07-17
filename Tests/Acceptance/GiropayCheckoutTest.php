@@ -18,7 +18,7 @@ class GiropayCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return GiropayPaymentMethod::getName(true);
+        return GiropayPaymentMethod::getName();
     }
 
     public function testCheckout()
@@ -45,7 +45,7 @@ class GiropayCheckoutTest extends CheckoutTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->paymentMethod::getName()
+            $this->getPaymentMethodName()
         ));
         $this->type(
             $this->getLocator('external.giropay.bic'),

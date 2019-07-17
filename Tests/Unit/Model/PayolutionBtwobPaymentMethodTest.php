@@ -13,7 +13,7 @@ use OxidEsales\Eshop\Core\Field;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Extend\Model\Basket;
 use Wirecard\Oxid\Extend\Model\Order;
-use Wirecard\Oxid\Model\PayolutionBtwobPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PayolutionBtwobPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
 use Wirecard\PaymentSdk\Transaction\Operation;
@@ -35,7 +35,7 @@ class PayolutionBtwobPaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
     public function testGetConfig()
     {
         $oConfig = $this->_oPaymentMethod->getConfig();
-        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get(PayolutionBtwobPaymentMethod::getName()));
+        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get('payolution-b2b'));
     }
 
     public function testGetTransaction()
@@ -56,7 +56,7 @@ class PayolutionBtwobPaymentMethodTest extends \Wirecard\Test\WdUnitTestCase
             ->getMock();
         $oOrderStub->method('__get')
             ->with('oxorder__oxpaymenttype')
-            ->willReturn(new Field(PayolutionBtwobPaymentMethod::getName(true)));
+            ->willReturn(new Field(PayolutionBtwobPaymentMethod::getName()));
         $oOrderStub->method('getAccountHolder')
             ->willReturn(\Wirecard\Oxid\Core\AccountHolderHelper::createAccountHolder(
                 [

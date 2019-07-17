@@ -48,7 +48,7 @@
       "nextStep": "//input[@type='submit']"
     },
     "ratepayInvoice": {
-      "dateOfBirth": "dateOfBirthratepay-invoice",
+      "dateOfBirth": "dateOfBirthwdratepay-invoice",
       "phone": "phoneratepay-invoice"
     },
     "eps": {
@@ -62,7 +62,7 @@
       "backToShop": "//input[@name='back2Shop']"
     },
     "payolutionInv":{
-      "dateOfBirth": "dateOfBirthpayolution-inv",
+      "dateOfBirth": "dateOfBirthwdpayolution-inv",
       "termsCheckbox": "//input[@name='terms_checkbox']"
     },
     "payolutionB2B": {

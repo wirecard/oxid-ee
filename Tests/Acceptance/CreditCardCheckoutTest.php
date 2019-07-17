@@ -18,7 +18,7 @@ class CreditCardCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return CreditCardPaymentMethod::getName(true);
+        return CreditCardPaymentMethod::getName();
     }
 
     public function testCheckoutForPurchaseNonThreeD()
@@ -65,14 +65,14 @@ class CreditCardCheckoutTest extends CheckoutTestCase
     {
         $this->executeSql("UPDATE `oxpayments`
             SET `WDOXIDEE_MAID` = '', `WDOXIDEE_SECRET` = ''
-            WHERE `OXID` = '{$this->paymentMethod::getName()}'");
+            WHERE `OXID` = '{$this->getPaymentMethodName()}'");
     }
 
     private function forceNonThreeD()
     {
         $this->executeSql("UPDATE `oxpayments`
             SET `WDOXIDEE_THREE_D_MAID` = '', `WDOXIDEE_THREE_D_SECRET` = ''
-            WHERE `OXID` = '{$this->paymentMethod::getName()}'");
+            WHERE `OXID` = '{$this->getPaymentMethodName()}'");
     }
 
     public function goThroughCheckout()
@@ -90,7 +90,7 @@ class CreditCardCheckoutTest extends CheckoutTestCase
         // Step 3: Pay
         $this->click(sprintf(
             $this->getLocator('checkout.paymentMethod'),
-            $this->paymentMethod::getName()
+            $this->getPaymentMethodName()
         ));
         $this->continueToNextStep();
 

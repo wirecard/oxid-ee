@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\PaymentInAdvancePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaymentInAdvancePaymentMethod;
 
 /**
  * Acceptance tests for the Payment in Advance checkout flow.
@@ -18,7 +18,7 @@ class PaymentInAdvanceCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return PaymentInAdvancePaymentMethod::getName(true);
+        return PaymentInAdvancePaymentMethod::getName();
     }
 
     public function testCheckout()
