@@ -49,7 +49,7 @@
     },
     "ratepayInvoice": {
       "dateOfBirth": "dateOfBirthwdratepay-invoice",
-      "phone": "phoneratepay-invoice"
+      "phone": "phonewdratepay-invoice"
     },
     "eps": {
       "bic": "bankname",
