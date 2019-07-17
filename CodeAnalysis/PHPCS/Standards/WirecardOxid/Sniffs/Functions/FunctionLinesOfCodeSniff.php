@@ -1,34 +1,30 @@
 <?php
 
 /**
- * Ensures that classes do not exceed a certain amount of lines of code.
+ * Ensures that functions do not exceed a certain amount of lines of code.
  */
-class WirecardBase_Sniffs_Classes_ClassLinesOfCodeSniff implements PHP_CodeSniffer_Sniff
+class WirecardOxid_Sniffs_Functions_FunctionLinesOfCodeSniff implements PHP_CodeSniffer_Sniff
 {
     /**
-     * The limit of lines of code a class should not exceed.
+     * The limit of lines of code a function should not exceed.
      *
      * @var int
      */
-    public $limit = 400;
+    public $limit = 80;
 
     /**
-     * The limit of lines of code a class must not exceed.
+     * The limit of lines of code a function must not exceed.
      *
      * @var int
      */
-    public $absoluteLimit = 500;
+    public $absoluteLimit = 120;
 
     /**
      * @inheritdoc
      */
     public function register()
     {
-        return [
-            T_CLASS,
-            T_INTERFACE,
-            T_TRAIT,
-        ];
+        return [T_FUNCTION];
     }
 
     /**
@@ -51,7 +47,7 @@ class WirecardBase_Sniffs_Classes_ClassLinesOfCodeSniff implements PHP_CodeSniff
 
         if ($linesOfCode > $this->absoluteLimit) {
             $phpcsFile->addError(
-                'Class exceeds maximum limit of %s lines of code; contains %s lines',
+                'Function exceeds maximum limit of %s lines of code; contains %s lines',
                 $stackPtr,
                 'MaxExceeded',
                 [
@@ -65,7 +61,7 @@ class WirecardBase_Sniffs_Classes_ClassLinesOfCodeSniff implements PHP_CodeSniff
 
         if ($linesOfCode > $this->limit) {
             $phpcsFile->addWarning(
-                'Class exceeds %s lines of code; contains %s lines',
+                'Function exceeds %s lines of code; contains %s lines',
                 $stackPtr,
                 'TooLong',
                 [
