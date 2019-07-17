@@ -10,8 +10,8 @@
 namespace Wirecard\Oxid\Extend\Controller\Admin;
 
 use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
-use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\RatepayInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PayolutionInvoicePaymentMethod;
 
 /**
  * Controls the view for the payment country tab.
@@ -47,8 +47,8 @@ class PaymentCountry extends PaymentCountry_parent
     protected function _allowCountryAssignment()
     {
         return !in_array($this->getEditObjectId(), [
-            RatepayInvoicePaymentMethod::getName(true),
-            PayolutionInvoicePaymentMethod::getName(true),
+            RatepayInvoicePaymentMethod::getName(),
+            PayolutionInvoicePaymentMethod::getName(),
         ]);
     }
 }

@@ -7,62 +7,60 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Model;
+namespace Wirecard\Oxid\Model\PaymentMethod;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Model\Transaction as TransactionModel;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use Wirecard\PaymentSdk\Transaction\PoiPiaTransaction;
+use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Base class for implementation of Payment on Invoice/Payment in Advance
+ * Payment method implementation for PayPal
  *
- * @since 1.3.0
+ * @since 1.0.0
  */
-abstract class BasePoiPiaPaymentMethod extends SepaCreditTransferPaymentMethod
+class PaypalPaymentMethod extends PaymentMethod
 {
     /**
      * @inheritdoc
      *
-     * @var bool
-     *
-     * @since 1.3.0
+     * @since 1.0.0
      */
-    protected static $_bMerchantOnly = false;
+    protected static $_sName = "paypal";
 
     /**
      * @inheritdoc
      *
      * @return Config
      *
-     * @since 1.3.0
+     * @since 1.0.0
      */
     public function getConfig()
     {
         $oConfig = parent::getConfig();
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
-            PoiPiaTransaction::NAME,
+            PayPalTransaction::NAME,
             $this->_oPayment->oxpayments__wdoxidee_maid->value,
             $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
 
         $oConfig->add($oPaymentMethodConfig);
-
         return $oConfig;
     }
 
     /**
-     * Get the current transaction to be processed
+     * @inheritdoc
      *
      * @return Transaction
      *
-     * @since 1.3.0
+     * @since 1.0.0
      */
     public function getTransaction()
     {
-        return new PoiPiaTransaction();
+        return new PayPalTransaction();
     }
 
     /**
@@ -70,29 +68,39 @@ abstract class BasePoiPiaPaymentMethod extends SepaCreditTransferPaymentMethod
      *
      * @return array
      *
-     * @since 1.3.0
+     * @since 1.0.0
      */
     public function getConfigFields()
     {
         $aAdditionalFields = [
-            'descriptor' => [
-                'type'  => 'select',
-                'field' => 'oxpayments__wdoxidee_descriptor',
+            'basket' => [
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_basket',
                 'options' => [
                     '1' => Helper::translate('wd_yes'),
                     '0' => Helper::translate('wd_no'),
                 ],
-                'title' => Helper::translate('wd_config_descriptor'),
+                'title' => Helper::translate('wd_config_shopping_basket'),
+                'description' => Helper::translate('wd_config_shopping_basket_desc'),
+            ],
+            'descriptor' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_descriptor',
+                'options'     => [
+                    '1'       => Helper::translate('wd_yes'),
+                    '0'       => Helper::translate('wd_no'),
+                ],
+                'title'       => Helper::translate('wd_config_descriptor'),
                 'description' => Helper::translate('wd_config_descriptor_desc'),
             ],
             'additionalInfo' => [
-                'type'  => 'select',
-                'field' => 'oxpayments__wdoxidee_additional_info',
-                'options' => [
-                    '1' => Helper::translate('wd_yes'),
-                    '0' => Helper::translate('wd_no'),
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_additional_info',
+                'options'     => [
+                    '1'       => Helper::translate('wd_yes'),
+                    '0'       => Helper::translate('wd_no'),
                 ],
-                'title' => Helper::translate('wd_config_additional_info'),
+                'title'       => Helper::translate('wd_config_additional_info'),
                 'description' => Helper::translate('wd_config_additional_info_desc'),
             ],
             'deleteCanceledOrder' => [
@@ -115,9 +123,16 @@ abstract class BasePoiPiaPaymentMethod extends SepaCreditTransferPaymentMethod
                 'title' => Helper::translate('wd_config_delete_failure_order'),
                 'description' => Helper::translate('wd_config_delete_failure_order_desc'),
             ],
+            'paymentAction' => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_transactionaction',
+                'options'     => TransactionModel::getTranslatedActions(),
+                'title'       => Helper::translate('wd_config_payment_action'),
+                'description' => Helper::translate('wd_config_payment_action_desc'),
+            ],
         ];
 
-        return array_merge(parent::getConfigFields(), $aAdditionalFields);
+        return parent::getConfigFields() + $aAdditionalFields;
     }
 
     /**
@@ -125,15 +140,13 @@ abstract class BasePoiPiaPaymentMethod extends SepaCreditTransferPaymentMethod
      *
      * @return array
      *
-     * @since 1.3.0
+     * @since 1.0.0
      */
     public function getPublicFieldNames()
     {
-        return array_merge(parent::getPublicFieldNames(), [
-            'descriptor',
-            'additionalInfo',
-            'deleteCanceledOrder',
-            'deleteFailedOrder',
-        ]);
+        return array_merge(
+            parent::getPublicFieldNames(),
+            ['basket', 'descriptor', 'additionalInfo', 'paymentAction', 'deleteCanceledOrder', 'deleteFailedOrder']
+        );
     }
 }

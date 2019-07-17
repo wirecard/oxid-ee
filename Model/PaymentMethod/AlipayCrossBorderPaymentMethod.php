@@ -7,50 +7,42 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Model;
+namespace Wirecard\Oxid\Model\PaymentMethod;
 
 use Wirecard\Oxid\Core\Helper;
+
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use Wirecard\PaymentSdk\Transaction\EpsTransaction;
+use Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Payment method implementation for eps
+ * Payment method implementation for Alipay Cross-border.
  *
- * @since 1.2.0
+ * @since 1.3.0
  */
-class EpsPaymentMethod extends SepaCreditTransferPaymentMethod
+class AlipayCrossBorderPaymentMethod extends PaymentMethod
 {
     /**
      * @inheritdoc
      *
-     * @since 1.2.0
+     * @since 1.3.0
      */
-    protected static $_sName = "eps";
-
-    /**
-     * @inheritdoc
-     *
-     * @var bool
-     *
-     * @since 1.2.0
-     */
-    protected static $_bMerchantOnly = false;
+    protected static $_sName = 'alipay-xborder';
 
     /**
      * @inheritdoc
      *
      * @return Config
      *
-     * @since 1.2.0
+     * @since 1.3.0
      */
     public function getConfig()
     {
         $oConfig = parent::getConfig();
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
-            EpsTransaction::NAME,
+            AlipayCrossborderTransaction::NAME,
             $this->_oPayment->oxpayments__wdoxidee_maid->value,
             $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
@@ -61,15 +53,28 @@ class EpsPaymentMethod extends SepaCreditTransferPaymentMethod
     }
 
     /**
-     * Get the current transaction to be processed
+     * @inheritdoc
      *
      * @return Transaction
      *
-     * @since 1.2.0
+     * @since 1.3.0
      */
     public function getTransaction()
     {
-        return new EpsTransaction();
+        return new AlipayCrossborderTransaction();
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @param Transaction $oTransaction
+     * @param Order       $oOrder
+     *
+     * @since 1.3.0
+     */
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
+    {
+        $oTransaction->setAccountHolder($oOrder->getAccountHolder());
     }
 
     /**
@@ -77,7 +82,7 @@ class EpsPaymentMethod extends SepaCreditTransferPaymentMethod
      *
      * @return array
      *
-     * @since 1.2.0
+     * @since 1.3.0
      */
     public function getConfigFields()
     {
@@ -124,7 +129,7 @@ class EpsPaymentMethod extends SepaCreditTransferPaymentMethod
             ],
         ];
 
-        return array_merge(parent::getConfigFields(), $aAdditionalFields);
+        return parent::getConfigFields() + $aAdditionalFields;
     }
 
     /**
@@ -132,7 +137,7 @@ class EpsPaymentMethod extends SepaCreditTransferPaymentMethod
      *
      * @return array
      *
-     * @since 1.2.0
+     * @since 1.3.0
      */
     public function getPublicFieldNames()
     {

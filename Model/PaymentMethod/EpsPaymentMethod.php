@@ -7,27 +7,27 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Model;
+namespace Wirecard\Oxid\Model\PaymentMethod;
 
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use Wirecard\PaymentSdk\Transaction\SofortTransaction;
+use Wirecard\PaymentSdk\Transaction\EpsTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Payment method implementation for Sofort.
+ * Payment method implementation for eps
  *
- * @since 1.0.0
+ * @since 1.2.0
  */
-class SofortPaymentMethod extends SepaCreditTransferPaymentMethod
+class EpsPaymentMethod extends SepaCreditTransferPaymentMethod
 {
     /**
      * @inheritdoc
      *
-     * @since 1.0.0
+     * @since 1.2.0
      */
-    protected static $_sName = "sofortbanking";
+    protected static $_sName = "eps";
 
     /**
      * @inheritdoc
@@ -43,17 +43,18 @@ class SofortPaymentMethod extends SepaCreditTransferPaymentMethod
      *
      * @return Config
      *
-     * @since 1.0.0
+     * @since 1.2.0
      */
     public function getConfig()
     {
         $oConfig = parent::getConfig();
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
-            SofortTransaction::NAME,
+            EpsTransaction::NAME,
             $this->_oPayment->oxpayments__wdoxidee_maid->value,
             $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
+
         $oConfig->add($oPaymentMethodConfig);
 
         return $oConfig;
@@ -64,31 +65,11 @@ class SofortPaymentMethod extends SepaCreditTransferPaymentMethod
      *
      * @return Transaction
      *
-     * @since 1.0.0
+     * @since 1.2.0
      */
     public function getTransaction()
     {
-        return new SofortTransaction();
-    }
-
-    /**
-     * Sofort has a variable logo depending on the shop language
-     *
-     * @return string
-     *
-     * @since 1.0.0
-     */
-    public function getLogoPath()
-    {
-        $sLogoPath = $this->_oPayment->oxpayments__wdoxidee_logo->value;
-        $sCountryCode = $this->_oPayment->oxpayments__wdoxidee_countrycode->value;
-        $sLogoVariant = $this->_oPayment->oxpayments__wdoxidee_logovariant->value;
-
-        return sprintf(
-            $sLogoPath,
-            $sCountryCode,
-            $sLogoVariant
-        );
+        return new EpsTransaction();
     }
 
     /**
@@ -96,19 +77,29 @@ class SofortPaymentMethod extends SepaCreditTransferPaymentMethod
      *
      * @return array
      *
-     * @since 1.0.0
+     * @since 1.2.0
      */
     public function getConfigFields()
     {
         $aAdditionalFields = [
-            'additionalInfo' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_additional_info',
-                'options'     => [
-                    '1'       => Helper::translate('wd_yes'),
-                    '0'       => Helper::translate('wd_no'),
+            'descriptor' => [
+                'type'  => 'select',
+                'field' => 'oxpayments__wdoxidee_descriptor',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
                 ],
-                'title'       => Helper::translate('wd_config_additional_info'),
+                'title' => Helper::translate('wd_config_descriptor'),
+                'description' => Helper::translate('wd_config_descriptor_desc'),
+            ],
+            'additionalInfo' => [
+                'type'  => 'select',
+                'field' => 'oxpayments__wdoxidee_additional_info',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
+                ],
+                'title' => Helper::translate('wd_config_additional_info'),
                 'description' => Helper::translate('wd_config_additional_info_desc'),
             ],
             'deleteCanceledOrder' => [
@@ -131,26 +122,9 @@ class SofortPaymentMethod extends SepaCreditTransferPaymentMethod
                 'title' => Helper::translate('wd_config_delete_failure_order'),
                 'description' => Helper::translate('wd_config_delete_failure_order_desc'),
             ],
-            'countryCode' => [
-                'type'        => 'text',
-                'field'       => 'oxpayments__wdoxidee_countrycode',
-                'title'       => Helper::translate('wd_config_country_code'),
-                'description' => Helper::translate('wd_config_country_code_desc'),
-                'onchange'    => 'wdCheckCountryCode()',
-            ],
-            'logoType' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_logovariant',
-                'options'     => [
-                    'standard'      => Helper::translate('wd_text_logo_variant_standard'),
-                    'descriptive'   => Helper::translate('wd_text_logo_variant_descriptive'),
-                ],
-                'title'       => Helper::translate('wd_config_logo_variant'),
-                'description' => Helper::translate('wd_config_logo_variant_desc'),
-            ],
         ];
 
-        return parent::getConfigFields() + $aAdditionalFields;
+        return array_merge(parent::getConfigFields(), $aAdditionalFields);
     }
 
     /**
@@ -158,13 +132,15 @@ class SofortPaymentMethod extends SepaCreditTransferPaymentMethod
      *
      * @return array
      *
-     * @since 1.0.0
+     * @since 1.2.0
      */
     public function getPublicFieldNames()
     {
-        return array_merge(
-            parent::getPublicFieldNames(),
-            ['additionalInfo', 'countryCode', 'logoType', 'deleteCanceledOrder', 'deleteFailedOrder']
-        );
+        return array_merge(parent::getPublicFieldNames(), [
+            'descriptor',
+            'additionalInfo',
+            'deleteCanceledOrder',
+            'deleteFailedOrder',
+        ]);
     }
 }

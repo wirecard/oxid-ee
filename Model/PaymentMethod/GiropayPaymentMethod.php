@@ -7,42 +7,53 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Model;
+namespace Wirecard\Oxid\Model\PaymentMethod;
+
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Model\Transaction as TransactionModel;
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
+use Wirecard\PaymentSdk\Entity\BankAccount;
+use Wirecard\PaymentSdk\Transaction\GiropayTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Payment method implementation for PayPal
+ * Payment method implementation for giropay.
  *
- * @since 1.0.0
+ * @since 1.2.0
  */
-class PaypalPaymentMethod extends PaymentMethod
+class GiropayPaymentMethod extends SepaCreditTransferPaymentMethod
 {
     /**
      * @inheritdoc
      *
-     * @since 1.0.0
+     * @since 1.2.0
      */
-    protected static $_sName = "paypal";
+    protected static $_sName = 'giropay';
+
+    /**
+     * @inheritdoc
+     *
+     * @var bool
+     *
+     * @since 1.2.0
+     */
+    protected static $_bMerchantOnly = false;
 
     /**
      * @inheritdoc
      *
      * @return Config
      *
-     * @since 1.0.0
+     * @since 1.2.0
      */
     public function getConfig()
     {
         $oConfig = parent::getConfig();
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
-            PayPalTransaction::NAME,
+            GiropayTransaction::NAME,
             $this->_oPayment->oxpayments__wdoxidee_maid->value,
             $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
@@ -52,15 +63,33 @@ class PaypalPaymentMethod extends PaymentMethod
     }
 
     /**
-     * @inheritdoc
+     * Get the current transaction to be processed
      *
      * @return Transaction
      *
-     * @since 1.0.0
+     * @since 1.2.0
      */
     public function getTransaction()
     {
-        return new PayPalTransaction();
+        return new GiropayTransaction();
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @param GiropayTransaction $oTransaction
+     * @param Order              $oOrder
+     *
+     * @since 1.2.0
+     */
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
+    {
+        $oBankAccount = new BankAccount();
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+
+        $oBankAccount->setBic($aDynvalues['bic'] ?? '');
+        $oTransaction->setBankAccount($oBankAccount);
     }
 
     /**
@@ -68,39 +97,29 @@ class PaypalPaymentMethod extends PaymentMethod
      *
      * @return array
      *
-     * @since 1.0.0
+     * @since 1.2.0
      */
     public function getConfigFields()
     {
         $aAdditionalFields = [
-            'basket' => [
-                'type' => 'select',
-                'field' => 'oxpayments__wdoxidee_basket',
+            'descriptor' => [
+                'type'  => 'select',
+                'field' => 'oxpayments__wdoxidee_descriptor',
                 'options' => [
                     '1' => Helper::translate('wd_yes'),
                     '0' => Helper::translate('wd_no'),
                 ],
-                'title' => Helper::translate('wd_config_shopping_basket'),
-                'description' => Helper::translate('wd_config_shopping_basket_desc'),
-            ],
-            'descriptor' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_descriptor',
-                'options'     => [
-                    '1'       => Helper::translate('wd_yes'),
-                    '0'       => Helper::translate('wd_no'),
-                ],
-                'title'       => Helper::translate('wd_config_descriptor'),
+                'title' => Helper::translate('wd_config_descriptor'),
                 'description' => Helper::translate('wd_config_descriptor_desc'),
             ],
             'additionalInfo' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_additional_info',
-                'options'     => [
-                    '1'       => Helper::translate('wd_yes'),
-                    '0'       => Helper::translate('wd_no'),
+                'type'  => 'select',
+                'field' => 'oxpayments__wdoxidee_additional_info',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
                 ],
-                'title'       => Helper::translate('wd_config_additional_info'),
+                'title' => Helper::translate('wd_config_additional_info'),
                 'description' => Helper::translate('wd_config_additional_info_desc'),
             ],
             'deleteCanceledOrder' => [
@@ -123,16 +142,9 @@ class PaypalPaymentMethod extends PaymentMethod
                 'title' => Helper::translate('wd_config_delete_failure_order'),
                 'description' => Helper::translate('wd_config_delete_failure_order_desc'),
             ],
-            'paymentAction' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_transactionaction',
-                'options'     => TransactionModel::getTranslatedActions(),
-                'title'       => Helper::translate('wd_config_payment_action'),
-                'description' => Helper::translate('wd_config_payment_action_desc'),
-            ],
         ];
 
-        return parent::getConfigFields() + $aAdditionalFields;
+        return array_merge(parent::getConfigFields(), $aAdditionalFields);
     }
 
     /**
@@ -140,13 +152,33 @@ class PaypalPaymentMethod extends PaymentMethod
      *
      * @return array
      *
-     * @since 1.0.0
+     * @since 1.2.0
+     */
+    public function getCheckoutFields()
+    {
+        return [
+            'bic' => [
+                'type' => 'text',
+                'title' => Helper::translate('wd_bic'),
+                'required' => true,
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @since 1.2.0
      */
     public function getPublicFieldNames()
     {
-        return array_merge(
-            parent::getPublicFieldNames(),
-            ['basket', 'descriptor', 'additionalInfo', 'paymentAction', 'deleteCanceledOrder', 'deleteFailedOrder']
-        );
+        return array_merge(parent::getPublicFieldNames(), [
+            'descriptor',
+            'additionalInfo',
+            'deleteCanceledOrder',
+            'deleteFailedOrder',
+        ]);
     }
 }
