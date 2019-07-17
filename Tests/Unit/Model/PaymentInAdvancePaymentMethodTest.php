@@ -7,7 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use Wirecard\Oxid\Model\PaymentInAdvancePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaymentInAdvancePaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 
@@ -24,20 +24,9 @@ class PaymentInAdvancePaymentMethodTest extends OxidEsales\TestingLibrary\UnitTe
         $this->_oPaymentMethod = new PaymentInAdvancePaymentMethod();
     }
 
-    /**
-     * @dataProvider getNameProvider
-     */
-    public function testGetName($bForOxid, $sExpected)
+    public function testGetName()
     {
-        $sName = PaymentInAdvancePaymentMethod::getName($bForOxid);
-        $this->assertEquals($sExpected, $sName);
-    }
-
-    public function getNameProvider()
-    {
-        return [
-            'for oxid' => [true, 'wdpaymentinadvance'],
-            'not for oxid' => [false, 'paymentinadvance'],
-        ];
+        $sName = PaymentInAdvancePaymentMethod::getName();
+        $this->assertEquals('wdpaymentinadvance', $sName);
     }
 }

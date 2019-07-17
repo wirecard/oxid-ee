@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\PaymentOnInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaymentOnInvoicePaymentMethod;
 
 /**
  * Acceptance tests for the Payment on Invoice checkout flow.
@@ -18,7 +18,7 @@ class PaymentOnInvoiceCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return PaymentOnInvoicePaymentMethod::getName(true);
+        return PaymentOnInvoicePaymentMethod::getName();
     }
 
     public function testCheckout()

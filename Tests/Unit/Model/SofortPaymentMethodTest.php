@@ -7,7 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use Wirecard\Oxid\Model\SofortPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\SofortPaymentMethod;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
 
 class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
@@ -43,21 +43,10 @@ class SofortPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertFalse($this->_oPaymentMethod->isMerchantOnly());
     }
 
-    /**
-     * @dataProvider getNameProvider
-     */
-    public function testGetName($bForOxid, $sExpected)
+    public function testGetName()
     {
-        $sName = SofortPaymentMethod::getName($bForOxid);
-        $this->assertEquals($sExpected, $sName);
-    }
-
-    public function getNameProvider()
-    {
-        return [
-            'for oxid' => [true, 'wdsofortbanking'],
-            'not for oxid' => [false, 'sofortbanking'],
-        ];
+        $sName = SofortPaymentMethod::getName();
+        $this->assertEquals('wdsofortbanking', $sName);
     }
 
     public function testGetLogoPath()

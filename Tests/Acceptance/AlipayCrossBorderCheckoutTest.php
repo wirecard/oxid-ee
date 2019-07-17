@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\AlipayCrossBorderPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\AlipayCrossBorderPaymentMethod;
 
 /**
  * Acceptance tests for the Alipay Cross-border checkout flow.
@@ -18,7 +18,7 @@ class AlipayCrossBorderCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return AlipayCrossBorderPaymentMethod::getName(true);
+        return AlipayCrossBorderPaymentMethod::getName();
     }
 
     public function testCheckout()

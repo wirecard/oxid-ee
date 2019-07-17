@@ -9,13 +9,13 @@
 
 use OxidEsales\Eshop\Core\Field;
 
-use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\SepaCreditTransferPaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Tests\Unit\Controller\Admin\TestDataHelper;
 use Wirecard\PaymentSdk\Transaction\SepaCreditTransferTransaction;
 use Wirecard\Test\WdUnitTestCase;
 
-class SepaCreditTransferPaymentMethodTest extends Wirecard\Test\WdUnitTestCase
+class SepaCreditTransferPaymentMethodTest extends WdUnitTestCase
 {
     /**
      * @var SepaCreditTransferPaymentMethod

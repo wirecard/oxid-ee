@@ -10,7 +10,7 @@
 
 use OxidEsales\Eshop\Application\Model\Order;
 
-use Wirecard\Oxid\Model\GiropayPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\GiropayPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
@@ -35,7 +35,7 @@ class GiropayPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oConfig = $this->_oPaymentMethod->getConfig();
 
         $this->assertInstanceOf(Config::class, $oConfig);
-        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get(GiropayPaymentMethod::getName()));
+        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get('giropay'));
     }
 
     public function testGetTransaction()

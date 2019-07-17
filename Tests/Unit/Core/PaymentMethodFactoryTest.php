@@ -8,14 +8,14 @@
  */
 
 use Wirecard\Oxid\Core\PaymentMethodFactory;
-use Wirecard\Oxid\Model\CreditCardPaymentMethod;
-use Wirecard\Oxid\Model\PaymentMethod;
-use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
-use Wirecard\Oxid\Model\PaypalPaymentMethod;
-use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
-use Wirecard\Oxid\Model\SepaCreditTransferPaymentMethod;
-use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
-use Wirecard\Oxid\Model\SofortPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PayolutionInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaypalPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\RatepayInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\SepaCreditTransferPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\SofortPaymentMethod;
 
 class PaymentMethodFactoryTest extends OxidEsales\TestingLibrary\UnitTestCase
 {

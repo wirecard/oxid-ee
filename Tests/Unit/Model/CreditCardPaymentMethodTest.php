@@ -7,7 +7,7 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-use Wirecard\Oxid\Model\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
 
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
@@ -126,21 +126,10 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         ];
     }
 
-    /**
-     * @dataProvider getNameProvider
-     */
-    public function testGetName($bForOxid, $sExpected)
+    public function testGetName()
     {
-        $sName = CreditCardPaymentMethod::getName($bForOxid);
-        $this->assertEquals($sExpected, $sName);
-    }
-
-    public function getNameProvider()
-    {
-        return [
-            'for oxid' => [true, 'wdcreditcard'],
-            'not for oxid' => [false, 'creditcard'],
-        ];
+        $sName = CreditCardPaymentMethod::getName();
+        $this->assertEquals('wdcreditcard', $sName);
     }
 
     public function testGetPublicFieldNames()

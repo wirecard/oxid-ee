@@ -10,9 +10,9 @@
 use PHPUnit\Framework\MockObject\MockObject;
 
 use Wirecard\Oxid\Controller\NotifyHandler;
-use Wirecard\Oxid\Model\CreditCardPaymentMethod;
-use Wirecard\Oxid\Model\PaypalPaymentMethod;
-use Wirecard\Oxid\Model\SofortPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaypalPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\SofortPaymentMethod;
 
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Status;
