@@ -19,7 +19,6 @@
 /.bin export-ignore
 /.bundle export-ignore
 /ops export-ignore
-/phpmd export-ignore
+/CodeAnalysis export-ignore
 /Tests export-ignore
 /WirecardOxidRuleset export-ignore
-

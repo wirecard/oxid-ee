@@ -9,13 +9,13 @@
 
 namespace Wirecard\Oxid\Controller\Admin\Transaction;
 
+use OxidEsales\Eshop\Application\Model\Payment;
+
 use Wirecard\Oxid\Controller\Admin\Tab;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\ResponseMapper;
-use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Extend\Language;
-
-use OxidEsales\Eshop\Application\Model\Payment;
+use Wirecard\Oxid\Model\Transaction;
 
 /**
  * Controls the view for a single transaction tab.

@@ -1,42 +1,21 @@
 <?xml version="1.0"?>
-<ruleset name="WirecardOxidRuleset">
+<ruleset name="Wirecard">
   <description>Wirecard OXID extension</description>
 
-  <!-- Load external standards -->
-  <config name="installed_paths" value="phpcs,vendor/oxid-esales/coding-standards,vendor/escapestudios/symfony2-coding-standard"/>
+  <!-- Load standards -->
+  <config name="installed_paths" value="CodeAnalysis/PHPCS/Standards,vendor/oxid-esales/coding-standards"/>
+
+  <!-- Define standards -->
+  <rule ref="WirecardOxid"/>
 
   <!-- Exclude patterns -->
   <exclude-pattern>.bin</exclude-pattern>
   <exclude-pattern>.bundle</exclude-pattern>
+  <exclude-pattern>CodeAnalysis</exclude-pattern>
   <exclude-pattern>ops</exclude-pattern>
   <exclude-pattern>out</exclude-pattern>
-  <exclude-pattern>phpcs</exclude-pattern>
-  <exclude-pattern>phpmd</exclude-pattern>
   <exclude-pattern>Tests</exclude-pattern>
   <exclude-pattern>translations</exclude-pattern>
   <exclude-pattern>vendor</exclude-pattern>
   <exclude-pattern>views</exclude-pattern>
-
-  <!-- Inherit OXID's standard -->
-  <rule ref="Oxid"/>
-
-  <!-- Add custom standard -->
-  <rule ref="Custom"/>
-
-  <!-- Add sniffs from other standards -->
-  <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
-  <rule ref="Generic.Formatting.SpaceAfterCast"/>
-  <rule ref="Generic.Files.LineLength">
-    <properties>
-      <property name="lineLimit" value="120"/>
-      <property name="absoluteLineLimit" value="120"/>
-    </properties>
-  </rule>
-  <rule ref="Generic.Metrics.CyclomaticComplexity">
-    <properties>
-      <property name="complexity" value="5"/>
-      <property name="absoluteComplexity" value="5"/>
-    </properties>
-  </rule>
-  <rule ref="Squiz.Classes.ClassFileName"/>
 </ruleset>

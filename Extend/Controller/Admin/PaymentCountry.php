@@ -10,8 +10,8 @@
 namespace Wirecard\Oxid\Extend\Controller\Admin;
 
 use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
+use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
 
 /**
  * Controls the view for the payment country tab.

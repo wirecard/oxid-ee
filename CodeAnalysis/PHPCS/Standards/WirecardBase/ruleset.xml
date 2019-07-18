@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<ruleset name="WirecardBase">
+  <description>Wirecard base coding standard.</description>
+
+  <!-- Inherit from PSR-2 -->
+  <rule ref="PSR2"/>
+
+  <!-- Additional rules -->
+  <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+  <rule ref="Generic.Files.LineLength">
+    <properties>
+      <property name="lineLimit" value="120"/>
+      <property name="absoluteLineLimit" value="120"/>
+    </properties>
+  </rule>
+  <rule ref="Generic.Formatting.SpaceAfterCast"/>
+  <rule ref="Squiz.Classes.ClassFileName"/>
+  <rule ref="Squiz.Classes.ValidClassName"/>
+</ruleset>

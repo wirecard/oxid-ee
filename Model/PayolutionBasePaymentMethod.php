@@ -10,13 +10,12 @@
 namespace Wirecard\Oxid\Model;
 
 use OxidEsales\Eshop\Application\Model\Country;
-use OxidEsales\Eshop\Core\Registry;
 use OxidEsales\Eshop\Core\Exception\InputException;
+use OxidEsales\Eshop\Core\Registry;
 
-use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\BasketHelper;
+use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
-
 use Wirecard\PaymentSdk\Config\Config;
 
 /**

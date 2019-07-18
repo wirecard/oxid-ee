@@ -9,8 +9,8 @@
 
 namespace Wirecard\Oxid\Core;
 
-use Wirecard\PaymentSdk\Entity\Address;
 use Wirecard\PaymentSdk\Entity\AccountHolder;
+use Wirecard\PaymentSdk\Entity\Address;
 
 /**
  * Helper class to handle account holders for transactions

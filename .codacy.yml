@@ -5,7 +5,7 @@ engines:
       - Tests/**
 exclude_paths:
   - '.bin/**'
-  - 'phpmd/**'
+  - 'CodeAnalysis/**'
   - 'translations/**'
   - 'views/**'
   - 'WirecardOxidRuleset/**'

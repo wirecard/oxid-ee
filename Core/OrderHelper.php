@@ -22,9 +22,9 @@ use Psr\Log\LoggerInterface;
 
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
-use Wirecard\Oxid\Model\PaymentInAdvancePaymentMethod;
 use Wirecard\Oxid\Model\FormInteractionResponseFields;
 use Wirecard\Oxid\Model\PaymentInAdvancePaymentInformation;
+use Wirecard\Oxid\Model\PaymentInAdvancePaymentMethod;
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Response\FailureResponse;
