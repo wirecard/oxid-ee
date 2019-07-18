@@ -36,7 +36,7 @@
       <oxactive>0</oxactive>
       <oxfromamount>10</oxfromamount>
       <oxtoamount>3500</oxtoamount>
-      <oxdesc id="wd_heading_title_payolution_b2b_customer"/>
+      <oxdesc id="wd_heading_title_payolution_b2b_consumer"/>
       <oxsort>35</oxsort>
       <wdoxidee_logo>invoice.png</wdoxidee_logo>
       <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
@@ -74,7 +74,7 @@
         <oxactive>0</oxactive>
         <oxfromamount>25</oxfromamount>
         <oxtoamount>3500</oxtoamount>
-        <oxdesc id="wd_heading_title_payolution_invoice_customer"/>
+        <oxdesc id="wd_heading_title_payolution_invoice_consumer"/>
         <oxsort>36</oxsort>
         <wdoxidee_logo>invoice.png</wdoxidee_logo>
         <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
@@ -207,7 +207,7 @@
         <oxactive>0</oxactive>
         <oxfromamount>20</oxfromamount>
         <oxtoamount>3500</oxtoamount>
-        <oxdesc id="wd_heading_title_ratepayinvoice_customer"/>
+        <oxdesc id="wd_heading_title_ratepayinvoice_consumer"/>
         <oxsort>40</oxsort>
         <wdoxidee_logo>invoice.png</wdoxidee_logo>
         <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
