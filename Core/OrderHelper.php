@@ -34,7 +34,6 @@ use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\FormInteractionResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\Response;
-use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 /**
  * Helper class to handle orders
@@ -138,24 +137,6 @@ class OrderHelper
 
         if ($oResponse instanceof InteractionResponse) {
             return self::_handleInteractionResponse($oResponse);
-        }
-
-        self::_onSuccessResponse($oResponse, $oBackendService, $oOrder);
-    }
-
-    /**
-     * @param Response       $oResponse
-     * @param BackendService $oBackendService
-     * @param Order          $oOrder
-     *
-     * @throws Exception
-     *
-     * @since 1.0.0
-     */
-    private static function _onSuccessResponse($oResponse, $oBackendService, $oOrder)
-    {
-        if (!is_null($oBackendService) && $oResponse instanceof SuccessResponse) {
-            ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
         }
     }
 

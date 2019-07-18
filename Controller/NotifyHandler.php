@@ -22,6 +22,7 @@ use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\ResponseHandler;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\PaymentMethod\PaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
 
 use Wirecard\PaymentSdk\BackendService;
@@ -40,6 +41,10 @@ use Wirecard\PaymentSdk\Response\SuccessResponse;
  */
 class NotifyHandler extends FrontendController
 {
+    const MAX_TIMEOUT_SECONDS = 10;
+    const ITERATION_TIMEOUT_SECONDS = 0.25;
+    const MICROSECONDS_TO_SECONDS = 1000000;
+
     /**
      * @var LoggerInterface
      *
@@ -128,7 +133,7 @@ class NotifyHandler extends FrontendController
             return;
         }
 
-        $this->_handleNotificationResponse($oNotificationResp, $oService);
+        $this->_handleNotificationResponse($oNotificationResp, $oService, $sPaymentId);
     }
 
     /**
@@ -136,13 +141,14 @@ class NotifyHandler extends FrontendController
      *
      * @param Response       $oNotificationResp
      * @param BackendService $oBackendService
+     * @param string         $sPaymentId
      *
      * @return null
      *
      * @since 1.0.0
      * @throws Exception
      */
-    private function _handleNotificationResponse($oNotificationResp, $oBackendService)
+    private function _handleNotificationResponse($oNotificationResp, $oBackendService, $sPaymentId)
     {
         // Return the response or log errors if any happen.
         if ($oNotificationResp instanceof SuccessResponse) {
@@ -152,8 +158,8 @@ class NotifyHandler extends FrontendController
                 // if a transaction with this ID already exists, we do not need to handle it again
                 return;
             }
-            $this->_onNotificationSuccess($oNotificationResp, $oBackendService);
 
+            $this->_onNotificationSuccess($oNotificationResp, $oBackendService, $sPaymentId);
             return;
         }
 
@@ -163,6 +169,7 @@ class NotifyHandler extends FrontendController
     /**
      * @param SuccessResponse $oResponse
      * @param BackendService  $oBackendService
+     * @param string          $sPaymentId
      *
      * @return void
      *
@@ -170,7 +177,7 @@ class NotifyHandler extends FrontendController
      *
      * @since 1.0.0
      */
-    private function _onNotificationSuccess($oResponse, $oBackendService)
+    private function _onNotificationSuccess($oResponse, $oBackendService, $sPaymentId)
     {
         // check if the response of this transaction type should be handled or not
         $aExcludedTypes = [
@@ -181,17 +188,15 @@ class NotifyHandler extends FrontendController
             return;
         }
 
-        $oOrder = oxNew(Order::class);
-
         $sTransactionId = $oResponse->getParentTransactionId();
-
         // Ratepay Invoice and Payolution Invoice do not have a  parent transaction ID set
-        if (is_null($sTransactionId)) {
+        if ($this->_shouldUseTransactionID($sTransactionId, $sPaymentId)) {
             $sTransactionId = $oResponse->getTransactionId();
         }
 
-        if (!$oOrder->loadWithTransactionId($sTransactionId)) {
-            $this->_oLogger->error('No order found for transactionId: ' . $oResponse->getParentTransactionId());
+        $oOrder = oxNew(Order::class);
+        if ($this->_loadOrder($oOrder, $sTransactionId) >= self::MAX_TIMEOUT_SECONDS) {
+            $this->_oLogger->error('No order found for transactionId: ' . $sTransactionId);
             return;
         }
 
@@ -244,5 +249,47 @@ class NotifyHandler extends FrontendController
         return $sShopUrl
             . 'index.php?cl=wcpg_notifyhandler&fnc=handleRequest&pmt='
             . PaymentMethod::getOxidFromSDKName($oPaymentMethod->getTransaction()->getConfigKey());
+    }
+
+    /**
+     * Recursively tries to load the corresponding order
+     * Needed because oxid some times(i.e non 3d credit card payments) does not create the order
+     * before we get the success notification from the payment sdk
+     *
+     * @param Order  $oOrder
+     * @param string $sTransactionId
+     * @param int    $iIteration
+     *
+     * @return int   needed time in seconds to load order
+     *
+     * @since 1.3.0
+     */
+    private function _loadOrder(&$oOrder, $sTransactionId, $iIteration = 0)
+    {
+        $iNeededSeconds = $iIteration * self::ITERATION_TIMEOUT_SECONDS;
+
+        if (!$oOrder->loadWithTransactionId($sTransactionId) && $iNeededSeconds < self::MAX_TIMEOUT_SECONDS) {
+            usleep(self::ITERATION_TIMEOUT_SECONDS * self::MICROSECONDS_TO_SECONDS);
+
+            $iIteration = $iIteration + 1;
+            return $this->_loadOrder($oOrder, $sTransactionId, $iIteration);
+        }
+
+        return $iNeededSeconds;
+    }
+
+    /**
+     * Returns true if transactionId should be used instead of parentTransactionId
+     *
+     * @param string $sTransactionId
+     * @param string $sPaymentId
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private function _shouldUseTransactionID($sTransactionId, $sPaymentId)
+    {
+        return is_null($sTransactionId) || $sPaymentId === CreditCardPaymentMethod::getName(true);
     }
 }
