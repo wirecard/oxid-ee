@@ -273,7 +273,7 @@ abstract class PayolutionBasePaymentMethod extends InvoicePaymentMethod
      */
     public function getMetaDataFieldNames()
     {
-        $aReturn = [
+        $aMetaDataFields = [
             'allowed_currencies',
             'shipping_countries',
             'billing_countries',
@@ -282,16 +282,18 @@ abstract class PayolutionBasePaymentMethod extends InvoicePaymentMethod
             'payolution_terms_url',
         ];
 
+        $aMetaDataFields = array_merge(parent::getMetaDataFieldNames(), $aMetaDataFields);
+
         $aCurrencies = PaymentMethodHelper::getCurrencyOptions();
         $aFieldNames = ['httpuser', 'httppass', 'maid', 'secret'];
 
         foreach ($aCurrencies as $sCurrency) {
             foreach ($aFieldNames as $sFieldName) {
-                $aReturn[] = $sFieldName . '_' . strtolower($sCurrency);
+                $aMetaDataFields[] = $sFieldName . '_' . strtolower($sCurrency);
             }
         }
 
-        return $aReturn;
+        return $aMetaDataFields;
     }
 
     /**

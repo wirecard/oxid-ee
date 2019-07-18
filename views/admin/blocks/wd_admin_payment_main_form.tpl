@@ -159,7 +159,7 @@
   [{/if}]
 
   <tr>
-    <td height="40" valign="top">[{ $edit->oxpayments__oxdesc->value }]</td>
+    <td height="40" valign="top">[{oxmultilang ident=$edit->oxpayments__initial_title->value}]</td>
   </tr>
 [{/if}]
 

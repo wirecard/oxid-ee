@@ -31,13 +31,14 @@
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
         <!-- meta fields -->
         <apiurl_wpp>https://wpp-test.wirecard.com</apiurl_wpp>
+        <initial_title>wd_heading_title_creditcard</initial_title>
     </payment>
     <payment>
       <oxid>wdpayolution-b2b</oxid>
       <oxactive>0</oxactive>
       <oxfromamount>10</oxfromamount>
       <oxtoamount>3500</oxtoamount>
-      <oxdesc id="wd_heading_title_payolution_b2b"/>
+      <oxdesc id="wd_heading_title_payolution_b2b_consumer"/>
       <oxsort>35</oxsort>
       <wdoxidee_logo>invoice.png</wdoxidee_logo>
       <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
@@ -68,13 +69,14 @@
       <httppass_eur>3!3013=D3fD8X7</httppass_eur>
       <maid_eur>2048677d-57f4-44b0-8d67-9014c6631d5f</maid_eur>
       <secret_eur>74bd2f0c-6d1b-4e9a-b278-abc34b83ab9f</secret_eur>
+      <initial_title>wd_heading_title_payolution_b2b</initial_title>
     </payment>
     <payment>
         <oxid>wdpayolution-inv</oxid>
         <oxactive>0</oxactive>
         <oxfromamount>25</oxfromamount>
         <oxtoamount>3500</oxtoamount>
-        <oxdesc id="wd_heading_title_payolution_invoice"/>
+        <oxdesc id="wd_heading_title_payolution_invoice_consumer"/>
         <oxsort>36</oxsort>
         <wdoxidee_logo>invoice.png</wdoxidee_logo>
         <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
@@ -107,6 +109,7 @@
         <httppass_eur>3!3013=D3fD8X7</httppass_eur>
         <maid_eur>2048677d-57f4-44b0-8d67-9014c6631d5f</maid_eur>
         <secret_eur>74bd2f0c-6d1b-4e9a-b278-abc34b83ab9f</secret_eur>
+        <initial_title>wd_heading_title_payolution_invoice</initial_title>
     </payment>
     <payment>
         <oxid>wdideal</oxid>
@@ -123,6 +126,7 @@
         <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <initial_title>wd_heading_title_ideal</initial_title>
     </payment>
     <payment>
         <oxid>wdeps</oxid>
@@ -139,6 +143,7 @@
         <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <initial_title>wd_heading_title_eps</initial_title>
     </payment>
     <payment>
         <oxid>wdpaypal</oxid>
@@ -157,6 +162,7 @@
         <wdoxidee_basket>1</wdoxidee_basket>
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <initial_title>wd_heading_title_paypal</initial_title>
     </payment>
     <payment>
         <oxid>wdsepadd</oxid>
@@ -176,6 +182,7 @@
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
         <wdoxidee_bic>0</wdoxidee_bic>
         <wdoxidee_creditorid>DE98ZZZ09999999999</wdoxidee_creditorid>
+        <initial_title>wd_heading_title_sepadd</initial_title>
     </payment>
     <payment>
         <oxid>wdsofortbanking</oxid>
@@ -195,13 +202,14 @@
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
         <wdoxidee_countrycode>en_gb</wdoxidee_countrycode>
         <wdoxidee_logovariant>standard</wdoxidee_logovariant>
+        <initial_title>wd_heading_title_sofortbanking</initial_title>
     </payment>
     <payment>
         <oxid>wdratepay-invoice</oxid>
         <oxactive>0</oxactive>
         <oxfromamount>20</oxfromamount>
         <oxtoamount>3500</oxtoamount>
-        <oxdesc id="wd_heading_title_ratepayinvoice"/>
+        <oxdesc id="wd_heading_title_ratepayinvoice_consumer"/>
         <oxsort>40</oxsort>
         <wdoxidee_logo>invoice.png</wdoxidee_logo>
         <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
@@ -225,6 +233,7 @@
             <country>DE</country>
         </billing_countries>
         <billing_shipping>1</billing_shipping>
+        <initial_title>wd_heading_title_ratepayinvoice</initial_title>
     </payment>
     <payment>
         <oxid>wdgiropay</oxid>
@@ -241,6 +250,7 @@
         <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <initial_title>wd_heading_title_giropay</initial_title>
     </payment>
     <payment>
         <oxid>wdalipay-xborder</oxid>
@@ -257,6 +267,7 @@
         <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <initial_title>wd_heading_title_alipay_crossborder</initial_title>
     </payment>
     <payment>
         <oxid>wdpaymentoninvoice</oxid>
@@ -273,6 +284,7 @@
         <wdoxidee_httppass>qD2wzQ_hrc!8</wdoxidee_httppass>
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <initial_title>wd_heading_title_poi</initial_title>
     </payment>
     <payment>
         <oxid>wdpaymentinadvance</oxid>
@@ -289,6 +301,7 @@
         <wdoxidee_httppass>qD2wzQ_hrc!8</wdoxidee_httppass>
         <wdoxidee_descriptor>1</wdoxidee_descriptor>
         <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <initial_title>wd_heading_title_pia</initial_title>
     </payment>
 
     <!-- only visible for the merchant -->
@@ -305,6 +318,7 @@
         <wdoxidee_secret>ecdf5990-0372-47cd-a55d-037dccfe9d25</wdoxidee_secret>
         <wdoxidee_httpuser>16390-testing</wdoxidee_httpuser>
         <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
+        <initial_title>wd_heading_title_sepact</initial_title>
     </payment>
 
 </payments>
