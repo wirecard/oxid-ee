@@ -8,7 +8,7 @@
  */
 
 use Wirecard\Oxid\Core\PaymentMethodHelper;
-use Wirecard\Oxid\Model\IdealPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\IdealPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
@@ -36,7 +36,7 @@ class IdealPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oConfig = $this->_oPaymentMethod->getConfig();
 
         $this->assertInstanceOf(Config::class, $oConfig);
-        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get(IdealPaymentMethod::getName()));
+        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get('ideal'));
     }
 
     public function testGetTransaction()
@@ -48,21 +48,10 @@ class IdealPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertInstanceOf(IdealTransaction::class, $this->_oPaymentMethod->getTransaction());
     }
 
-    /**
-     * @dataProvider getNameProvider
-     */
-    public function testGetName($bForOxid, $sExpected)
+    public function testGetName()
     {
-        $sName = IdealPaymentMethod::getName($bForOxid);
-        $this->assertEquals($sExpected, $sName);
-    }
-
-    public function getNameProvider()
-    {
-        return [
-            'for oxid' => [true, 'wdideal'],
-            'not for oxid' => [false, 'ideal'],
-        ];
+        $sName = IdealPaymentMethod::getName();
+        $this->assertEquals('wdideal', $sName);
     }
 
     public function testGetConfigFields()

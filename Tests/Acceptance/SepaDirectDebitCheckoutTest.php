@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\SepaDirectDebitPaymentMethod;
 
 /**
  * Acceptance tests for the SEPA Direct Debit checkout flow.
@@ -18,7 +18,7 @@ class SepaDirectDebitCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return SepaDirectDebitPaymentMethod::getName(true);
+        return SepaDirectDebitPaymentMethod::getName();
     }
 
     public function testCheckoutForPurchase()

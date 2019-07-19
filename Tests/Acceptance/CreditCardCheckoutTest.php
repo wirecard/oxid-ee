@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
 
 /**
  * Acceptance tests for the Credit Card checkout flow.
@@ -18,7 +18,7 @@ class CreditCardCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return CreditCardPaymentMethod::getName(true);
+        return CreditCardPaymentMethod::getName();
     }
 
     public function testCheckoutForPurchaseNonThreeD()

@@ -8,7 +8,7 @@
  */
 
 use Wirecard\Oxid\Core\PaymentMethodHelper;
-use Wirecard\Oxid\Model\EpsPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\EpsPaymentMethod;
 
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
@@ -29,12 +29,10 @@ class EpsPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testGetConfig()
     {
-        $oPayment = PaymentMethodHelper::getPaymentById(EpsPaymentMethod::getName(true));
-
         $oConfig = $this->_oPaymentMethod->getConfig();
 
         $this->assertInstanceOf(Config::class, $oConfig);
-        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get(EpsPaymentMethod::getName()));
+        $this->assertInstanceOf(PaymentMethodConfig::class, $oConfig->get('eps'));
     }
 
     public function testGetTransaction()
@@ -43,21 +41,10 @@ class EpsPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
         $this->assertInstanceOf(EpsTransaction::class, $oTransaction);
     }
 
-    /**
-     * @dataProvider getNameProvider
-     */
-    public function testGetName($bForOxid, $sExpected)
+    public function testGetName()
     {
-        $sName = EpsPaymentMethod::getName($bForOxid);
-        $this->assertEquals($sExpected, $sName);
-    }
-
-    public function getNameProvider()
-    {
-        return [
-            'for oxid' => [true, 'wdeps'],
-            'not for oxid' => [false, 'eps'],
-        ];
+        $sName = EpsPaymentMethod::getName();
+        $this->assertEquals('wdeps', $sName);
     }
 
     public function testGetConfigFields()

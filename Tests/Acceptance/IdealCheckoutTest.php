@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\IdealPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\IdealPaymentMethod;
 
 /**
  * Acceptance tests for the iDEAL checkout flow.
@@ -18,7 +18,7 @@ class IdealCheckoutTest extends CheckoutTestCase
 {
     public function getPaymentMethodName()
     {
-        return IdealPaymentMethod::getName(true);
+        return IdealPaymentMethod::getName();
     }
 
     public function testCheckout()

@@ -9,7 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use Wirecard\Oxid\Model\PaypalPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PaypalPaymentMethod;
 
 /**
  * Acceptance tests for the PayPal checkout flow.
@@ -18,14 +18,14 @@ class PaypalCheckoutTest extends CheckoutTestCase
 {
     /**
      * Catch possible A/B tests
-     * 
+     *
      * @inheritdoc
      */
     protected $retryTimes = 1;
 
     public function getPaymentMethodName()
     {
-        return PaypalPaymentMethod::getName(true);
+        return PaypalPaymentMethod::getName();
     }
 
     public function testCheckoutForPurchase()

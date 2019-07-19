@@ -10,7 +10,7 @@
 
 use OxidEsales\Eshop\Core\Registry;
 use Wirecard\Oxid\Extend\ViewConfig;
-use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\RatepayInvoicePaymentMethod;
 
 class ViewConfigTest extends OxidEsales\TestingLibrary\UnitTestCase
 {

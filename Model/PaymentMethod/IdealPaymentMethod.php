@@ -7,42 +7,71 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
-namespace Wirecard\Oxid\Model;
+namespace Wirecard\Oxid\Model\PaymentMethod;
+
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
-
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\Config\PaymentMethodConfig;
-use Wirecard\PaymentSdk\Transaction\AlipayCrossborderTransaction;
+use Wirecard\PaymentSdk\Entity\IdealBic;
+use Wirecard\PaymentSdk\Transaction\IdealTransaction;
 use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
- * Payment method implementation for Alipay Cross-border.
+ * Payment method implementation for iDEAL
  *
- * @since 1.3.0
+ * @since 1.2.0
  */
-class AlipayCrossBorderPaymentMethod extends PaymentMethod
+class IdealPaymentMethod extends SepaCreditTransferPaymentMethod
 {
     /**
      * @inheritdoc
      *
-     * @since 1.3.0
+     * @since 1.2.0
      */
-    protected static $_sName = 'alipay-xborder';
+    protected static $_sName = "ideal";
+
+    /**
+     * @inheritdoc
+     *
+     * @var bool
+     *
+     * @since 1.2.0
+     */
+    protected static $_bMerchantOnly = false;
+
+    /**
+     *
+     * @since 1.2.0
+     */
+    private $_aBankOptions = [];
+
+    /**
+     * IdealPaymentMethod constructor.
+     *
+     * @since 1.2.0
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->_aBankOptions = $this->getBanks();
+    }
 
     /**
      * @inheritdoc
      *
      * @return Config
      *
-     * @since 1.3.0
+     * @since 1.2.0
      */
     public function getConfig()
     {
         $oConfig = parent::getConfig();
 
         $oPaymentMethodConfig = new PaymentMethodConfig(
-            AlipayCrossborderTransaction::NAME,
+            IdealTransaction::NAME,
             $this->_oPayment->oxpayments__wdoxidee_maid->value,
             $this->_oPayment->oxpayments__wdoxidee_secret->value
         );
@@ -53,28 +82,15 @@ class AlipayCrossBorderPaymentMethod extends PaymentMethod
     }
 
     /**
-     * @inheritdoc
+     * Get the current transaction to be processed
      *
      * @return Transaction
      *
-     * @since 1.3.0
+     * @since 1.2.0
      */
     public function getTransaction()
     {
-        return new AlipayCrossborderTransaction();
-    }
-
-    /**
-     * @inheritdoc
-     *
-     * @param Transaction $oTransaction
-     * @param Order       $oOrder
-     *
-     * @since 1.3.0
-     */
-    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
-    {
-        $oTransaction->setAccountHolder($oOrder->getAccountHolder());
+        return new IdealTransaction();
     }
 
     /**
@@ -82,7 +98,7 @@ class AlipayCrossBorderPaymentMethod extends PaymentMethod
      *
      * @return array
      *
-     * @since 1.3.0
+     * @since 1.2.0
      */
     public function getConfigFields()
     {
@@ -129,7 +145,7 @@ class AlipayCrossBorderPaymentMethod extends PaymentMethod
             ],
         ];
 
-        return parent::getConfigFields() + $aAdditionalFields;
+        return array_merge(parent::getConfigFields(), $aAdditionalFields);
     }
 
     /**
@@ -137,7 +153,39 @@ class AlipayCrossBorderPaymentMethod extends PaymentMethod
      *
      * @return array
      *
-     * @since 1.3.0
+     * @since 1.2.0
+     */
+    public function getCheckoutFields()
+    {
+        return [
+            'bank' => [
+                'type' => 'select',
+                'options' => $this->_aBankOptions,
+                'title' => Helper::translate('wd_ideal_legend'),
+            ],
+        ];
+    }
+
+    /**
+     * Returns array for bank select options
+     *
+     * @return array
+     *
+     * @since 1.2.0
+     */
+    public function getBanks()
+    {
+        //IdealBic extends Enum class and contains const variables which represent bank options.
+        //toArray() combines all const variables from IdealBic and converts them to array.
+        return IdealBic::toArray();
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @since 1.2.0
      */
     public function getPublicFieldNames()
     {
@@ -147,5 +195,21 @@ class AlipayCrossBorderPaymentMethod extends PaymentMethod
             'deleteCanceledOrder',
             'deleteFailedOrder',
         ]);
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @param IdealTransaction $oTransaction
+     * @param Order            $oOrder
+     *
+     * @since 1.2.0
+     */
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
+    {
+        $oSession = Registry::getConfig()->getSession();
+        $aDynvalues = $oSession->getVariable('dynvalue');
+
+        $oTransaction->setBic($this->_aBankOptions[$aDynvalues['bank']]);
     }
 }

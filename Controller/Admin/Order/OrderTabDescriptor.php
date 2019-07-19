@@ -10,7 +10,7 @@
 namespace Wirecard\Oxid\Controller\Admin\Order;
 
 use Wirecard\Oxid\Core\Helper;
-use Wirecard\Oxid\Model\RatepayInvoicePaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\RatepayInvoicePaymentMethod;
 
 /**
  * Controls the view for the order descriptor tab.
@@ -55,7 +55,7 @@ class OrderTabDescriptor extends OrderTab
     {
         if ($this->_oOrder->isCustomPaymentMethod()) {
             $sOrderPaymentName = $this->_oOrder->oxorder__oxpaymenttype->value;
-            if ($sOrderPaymentName === RatepayInvoicePaymentMethod::getName(true)) {
+            if ($sOrderPaymentName === RatepayInvoicePaymentMethod::getName()) {
                 $oXml = simplexml_load_string($this->_oTransaction->getResponseXML());
                 if (isset($oXml->descriptor)) {
                     return [$oXml->descriptor];

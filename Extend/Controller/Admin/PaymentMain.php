@@ -14,11 +14,12 @@ use OxidEsales\Eshop\Core\Registry;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Extend\Model\Payment;
-use Wirecard\Oxid\Model\CreditCardPaymentMethod;
-use Wirecard\Oxid\Model\PayolutionBtwobPaymentMethod;
-use Wirecard\Oxid\Model\PayolutionInvoicePaymentMethod;
-use Wirecard\Oxid\Model\SepaDirectDebitPaymentMethod;
-use Wirecard\Oxid\Model\SofortPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PayolutionBtwobPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\SofortPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\PayolutionInvoicePaymentMethod;
+
 use Wirecard\PaymentSdk\Config\Config;
 use Wirecard\PaymentSdk\TransactionService;
 
@@ -147,7 +148,7 @@ class PaymentMain extends PaymentMain_parent
      */
     private function _areCreditCardUrlsValid($aParams)
     {
-        return $aParams['oxpayments__oxid'] !== CreditCardPaymentMethod::getName(true)
+        return $aParams['oxpayments__oxid'] !== CreditCardPaymentMethod::getName()
             || $this->_bothCreditCardUrlsAreTest($aParams)
             || $this->_noCreditCardUrlIsTest($aParams);
     }
@@ -180,8 +181,8 @@ class PaymentMain extends PaymentMain_parent
      */
     private function _isPayolutionPaymentMethod($sPaymentId)
     {
-        return $sPaymentId === PayolutionInvoicePaymentMethod::getName(true)
-            || $sPaymentId === PayolutionBtwobPaymentMethod::getName(true);
+        return $sPaymentId === PayolutionInvoicePaymentMethod::getName()
+            || $sPaymentId === PayolutionBtwobPaymentMethod::getName();
     }
 
     /**
@@ -199,7 +200,7 @@ class PaymentMain extends PaymentMain_parent
         // the country code must be of the format two characters, underscore, two characters: "en_gb"
         // this format is checked by the regular expression below
         $sCountryCode = $aParams['oxpayments__wdoxidee_countrycode'];
-        return $aParams['oxpayments__oxid'] !== SofortPaymentMethod::getName(true)
+        return $aParams['oxpayments__oxid'] !== SofortPaymentMethod::getName()
             || (preg_match('/^[a-z]{2}_[a-z]{2}$/', $sCountryCode) === 1);
     }
 
@@ -215,7 +216,7 @@ class PaymentMain extends PaymentMain_parent
     private function _isCreditorIdValid($aParams)
     {
         $sCreditorId = $aParams['oxpayments__wdoxidee_creditorid'];
-        return $aParams['oxpayments__oxid'] !== SepaDirectDebitPaymentMethod::getName(true)
+        return $aParams['oxpayments__oxid'] !== SepaDirectDebitPaymentMethod::getName()
             || $this->_creditorIdValidation($sCreditorId);
     }
 
@@ -295,7 +296,7 @@ class PaymentMain extends PaymentMain_parent
         $sUser = $aParams['oxpayments__wdoxidee_httpuser'];
         $sPass = $aParams['oxpayments__wdoxidee_httppass'];
 
-        if ($aParams['oxpayments__oxid'] === PayolutionInvoicePaymentMethod::getName(true)) {
+        if ($aParams['oxpayments__oxid'] === PayolutionInvoicePaymentMethod::getName()) {
             // handle the case of different configuration per currency (currently only Payolution)
             // it's only checked if config values are entered on the frontend but no validation is done on the backend
             return $this->_checkCurrencyConfigFields($aParams);
