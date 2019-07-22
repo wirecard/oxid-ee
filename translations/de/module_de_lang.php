@@ -105,24 +105,14 @@ $aLang = array(
     'wd_heading_title_giropay' => 'Wirecard giropay',
     'wd_heading_title_ideal' => 'Wirecard iDEAL',
     'wd_heading_title_payolution_b2b' => 'Wirecard Garantierter Kauf auf Rechnung (Payolution B2B)',
-<<<<<<< HEAD
     'wd_heading_title_payolution_b2b_consumer' => 'Wirecard Kauf auf Rechnung (Payolution B2B)',
     'wd_heading_title_payolution_invoice' => 'Wirecard Garantierter Kauf auf Rechnung (Payolution B2C)',
     'wd_heading_title_payolution_invoice_consumer' => 'Wirecard Kauf auf Rechnung (Payolution B2C)',
-=======
-    'wd_heading_title_payolution_b2b_custom' => 'Wirecard Kauf auf Rechnung (Payolution B2B)',
-    'wd_heading_title_payolution_invoice' => 'Wirecard Garantierter Kauf auf Rechnung (Payolution B2C)',
-    'wd_heading_title_payolution_invoice_custom' => 'Wirecard Kauf auf Rechnung (Payolution B2C)',
->>>>>>> Update translation strings, remove doubled entries, format tpl
     'wd_heading_title_paypal' => 'Wirecard PayPal',
     'wd_heading_title_pia' => 'Wirecard Vorauskasse',
     'wd_heading_title_poi' => 'Wirecard Kauf auf Rechnung',
     'wd_heading_title_ratepayinvoice' => 'Wirecard Garantierter Kauf auf Rechnung',
-<<<<<<< HEAD
     'wd_heading_title_ratepayinvoice_consumer' => 'Wirecard Kauf auf Rechnung von Wirecard',
-=======
-    'wd_heading_title_ratepayinvoice_custom' => 'Wirecard Kauf auf Rechnung',
->>>>>>> Update translation strings, remove doubled entries, format tpl
     'wd_heading_title_sepact' => 'Wirecard SEPA-Überweisung',
     'wd_heading_title_sepadd' => 'Wirecard SEPA-Lastschrift',
     'wd_heading_title_sofortbanking' => 'Wirecard Sofort.',

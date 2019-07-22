@@ -105,24 +105,14 @@ $aLang = array(
     'wd_heading_title_giropay' => 'Wirecard Giropay',
     'wd_heading_title_ideal' => 'Wirecard iDEAL',
     'wd_heading_title_payolution_b2b' => 'Wirecard Guaranteed Invoice (Payolution B2B)',
-<<<<<<< HEAD
     'wd_heading_title_payolution_b2b_consumer' => 'Wirecard Invoice (Payolution B2B)',
     'wd_heading_title_payolution_invoice' => 'Wirecard Guaranteed Invoice (Payolution B2C)',
     'wd_heading_title_payolution_invoice_consumer' => 'Wirecard Invoice (Payolution B2C)',
-=======
-    'wd_heading_title_payolution_b2b_custom' => 'Wirecard Invoice (Payolution B2B)',
-    'wd_heading_title_payolution_invoice' => 'Wirecard Guaranteed Invoice (Payolution B2C)',
-    'wd_heading_title_payolution_invoice_custom' => 'Wirecard Invoice (Payolution B2C)',
->>>>>>> Update translation strings, remove doubled entries, format tpl
     'wd_heading_title_paypal' => 'Wirecard PayPal',
     'wd_heading_title_pia' => 'Wirecardの前払い',
     'wd_heading_title_poi' => 'Wirecardの請求書払い',
     'wd_heading_title_ratepayinvoice' => 'Wirecard 保証付きインボイス',
-<<<<<<< HEAD
     'wd_heading_title_ratepayinvoice_consumer' => 'Wirecard Invoice by Wirecard',
-=======
-    'wd_heading_title_ratepayinvoice_custom' => 'Wirecard Invoice by Wirecard',
->>>>>>> Update translation strings, remove doubled entries, format tpl
     'wd_heading_title_sepact' => 'Wirecard SEPA Credit Transfer',
     'wd_heading_title_sepadd' => 'Wirecard SEPA Direct Debit',
     'wd_heading_title_sofortbanking' => 'Wirecard Sofort。',

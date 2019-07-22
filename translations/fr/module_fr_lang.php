@@ -105,24 +105,14 @@ $aLang = array(
     'wd_heading_title_giropay' => 'Wirecard giropay',
     'wd_heading_title_ideal' => 'Wirecard iDEAL',
     'wd_heading_title_payolution_b2b' => 'Wirecard Guaranteed Invoice (Payolution B2B)',
-<<<<<<< HEAD
     'wd_heading_title_payolution_b2b_consumer' => 'Wirecard Invoice (Payolution B2B)',
     'wd_heading_title_payolution_invoice' => 'Wirecard Guaranteed Invoice (Payolution B2C)',
     'wd_heading_title_payolution_invoice_consumer' => 'Wirecard Invoice (Payolution B2C)',
-=======
-    'wd_heading_title_payolution_b2b_custom' => 'Wirecard Invoice (Payolution B2B)',
-    'wd_heading_title_payolution_invoice' => 'Wirecard Guaranteed Invoice (Payolution B2C)',
-    'wd_heading_title_payolution_invoice_custom' => 'Wirecard Invoice (Payolution B2C)',
->>>>>>> Update translation strings, remove doubled entries, format tpl
     'wd_heading_title_paypal' => 'Wirecard PayPal',
     'wd_heading_title_pia' => 'Wirecard Paiement à l’avance',
     'wd_heading_title_poi' => 'Wirecard Paiement sur facture',
     'wd_heading_title_ratepayinvoice' => 'Wirecard Facture avec garantie de paiement par Wirecard',
-<<<<<<< HEAD
     'wd_heading_title_ratepayinvoice_consumer' => 'Wirecard Invoice by Wirecard',
-=======
-    'wd_heading_title_ratepayinvoice_custom' => 'Wirecard Invoice by Wirecard',
->>>>>>> Update translation strings, remove doubled entries, format tpl
     'wd_heading_title_sepact' => 'Wirecard Virement SEPA',
     'wd_heading_title_sepadd' => 'Wirecard Prélèvement SEPA',
     'wd_heading_title_sofortbanking' => 'Wirecard Sofort.',
