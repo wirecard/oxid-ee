@@ -16,8 +16,8 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Extend\Model\Order;
-use Wirecard\Oxid\Model\Transaction;
 use Wirecard\Oxid\Model\PaymentMethod\SepaDirectDebitPaymentMethod;
+use Wirecard\Oxid\Model\Transaction;
 
 /**
  * Class handles module behaviour on shop installation events
