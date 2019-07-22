@@ -36,42 +36,42 @@
         <initial_title>wd_heading_title_creditcard</initial_title>
     </payment>
     <payment>
-      <oxid>wdpayolution-b2b</oxid>
-      <oxactive>0</oxactive>
-      <oxfromamount>10</oxfromamount>
-      <oxtoamount>3500</oxtoamount>
-      <oxdesc id="wd_heading_title_payolution_b2b_consumer"/>
-      <oxsort>35</oxsort>
-      <wdoxidee_logo>invoice.png</wdoxidee_logo>
-      <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
-      <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
-      <wdoxidee_maid>2048677d-57f4-44b0-8d67-9014c6631d5f</wdoxidee_maid>
-      <wdoxidee_secret>74bd2f0c-6d1b-4e9a-b278-abc34b83ab9f</wdoxidee_secret>
-      <wdoxidee_httpuser>16390-testing</wdoxidee_httpuser>
-      <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
-      <wdoxidee_descriptor>1</wdoxidee_descriptor>
-      <wdoxidee_additional_info>1</wdoxidee_additional_info>
-      <!-- meta fields -->
-      <shipping_countries>
-        <country>AT</country>
-        <country>DE</country>
-        <country>CH</country>
-      </shipping_countries>
-      <billing_countries>
-        <country>AT</country>
-        <country>DE</country>
-        <country>CH</country>
-      </billing_countries>
-      <billing_shipping>1</billing_shipping>
-      <terms>1</terms>
-      <allowed_currencies>
-        <currency>EUR</currency>
-      </allowed_currencies>
-      <httpuser_eur>16390-testing</httpuser_eur>
-      <httppass_eur>3!3013=D3fD8X7</httppass_eur>
-      <maid_eur>2048677d-57f4-44b0-8d67-9014c6631d5f</maid_eur>
-      <secret_eur>74bd2f0c-6d1b-4e9a-b278-abc34b83ab9f</secret_eur>
-      <initial_title>wd_heading_title_payolution_b2b</initial_title>
+        <oxid>wdpayolution-b2b</oxid>
+        <oxactive>0</oxactive>
+        <oxfromamount>10</oxfromamount>
+        <oxtoamount>3500</oxtoamount>
+        <oxdesc id="wd_heading_title_payolution_b2b_consumer"/>
+        <oxsort>35</oxsort>
+        <wdoxidee_logo>invoice.png</wdoxidee_logo>
+        <wdoxidee_transactionaction>reserve</wdoxidee_transactionaction>
+        <wdoxidee_apiurl>https://api-test.wirecard.com</wdoxidee_apiurl>
+        <wdoxidee_maid>2048677d-57f4-44b0-8d67-9014c6631d5f</wdoxidee_maid>
+        <wdoxidee_secret>74bd2f0c-6d1b-4e9a-b278-abc34b83ab9f</wdoxidee_secret>
+        <wdoxidee_httpuser>16390-testing</wdoxidee_httpuser>
+        <wdoxidee_httppass>3!3013=D3fD8X7</wdoxidee_httppass>
+        <wdoxidee_descriptor>1</wdoxidee_descriptor>
+        <wdoxidee_additional_info>1</wdoxidee_additional_info>
+        <!-- meta fields -->
+        <shipping_countries>
+            <country>AT</country>
+            <country>DE</country>
+            <country>CH</country>
+        </shipping_countries>
+        <billing_countries>
+            <country>AT</country>
+            <country>DE</country>
+            <country>CH</country>
+        </billing_countries>
+        <billing_shipping>1</billing_shipping>
+        <terms>1</terms>
+        <allowed_currencies>
+            <currency>EUR</currency>
+        </allowed_currencies>
+        <httpuser_eur>16390-testing</httpuser_eur>
+        <httppass_eur>3!3013=D3fD8X7</httppass_eur>
+        <maid_eur>2048677d-57f4-44b0-8d67-9014c6631d5f</maid_eur>
+        <secret_eur>74bd2f0c-6d1b-4e9a-b278-abc34b83ab9f</secret_eur>
+        <initial_title>wd_heading_title_payolution_b2b</initial_title>
     </payment>
     <payment>
         <oxid>wdpayolution-inv</oxid>
