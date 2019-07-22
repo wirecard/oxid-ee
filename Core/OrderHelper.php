@@ -417,7 +417,7 @@ class OrderHelper
     }
 
     /**
-     * Get the last order's shipping address for the current user
+     * Get the last order's shipping address for the given user
      *
      * @param string $sUserId
      *

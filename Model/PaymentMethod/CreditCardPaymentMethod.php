@@ -394,17 +394,17 @@ class CreditCardPaymentMethod extends PaymentMethod
 
     /**
      * @param string $sToken
-     * @param bool   $bCheked
+     * @param bool   $bChecked
      *
      * @return string
      *
      * @since 1.3.0
      */
-    private static function _createRadioButton($sToken, $bCheked = false)
+    private static function _createRadioButton($sToken, $bChecked = false)
     {
         $sResult = '<input type="radio" name="dynvalue[wd_selected_card]" value="' . $sToken . '"';
 
-        if ($bCheked) {
+        if ($bChecked) {
             $sResult .= ' checked';
         }
 
@@ -422,7 +422,7 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     private static function _createDeleteButton($iCardId)
     {
-        return '<button class="btn btn-error" type = "submit" name = "wd_delete_id" value = "' . $iCardId . '" />' .
+        return '<button class="btn btn-error" type="submit" name="wd_deletion_card_id" value="' . $iCardId . '" />' .
             Helper::translate('wd_text_delete') . ' </button > ';
     }
 

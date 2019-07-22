@@ -131,7 +131,7 @@ class PaymentController extends PaymentController_parent
      */
     public function validatePayment()
     {
-        $iDeleteId = Registry::getRequest()->getRequestParameter('wd_delete_id');
+        $iDeleteId = Registry::getRequest()->getRequestParameter('wd_deletion_card_id');
 
         if (is_null($iDeleteId)) {
             return parent::validatePayment();
