@@ -40,10 +40,10 @@
       <input type="hidden" name="oxserviceproductsagreement" value="0">
       <div id="creditcard-form-div"></div>
 
-      [{if $user->hasAccount()}]
+      [{if $user->hasAccount() && $payment->oxpayments__oneclick_enabled->value == 1}]
         <div style="margin-bottom: 10px">
-          <input type="checkbox" name="save_checkbox" id="save-checkbox"/>
-          <label for="save-checkbox" style="display: inline">
+          <label style="display: inline">
+            <input type="checkbox" name="wdsavecheckbox" value="1"/>
             [{oxmultilang ident="wd_vault_save_text"}]
           </label>
         </div>

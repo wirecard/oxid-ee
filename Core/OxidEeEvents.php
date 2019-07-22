@@ -100,6 +100,7 @@ class OxidEeEvents
             'WDOXIDEE_FINAL' => "tinyint(1) default 0 NOT NULL",
             'WDOXIDEE_PROVIDERTRANSACTIONID' => "varchar(36) NOT NULL",
             'WDOXIDEE_TRANSACTIONID' => "varchar(36) NOT NULL",
+            'WDOXIDEE_SAVEPAYMENTCREDENTIALS' => "tinyint(1) default 0 NOT NULL",
             'WDOXIDEE_FINALIZEORDERSTATE' => "int NOT NULL",
             'WDOXIDEE_SEPAMANDATE' => "text",
         ];

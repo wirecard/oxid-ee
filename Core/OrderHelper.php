@@ -35,8 +35,6 @@ use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\FormInteractionResponse;
 use Wirecard\PaymentSdk\Response\InteractionResponse;
 use Wirecard\PaymentSdk\Response\Response;
-use Wirecard\PaymentSdk\Response\SuccessResponse;
-use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
 /**
  * Helper class to handle orders
@@ -129,6 +127,11 @@ class OrderHelper
 
         self::_managePiaPaymentInformation($oResponse, $oOrder);
 
+        if (!$oOrder->oxorder__wdoxidee_transactionid->value) {
+            $oOrder->oxorder__wdoxidee_savepaymentcredentials =
+                new Field(Registry::getRequest()->getRequestParameter('wdsavecheckbox'));
+        }
+
         // set the transaction ID on the order
         $oOrder->oxorder__wdoxidee_transactionid = new Field($oResponse->getTransactionId());
         $oOrder->save();
@@ -139,25 +142,6 @@ class OrderHelper
 
         if ($oResponse instanceof InteractionResponse) {
             return self::_handleInteractionResponse($oResponse);
-        }
-
-        self::_onSuccessResponse($oResponse, $oBackendService, $oOrder);
-    }
-
-    /**
-     * @param Response       $oResponse
-     * @param BackendService $oBackendService
-     * @param Order          $oOrder
-     *
-     * @throws Exception
-     *
-     * @since 1.0.0
-     */
-    private static function _onSuccessResponse($oResponse, $oBackendService, $oOrder)
-    {
-        if (!is_null($oBackendService) && $oResponse instanceof SuccessResponse) {
-            self::_handleCreditCard($oResponse, $oBackendService, $oOrder);
-            ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
         }
     }
 
@@ -516,52 +500,5 @@ class OrderHelper
             'country_id' => $oUser->oxuser__oxcountryid->value,
             'state_id' => $oUser->oxuser__oxstateid->value,
         ];
-    }
-
-    /**
-     * Handle credit card
-     *
-     * @param SuccessResponse $oResponse
-     * @param BackendService  $oBackendService
-     * @param Order           $oOrder
-     *
-     * @return void
-     *
-     * @since 1.3.0
-     */
-    private static function _handleCreditCard($oResponse, $oBackendService, $oOrder)
-    {
-        $oLogger = Registry::getLogger();
-
-        if (!self::_shouldSaveCard($oResponse, $oOrder)) {
-            return;
-        }
-
-        try {
-            $aTransaction = $oBackendService->getTransactionByTransactionId(
-                $oResponse->getTransactionId(),
-                CreditCardTransaction::NAME
-            );
-
-            $oVault = new Vault();
-            $oVault->saveCard($oResponse, $aTransaction['payment']['card'], $oOrder);
-        } catch (DatabaseConnectionException $oExc) {
-            $oLogger->error("Cannot save card", [$oExc]);
-        } catch (DatabaseErrorException $oExc) {
-            $oLogger->error("Cannot save card", [$oExc]);
-        }
-    }
-
-    /**
-     * @param SuccessResponse $oResponse
-     * @param Order           $oOrder
-     *
-     * @return bool
-     *
-     * @since 1.3.0
-     */
-    private static function _shouldSaveCard($oResponse, $oOrder)
-    {
-        return $oResponse->getPaymentMethod() === CreditCardTransaction::NAME && $oOrder->getUser()->hasAccount();
     }
 }

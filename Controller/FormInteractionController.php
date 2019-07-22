@@ -22,8 +22,8 @@ use Wirecard\PaymentSdk\Entity\FormFieldMap;
  */
 class FormInteractionController extends FrontendController
 {
-
     const WD_RESPONSE_VARIABLE = 'wdFormInteractionResponse';
+
     /**
      * @inheritdoc
      *
