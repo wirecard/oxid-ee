@@ -31,8 +31,8 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
  */
 class CreditCardPaymentMethod extends PaymentMethod
 {
-
     const NEW_CARD_TOKEN = '-1';
+
     /**
      * @inheritdoc
      *
@@ -336,6 +336,8 @@ class CreditCardPaymentMethod extends PaymentMethod
             'oneclick_enabled',
             'oneclick_changed_shipping',
         ];
+
+        return array_merge(parent::getMetaDataFieldNames(), $aMetaDataFields);
     }
 
     /**
@@ -372,7 +374,6 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'data' => $this->_mapCardsToList($aCards),
             ],
         ];
-        return array_merge(parent::getMetaDataFieldNames(), $aMetaDataFields);
     }
 
     /**
