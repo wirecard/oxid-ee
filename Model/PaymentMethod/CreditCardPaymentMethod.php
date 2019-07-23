@@ -342,18 +342,24 @@ class CreditCardPaymentMethod extends PaymentMethod
      * @inheritdoc
      *
      * @return array
+     *
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      *
      * @since 1.3.0
      */
     public function getCheckoutFields()
     {
+        if (!$this->getPayment()->oxpayments__oneclick_enabled->value
+            || !Registry::getSession()->getUser()->hasAccount()) {
+            return [];
+        }
+
         $oOrder = oxNew(Order::class);
         $oOrder->createTemp(Registry::getSession()->getBasket(), Registry::getSession()->getUser());
         $aCards = Vault::getCards($oOrder);
-        if ($aCards &&
-            self::_hasShippingAddressChanged() &&
-            !$this->_oPayment->oxpayments__oneclick_changed_shipping->value) {
+        if ($aCards
+            && (!$this->getPayment()->oxpayments__oneclick_changed_shipping->value
+                && self::_hasShippingAddressChanged())) {
             return [
                 [
                     'type' => 'info',
