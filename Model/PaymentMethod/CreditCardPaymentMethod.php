@@ -287,8 +287,9 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     public function getMetaDataFieldNames()
     {
-        return [
+        $aMetaDataFields = [
             'apiurl_wpp',
         ];
+        return array_merge(parent::getMetaDataFieldNames(), $aMetaDataFields);
     }
 }
