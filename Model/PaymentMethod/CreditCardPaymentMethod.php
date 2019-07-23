@@ -504,6 +504,7 @@ class CreditCardPaymentMethod extends PaymentMethod
 
         if (self::isCardTokenSet($aDynValue)) {
             $oTransaction->setTokenId($aDynValue['wd_selected_card']);
+            $oTransaction->setTermUrl($oTransaction->getSuccessUrl());
         }
 
         parent::addMandatoryTransactionData($oTransaction, $oOrder);
