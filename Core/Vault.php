@@ -49,7 +49,7 @@ class Vault
 
             $bIsValid = $oDateToday < $oDateExpiration;
             if (!$bIsValid) {
-                self::deleteCard($aCard['USERID'], $aCard['TOKEN']);
+                self::deleteCard($aCard['USERID'], $aCard['OXID']);
             }
 
             return $bIsValid;
