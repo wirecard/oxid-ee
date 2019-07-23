@@ -410,7 +410,7 @@ class OxidEeEvents
         $sQuery = "CREATE TABLE IF NOT EXISTS " . self::VAULT_TABLE . "(
             `OXID` int NOT NULL AUTO_INCREMENT,
             `USERID` varchar(32) NOT NULL,
-            `ADDRESSID` varchar(32) NOT NULL,
+            `ADDRESSID` varchar(40) NOT NULL,
             `TOKEN` varchar(20) NOT NULL,
 			`MASKEDPAN` varchar(30) NOT NULL,
 			`EXPIRATIONMONTH` int NOT NULL,

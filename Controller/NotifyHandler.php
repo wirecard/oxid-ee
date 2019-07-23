@@ -341,7 +341,7 @@ class NotifyHandler extends FrontendController
     private static function _shouldSaveCard($oResponse, $oOrder)
     {
         return $oResponse->getPaymentMethod() === CreditCardTransaction::NAME
-            && $oOrder->getUser()->hasAccount()
+            && $oOrder->getOrderUser()->hasAccount()
             && $oOrder->oxorder__wdoxidee_savepaymentcredentials->value === '1';
     }
 }
