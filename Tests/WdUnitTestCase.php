@@ -14,6 +14,7 @@ use OxidEsales\TestingLibrary\UnitTestCase;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 
 use Psr\Log\LogLevel;
+use PHPUnit_Framework_TestResult;
 use oxTestModules;
 
 /**
@@ -54,7 +55,7 @@ abstract class WdUnitTestCase extends UnitTestCase
      *
      * @inheritdoc
      */
-    public function run($result = null)
+    public function run(PHPUnit_Framework_TestResult $result = null)
     {
         error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
         oxTestModules::cleanUp();
