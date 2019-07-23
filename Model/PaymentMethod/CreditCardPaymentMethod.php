@@ -357,9 +357,7 @@ class CreditCardPaymentMethod extends PaymentMethod
         $oOrder = oxNew(Order::class);
         $oOrder->createTemp(Registry::getSession()->getBasket(), Registry::getSession()->getUser());
         $aCards = Vault::getCards($oOrder);
-        if ($aCards
-            && (!$this->getPayment()->oxpayments__oneclick_changed_shipping->value
-                && self::_hasShippingAddressChanged())) {
+        if ($this->_showShippingAddressChangedInfo($aCards)) {
             return [
                 [
                     'type' => 'info',
@@ -374,6 +372,20 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'data' => $this->_mapCardsToList($aCards),
             ],
         ];
+    }
+
+    /**
+     * @param array $aCards
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private function _showShippingAddressChangedInfo($aCards)
+    {
+        return $aCards
+            && !$this->getPayment()->oxpayments__oneclick_changed_shipping->value
+            && self::_hasShippingAddressChanged();
     }
 
     /**

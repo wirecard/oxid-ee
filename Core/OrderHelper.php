@@ -15,7 +15,6 @@ use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
-use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
@@ -126,11 +125,7 @@ class OrderHelper
         }
 
         self::_managePiaPaymentInformation($oResponse, $oOrder);
-
-        if (!$oOrder->oxorder__wdoxidee_transactionid->value) {
-            $oOrder->oxorder__wdoxidee_savepaymentcredentials =
-                new Field(Registry::getRequest()->getRequestParameter('wdsavecheckbox'));
-        }
+        self::_handleSaveCheckbox($oOrder);
 
         // set the transaction ID on the order
         $oOrder->oxorder__wdoxidee_transactionid = new Field($oResponse->getTransactionId());
@@ -214,6 +209,21 @@ class OrderHelper
                     (string) $oResponseXml->{'provider-transaction-reference-id'}
                 )
             );
+        }
+    }
+
+    /**
+     * Saves one-click save checkbox value if needed
+     *
+     * @param Order $oOrder
+     *
+     * @since 1.3.0
+     */
+    private static function _handleSaveCheckbox($oOrder)
+    {
+        if (!$oOrder->oxorder__wdoxidee_transactionid->value) {
+            $oOrder->oxorder__wdoxidee_savepaymentcredentials =
+                new Field(Registry::getRequest()->getRequestParameter('wdsavecheckbox'));
         }
     }
 

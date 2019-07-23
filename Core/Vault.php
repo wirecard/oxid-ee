@@ -9,7 +9,6 @@
 
 namespace Wirecard\Oxid\Core;
 
-use DateInterval;
 use DateTime;
 
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
@@ -106,9 +105,7 @@ class Vault
 
         $aExistingCards = self::getCards($oOrder);
         foreach ($aExistingCards as $aCard) {
-            if ($aCard['TOKEN'] === $aVaultCard['token']
-                && $aCard['ADDRESSID'] === $aVaultCard['addressId']
-                && $aCard['USERID'] === $aVaultCard['userId']) {
+            if (self::_areCardsEqual($aCard, $aVaultCard)) {
                 return;
             }
         }
@@ -192,5 +189,20 @@ class Vault
     private static function _getAddressId($oOrder)
     {
         return sha1(implode($oOrder->getShippingAccountHolder()->mappedProperties()));
+    }
+
+    /**
+     * @param array $aCard
+     * @param array $aVaultCard
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private static function _areCardsEqual($aCard, $aVaultCard)
+    {
+        return $aCard['TOKEN'] === $aVaultCard['token']
+            && $aCard['ADDRESSID'] === $aVaultCard['addressId']
+            && $aCard['USERID'] === $aVaultCard['userId'];
     }
 }
