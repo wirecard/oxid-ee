@@ -296,7 +296,7 @@ class PaymentMain extends PaymentMain_parent
         $sUser = $aParams['oxpayments__wdoxidee_httpuser'];
         $sPass = $aParams['oxpayments__wdoxidee_httppass'];
 
-        if ($aParams['oxpayments__oxid'] === PayolutionInvoicePaymentMethod::getName()) {
+        if ($this->_isPayolutionPaymentMethod($aParams['oxpayments__oxid'])) {
             // handle the case of different configuration per currency (currently only Payolution)
             // it's only checked if config values are entered on the frontend but no validation is done on the backend
             return $this->_checkCurrencyConfigFields($aParams);
