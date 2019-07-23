@@ -14,6 +14,7 @@ use OxidEsales\TestingLibrary\UnitTestCase;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 
 use Psr\Log\LogLevel;
+use oxTestModules;
 
 /**
  * UnitTextCase extension that allows setting database values from within the test.
@@ -49,6 +50,19 @@ abstract class WdUnitTestCase extends UnitTestCase
     }
 
     /**
+     * Ignores PHP warnings in tests.
+     *
+     * @inheritdoc
+     */
+    public function run($result = null)
+    {
+        error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
+        oxTestModules::cleanUp();
+
+        return $result;
+    }
+
+    /**
      * Only fails a test if the log level matches one of FAIL_TEST_ON_LOG_LEVELS.
      *
      * @inheritdoc
@@ -78,7 +92,7 @@ abstract class WdUnitTestCase extends UnitTestCase
         if ($logFileContent) {
             return constant(LogLevel::class . "::{$matches[0]}");
         }
-        
+
         return null;
     }
 
