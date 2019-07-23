@@ -7,7 +7,7 @@
 *}]
 [{$smarty.block.parent}]
 [{assign var="payment" value=$oView->getPayment()}]
-[{if $payment->oxpayments__oxid->value === "wdcreditcard"}]
+[{if $payment->shouldRenderCreditCardForm()}]
 
   [{oxscript include="js/libs/jquery.min.js" priority=8}]
   [{oxscript include=$oView->getPaymentPageLoaderScriptUrl() priority=8}]

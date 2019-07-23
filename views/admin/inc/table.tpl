@@ -1,3 +1,4 @@
+[{oxstyle include=$oViewConf->getPaymentGatewayUrl("out/css/wirecard_wdoxidee_table.css")}]
 <table class="wd-table">
 [{if $data.head}]
   <thead>

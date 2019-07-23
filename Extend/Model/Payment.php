@@ -10,10 +10,12 @@
 namespace Wirecard\Oxid\Extend\Model;
 
 use OxidEsales\Eshop\Core\Exception\SystemComponentException;
+use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\OxidEeEvents;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Model\MetaDataModel;
+use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod\PaymentMethod;
 
 /**
@@ -82,5 +84,18 @@ class Payment extends Payment_parent
         }
 
         return $oPaymentMethod->getLogoPath();
+    }
+
+    /**
+     * Validate rendering the form
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    public function shouldRenderCreditCardForm()
+    {
+        return $this->oxpayments__oxid->value === CreditCardPaymentMethod::getName(true)
+            && !CreditCardPaymentMethod::isCardTokenSet(Registry::getSession()->getVariable('dynvalue'));
     }
 }

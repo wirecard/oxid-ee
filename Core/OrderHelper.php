@@ -11,8 +11,10 @@ namespace Wirecard\Oxid\Core;
 
 use Exception;
 
+use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
@@ -201,7 +203,7 @@ class OrderHelper
                 PaymentInAdvancePaymentInformation::PIA_PAYMENT_INFORMATION,
                 new PaymentInAdvancePaymentInformation(
                     $oResponse->getRequestedAmount()->getValue() . ' ' .
-                     $oResponse->getRequestedAmount()->getCurrency(),
+                    $oResponse->getRequestedAmount()->getCurrency(),
                     (string) $oResponseXml->{'merchant-bank-account'}->{'iban'},
                     (string) $oResponseXml->{'merchant-bank-account'}->{'bic'},
                     (string) $oResponseXml->{'provider-transaction-reference-id'}
@@ -334,6 +336,7 @@ class OrderHelper
 
     /**
      * Sets a payment error text to the session.
+     *
      * @param string $sText
      *
      * @since 1.1.0
@@ -391,5 +394,39 @@ class OrderHelper
         }
 
         return true;
+    }
+
+    /**
+     * Get the last order's shipping address for the given user
+     *
+     * @param string $sUserId
+     *
+     * @return Address|null
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     *
+     * @since 1.3.0
+     */
+    public static function getLastOrderShippingAddress($sUserId)
+    {
+        $sOrderId = self::_getLastOrderIdFromDb($sUserId);
+        $oOrder = oxNew(Order::class);
+        $oOrder->load($sOrderId);
+        return $oOrder->getDelAddressInfo();
+    }
+
+    /**
+     * @param string $sUserId
+     *
+     * @return false|string
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     *
+     * @since 1.3.0
+     */
+    private static function _getLastOrderIdFromDb($sUserId)
+    {
+        $sQuery = "SELECT `OXID` from oxorder WHERE `OXUSERID`=? ORDER BY `OXORDERDATE` DESC LIMIT 1";
+        return DatabaseProvider::getDb()->getOne($sQuery, [$sUserId]);
     }
 }
