@@ -318,7 +318,7 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     public function getMetaDataFieldNames()
     {
-        return [
+        $aMetaDataFields = [
             'apiurl_wpp',
             'oneclick_enabled',
             'oneclick_changed_shipping',
@@ -353,6 +353,7 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'data' => $this->_mapCardsToList($aCards),
             ],
         ];
+        return array_merge(parent::getMetaDataFieldNames(), $aMetaDataFields);
     }
 
     /**
