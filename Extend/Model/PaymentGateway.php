@@ -121,7 +121,7 @@ class PaymentGateway extends BaseModel
     }
 
     /**
-     * Executes the transaction through EE
+     * Creates a transaction
      *
      * @param Basket $oBasket
      * @param Order  $oOrder
