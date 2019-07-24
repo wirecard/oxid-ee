@@ -9,6 +9,7 @@
 
 namespace Wirecard\Oxid\Core;
 
+use DateInterval;
 use DateTime;
 
 use OxidEsales\Eshop\Core\Database\Adapter\DatabaseInterface;
@@ -44,6 +45,7 @@ class Vault
 
         return array_filter($aCards, function ($aCard) {
             $oDateExpiration = new DateTime($aCard['EXPIRATIONYEAR'] . '-' . $aCard['EXPIRATIONMONTH'] . '-01');
+            $oDateExpiration->add(new DateInterval('P1M'));
             $oDateToday = new DateTime();
 
             $bIsValid = $oDateToday < $oDateExpiration;

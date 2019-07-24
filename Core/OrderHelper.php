@@ -125,7 +125,7 @@ class OrderHelper
         }
 
         self::_managePiaPaymentInformation($oResponse, $oOrder);
-        self::_handleSaveCheckbox($oOrder);
+        self::_handleSaveCredentials($oOrder);
 
         // set the transaction ID on the order
         $oOrder->oxorder__wdoxidee_transactionid = new Field($oResponse->getTransactionId());
@@ -219,7 +219,7 @@ class OrderHelper
      *
      * @since 1.3.0
      */
-    private static function _handleSaveCheckbox($oOrder)
+    private static function _handleSaveCredentials($oOrder)
     {
         if (!$oOrder->oxorder__wdoxidee_transactionid->value) {
             $oOrder->oxorder__wdoxidee_savepaymentcredentials =
