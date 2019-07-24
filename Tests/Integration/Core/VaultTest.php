@@ -13,7 +13,6 @@ use OxidEsales\Eshop\Core\Field;
 use Wirecard\Oxid\Core\OxidEeEvents;
 use Wirecard\Oxid\Core\Vault;
 use Wirecard\Oxid\Extend\Model\Order;
-use Wirecard\Oxid\Model\PaymentMethod\PayolutionBtwobPaymentMethod;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
 
 class VaultTest extends \Wirecard\Test\WdUnitTestCase
