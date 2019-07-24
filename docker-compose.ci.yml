@@ -22,6 +22,7 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       OXID_HOSTNAME: web
       OXID_SERVICE: localhost.dev # should be same as the service name
+      OXID_COVERAGE_XML_ONLY: ${OXID_COVERAGE_XML_ONLY}
     depends_on:
       - db
     networks:
