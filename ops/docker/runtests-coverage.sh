@@ -12,8 +12,8 @@ COMMAND="vendor/bin/runtests-coverage"
 # see https://github.com/sebastianbergmann/php-code-coverage/issues/551
 if [ "${OXID_COVERAGE_XML_ONLY}" = true ]
 then
-    REPORTS_DIR="${WEBROOT_DIR}/modules/${MODULE_PATH}/tests/reports"
-    rm -rf $REPORTS_DIR && mkdir -m 777 $REPORTS_DIR
+    REPORTS_DIR="${WEBROOT_DIR}/modules/${MODULE_PATH}/Tests/reports"
+    rm -rf $REPORTS_DIR && mkdir -p -m 777 $REPORTS_DIR
     COMMAND="vendor/bin/runtests --coverage-clover $REPORTS_DIR/clover.xml AllTestsUnit"
 fi
 
