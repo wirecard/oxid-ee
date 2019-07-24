@@ -12,4 +12,6 @@ INSTALL_SHOP=0 \
 RETRY_TIMES_AFTER_TEST_FAIL=0 \
 SELENIUM_SERVER_IP=selenium \
 SHOP_URL=http://${OXID_SERVICE} \
+# suppress PHP warnings caused by PHPUnit
+PHPBIN="php -d error_reporting=0" \
     vendor/bin/runtests-selenium
