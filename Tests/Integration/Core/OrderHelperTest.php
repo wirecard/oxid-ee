@@ -34,8 +34,34 @@ class OrderHelperTest extends \Wirecard\Test\WdUnitTestCase
                     'OXSTATEID',
                 ],
                 'rows' => [
-                    ['User ID 1', 1, 'User 1', 'User', 'One', 'Red Company', 'Blue Square', '1', '5555', 'Green City', '1', '1'],
-                    ['User ID 2', 1, 'User 2', null, null, null, null, null, null, null, null, null],
+                    [
+                        'User ID 1',
+                        1,
+                        'User 1',
+                        'User',
+                        'One',
+                        'Red Company',
+                        'Blue Square',
+                        '1',
+                        '5555',
+                        'Green City',
+                        '1',
+                        '1'
+                    ],
+                    [
+                        'User ID 2',
+                        1,
+                        'User 2',
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null,
+                        null
+                    ],
                 ],
             ],
             [
@@ -186,7 +212,7 @@ class OrderHelperTest extends \Wirecard\Test\WdUnitTestCase
                     'state_id' => '1',
                 ],
             ],
-            'user without delivery country set' => [
+            'order without delivery country set' => [
                 'User ID 2',
                 [
                     'first_name' => 'User',
