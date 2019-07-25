@@ -431,30 +431,10 @@ class OrderHelper
         };
 
         if (!empty($oOrder->oxorder__oxdelcountryid->value)) {
-            return [
-                'first_name' => $oOrder->oxorder__oxdelfname->value,
-                'last_name' => $oOrder->oxorder__oxdellname->value,
-                'company' => $oOrder->oxorder__oxdelcompany->value,
-                'street' => $oOrder->oxorder__oxdelstreet->value,
-                'street_nr' => $oOrder->oxorder__oxdelstreetnr->value,
-                'zip' => $oOrder->oxorder__oxdelzip->value,
-                'city' => $oOrder->oxorder__oxdelcity->value,
-                'country_id' => $oOrder->oxorder__oxdelcountryid->value,
-                'state_id' => $oOrder->oxorder__oxdelstateid->value,
-            ];
+            return self::_getDeliveryAddressFromOrder($oOrder);
         }
 
-        return [
-            'first_name' => $oOrder->oxorder__oxbillfname->value,
-            'last_name' => $oOrder->oxorder__oxbilllname->value,
-            'company' => $oOrder->oxorder__oxbillcompany->value,
-            'street' => $oOrder->oxorder__oxbillstreet->value,
-            'street_nr' => $oOrder->oxorder__oxbillstreetnr->value,
-            'zip' => $oOrder->oxorder__oxbillzip->value,
-            'city' => $oOrder->oxorder__oxbillcity->value,
-            'country_id' => $oOrder->oxorder__oxbillcountryid->value,
-            'state_id' => $oOrder->oxorder__oxbillstateid->value,
-        ];
+        return self::_getBillingAddressFromOrder($oOrder);
     }
 
     /**
@@ -485,30 +465,83 @@ class OrderHelper
         $oCurrentAddress =  $oOrder->getDelAddressInfo();
 
         if (!is_null($oCurrentAddress)) {
-            return [
-                'first_name' => $oCurrentAddress->oxaddress__oxfname->value,
-                'last_name' => $oCurrentAddress->oxaddress__oxlname->value,
-                'company' => $oCurrentAddress->oxaddress__oxcompany->value,
-                'street' => $oCurrentAddress->oxaddress__oxstreet->value,
-                'street_nr' => $oCurrentAddress->oxaddress__oxstreetnr->value,
-                'zip' => $oCurrentAddress->oxaddress__oxzip->value,
-                'city' => $oCurrentAddress->oxaddress__oxcity->value,
-                'country_id' => $oCurrentAddress->oxaddress__oxcountryid->value,
-                'state_id' => $oCurrentAddress->oxaddress__oxstateid->value,
-            ];
+            return self::_getShippingAddressFromObject($oCurrentAddress);
         }
 
         $oUser = Registry::getSession()->getUser();
+        return self::_getShippingAddressFromObject($oUser);
+    }
+
+    /**
+     * Returns an address array from the given address object
+     *
+     * @param object $oAddress
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private static function _getShippingAddressFromObject($oAddress)
+    {
+
         return [
-            'first_name' => $oUser->oxuser__oxfname->value,
-            'last_name' => $oUser->oxuser__oxlname->value,
-            'company' => $oUser->oxuser__oxcompany->value,
-            'street' => $oUser->oxuser__oxstreet->value,
-            'street_nr' => $oUser->oxuser__oxstreetnr->value,
-            'zip' => $oUser->oxuser__oxzip->value,
-            'city' => $oUser->oxuser__oxcity->value,
-            'country_id' => $oUser->oxuser__oxcountryid->value,
-            'state_id' => $oUser->oxuser__oxstateid->value,
+            'first_name' => $oAddress->oxuser__oxfname->value,
+            'last_name' => $oAddress->oxuser__oxlname->value,
+            'company' => $oAddress->oxuser__oxcompany->value,
+            'street' => $oAddress->oxuser__oxstreet->value,
+            'street_nr' => $oAddress->oxuser__oxstreetnr->value,
+            'zip' => $oAddress->oxuser__oxzip->value,
+            'city' => $oAddress->oxuser__oxcity->value,
+            'country_id' => $oAddress->oxuser__oxcountryid->value,
+            'state_id' => $oAddress->oxuser__oxstateid->value,
+        ];
+    }
+
+    /**
+     * Returns the delivery address from the order object
+     *
+     * @param object $oOrder
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private static function _getDeliveryAddressFromOrder($oOrder)
+    {
+        return [
+            'first_name' => $oOrder->oxorder__oxdelfname->value,
+            'last_name' => $oOrder->oxorder__oxdellname->value,
+            'company' => $oOrder->oxorder__oxdelcompany->value,
+            'street' => $oOrder->oxorder__oxdelstreet->value,
+            'street_nr' => $oOrder->oxorder__oxdelstreetnr->value,
+            'zip' => $oOrder->oxorder__oxdelzip->value,
+            'city' => $oOrder->oxorder__oxdelcity->value,
+            'country_id' => $oOrder->oxorder__oxdelcountryid->value,
+            'state_id' => $oOrder->oxorder__oxdelstateid->value,
+        ];
+    }
+
+    /**
+     * Returns the billing address from the order object
+     *
+     * @param object $oOrder
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private static function _getBillingAddressFromOrder($oOrder)
+    {
+        return [
+            'first_name' => $oOrder->oxorder__oxbillfname->value,
+            'last_name' => $oOrder->oxorder__oxbilllname->value,
+            'company' => $oOrder->oxorder__oxbillcompany->value,
+            'street' => $oOrder->oxorder__oxbillstreet->value,
+            'street_nr' => $oOrder->oxorder__oxbillstreetnr->value,
+            'zip' => $oOrder->oxorder__oxbillzip->value,
+            'city' => $oOrder->oxorder__oxbillcity->value,
+            'country_id' => $oOrder->oxorder__oxbillcountryid->value,
+            'state_id' => $oOrder->oxorder__oxbillstateid->value,
         ];
     }
 }
