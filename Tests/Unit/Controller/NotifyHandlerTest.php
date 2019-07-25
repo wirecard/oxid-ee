@@ -104,7 +104,7 @@ class NotifyHandlerTest extends \Wirecard\Test\WdUnitTestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $oSuccessWithoutTransactionStub->method('getParentTransactionId')
+        $oSuccessWithoutTransactionStub->method('getTransactionId')
             ->willReturn('noExistingTransactionId');
 
         $oFailureResponseStub = $this->getMockBuilder(FailureResponse::class)
