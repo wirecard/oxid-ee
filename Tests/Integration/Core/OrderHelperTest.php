@@ -7,6 +7,9 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use OxidEsales\Eshop\Application\Model\User;
+use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Core\OrderHelper;
 
 class OrderHelperTest extends \Wirecard\Test\WdUnitTestCase
@@ -16,10 +19,67 @@ class OrderHelperTest extends \Wirecard\Test\WdUnitTestCase
         return [
             [
                 'table' => 'oxuser',
-                'columns' => ['OXID', 'OXACTIVE', 'OXUSERNAME'],
+                'columns' => [
+                    'OXID',
+                    'OXACTIVE',
+                    'OXUSERNAME',
+                    'OXFNAME',
+                    'OXLNAME',
+                    'OXCOMPANY',
+                    'OXSTREET',
+                    'OXSTREETNR',
+                    'OXZIP',
+                    'OXCITY',
+                    'OXCOUNTRYID',
+                    'OXSTATEID',
+                ],
                 'rows' => [
-                    ['User ID 1', 1, 'User 1'],
-                    ['User ID 2', 1, 'User 2'],
+                    ['User ID 1', 1, 'User 1', 'User', 'One', 'Red Company', 'Blue Square', '1', '5555', 'Green City', '1', '1'],
+                    ['User ID 2', 1, 'User 2', null, null, null, null, null, null, null, null, null],
+                ],
+            ],
+            [
+                'table' => 'oxaddress',
+                'columns' => [
+                    'OXID',
+                    'OXUSERID',
+                    'OXFNAME',
+                    'OXLNAME',
+                    'OXCOMPANY',
+                    'OXSTREET',
+                    'OXSTREETNR',
+                    'OXZIP',
+                    'OXCITY',
+                    'OXCOUNTRYID',
+                    'OXSTATEID',
+                ],
+                'rows' => [
+                    [
+                        '1',
+                        'User ID 1',
+                        'First',
+                        'Last',
+                        'Company',
+                        'Street',
+                        '10',
+                        '9876',
+                        'City',
+                        '9',
+                        '9',
+                    ],
+                ],
+            ],
+            [
+                'table' => 'oxcountry',
+                'columns' => [
+                    'OXID',
+                    'OXTITLE',
+                ],
+                'rows' => [
+                    [
+                        '9',
+                        'Testland',
+                    ],
                 ],
             ],
             [
@@ -136,6 +196,57 @@ class OrderHelperTest extends \Wirecard\Test\WdUnitTestCase
                     'street_nr' => '2',
                     'zip' => '44567',
                     'city' => 'Großstadt',
+                    'country_id' => '1',
+                    'state_id' => '1',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * @dataProvider getSelectedShippingAddressProvider
+     */
+    public function testGetSelectedShippingAddress($sUserId, $aExpected)
+    {
+        $oUser = oxNew(User::class);
+
+        if ($sUserId !== null) {
+            $oUser->load($sUserId);
+            Registry::getSession()->setUser($oUser);
+        } else {
+            Registry::getSession()->setVariable('deladrid', '1');
+        }
+
+        $this->assertEquals($aExpected, OrderHelper::getSelectedShippingAddress());
+    }
+
+    public function getSelectedShippingAddressProvider()
+    {
+        return [
+            'invalid user' => [
+                null,
+                [
+                    'first_name' => 'First',
+                    'last_name' => 'Last',
+                    'company' => 'Company',
+                    'street' => 'Street',
+                    'street_nr' => '10',
+                    'zip' => '9876',
+                    'city' => 'City',
+                    'country_id' => '9',
+                    'state_id' => '9',
+                ],
+            ],
+            'valid user' => [
+                'User ID 1',
+                [
+                    'first_name' => 'User',
+                    'last_name' => 'One',
+                    'company' => 'Red Company',
+                    'street' => 'Blue Square',
+                    'street_nr' => '1',
+                    'zip' => '5555',
+                    'city' => 'Green City',
                     'country_id' => '1',
                     'state_id' => '1',
                 ],
