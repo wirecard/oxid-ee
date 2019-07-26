@@ -74,6 +74,7 @@ class AlipayCrossBorderPaymentMethod extends PaymentMethod
      */
     public function addMandatoryTransactionData(&$oTransaction, $oOrder)
     {
+        //TODO: once account holder is not needed by the sdk, remove this line
         $oTransaction->setAccountHolder($oOrder->getAccountHolder());
     }
 
