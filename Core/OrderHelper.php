@@ -483,7 +483,7 @@ class OrderHelper
      */
     private static function _getShippingAddressFromObject($oAddress)
     {
-        return self::_getAddressFromObject($oAddress, 'oxuser', '');
+        return self::_getAddressFromObject($oAddress, 'oxuser');
     }
 
     /**
@@ -497,7 +497,7 @@ class OrderHelper
      */
     private static function _getDeliveryAddressFromOrder($oOrder)
     {
-        return self::_getAddressFromObject($oOrder, 'oxorder', 'del');
+        return self::_getAddressFromOrder($oOrder, 'del');
     }
 
     /**
@@ -511,7 +511,22 @@ class OrderHelper
      */
     private static function _getBillingAddressFromOrder($oOrder)
     {
-        return self::_getAddressFromObject($oOrder, 'oxorder', 'bill');
+        return self::_getAddressFromOrder($oOrder, 'bill');
+    }
+
+    /**
+     * Returns an address array from the given order object
+     *
+     * @param object $oOrder
+     * @param string $sColumnPrefix
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private static function _getAddressFromOrder($oOrder, $sColumnPrefix)
+    {
+        return self::_getAddressFromObject($oOrder, 'oxorder', $sColumnPrefix);
     }
 
     /**
@@ -525,7 +540,7 @@ class OrderHelper
      *
      * @since 1.3.0
      */
-    private static function _getAddressFromObject($oDbObject, $sTableName, $sColumnPrefix)
+    private static function _getAddressFromObject($oDbObject, $sTableName, $sColumnPrefix = '')
     {
         $sDbPrefix = $sTableName . '__ox' . $sColumnPrefix;
 
