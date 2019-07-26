@@ -9,8 +9,6 @@
 
 use OxidEsales\Eshop\Application\Model\Order;
 
-use Wirecard\Oxid\Model\PaymentMethod\BasePoiPiaPaymentMethod;
-use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Model\Transaction;
 
 class TransactionTest extends Wirecard\Test\WdUnitTestCase
