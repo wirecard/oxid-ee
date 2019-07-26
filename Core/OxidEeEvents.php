@@ -405,7 +405,7 @@ class OxidEeEvents
      *
      * @since 1.3.0
      */
-    private static function _createVaultTable()
+    public static function createVaultTable()
     {
         $sQuery = "CREATE TABLE IF NOT EXISTS " . self::VAULT_TABLE . "(
             `OXID` int NOT NULL AUTO_INCREMENT,
@@ -490,7 +490,7 @@ class OxidEeEvents
         $oDbMetaDataHandler = oxNew(DbMetaDataHandler::class);
 
         if (!$oDbMetaDataHandler->tableExists(self::VAULT_TABLE)) {
-            self::_createVaultTable();
+            self::createVaultTable();
         }
     }
 }

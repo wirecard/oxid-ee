@@ -11,7 +11,7 @@ use OxidEsales\Eshop\Application\Model\Payment;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 use OxidEsales\Eshop\Core\DbMetaDataHandler;
 
-use Wirecard\Oxid\Core\OxidEEEvents;
+use Wirecard\Oxid\Core\OxidEeEvents;
 
 class OxidEEEventsTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
@@ -83,19 +83,21 @@ class OxidEEEventsTest extends OxidEsales\TestingLibrary\UnitTestCase
      */
     protected function tearDown()
     {
-        DatabaseProvider::getDB()->execute("DROP TABLE IF EXISTS `" . \Wirecard\Oxid\Core\OxidEEEvents::TRANSACTION_TABLE . "`");
-        OxidEEEvents::createOrderTransactionTable();
+        DatabaseProvider::getDB()->execute("DROP TABLE IF EXISTS `" . OxidEeEvents::TRANSACTION_TABLE . "`");
+        OxidEeEvents::createOrderTransactionTable();
 
-        OxidEEEvents::extendPaymentMethodTable();
-        OxidEEEvents::extendOrderTable();
-        OxidEEEvents::addPaymentMethods();
+        OxidEeEvents::extendPaymentMethodTable();
+        OxidEeEvents::extendOrderTable();
+        OxidEeEvents::createPaymentMethodMetaDataTable();
+        OxidEeEvents::createVaultTable();
+        OxidEeEvents::addPaymentMethods();
 
         parent::tearDown();
     }
 
     public function testOnActivate()
     {
-        OxidEEEvents::onActivate();
+        OxidEeEvents::onActivate();
 
         $dbMetaDataHandler = oxNew(DbMetaDataHandler::class);
         $this->assertTrue($dbMetaDataHandler->tableExists('wdoxidee_ordertransactions'));
@@ -117,8 +119,8 @@ class OxidEEEventsTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testOnDeactivate()
     {
-        OxidEEEvents::onActivate();
-        OxidEEEvents::onDeactivate();
+        OxidEeEvents::onActivate();
+        OxidEeEvents::onDeactivate();
 
         $dbMetaDataHandler = oxNew(DbMetaDataHandler::class);
         $this->assertTrue($dbMetaDataHandler->tableExists('wdoxidee_ordertransactions'));
