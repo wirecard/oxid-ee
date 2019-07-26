@@ -18,7 +18,7 @@ var ModuleCreditCardForm = (function($) {
   function callback() {
     $(".loader").fadeOut(200,function() {
       $("#creditcard-form-div")
-        .height(400)
+        .height(screen.width >= 992 ? 200 : 380)
         .fadeIn(200);
       getOrderButton().prop("disabled", false);
     });
