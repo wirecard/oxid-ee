@@ -483,18 +483,7 @@ class OrderHelper
      */
     private static function _getShippingAddressFromObject($oAddress)
     {
-
-        return [
-            'first_name' => $oAddress->oxuser__oxfname->value,
-            'last_name' => $oAddress->oxuser__oxlname->value,
-            'company' => $oAddress->oxuser__oxcompany->value,
-            'street' => $oAddress->oxuser__oxstreet->value,
-            'street_nr' => $oAddress->oxuser__oxstreetnr->value,
-            'zip' => $oAddress->oxuser__oxzip->value,
-            'city' => $oAddress->oxuser__oxcity->value,
-            'country_id' => $oAddress->oxuser__oxcountryid->value,
-            'state_id' => $oAddress->oxuser__oxstateid->value,
-        ];
+        return self::_getAddressFromObject($oAddress, 'oxuser', '');
     }
 
     /**
@@ -508,17 +497,7 @@ class OrderHelper
      */
     private static function _getDeliveryAddressFromOrder($oOrder)
     {
-        return [
-            'first_name' => $oOrder->oxorder__oxdelfname->value,
-            'last_name' => $oOrder->oxorder__oxdellname->value,
-            'company' => $oOrder->oxorder__oxdelcompany->value,
-            'street' => $oOrder->oxorder__oxdelstreet->value,
-            'street_nr' => $oOrder->oxorder__oxdelstreetnr->value,
-            'zip' => $oOrder->oxorder__oxdelzip->value,
-            'city' => $oOrder->oxorder__oxdelcity->value,
-            'country_id' => $oOrder->oxorder__oxdelcountryid->value,
-            'state_id' => $oOrder->oxorder__oxdelstateid->value,
-        ];
+        return self::_getAddressFromObject($oOrder, 'oxorder', 'del');
     }
 
     /**
@@ -532,16 +511,34 @@ class OrderHelper
      */
     private static function _getBillingAddressFromOrder($oOrder)
     {
+        return self::_getAddressFromObject($oOrder, 'oxorder', 'bill');
+    }
+
+    /**
+     * Returns an address array from the given address object
+     *
+     * @param object $oDbObject
+     * @param string $sTableName
+     * @param string $sColumnPrefix
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private static function _getAddressFromObject($oDbObject, $sTableName, $sColumnPrefix)
+    {
+        $sDbPrefix = $sTableName . '__ox' . $sColumnPrefix;
+
         return [
-            'first_name' => $oOrder->oxorder__oxbillfname->value,
-            'last_name' => $oOrder->oxorder__oxbilllname->value,
-            'company' => $oOrder->oxorder__oxbillcompany->value,
-            'street' => $oOrder->oxorder__oxbillstreet->value,
-            'street_nr' => $oOrder->oxorder__oxbillstreetnr->value,
-            'zip' => $oOrder->oxorder__oxbillzip->value,
-            'city' => $oOrder->oxorder__oxbillcity->value,
-            'country_id' => $oOrder->oxorder__oxbillcountryid->value,
-            'state_id' => $oOrder->oxorder__oxbillstateid->value,
+            'first_name' => $oDbObject->{$sDbPrefix . 'fname'}->value,
+            'last_name' => $oDbObject->{$sDbPrefix . 'lname'}->value,
+            'company' => $oDbObject->{$sDbPrefix . 'company'}->value,
+            'street' => $oDbObject->{$sDbPrefix . 'street'}->value,
+            'street_nr' => $oDbObject->{$sDbPrefix . 'streetnr'}->value,
+            'zip' => $oDbObject->{$sDbPrefix . 'zip'}->value,
+            'city' => $oDbObject->{$sDbPrefix . 'city'}->value,
+            'country_id' => $oDbObject->{$sDbPrefix . 'countryid'}->value,
+            'state_id' => $oDbObject->{$sDbPrefix . 'stateid'}->value,
         ];
     }
 }
