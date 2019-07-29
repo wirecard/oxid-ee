@@ -8,7 +8,6 @@
  */
 
 use Wirecard\Oxid\Extend\Controller\Admin\PaymentMain;
-
 use Wirecard\PaymentSdk\TransactionService;
 
 class PaymentMainTest extends \Wirecard\Test\WdUnitTestCase
@@ -143,4 +142,25 @@ class PaymentMainTest extends \Wirecard\Test\WdUnitTestCase
         return $cPaymentMain;
     }
 
+    public function testCheckCurrencyConfigFields()
+    {
+        $sPaymentId = 'wdpayolution-inv';
+        $this->_controller->setEditObjectId($sPaymentId);
+
+        $this->setRequestParameter(
+            'editval',
+            [
+                'oxpayments__oxid' => $sPaymentId,
+                'oxpayments__allowed_currencies' => ['EUR', 'GBP'],
+                'oxpayments__httpuser_eur' => 'test',
+                'oxpayments__httppass_eur' => 'test',
+            ]
+        );
+
+        try {
+            $this->_controller->save();
+        } catch (\Exception $exc) {
+            $this->fail($exc->getMessage());
+        }
+    }
 }
