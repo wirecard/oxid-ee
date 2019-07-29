@@ -332,8 +332,8 @@ class NotifyHandler extends FrontendController
 
     /**
      * Checks if the credit card credentials should be saved.
-     * For that the user needs an account, it has to be a credit card payment and the user must had checked the save
-     * credentials checkbox
+     * For that the user needs an account, it has to be a credit card payment and the user must have checked the save
+     * credentials checkbox.
      *
      * @param SuccessResponse $oResponse
      * @param Order           $oOrder
