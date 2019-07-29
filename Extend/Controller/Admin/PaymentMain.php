@@ -305,7 +305,12 @@ class PaymentMain extends PaymentMain_parent
         if ($this->_areCredentialsSet($sUrl, $sUser, $sPass)) {
             $oConfig = new Config($sUrl, $sUser, $sPass);
             $oTransactionService = $this->_getTransactionService($oConfig);
-            return $oTransactionService->checkCredentials();
+            try {
+                return $oTransactionService->checkCredentials();
+            } catch (\Exception $oException) {
+                Registry::getLogger()->error(__METHOD__ . ": Error checking credentials: " . $oException->getMessage());
+                return false;
+            }
         }
 
         return false;
