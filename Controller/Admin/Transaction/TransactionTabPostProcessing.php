@@ -482,8 +482,14 @@ class TransactionTabPostProcessing extends TransactionTab
 
         if (!is_null($this->_oTransaction)) {
             $sPaymentId = $this->_oTransaction->getPaymentType();
-            $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
-            $oConfig = $oPaymentMethod->getConfig();
+
+            if ($sPaymentId) {
+                $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
+                $oConfig = $oPaymentMethod->getConfig();
+            } else { // "wiretransfer"
+                $oPaymentMethod = PaymentMethodFactory::create("wdpaymentoninvoice");
+                $oConfig = $oPaymentMethod->getConfig();
+            }
         }
 
         return $oConfig;

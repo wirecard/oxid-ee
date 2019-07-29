@@ -121,9 +121,9 @@ class Transaction extends MultiLanguageModel
      */
     public function isPoiPiaPaymentMethod()
     {
-        $sPaymentId = $this->getPaymentType();
-        $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
-        return is_subclass_of($oPayment->getPaymentMethod(), BasePoiPiaPaymentMethod::class);
+        $oXml = simplexml_load_string($this->getResponseXML());
+        $sPaymentId = (string) $oXml->{'payment-methods'}->{'payment-method'}['name'];
+        return $sPaymentId === 'wiretransfer' ? true : false;
     }
 
     /**
@@ -139,6 +139,31 @@ class Transaction extends MultiLanguageModel
         $oOrder->load($this->wdoxidee_ordertransactions__orderid->value);
 
         return $oOrder;
+    }
+
+    /**
+     * Returns transaction's payment method name.
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    public function getTransactionPaymentMethodName()
+    {
+        if ($this->getPaymentType()) { // there is an order associated with the transaction
+            $oPayment = PaymentMethodHelper::getPaymentById($this->getPaymentType());
+            return $oPayment->oxpayments__oxdesc->value;
+        }
+
+        $oXml = simplexml_load_string($this->getResponseXML());
+        $sPaymentId = $oXml->{'payment-methods'}->{'payment-method'}['name'];
+        $oPayment = PaymentMethodHelper::getPaymentById('wd' . $sPaymentId);
+        // payment with id from xml response exists in database
+        if ($oPayment->oxpayments__oxid->value) {
+            return $oPayment->oxpayments__oxdesc->value;
+        }
+
+        return (string) $oXml->{'payment-methods'}->{'payment-method'}['name'];
     }
 
     /**
@@ -264,6 +289,8 @@ class Transaction extends MultiLanguageModel
     }
 
     /**
+     * Returns payment type from the order associated with the transaction
+     *
      * @return string
      *
      * @since 1.1.0
