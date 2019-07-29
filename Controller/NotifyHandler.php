@@ -197,7 +197,10 @@ class NotifyHandler extends FrontendController
         $oOrder = oxNew(Order::class);
         if ($this->_loadOrder($oOrder, $sTransactionId) >= self::MAX_TIMEOUT_SECONDS) {
             $this->_oLogger->error('No order found for transactionId: ' . $sTransactionId);
-            ResponseHandler::saveTransaction($oResponse, $oOrder, $oBackendService);
+            if ($oResponse->getPaymentMethod() === Transaction::WIRETRANSFER) { // unmatched POI/PIA transaction
+                // Unmatched transaction is saved only if it was a POI/PIA transaction
+                ResponseHandler::saveTransaction($oResponse, $oOrder, $oBackendService);
+            }
             return;
         }
 

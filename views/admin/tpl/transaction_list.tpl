@@ -131,7 +131,7 @@ window.onload = function ()
             [{foreach from=$mylist item=listitem}]
             <tr>
                 [{block name="admin_transaction_list_item"}]
-                    [{assign var="order" value=$listitem->getTransactionOrder()}]
+                    [{assign var="ordernumber" value=$listitem->wdoxidee_ordertransactions__ordernumber->value}]
                     [{if $listitem->getId() == $oxid}]
                         [{assign var="listclass" value=listitem4}]
                     [{else}]
@@ -145,8 +145,8 @@ window.onload = function ()
                     </td>
                     <td class="[{$listclass}]">
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">
-                        [{if $listitem->wdoxidee_ordertransactions__ordernumber->value}]
-                          [{$listitem->wdoxidee_ordertransactions__ordernumber->value}]
+                        [{if $ordernumber}]
+                          [{$ordernumber}]
                         [{/if}]
                         </a>
                     </td>

@@ -479,14 +479,19 @@ class TransactionTabPostProcessing extends TransactionTab
     private function _getPaymentMethodConfig()
     {
         $oConfig = null;
-
         if (!is_null($this->_oTransaction)) {
             $sPaymentId = $this->_oTransaction->getPaymentType();
 
             if ($sPaymentId) {
                 $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
                 $oConfig = $oPaymentMethod->getConfig();
-            } else { // "wiretransfer"
+                return $oConfig;
+            }
+
+            // If sPaymentId is empty, it means transaction's order reference was empty.
+            // In that case, we have to confirm it was a POI/PIA transaction.
+            if ($this->_oTransaction->isPoiPiaPaymentMethod()) {
+                // Since POI and PIA payment methods share configuration, we create POI config.
                 $oPaymentMethod = PaymentMethodFactory::create("wdpaymentoninvoice");
                 $oConfig = $oPaymentMethod->getConfig();
             }

@@ -36,6 +36,8 @@ class Transaction extends MultiLanguageModel
     const STATE_CLOSED = 'closed';
     const STATE_ERROR = 'error';
 
+    const WIRETRANSFER = 'wiretransfer';
+
     /**
      * @inheritdoc
      *
@@ -113,7 +115,7 @@ class Transaction extends MultiLanguageModel
     }
 
     /**
-     * Returns true if transaction's payment method is Payment on Invoice or Payment in Advance
+     * Returns true if transaction's payment method is "wiretransfer"
      *
      * @return bool
      *
@@ -123,7 +125,7 @@ class Transaction extends MultiLanguageModel
     {
         $oXml = simplexml_load_string($this->getResponseXML());
         $sPaymentId = (string) $oXml->{'payment-methods'}->{'payment-method'}['name'];
-        return $sPaymentId === 'wiretransfer' ? true : false;
+        return $sPaymentId === self::WIRETRANSFER;
     }
 
     /**
@@ -150,20 +152,21 @@ class Transaction extends MultiLanguageModel
      */
     public function getTransactionPaymentMethodName()
     {
-        if ($this->getPaymentType()) { // there is an order associated with the transaction
-            $oPayment = PaymentMethodHelper::getPaymentById($this->getPaymentType());
+        $sPaymentId = $this->getPaymentType();
+        if ($sPaymentId) { // there is an order associated with the transaction
+            $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
             return $oPayment->oxpayments__oxdesc->value;
         }
 
         $oXml = simplexml_load_string($this->getResponseXML());
-        $sPaymentId = $oXml->{'payment-methods'}->{'payment-method'}['name'];
+        $sPaymentId = (string) $oXml->{'payment-methods'}->{'payment-method'}['name'];
         $oPayment = PaymentMethodHelper::getPaymentById('wd' . $sPaymentId);
-        // payment with id from xml response exists in database
-        if ($oPayment->oxpayments__oxid->value) {
+
+        if ($oPayment->oxpayments__oxid->value) { // payment with id from xml response exists in database
             return $oPayment->oxpayments__oxdesc->value;
         }
 
-        return (string) $oXml->{'payment-methods'}->{'payment-method'}['name'];
+        return $sPaymentId;
     }
 
     /**
