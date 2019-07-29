@@ -465,25 +465,11 @@ class OrderHelper
         $oCurrentAddress =  $oOrder->getDelAddressInfo();
 
         if (!is_null($oCurrentAddress)) {
-            return self::_getShippingAddressFromObject($oCurrentAddress);
+            return self::_getAddressFromObject($oCurrentAddress, 'oxaddress');
         }
 
         $oUser = Registry::getSession()->getUser();
-        return self::_getShippingAddressFromObject($oUser);
-    }
-
-    /**
-     * Returns an address array from the given address object
-     *
-     * @param object $oAddress
-     *
-     * @return array
-     *
-     * @since 1.3.0
-     */
-    private static function _getShippingAddressFromObject($oAddress)
-    {
-        return self::_getAddressFromObject($oAddress, 'oxuser');
+        return self::_getAddressFromObject($oUser, 'oxuser');
     }
 
     /**
