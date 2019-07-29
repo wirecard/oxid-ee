@@ -37,11 +37,11 @@ class OrderHelperTest extends \Wirecard\Test\WdUnitTestCase
             ],
             'order with delivery country set' => [
                 'User ID 1',
-                OrderHelperData::TEST_USER_1,
+                OrderHelperData::USER_DELIVERY_COUNTRY,
             ],
             'order without delivery country set' => [
                 'User ID 2',
-                OrderHelperData::TEST_USER_2,
+                OrderHelperData::USER_NO_DELIVERY_COUNTRY,
             ],
         ];
     }
@@ -68,11 +68,11 @@ class OrderHelperTest extends \Wirecard\Test\WdUnitTestCase
         return [
             'invalid user' => [
                 null,
-                OrderHelperData::TEST_USER_3,
+                OrderHelperData::USER_SHIPPING_INVALID,
             ],
             'valid user' => [
                 'User ID 1',
-                OrderHelperData::TEST_USER_4,
+                OrderHelperData::USER_SHIPPING_VALID,
             ],
         ];
     }
