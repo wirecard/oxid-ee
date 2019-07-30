@@ -135,7 +135,11 @@
     <tr>
       <td colspan="2">
         <div class="wdoxidee-messagebox wdoxidee-messagebox--error">
-          [{oxmultilang ident="wd_error_save_failed"}]
+          [{if $bCCUrlsValid}]
+            [{oxmultilang ident="wd_error_save_failed"}]
+          [{else}]
+            [{oxmultilang ident="wd_warning_credit_card_url_mismatch"}]
+          [{/if}]
         </div>
       </td>
     </tr>

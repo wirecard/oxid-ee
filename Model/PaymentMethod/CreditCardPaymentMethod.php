@@ -13,7 +13,10 @@ use OxidEsales\Eshop\Core\Config;
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\Helper;
+use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Core\Vault;
+use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
 use Wirecard\PaymentSdk\Config\Config as PaymentSdkConfig;
@@ -28,6 +31,8 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
  */
 class CreditCardPaymentMethod extends PaymentMethod
 {
+    const NEW_CARD_TOKEN = '-1';
+
     /**
      * @inheritdoc
      *
@@ -201,23 +206,23 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'text' => Helper::translate('wd_three_d_link_text'),
             ],
             'descriptor' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_descriptor',
-                'options'     => [
-                    '1'       => Helper::translate('wd_yes'),
-                    '0'       => Helper::translate('wd_no'),
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_descriptor',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
                 ],
-                'title'       => Helper::translate('wd_config_descriptor'),
+                'title' => Helper::translate('wd_config_descriptor'),
                 'description' => Helper::translate('wd_config_descriptor_desc'),
             ],
             'additionalInfo' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_additional_info',
-                'options'     => [
-                    '1'       => Helper::translate('wd_yes'),
-                    '0'       => Helper::translate('wd_no'),
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_additional_info',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
                 ],
-                'title'       => Helper::translate('wd_config_additional_info'),
+                'title' => Helper::translate('wd_config_additional_info'),
                 'description' => Helper::translate('wd_config_additional_info_desc'),
             ],
             'deleteCanceledOrder' => [
@@ -241,15 +246,52 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'description' => Helper::translate('wd_config_delete_failure_order_desc'),
             ],
             'paymentAction' => [
-                'type'        => 'select',
-                'field'       => 'oxpayments__wdoxidee_transactionaction',
-                'options'     => TransactionModel::getTranslatedActions(),
-                'title'       => Helper::translate('wd_config_payment_action'),
+                'type' => 'select',
+                'field' => 'oxpayments__wdoxidee_transactionaction',
+                'options' => TransactionModel::getTranslatedActions(),
+                'title' => Helper::translate('wd_config_payment_action'),
                 'description' => Helper::translate('wd_config_payment_action_desc'),
             ],
         ];
 
-        return array_merge($aFirstFields, $aAdditionalFields);
+        return array_merge($aFirstFields, $aAdditionalFields, $this->_getOneClickConfigFields());
+    }
+
+    /**
+     * Returns an array with the needed config fields for one click payment
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private function _getOneClickConfigFields()
+    {
+        return [
+            'oneClickTitle' => [
+                'type' => 'separator',
+                'title' => Helper::translate('wd_text_vault'),
+            ],
+            'oneClickEnabled' => [
+                'type' => 'select',
+                'field' => 'oxpayments__oneclick_enabled',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
+                ],
+                'title' => Helper::translate('wd_config_vault'),
+                'description' => Helper::translate('wd_config_vault_desc'),
+            ],
+            'oneClickChangedShipping' => [
+                'type' => 'select',
+                'field' => 'oxpayments__oneclick_changed_shipping',
+                'options' => [
+                    '1' => Helper::translate('wd_yes'),
+                    '0' => Helper::translate('wd_no'),
+                ],
+                'title' => Helper::translate('wd_config_allow_changed_shipping'),
+                'description' => Helper::translate('wd_config_allow_changed_shipping_desc'),
+            ],
+        ];
     }
 
     /**
@@ -274,6 +316,8 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'deleteCanceledOrder',
                 'deleteFailedOrder',
                 'apiUrlWpp',
+                'oneClickEnabled',
+                'oneClickChangedShipping',
             ]
         );
     }
@@ -283,13 +327,202 @@ class CreditCardPaymentMethod extends PaymentMethod
      *
      * @return array
      *
-     * @since 1.2.0
+     * @since 1.3.0
      */
     public function getMetaDataFieldNames()
     {
         $aMetaDataFields = [
             'apiurl_wpp',
+            'oneclick_enabled',
+            'oneclick_changed_shipping',
         ];
+
         return array_merge(parent::getMetaDataFieldNames(), $aMetaDataFields);
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return array
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     *
+     * @since 1.3.0
+     */
+    public function getCheckoutFields()
+    {
+        if (!$this->getPayment()->oxpayments__oneclick_enabled->value
+            || !Registry::getSession()->getUser()->hasAccount()) {
+            return [];
+        }
+
+        $oOrder = oxNew(Order::class);
+        $oOrder->createTemp(Registry::getSession()->getBasket(), Registry::getSession()->getUser());
+        $aCards = Vault::getCards($oOrder);
+        if ($this->_showShippingAddressChangedInfo($aCards)) {
+            return [
+                [
+                    'type' => 'info',
+                    'text' => Helper::translate('wd_vault_changed_shipping_text'),
+                ],
+            ];
+        }
+
+        return [
+            [
+                'type' => 'list',
+                'data' => $this->_mapCardsToList($aCards),
+            ],
+        ];
+    }
+
+    /**
+     * @param array $aCards
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private function _showShippingAddressChangedInfo($aCards)
+    {
+        return $aCards
+            && !$this->getPayment()->oxpayments__oneclick_changed_shipping->value
+            && self::_hasShippingAddressChanged();
+    }
+
+    /**
+     * @param array $aCards
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private function _mapCardsToList($aCards)
+    {
+        $aTableMapping = [];
+
+        foreach ($aCards as $aCard) {
+            $aTableMapping[] = [
+                ['text' => self::_createRadioButton($aCard['TOKEN'])],
+                ['text' =>
+                    self::_createDescription(
+                        $aCard['MASKEDPAN'],
+                        $aCard['EXPIRATIONMONTH'],
+                        $aCard['EXPIRATIONYEAR']
+                    ),
+                ],
+                ['text' => self::_createDeleteButton($aCard['OXID'])],
+            ];
+        }
+
+        if ($aCards) {
+            $aTableMapping[] = [
+                ['text' => self::_createRadioButton(self::NEW_CARD_TOKEN, true)],
+                ['text' => Helper::translate('wd_vault_use_new_text')],
+            ];
+        }
+
+        return [
+            'body' => $aTableMapping,
+        ];
+    }
+
+    /**
+     * @param string $sToken
+     * @param bool   $bChecked
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    private static function _createRadioButton($sToken, $bChecked = false)
+    {
+        $sResult = '<input type="radio" name="dynvalue[wd_selected_card]" value="' . $sToken . '"';
+
+        if ($bChecked) {
+            $sResult .= ' checked';
+        }
+
+        $sResult .= ' />';
+
+        return $sResult;
+    }
+
+    /**
+     * @param int $iCardId
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    private static function _createDeleteButton($iCardId)
+    {
+        return '<button class="btn btn-error" type="submit" name="wd_deletion_card_id" value="' . $iCardId . '" />' .
+            Helper::translate('wd_text_delete') . ' </button > ';
+    }
+
+    /**
+     * @param string $sMaskedPan
+     * @param int    $iExpMonth
+     * @param int    $iExpYear
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    private static function _createDescription($sMaskedPan, $iExpMonth, $iExpYear)
+    {
+        return '<b>' . $sMaskedPan . '</b><i style="margin-left: 2em">' .
+            sprintf("%02d", $iExpMonth) . '-' . $iExpYear . '</i>';
+    }
+
+    /**
+     * @return bool
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     *
+     * @since 1.3.0
+     */
+    private static function _hasShippingAddressChanged()
+    {
+        $aLastAddress = OrderHelper::getLastOrderShippingAddress(Registry::getSession()->getUser()->getId());
+        $aCurrentAddress = OrderHelper::getSelectedShippingAddress();
+
+        return $aCurrentAddress != $aLastAddress;
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @param CreditCardTransaction $oTransaction
+     * @param Order                 $oOrder
+     *
+     * @since 1.3.0
+     */
+    public function addMandatoryTransactionData(&$oTransaction, $oOrder)
+    {
+        $aDynValue = Registry::getSession()->getVariable('dynvalue');
+
+        if (self::isCardTokenSet($aDynValue)) {
+            $oTransaction->setTokenId($aDynValue['wd_selected_card']);
+            $oTransaction->setTermUrl($oTransaction->getSuccessUrl());
+        }
+
+        parent::addMandatoryTransactionData($oTransaction, $oOrder);
+    }
+
+    /**
+     * Checks if a valid card token is set
+     *
+     * @param array $aDynValue
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    public static function isCardTokenSet($aDynValue)
+    {
+        return isset($aDynValue['wd_selected_card']) &&
+            $aDynValue['wd_selected_card'] !== CreditCardPaymentMethod::NEW_CARD_TOKEN;
     }
 }

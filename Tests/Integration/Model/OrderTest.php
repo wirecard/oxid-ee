@@ -7,10 +7,12 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Country;
 use OxidEsales\Eshop\Application\Model\Order;
 use OxidEsales\Eshop\Core\Field;
 
+use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Extend\Model\Order as WdOrder;
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\PaymentMethod\PaypalPaymentMethod;
@@ -29,15 +31,27 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
                 'columns' => [
                     'oxid',
                     'oxpaymenttype',
+                    'oxdelcountryid',
                     'wdoxidee_orderstate',
                     'wdoxidee_transactionid',
                 ],
                 'rows' => [
-                    ['1', 'wdpaypal', BackendService::TYPE_AUTHORIZED, '1'],
-                    ['2', 'oxidinvoice', BackendService::TYPE_PROCESSING, '2'],
-                    ['3', 'wdcreditcard', BackendService::TYPE_CANCELLED, '1'],
-                    ['4', 'wdcreditcard', BackendService::TYPE_REFUNDED, '2'],
-                    ['5', 'wdpaypal', BackendService::TYPE_PROCESSING, '3'],
+                    ['1', 'wdpaypal', 1, BackendService::TYPE_AUTHORIZED, '1'],
+                    ['2', 'oxidinvoice', 2, BackendService::TYPE_PROCESSING, '2'],
+                    ['3', 'wdcreditcard', 2, BackendService::TYPE_CANCELLED, '1'],
+                    ['4', 'wdcreditcard', 2, BackendService::TYPE_REFUNDED, '2'],
+                    ['5', 'wdpaypal', 2, BackendService::TYPE_PROCESSING, '3'],
+                ],
+            ],
+            [
+                'table' => 'oxcountry',
+                'columns' => [
+                    'oxid',
+                    'oxisoalpha2',
+                ],
+                'rows' => [
+                    ['1', 'de'],
+                    ['2', 'at'],
                 ],
             ],
             [
@@ -249,11 +263,26 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
         $this->assertInstanceOf(AccountHolder::class, $oOrder->getAccountHolder());
     }
 
-    public function testGetShippingAccountHolder()
+    /**
+     * @dataProvider getShippingAccountHolderProvider
+     */
+    public function testGetShippingAccountHolder($sOrderId)
     {
         $oOrder = oxNew(Order::class);
 
+        if (!is_null($sOrderId)) {
+            $oOrder->load('1');
+        }
+
         $this->assertInstanceOf(AccountHolder::class, $oOrder->getShippingAccountHolder());
+    }
+
+    public function getShippingAccountHolderProvider()
+    {
+        return [
+            'no order ID' => [null],
+            'valid order ID' => ['1'],
+        ];
     }
 
     /**
@@ -300,5 +329,31 @@ class OrderTest extends Wirecard\Test\WdUnitTestCase
             'correct last article' => ['oxid2', true],
             'not last article' => ['oxid1', false],
         ];
+    }
+
+    /**
+     * @dataProvider getTranslatedStateProvider
+     */
+    public function testGetTranslatedState($sOrderId, $sExpected)
+    {
+        $oOrder = oxNew(Order::class);
+        $oOrder->load($sOrderId);
+
+        $this->assertEquals($oOrder->getTranslatedState(), $sExpected);
+    }
+
+    public function getTranslatedStateProvider()
+    {
+        return [
+            'unknown order' => ['xxx', ''],
+            'authorized order' => ['1', Helper::translate('wd_order_status_authorized')],
+        ];
+    }
+
+    public function testGetOrderBasket()
+    {
+        $oOrder = oxNew(Order::class);
+
+        $this->assertInstanceOf(Basket::class, $oOrder->getOrderBasket());
     }
 }

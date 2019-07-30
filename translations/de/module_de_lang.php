@@ -241,5 +241,6 @@ $aLang = array(
     'wd_vault_save_text' => 'Für spätere Verwendung speichern.',
     'wd_vault_use_new_text' => 'Neue Kreditkarte verwenden',
     'wd_wait_for_final_status' => 'Bitte warten Sie auf ein zusätzliches E-Mail mit dem finalen Bezahlstatus.',
+    'wd_warning_credit_card_url_mismatch' => 'Achtung: Bitte überprüfen Sie Ihre Konfigurationsdaten in den URL-Eingabefeldern. Möglicherweise haben Sie ein Produktivkonto mit einem Testkonto kombiniert.',
     'wd_yes' => 'Ja',
 );

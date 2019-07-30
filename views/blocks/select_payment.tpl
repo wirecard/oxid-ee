@@ -42,6 +42,10 @@
                             <input id="[{$fieldKey}]" type="[{$checkoutField.type}]" class="form-control" name="dynvalue[[{$fieldKey}]]" value="[{$dynvalue.$fieldKey}]" [{if $checkoutField.required}]required[{/if}]/>
                         [{/if}]
 
+                        [{if $checkoutField.type === 'info' }]
+                            [{$checkoutField.text}]
+                        [{/if}]
+
                         [{if $checkoutField.type === 'select'}]
                             <select class="form-control" name="dynvalue[[{$fieldKey}]]" [{if $checkoutField.required}]required[{/if}]>
                                 [{foreach from=$checkoutField.options key=optionKey item=optionValue}]
@@ -52,6 +56,20 @@
 
                         [{if $checkoutField.type !== 'hidden' && $checkoutField.description}]
                             <div class="help-block">[{$checkoutField.description}]</div>
+                        [{/if}]
+
+                        [{if $checkoutField.type === 'list'}]
+                            [{assign var='data' value=$checkoutField.data}]
+                            [{if $data.body|@count > 0}]
+                                <style>
+                                    .cards .wd-table td {
+                                        border:0
+                                    }
+                                </style>
+                                <div class="cards">
+                                    [{include file='table.tpl'}]
+                                </div>
+                            [{/if}]
                         [{/if}]
                     </div>
                 </div>
