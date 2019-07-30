@@ -197,7 +197,11 @@ class NotifyHandler extends FrontendController
 
         $oOrder = oxNew(Order::class);
         $bSavedTransaction = self::_saveIfUnmatchedPoiPiaTransaction(
-            $sTransactionId, $oResponse, $oBackendService, $oOrder);
+            $sTransactionId,
+            $oResponse,
+            $oBackendService,
+            $oOrder
+        );
 
         if (!$bSavedTransaction) {
             ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
