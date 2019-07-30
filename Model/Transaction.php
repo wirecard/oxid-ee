@@ -114,7 +114,7 @@ class Transaction extends MultiLanguageModel
     }
 
     /**
-     * Returns true if transaction's xml payment method is "wiretransfer"
+     * Returns true if transaction's xml payment method id is "wiretransfer"
      *
      * @return bool
      *
@@ -122,24 +122,24 @@ class Transaction extends MultiLanguageModel
      */
     public function isPoiPiaPaymentMethod()
     {
-        return self::_getTransactionXmlPaymentMethod() === BasePoiPiaPaymentMethod::PAYMENT_METHOD_WIRETRANSFER;
+        return self::_getTransactionXmlPaymentMethodId() === BasePoiPiaPaymentMethod::PAYMENT_METHOD_WIRETRANSFER;
     }
 
     /**
-     * Returns payment method from transaction xml object
+     * Returns payment method id from transaction xml object
      *
      * @return string
      *
      * @since 1.3.0
      */
-    private function _getTransactionXmlPaymentMethod()
+    private function _getTransactionXmlPaymentMethodId()
     {
         $oXml = simplexml_load_string($this->getResponseXML());
         return (string) $oXml->{'payment-methods'}->{'payment-method'}['name'];
     }
 
     /**
-     * Returns payment method name by transaction order reference if there is order reference.
+     * Returns payment method name from transaction order reference if existing.
      *
      * @return string|void
      *
@@ -163,9 +163,9 @@ class Transaction extends MultiLanguageModel
      *
      * @since 1.3.0
      */
-    private function _getPaymentMethodNameFromTransactionXmlPaymentMethod()
+    private function _getPaymentMethodNameFromTransactionXml()
     {
-        $sPaymentId = self::_getTransactionXmlPaymentMethod();
+        $sPaymentId = self::_getTransactionXmlPaymentMethodId();
         $oPayment = PaymentMethodHelper::getPaymentById('wd' . $sPaymentId);
 
         if (!$oPayment->oxpayments__oxid->value) {
@@ -203,7 +203,7 @@ class Transaction extends MultiLanguageModel
             return $sPaymentMethodName;
         }
 
-        return self::_getPaymentMethodNameFromTransactionXmlPaymentMethod();
+        return self::_getPaymentMethodNameFromTransactionXml();
     }
 
 
