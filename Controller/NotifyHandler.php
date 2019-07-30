@@ -21,8 +21,8 @@ use Psr\Log\LoggerInterface;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\ResponseHandler;
 use Wirecard\Oxid\Extend\Model\Order;
-use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod\BasePoiPiaPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod\PaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
 
@@ -221,7 +221,6 @@ class NotifyHandler extends FrontendController
     private function _handleUnmatchedTransactions($sTransactionId, $oResponse, $oBackendService, &$oOrder)
     {
         if ($this->_loadOrder($oOrder, $sTransactionId) >= self::MAX_TIMEOUT_SECONDS) {
-
             if ($oResponse->getPaymentMethod() === BasePoiPiaPaymentMethod::PAYMENT_METHOD_WIRETRANSFER) {
                 $this->_oLogger->info('Save unmatched order POI/PIA transaction: ' . $sTransactionId);
                 ResponseHandler::saveTransaction($oResponse, $oOrder, $oBackendService);
