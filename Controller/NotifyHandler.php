@@ -207,7 +207,7 @@ class NotifyHandler extends FrontendController
     }
 
     /**
-     * Returns true if no matching order was found for transaction. Otherwise returns false.
+     * Handles transactions that cannot be matched to an existing order. Returns true if handled, false otherwise.
      *
      * @param string          $sTransactionId
      * @param SuccessResponse $oResponse
