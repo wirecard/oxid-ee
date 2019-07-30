@@ -7,6 +7,7 @@
 *}]
 [{$smarty.block.parent}]
 [{assign var="payment" value=$oView->getPayment()}]
+[{assign var="user" value=$oView->getUser()}]
 [{if $payment->shouldRenderCreditCardForm()}]
 
   [{oxscript include="js/libs/jquery.min.js" priority=8}]
@@ -31,14 +32,24 @@
       <input type="hidden" name="challenge" value="[{$challenge}]">
       <input type="hidden" name="sDeliveryAddressMD5" value="[{$oView->getDeliveryAddressMD5()}]">
       [{if $oView->isActive('PsLogin') || !$oView->isConfirmAGBActive()}]
-    <input type="hidden" name="ord_agb" value="1">
+        <input type="hidden" name="ord_agb" value="1">
       [{else}]
-    <input type="hidden" name="ord_agb" value="0">
+        <input type="hidden" name="ord_agb" value="0">
       [{/if}]
       <input type="hidden" name="oxdownloadableproductsagreement" value="0">
       <input type="hidden" name="oxserviceproductsagreement" value="0">
       <div id="creditcard-form-div"></div>
+
+      [{if $user->hasAccount() && $payment->oxpayments__oneclick_enabled->value == 1}]
+        <div style="margin-bottom: 10px">
+          <label style="display: inline">
+            <input type="checkbox" name="wdsavecheckbox" value="1"/>
+            [{oxmultilang ident="wd_vault_save_text"}]
+          </label>
+        </div>
+      [{/if}]
+
     </form>
   </div>
 
-  [{/if}]
+[{/if}]

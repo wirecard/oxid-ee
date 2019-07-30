@@ -30,28 +30,30 @@ class Vault
     /**
      * Get all cards associated with the user and address
      *
+     * @param Order $oOrder
+     *
      * @return array of cards with keys 'OXID', 'USERID', 'ADDRESSID', 'TOKEN', 'MASKEDPAN', 'EXPIRATIONMONTH',
      *         'EXPIRATIONYEAR'
      *
      * @throws DatabaseConnectionException
-     *
      * @since 1.3.0
      */
-    public static function getCards()
+    public static function getCards($oOrder)
     {
-        $oUser = Registry::getSession()->getUser();
-        $sUserId = $oUser->getId();
-        //FIXME get shipping address
-        $sAddressId = 'TODO';//$oUser->getSelectedAddressId();
-        $aCards = self::_getCardsFromDb($sUserId, $sAddressId);
+        $sUserId = $oOrder->getOrderUser()->oxuser__oxid->value;
+        $aCards = self::_getCardsFromDb($sUserId, self::_getAddressId($oOrder));
 
         return array_filter($aCards, function ($aCard) {
             $oDateExpiration = new DateTime($aCard['EXPIRATIONYEAR'] . '-' . $aCard['EXPIRATIONMONTH'] . '-01');
-            $oDateExpiration->add(new DateInterval('P6M'));
-
+            $oDateExpiration->add(new DateInterval('P1M'));
             $oDateToday = new DateTime();
 
-            return $oDateToday < $oDateExpiration;
+            $bIsValid = $oDateToday < $oDateExpiration;
+            if (!$bIsValid) {
+                self::deleteCard($aCard['USERID'], $aCard['OXID']);
+            }
+
+            return $bIsValid;
         });
     }
 
@@ -97,15 +99,15 @@ class Vault
         $aVaultCard = [
             'token' => $oResponse->getCardTokenId(),
             'maskedPan' => $oResponse->getMaskedAccountNumber(),
-            'exporationMonth' => $aCard['expiration-month'],
+            'expirationMonth' => $aCard['expiration-month'],
             'expirationYear' => $aCard['expiration-year'],
-            'userId' => Registry::getSession()->getUser()->getId(),
+            'userId' => $oOrder->getOrderUser()->oxuser__oxid->value,
             'addressId' => self::_getAddressId($oOrder),
         ];
 
         $aExistingCards = self::getCards($oOrder);
         foreach ($aExistingCards as $aCard) {
-            if ($aCard['TOKEN'] === $aVaultCard['token'] && $aCard['ADDRESSID'] === $aVaultCard['addressId']) {
+            if (self::_areCardsEqual($aCard, $aVaultCard)) {
                 return;
             }
         }
@@ -136,7 +138,7 @@ class Vault
             $aCard['addressId'],
             $aCard['token'],
             $aCard['maskedPan'],
-            $aCard['exporationMonth'],
+            $aCard['expirationMonth'],
             $aCard['expirationYear'],
         ]);
     }
@@ -144,6 +146,7 @@ class Vault
     /**
      * Delete the card from the Vault
      *
+     * @param string $sUserId
      * @param string $sVaultId
      *
      * @return int
@@ -153,13 +156,13 @@ class Vault
      *
      * @since 1.3.0
      */
-    public static function deleteCard($sVaultId)
+    public static function deleteCard($sUserId, $sVaultId)
     {
         $sQuery = "DELETE FROM " . OxidEeEvents::VAULT_TABLE . " 
             WHERE `USERID`=? AND `OXID`=?";
 
         return self::_getDb()->execute($sQuery, [
-            Registry::getSession()->getUser()->getId(),
+            $sUserId,
             $sVaultId,
         ]);
     }
@@ -188,5 +191,20 @@ class Vault
     private static function _getAddressId($oOrder)
     {
         return sha1(implode($oOrder->getShippingAccountHolder()->mappedProperties()));
+    }
+
+    /**
+     * @param array $aCard
+     * @param array $aVaultCard
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private static function _areCardsEqual($aCard, $aVaultCard)
+    {
+        return $aCard['TOKEN'] === $aVaultCard['token']
+            && $aCard['ADDRESSID'] === $aVaultCard['addressId']
+            && $aCard['USERID'] === $aVaultCard['userId'];
     }
 }

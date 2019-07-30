@@ -66,6 +66,7 @@ class OxidEEEventsTest extends OxidEsales\TestingLibrary\UnitTestCase
             'WDOXIDEE_FINAL',
             'WDOXIDEE_PROVIDERTRANSACTIONID',
             'WDOXIDEE_TRANSACTIONID',
+            'WDOXIDEE_SAVEPAYMENTCREDENTIALS',
             'WDOXIDEE_FINALIZEORDERSTATE',
         ];
 

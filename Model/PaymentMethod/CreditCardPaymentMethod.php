@@ -31,8 +31,8 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
  */
 class CreditCardPaymentMethod extends PaymentMethod
 {
-
     const NEW_CARD_TOKEN = '-1';
+
     /**
      * @inheritdoc
      *
@@ -252,6 +252,21 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'title' => Helper::translate('wd_config_payment_action'),
                 'description' => Helper::translate('wd_config_payment_action_desc'),
             ],
+        ];
+
+        return array_merge($aFirstFields, $aAdditionalFields, $this->_getOneClickConfigFields());
+    }
+
+    /**
+     * Returns an array with the needed config fields for one click payment
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private function _getOneClickConfigFields()
+    {
+        return [
             'oneClickTitle' => [
                 'type' => 'separator',
                 'title' => Helper::translate('wd_text_vault'),
@@ -277,8 +292,6 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'description' => Helper::translate('wd_config_allow_changed_shipping_desc'),
             ],
         ];
-
-        return array_merge($aFirstFields, $aAdditionalFields);
     }
 
     /**
@@ -323,26 +336,34 @@ class CreditCardPaymentMethod extends PaymentMethod
             'oneclick_enabled',
             'oneclick_changed_shipping',
         ];
+
+        return array_merge(parent::getMetaDataFieldNames(), $aMetaDataFields);
     }
 
     /**
      * @inheritdoc
      *
      * @return array
+     *
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      *
      * @since 1.3.0
      */
     public function getCheckoutFields()
     {
-        $aCards = Vault::getCards();
-        if ($aCards &&
-            self::_hasShippingAddressChanged() &&
-            !$this->_oPayment->oxpayments__oneclick_changed_shipping->value) {
+        if (!$this->getPayment()->oxpayments__oneclick_enabled->value
+            || !Registry::getSession()->getUser()->hasAccount()) {
+            return [];
+        }
+
+        $oOrder = oxNew(Order::class);
+        $oOrder->createTemp(Registry::getSession()->getBasket(), Registry::getSession()->getUser());
+        $aCards = Vault::getCards($oOrder);
+        if ($this->_showShippingAddressChangedInfo($aCards)) {
             return [
                 [
                     'type' => 'info',
-                    'text' => Helper::translate('vault_changed_shipping_text'),
+                    'text' => Helper::translate('wd_vault_changed_shipping_text'),
                 ],
             ];
         }
@@ -353,7 +374,20 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'data' => $this->_mapCardsToList($aCards),
             ],
         ];
-        return array_merge(parent::getMetaDataFieldNames(), $aMetaDataFields);
+    }
+
+    /**
+     * @param array $aCards
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private function _showShippingAddressChangedInfo($aCards)
+    {
+        return $aCards
+            && !$this->getPayment()->oxpayments__oneclick_changed_shipping->value
+            && self::_hasShippingAddressChanged();
     }
 
     /**
@@ -451,11 +485,10 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     private static function _hasShippingAddressChanged()
     {
-        $oLastAddress = OrderHelper::getLastOrderShippingAddress(Registry::getSession()->getUser()->getId());
-        $oOrder = oxNew(Order::class);
+        $aLastAddress = OrderHelper::getLastOrderShippingAddress(Registry::getSession()->getUser()->getId());
+        $aCurrentAddress = OrderHelper::getSelectedShippingAddress();
 
-        $oCurrentAddress = $oOrder->getDelAddressInfo();
-        return $oCurrentAddress !== $oLastAddress;
+        return $aCurrentAddress != $aLastAddress;
     }
 
     /**
@@ -472,6 +505,7 @@ class CreditCardPaymentMethod extends PaymentMethod
 
         if (self::isCardTokenSet($aDynValue)) {
             $oTransaction->setTokenId($aDynValue['wd_selected_card']);
+            $oTransaction->setTermUrl($oTransaction->getSuccessUrl());
         }
 
         parent::addMandatoryTransactionData($oTransaction, $oOrder);

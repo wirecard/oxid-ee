@@ -20,6 +20,7 @@ use Psr\Log\LoggerInterface;
 
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\ResponseHandler;
+use Wirecard\Oxid\Core\Vault;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod\PaymentMethod;
@@ -31,6 +32,7 @@ use Wirecard\PaymentSdk\Entity\Status;
 use Wirecard\PaymentSdk\Exception\MalformedResponseException;
 use Wirecard\PaymentSdk\Response\FailureResponse;
 use Wirecard\PaymentSdk\Response\SuccessResponse;
+use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 
 /**
  * Notify handler class.
@@ -200,6 +202,7 @@ class NotifyHandler extends FrontendController
             return;
         }
 
+        self::_handleCreditCard($oResponse, $oBackendService, $oOrder);
         ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
     }
 
@@ -291,5 +294,58 @@ class NotifyHandler extends FrontendController
     private function _shouldUseTransactionID($sTransactionId, $sPaymentId)
     {
         return is_null($sTransactionId) || $sPaymentId === CreditCardPaymentMethod::getName(true);
+    }
+
+    /**
+     * Handle credit card
+     *
+     * @param SuccessResponse $oResponse
+     * @param BackendService  $oBackendService
+     * @param Order           $oOrder
+     *
+     * @return void
+     *
+     * @since 1.3.0
+     */
+    private static function _handleCreditCard($oResponse, $oBackendService, $oOrder)
+    {
+        $oLogger = Registry::getLogger();
+
+        if (!self::_shouldSaveCard($oResponse, $oOrder)) {
+            return;
+        }
+
+        try {
+            $aTransaction = $oBackendService->getTransactionByTransactionId(
+                $oResponse->getTransactionId(),
+                CreditCardTransaction::NAME
+            );
+
+            $oVault = new Vault();
+            $oVault->saveCard($oResponse, $aTransaction['payment']['card'], $oOrder);
+        } catch (DatabaseConnectionException $oExc) {
+            $oLogger->error("Cannot save card", [$oExc]);
+        } catch (DatabaseErrorException $oExc) {
+            $oLogger->error("Cannot save card", [$oExc]);
+        }
+    }
+
+    /**
+     * Checks if the credit card credentials should be saved.
+     * For that the user needs an account, it has to be a credit card payment and the user must have checked the save
+     * credentials checkbox.
+     *
+     * @param SuccessResponse $oResponse
+     * @param Order           $oOrder
+     *
+     * @return bool
+     *
+     * @since 1.3.0
+     */
+    private static function _shouldSaveCard($oResponse, $oOrder)
+    {
+        return $oResponse->getPaymentMethod() === CreditCardTransaction::NAME
+            && $oOrder->getOrderUser()->hasAccount()
+            && $oOrder->oxorder__wdoxidee_savepaymentcredentials->value === '1';
     }
 }

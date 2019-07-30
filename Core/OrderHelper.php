@@ -11,10 +11,10 @@ namespace Wirecard\Oxid\Core;
 
 use Exception;
 
-use OxidEsales\Eshop\Application\Model\Address;
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\DatabaseProvider;
+use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Exception\OutOfStockException;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
@@ -42,7 +42,6 @@ use Wirecard\PaymentSdk\Response\Response;
  */
 class OrderHelper
 {
-
     const PAY_ERROR_VARIABLE = 'payerror';
     const PAY_ERROR_ID = '-102';
     const PAY_ERROR_TEXT_VARIABLE = 'payerrortext';
@@ -126,6 +125,7 @@ class OrderHelper
         }
 
         self::_managePiaPaymentInformation($oResponse, $oOrder);
+        self::_handleSaveCredentials($oOrder);
 
         // set the transaction ID on the order
         $oOrder->oxorder__wdoxidee_transactionid = new Field($oResponse->getTransactionId());
@@ -209,6 +209,21 @@ class OrderHelper
                     (string) $oResponseXml->{'provider-transaction-reference-id'}
                 )
             );
+        }
+    }
+
+    /**
+     * Saves one-click save checkbox value if needed
+     *
+     * @param Order $oOrder
+     *
+     * @since 1.3.0
+     */
+    private static function _handleSaveCredentials($oOrder)
+    {
+        if (!$oOrder->oxorder__wdoxidee_transactionid->value) {
+            $oOrder->oxorder__wdoxidee_savepaymentcredentials =
+                new Field(Registry::getRequest()->getRequestParameter('wdsavecheckbox'));
         }
     }
 
@@ -401,7 +416,7 @@ class OrderHelper
      *
      * @param string $sUserId
      *
-     * @return Address|null
+     * @return array|null
      *
      * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
      *
@@ -409,10 +424,17 @@ class OrderHelper
      */
     public static function getLastOrderShippingAddress($sUserId)
     {
-        $sOrderId = self::_getLastOrderIdFromDb($sUserId);
         $oOrder = oxNew(Order::class);
-        $oOrder->load($sOrderId);
-        return $oOrder->getDelAddressInfo();
+
+        if (!$oOrder->load(self::_getLastOrderIdFromDb($sUserId))) {
+            return null;
+        };
+
+        if (!empty($oOrder->oxorder__oxdelcountryid->value)) {
+            return self::_getDeliveryAddressFromOrder($oOrder);
+        }
+
+        return self::_getBillingAddressFromOrder($oOrder);
     }
 
     /**
@@ -428,5 +450,110 @@ class OrderHelper
     {
         $sQuery = "SELECT `OXID` from oxorder WHERE `OXUSERID`=? ORDER BY `OXORDERDATE` DESC LIMIT 1";
         return DatabaseProvider::getDb()->getOne($sQuery, [$sUserId]);
+    }
+
+    /**
+     * Get the current shipping address selected for the order
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    public static function getSelectedShippingAddress()
+    {
+        $oOrder = oxNew(Order::class);
+        $oCurrentAddress =  $oOrder->getDelAddressInfo();
+
+        if (!is_null($oCurrentAddress)) {
+            return self::_getShippingAddressFromObject($oCurrentAddress);
+        }
+
+        $oUser = Registry::getSession()->getUser();
+        return self::_getShippingAddressFromObject($oUser);
+    }
+
+    /**
+     * Returns an address array from the given address object
+     *
+     * @param object $oAddress
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private static function _getShippingAddressFromObject($oAddress)
+    {
+        return self::_getAddressFromObject($oAddress, 'oxuser');
+    }
+
+    /**
+     * Returns the delivery address from the order object
+     *
+     * @param object $oOrder
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private static function _getDeliveryAddressFromOrder($oOrder)
+    {
+        return self::_getAddressFromOrder($oOrder, 'del');
+    }
+
+    /**
+     * Returns the billing address from the order object
+     *
+     * @param object $oOrder
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private static function _getBillingAddressFromOrder($oOrder)
+    {
+        return self::_getAddressFromOrder($oOrder, 'bill');
+    }
+
+    /**
+     * Returns an address array from the given order object
+     *
+     * @param object $oOrder
+     * @param string $sColumnPrefix
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private static function _getAddressFromOrder($oOrder, $sColumnPrefix)
+    {
+        return self::_getAddressFromObject($oOrder, 'oxorder', $sColumnPrefix);
+    }
+
+    /**
+     * Returns an address array from the given address object
+     *
+     * @param object $oDbObject
+     * @param string $sTableName
+     * @param string $sColumnPrefix
+     *
+     * @return array
+     *
+     * @since 1.3.0
+     */
+    private static function _getAddressFromObject($oDbObject, $sTableName, $sColumnPrefix = '')
+    {
+        $sDbPrefix = $sTableName . '__ox' . $sColumnPrefix;
+
+        return [
+            'first_name' => $oDbObject->{$sDbPrefix . 'fname'}->value,
+            'last_name' => $oDbObject->{$sDbPrefix . 'lname'}->value,
+            'company' => $oDbObject->{$sDbPrefix . 'company'}->value,
+            'street' => $oDbObject->{$sDbPrefix . 'street'}->value,
+            'street_nr' => $oDbObject->{$sDbPrefix . 'streetnr'}->value,
+            'zip' => $oDbObject->{$sDbPrefix . 'zip'}->value,
+            'city' => $oDbObject->{$sDbPrefix . 'city'}->value,
+            'country_id' => $oDbObject->{$sDbPrefix . 'countryid'}->value,
+            'state_id' => $oDbObject->{$sDbPrefix . 'stateid'}->value,
+        ];
     }
 }

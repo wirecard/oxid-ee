@@ -127,6 +127,7 @@ class PaymentController extends PaymentController_parent
      * @throws DatabaseErrorException
      *
      * @return mixed
+     *
      * @since 1.3.0
      */
     public function validatePayment()
@@ -138,7 +139,7 @@ class PaymentController extends PaymentController_parent
         }
 
         $oVault = new Vault();
-        $oVault->deleteCard($iDeleteId);
+        $oVault->deleteCard(Registry::getSession()->getUser()->getId(), $iDeleteId);
 
         return;
     }
