@@ -12,6 +12,7 @@ use OxidEsales\Eshop\Core\Registry;
 use PHPUnit\Framework\MockObject\MockObject;
 
 use Wirecard\Oxid\Extend\Controller\ThankYouController;
+use Wirecard\Oxid\Model\PaymentInAdvancePaymentInformation;
 
 class ThankYouControllerTest extends \Wirecard\Test\WdUnitTestCase
 {
@@ -41,6 +42,29 @@ class ThankYouControllerTest extends \Wirecard\Test\WdUnitTestCase
 
     public function testInit()
     {
+        $this->_mockBasket();
+
+        $this->_thankYouController->init();
+
+        $this->assertNull(\OxidEsales\Eshop\Core\Registry::getSession()->getVariable('wdtoken'));
+        $this->assertArrayHasKey('sendPendingEmailsSettings', $this->_thankYouController->getViewData());
+    }
+
+    public function testGetPaymentInAdvanceInfo()
+    {
+        $sPiaInfo = 'Lorem ipsum';
+
+        Registry::getSession()->setVariable(PaymentInAdvancePaymentInformation::PIA_PAYMENT_INFORMATION, $sPiaInfo);
+
+        $this->_mockBasket();
+
+        $this->_thankYouController->init();
+
+        $this->assertEquals($sPiaInfo, $this->_thankYouController->getPaymentInAdvanceInfo());
+    }
+
+    private function _mockBasket()
+    {
         $oBasketStub = $this->getMockBuilder(\Wirecard\Oxid\Extend\Model\Basket::class)
             ->disableOriginalConstructor()
             ->setMethods(['getOrderId'])
@@ -50,10 +74,5 @@ class ThankYouControllerTest extends \Wirecard\Test\WdUnitTestCase
             ->willReturn('oxid1');
 
         Registry::getSession()->setBasket($oBasketStub);
-
-        $this->_thankYouController->init();
-
-        $this->assertNull(\OxidEsales\Eshop\Core\Registry::getSession()->getVariable('wdtoken'));
-        $this->assertArrayHasKey('sendPendingEmailsSettings', $this->_thankYouController->getViewData());
     }
 }
