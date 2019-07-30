@@ -114,7 +114,7 @@ class Transaction extends MultiLanguageModel
     }
 
     /**
-     * Returns true if transaction's payment method is "wiretransfer"
+     * Returns true if transaction's xml payment method is "wiretransfer"
      *
      * @return bool
      *
@@ -122,9 +122,56 @@ class Transaction extends MultiLanguageModel
      */
     public function isPoiPiaPaymentMethod()
     {
+        return self::_getTransactionXmlPaymentMethod() === BasePoiPiaPaymentMethod::PAYMENT_METHOD_WIRETRANSFER;
+    }
+
+    /**
+     * Returns payment method from transaction xml object
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    private function _getTransactionXmlPaymentMethod()
+    {
         $oXml = simplexml_load_string($this->getResponseXML());
-        $sPaymentId = (string) $oXml->{'payment-methods'}->{'payment-method'}['name'];
-        return $sPaymentId === BasePoiPiaPaymentMethod::PAYMENT_METHOD_WIRETRANSFER;
+        return (string) $oXml->{'payment-methods'}->{'payment-method'}['name'];
+    }
+
+    /**
+     * Returns payment method name by transaction order reference if there is order reference.
+     *
+     * @return string|void
+     *
+     * @since 1.3.0
+     */
+    private function _getPaymentMethodNameFromTransactionOrderReference()
+    {
+        $sPaymentId = $this->getPaymentType();
+        if ($sPaymentId) { // there is an order associated with the transaction
+            $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
+            return $oPayment->oxpayments__oxdesc->value;
+        }
+    }
+
+    /**
+     * Gets payment method from transaction's xml and tries to find corresponding payment method
+     * name in database.
+     * If it does not exist, returns payment method from transaction's xml as a fallback.
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    private function _getPaymentMethodNameFromTransactionXmlPaymentMethod()
+    {
+        $sPaymentId = self::_getTransactionXmlPaymentMethod();
+        $oPayment = PaymentMethodHelper::getPaymentById('wd' . $sPaymentId);
+
+        if (!$oPayment->oxpayments__oxid->value) {
+            return $sPaymentId;
+        }
+        return $oPayment->oxpayments__oxdesc->value;
     }
 
     /**
@@ -151,22 +198,15 @@ class Transaction extends MultiLanguageModel
      */
     public function getTransactionPaymentMethodName()
     {
-        $sPaymentId = $this->getPaymentType();
-        if ($sPaymentId) { // there is an order associated with the transaction
-            $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
-            return $oPayment->oxpayments__oxdesc->value;
+        $sPaymentMethodName = self::_getPaymentMethodNameFromTransactionOrderReference();
+        if ($sPaymentMethodName) {
+            return $sPaymentMethodName;
         }
 
-        $oXml = simplexml_load_string($this->getResponseXML());
-        $sPaymentId = (string) $oXml->{'payment-methods'}->{'payment-method'}['name'];
-        $oPayment = PaymentMethodHelper::getPaymentById('wd' . $sPaymentId);
-
-        if ($oPayment->oxpayments__oxid->value) { // payment with id from xml response exists in database
-            return $oPayment->oxpayments__oxdesc->value;
-        }
-
-        return $sPaymentId;
+        return self::_getPaymentMethodNameFromTransactionXmlPaymentMethod();
     }
+
+
 
     /**
      * Returns the decoded response XML.
