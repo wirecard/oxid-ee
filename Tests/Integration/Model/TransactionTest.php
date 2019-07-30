@@ -47,6 +47,7 @@ class TransactionTest extends Wirecard\Test\WdUnitTestCase
                     ['6', 'order 1', 't4', null, '', 'success'],
                     ['7', 'order 2', 't5', null, '', 'awaiting'],
                     ['8', 'order 3', 't6', null, '', 'xxx'],
+                    ['9', null, 't7', null, '', 'xxx'],
                 ],
             ],
         ];
@@ -119,4 +120,24 @@ class TransactionTest extends Wirecard\Test\WdUnitTestCase
             'no translation found' => ['', 't6'],
         ];
     }
+
+    /**
+     * @dataProvider getTransactionPaymentMethodNameProvider
+     */
+    public function testGetTransactionPaymentMethodName($sExpected, $sTransactionId)
+    {
+        $oTransaction = oxNew(Transaction::class);
+        $oTransaction->loadWithTransactionId($sTransactionId);
+
+        $this->assertEquals($sExpected, $oTransaction->getTransactionPaymentMethodName());
+    }
+
+    public function getTransactionPaymentMethodNameProvider()
+    {
+        return [
+            'transaction with order id' => ['Wirecard Vorauskasse', 't4'],
+            'transaction without order id' => ['', 't7'],
+        ];
+    }
+
 }
