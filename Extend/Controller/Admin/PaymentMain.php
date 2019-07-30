@@ -49,6 +49,13 @@ class PaymentMain extends PaymentMain_parent
     private $_bIsSavePossible;
 
     /**
+     * Stores the result of the credit card urls check.
+     *
+     * @since 1.3.0
+     */
+    private $_bCCUrlsValid = true;
+
+    /**
      * Tells if information about currency settings should be shown.
      * The information is shown any time merchant adds a currency which has empty configuration fields.
      *
@@ -76,6 +83,7 @@ class PaymentMain extends PaymentMain_parent
             // and an error message shown in the frontend
             Helper::addToViewData($this, [
                 'bConfigNotValid' => ($sFnc === 'save' || $sFnc === 'addfield') && !$this->_bIsSavePossible,
+                'bCCUrlsValid' => $this->_bCCUrlsValid,
                 'bShowCurrencyHelp' => $this->_bShowCurrencyHelp,
             ]);
         }
@@ -148,9 +156,11 @@ class PaymentMain extends PaymentMain_parent
      */
     private function _areCreditCardUrlsValid($aParams)
     {
-        return $aParams['oxpayments__oxid'] !== CreditCardPaymentMethod::getName()
+        $this->_bCCUrlsValid = $aParams['oxpayments__oxid'] !== CreditCardPaymentMethod::getName()
             || $this->_bothCreditCardUrlsAreTest($aParams)
             || $this->_noCreditCardUrlIsTest($aParams);
+
+        return $this->_bCCUrlsValid;
     }
 
     /**
@@ -305,7 +315,12 @@ class PaymentMain extends PaymentMain_parent
         if ($this->_areCredentialsSet($sUrl, $sUser, $sPass)) {
             $oConfig = new Config($sUrl, $sUser, $sPass);
             $oTransactionService = $this->_getTransactionService($oConfig);
-            return $oTransactionService->checkCredentials();
+            try {
+                return $oTransactionService->checkCredentials();
+            } catch (\Exception $oException) {
+                Registry::getLogger()->error(__METHOD__ . ": Error checking credentials: " . $oException->getMessage());
+                return false;
+            }
         }
 
         return false;
