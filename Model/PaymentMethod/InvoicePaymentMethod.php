@@ -108,7 +108,7 @@ abstract class InvoicePaymentMethod extends PaymentMethod
             }
         }
 
-        return $bDataToSave && Registry::getSession()->getUser()->oxuser__oxpassword->value !== '';
+        return $bDataToSave && Registry::getSession()->getUser()->hasAccount();
     }
 
     /**

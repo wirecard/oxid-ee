@@ -231,7 +231,6 @@ $aModule = [
         'live_chat.tpl' => 'wirecard/paymentgateway/views/admin/inc/live_chat.tpl',
         'sepa_mandate_modal.tpl' => 'wirecard/paymentgateway/views/blocks/sepa_mandate_modal.tpl',
         'sepa_mandate.tpl' => 'wirecard/paymentgateway/views/blocks/sepa_mandate.tpl',
-        'tab_descriptor.tpl' => 'wirecard/paymentgateway/views/admin/tpl/tab_descriptor.tpl',
         'table.tpl' => 'wirecard/paymentgateway/views/admin/inc/table.tpl',
         'post_processing_buttons_row.tpl' => 'wirecard/paymentgateway/views/admin/inc/post_processing_buttons_row.tpl',
     ],

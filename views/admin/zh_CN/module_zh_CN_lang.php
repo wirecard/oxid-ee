@@ -239,7 +239,6 @@ $aLang = array(
     'wd_unmatched' => 'unmatched',
     'wd_vault_changed_shipping_text' => '与上个订单相比，您的发货地址发生了变动。出于安全，您需要输入新的信用卡详细信息。',
     'wd_vault_save_text' => '保存以备后用。',
-    'wd_vault_use_new_text' => '使用新信用卡',
     'wd_wait_for_final_status' => 'Please, wait for additional email with the final status of your payment.',
     'wd_warning_credit_card_url_mismatch' => 'Attention: Please check your credentials within the URL setting fields. You might have configured/combined a productive account with a test account.',
     'wd_yes' => 'Yes',

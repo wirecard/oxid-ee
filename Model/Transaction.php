@@ -123,6 +123,7 @@ class Transaction extends MultiLanguageModel
     {
         $sPaymentId = $this->getPaymentType();
         $oPayment = PaymentMethodHelper::getPaymentById($sPaymentId);
+
         return is_subclass_of($oPayment->getPaymentMethod(), BasePoiPiaPaymentMethod::class);
     }
 

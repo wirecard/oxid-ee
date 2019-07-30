@@ -9,9 +9,12 @@
 
 namespace Wirecard\Oxid\Extend\Controller;
 
+use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
+use OxidEsales\Eshop\Core\Exception\DatabaseErrorException;
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Core\SessionHelper;
+use Wirecard\Oxid\Core\Vault;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\PaymentMethod\InvoicePaymentMethod;
 
@@ -62,7 +65,7 @@ class PaymentController extends PaymentController_parent
     {
         $aPaymentList = parent::getPaymentList();
 
-        foreach (parent::getPaymentList() as $sKey => $oPayment) {
+        foreach ($aPaymentList as $sKey => $oPayment) {
             if (!$this->_showPayment($oPayment)) {
                 unset($aPaymentList[$sKey]);
             }
@@ -115,5 +118,29 @@ class PaymentController extends PaymentController_parent
             SessionHelper::setSaveCheckoutFields(0, $oPaymentMethod::getName());
             SessionHelper::setCompanyName($oUser->oxuser__oxcompany->value);
         }
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @throws DatabaseConnectionException
+     * @throws DatabaseErrorException
+     *
+     * @return mixed
+     *
+     * @since 1.3.0
+     */
+    public function validatePayment()
+    {
+        $iDeleteId = Registry::getRequest()->getRequestParameter('wd_deletion_card_id');
+
+        if (is_null($iDeleteId)) {
+            return parent::validatePayment();
+        }
+
+        $oVault = new Vault();
+        $oVault->deleteCard(Registry::getSession()->getUser()->getId(), $iDeleteId);
+
+        return;
     }
 }
