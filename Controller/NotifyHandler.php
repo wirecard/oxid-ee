@@ -22,6 +22,7 @@ use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\ResponseHandler;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
+use Wirecard\Oxid\Model\PaymentMethod\BasePoiPiaPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod\PaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
 
@@ -195,16 +196,39 @@ class NotifyHandler extends FrontendController
         }
 
         $oOrder = oxNew(Order::class);
+        $bSavedTransaction = self::_saveIfUnmatchedPoiPiaTransaction($sTransactionId, $oResponse, $oBackendService, $oOrder);
+
+        if (!$bSavedTransaction) {
+            ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
+        }
+        return;
+    }
+
+    /**
+     * Saves transaction if it is unmatched and returns true. Otherwise returns false.
+     *
+     * @param string $sTransactionId
+     * @param SuccessResponse $oResponse
+     * @param BackendService  $oBackendService
+     * @param Order $oOrder
+     *
+     * @return boolean
+     *
+     * @since 1.3.0
+     */
+    private function _saveIfUnmatchedPoiPiaTransaction($sTransactionId, $oResponse, $oBackendService, &$oOrder)
+    {
         if ($this->_loadOrder($oOrder, $sTransactionId) >= self::MAX_TIMEOUT_SECONDS) {
             $this->_oLogger->error('No order found for transactionId: ' . $sTransactionId);
-            if ($oResponse->getPaymentMethod() === Transaction::WIRETRANSFER) { // unmatched POI/PIA transaction
-                // Unmatched transaction is saved only if it was a POI/PIA transaction
-                ResponseHandler::saveTransaction($oResponse, $oOrder, $oBackendService);
-            }
-            return;
-        }
 
-        ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
+            // Unmatched transaction is saved only if it was a POI/PIA transaction
+            if ($oResponse->getPaymentMethod() === BasePoiPiaPaymentMethod::PAYMENT_METHOD_WIRETRANSFER) {
+                ResponseHandler::saveTransaction($oResponse, $oOrder, $oBackendService);
+                return true;
+            }
+
+        }
+        return false;
     }
 
     /**

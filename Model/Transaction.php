@@ -17,6 +17,7 @@ use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OxidEeEvents;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\ResponseMapper;
+use Wirecard\Oxid\Model\PaymentMethod\BasePoiPiaPaymentMethod;
 
 use Wirecard\PaymentSdk\Entity\Basket;
 
@@ -35,8 +36,6 @@ class Transaction extends MultiLanguageModel
     const STATE_SUCCESS = 'success';
     const STATE_CLOSED = 'closed';
     const STATE_ERROR = 'error';
-
-    const WIRETRANSFER = 'wiretransfer';
 
     /**
      * @inheritdoc
@@ -125,7 +124,7 @@ class Transaction extends MultiLanguageModel
     {
         $oXml = simplexml_load_string($this->getResponseXML());
         $sPaymentId = (string) $oXml->{'payment-methods'}->{'payment-method'}['name'];
-        return $sPaymentId === self::WIRETRANSFER;
+        return $sPaymentId === BasePoiPiaPaymentMethod::PAYMENT_METHOD_WIRETRANSFER;
     }
 
     /**

@@ -167,7 +167,7 @@ window.onload = function ()
                     <td class="[{$listclass}]">
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">
                         [{$listitem->getTranslatedState()}]
-                          [{if $listitem->isPoiPiaPaymentMethod() && !$listitem->wdoxidee_ordertransactions__ordernumber->value}]
+                          [{if $listitem->isPoiPiaPaymentMethod() && !$ordernumber}]
                               ([{oxmultilang ident="wd_unmatched"}])
                           [{/if}]
                         </a>

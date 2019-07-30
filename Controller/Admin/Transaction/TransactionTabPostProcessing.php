@@ -19,6 +19,7 @@ use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\PostProcessingHelper;
 use Wirecard\Oxid\Core\TransactionHandler;
 use Wirecard\Oxid\Model\Transaction;
+use Wirecard\Oxid\Model\PaymentMethod\PaymentOnInvoicePaymentMethod;
 
 use Wirecard\PaymentSdk\BackendService;
 use Wirecard\PaymentSdk\Config\Config;
@@ -480,21 +481,17 @@ class TransactionTabPostProcessing extends TransactionTab
     {
         $oConfig = null;
         if (!is_null($this->_oTransaction)) {
-            $sPaymentId = $this->_oTransaction->getPaymentType();
+            $sOrderPaymentId = $this->_oTransaction->getPaymentType();
 
-            if ($sPaymentId) {
-                $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
+            if (!$sOrderPaymentId && $this->_oTransaction->isPoiPiaPaymentMethod()) {
+                // Since POI and PIA payment methods share configuration, we create POI config.
+                $oPaymentMethod = PaymentMethodFactory::create(PaymentOnInvoicePaymentMethod::getName());
                 $oConfig = $oPaymentMethod->getConfig();
                 return $oConfig;
             }
 
-            // If sPaymentId is empty, it means transaction's order reference was empty.
-            // In that case, we have to confirm it was a POI/PIA transaction.
-            if ($this->_oTransaction->isPoiPiaPaymentMethod()) {
-                // Since POI and PIA payment methods share configuration, we create POI config.
-                $oPaymentMethod = PaymentMethodFactory::create("wdpaymentoninvoice");
-                $oConfig = $oPaymentMethod->getConfig();
-            }
+            $oPaymentMethod = PaymentMethodFactory::create($sOrderPaymentId);
+            $oConfig = $oPaymentMethod->getConfig();
         }
 
         return $oConfig;
