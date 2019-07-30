@@ -135,7 +135,7 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
     public function testGetPublicFieldNames()
     {
         $aPublicFieldNames = $this->_oPaymentMethod->getPublicFieldNames();
-        $this->assertCount(12, $aPublicFieldNames);
+        $this->assertCount(14, $aPublicFieldNames);
         $aExpected = [
             "apiUrl",
             "apiUrlWpp",
@@ -149,6 +149,8 @@ class CreditCardPaymentMethodTest extends OxidEsales\TestingLibrary\UnitTestCase
             "paymentAction",
             "deleteCanceledOrder",
             "deleteFailedOrder",
+            'oneClickEnabled',
+            'oneClickChangedShipping',
         ];
 
         $this->assertEquals($aExpected, $aPublicFieldNames, '', 0.0, 1, true);

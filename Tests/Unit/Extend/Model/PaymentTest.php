@@ -7,6 +7,8 @@
  * https://github.com/wirecard/oxid-ee/blob/master/LICENSE
  */
 
+use OxidEsales\Eshop\Core\Registry;
+
 use Wirecard\Oxid\Extend\Model\Payment;
 use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod\PaypalPaymentMethod;
@@ -85,6 +87,29 @@ class PaymentTest extends OxidEsales\TestingLibrary\UnitTestCase
             'Credit Card logo url' => ['wdcreditcard', 'creditcard.png'],
             'Sofort. logo url' => ['wdsofortbanking', 'klarna.com'],
             'invalid payment method' => ['invalid', null],
+        ];
+    }
+
+    /**
+     * @dataProvider shouldRenderCreditCardFormProvider
+     */
+    public function testShouldRenderCreditCardFormProvider($sPaymentMethodName, $sToken, $bExpected)
+    {
+        $oPayment = oxNew(Payment::class);
+        $oPayment->load($sPaymentMethodName);
+
+        $aDynArray['wd_selected_card'] = $sToken;
+        Registry::getSession()->setVariable('dynvalue', $aDynArray);
+
+        $this->assertEquals($bExpected, $oPayment->shouldRenderCreditCardForm());
+    }
+
+    public function shouldRenderCreditCardFormProvider()
+    {
+        return [
+            'Credit Card with token set' => ['wdcreditcard', 'token 1', false],
+            'Credit Card no token set' => ['wdcreditcard', CreditCardPaymentMethod::NEW_CARD_TOKEN, true],
+            'No credit card' => ['wdsepadd', CreditCardPaymentMethod::NEW_CARD_TOKEN, false],
         ];
     }
 }

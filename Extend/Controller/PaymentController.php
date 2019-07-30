@@ -65,7 +65,7 @@ class PaymentController extends PaymentController_parent
     {
         $aPaymentList = parent::getPaymentList();
 
-        foreach (parent::getPaymentList() as $sKey => $oPayment) {
+        foreach ($aPaymentList as $sKey => $oPayment) {
             if (!$this->_showPayment($oPayment)) {
                 unset($aPaymentList[$sKey]);
             }
