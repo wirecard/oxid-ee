@@ -205,7 +205,7 @@ class NotifyHandler extends FrontendController
     }
 
     /**
-     * Saves transaction if it is unmatched and returns true. Otherwise returns false.
+     * Saves POI/PIA transaction if it is unmatched, and returns true. Otherwise returns false.
      *
      * @param string $sTransactionId
      * @param SuccessResponse $oResponse
