@@ -135,10 +135,10 @@
     <tr>
       <td colspan="2">
         <div class="wdoxidee-messagebox wdoxidee-messagebox--error">
-          [{if $paymentMethod->getName() === 'wdcreditcard'}]
-            [{oxmultilang ident="wd_warning_credit_card_url_mismatch"}]
-          [{else}]
+          [{if $bCCUrlsValid}]
             [{oxmultilang ident="wd_error_save_failed"}]
+          [{else}]
+            [{oxmultilang ident="wd_warning_credit_card_url_mismatch"}]
           [{/if}]
         </div>
       </td>
