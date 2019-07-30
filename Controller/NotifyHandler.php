@@ -196,7 +196,8 @@ class NotifyHandler extends FrontendController
         }
 
         $oOrder = oxNew(Order::class);
-        $bSavedTransaction = self::_saveIfUnmatchedPoiPiaTransaction($sTransactionId, $oResponse, $oBackendService, $oOrder);
+        $bSavedTransaction = self::_saveIfUnmatchedPoiPiaTransaction(
+            $sTransactionId, $oResponse, $oBackendService, $oOrder);
 
         if (!$bSavedTransaction) {
             ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
@@ -207,10 +208,10 @@ class NotifyHandler extends FrontendController
     /**
      * Saves POI/PIA transaction if it is unmatched, and returns true. Otherwise returns false.
      *
-     * @param string $sTransactionId
+     * @param string          $sTransactionId
      * @param SuccessResponse $oResponse
      * @param BackendService  $oBackendService
-     * @param Order $oOrder
+     * @param Order           $oOrder
      *
      * @return boolean
      *
@@ -226,7 +227,6 @@ class NotifyHandler extends FrontendController
                 ResponseHandler::saveTransaction($oResponse, $oOrder, $oBackendService);
                 return true;
             }
-
         }
         return false;
     }
