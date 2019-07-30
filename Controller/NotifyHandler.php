@@ -196,21 +196,18 @@ class NotifyHandler extends FrontendController
         }
 
         $oOrder = oxNew(Order::class);
-        $bSavedTransaction = self::_saveIfUnmatchedPoiPiaTransaction(
+        if (!self::_handleUnmatchedTransactions(
             $sTransactionId,
             $oResponse,
             $oBackendService,
             $oOrder
-        );
-
-        if (!$bSavedTransaction) {
+        )) {
             ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
         }
-        return;
     }
 
     /**
-     * Saves POI/PIA transaction if it is unmatched, and returns true. Otherwise returns false.
+     * Returns true if no matching order was found for transaction. Otherwise returns false.
      *
      * @param string          $sTransactionId
      * @param SuccessResponse $oResponse
@@ -221,16 +218,17 @@ class NotifyHandler extends FrontendController
      *
      * @since 1.3.0
      */
-    private function _saveIfUnmatchedPoiPiaTransaction($sTransactionId, $oResponse, $oBackendService, &$oOrder)
+    private function _handleUnmatchedTransactions($sTransactionId, $oResponse, $oBackendService, &$oOrder)
     {
         if ($this->_loadOrder($oOrder, $sTransactionId) >= self::MAX_TIMEOUT_SECONDS) {
-            $this->_oLogger->error('No order found for transactionId: ' . $sTransactionId);
 
-            // Unmatched transaction is saved only if it was a POI/PIA transaction
             if ($oResponse->getPaymentMethod() === BasePoiPiaPaymentMethod::PAYMENT_METHOD_WIRETRANSFER) {
+                $this->_oLogger->info('Save unmatched order POI/PIA transaction: ' . $sTransactionId);
                 ResponseHandler::saveTransaction($oResponse, $oOrder, $oBackendService);
                 return true;
             }
+            $this->_oLogger->error('No order found for transactionId: ' . $sTransactionId);
+            return true;
         }
         return false;
     }
