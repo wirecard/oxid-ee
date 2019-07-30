@@ -241,5 +241,6 @@ $aLang = array(
     'wd_vault_save_text' => 'Simpan untuk digunakan di kemudian hari.',
     'wd_vault_use_new_text' => 'Gunakan Kartu Kredit baru',
     'wd_wait_for_final_status' => 'Please, wait for additional email with the final status of your payment.',
+    'wd_warning_credit_card_url_mismatch' => 'Attention: Please check your credentials within the URL setting fields. You might have configured/combined a productive account with a test account.',
     'wd_yes' => 'Yes',
 );
