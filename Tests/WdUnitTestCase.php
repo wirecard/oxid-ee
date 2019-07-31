@@ -51,19 +51,6 @@ abstract class WdUnitTestCase extends UnitTestCase
     }
 
     /**
-     * Ignores PHP warnings in tests.
-     *
-     * @inheritdoc
-     */
-    public function run(PHPUnit_Framework_TestResult $result = null)
-    {
-        error_reporting(E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED);
-        oxTestModules::cleanUp();
-
-        return $result;
-    }
-
-    /**
      * Only fails a test if the log level matches one of FAIL_TEST_ON_LOG_LEVELS.
      *
      * @inheritdoc
