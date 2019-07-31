@@ -31,6 +31,8 @@ abstract class BasePoiPiaPaymentMethod extends SepaCreditTransferPaymentMethod
      */
     protected static $_bMerchantOnly = false;
 
+    const PAYMENT_METHOD_WIRETRANSFER = 'wiretransfer';
+
     /**
      * @inheritdoc
      *

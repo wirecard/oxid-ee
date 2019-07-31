@@ -131,8 +131,7 @@ window.onload = function ()
             [{foreach from=$mylist item=listitem}]
             <tr>
                 [{block name="admin_transaction_list_item"}]
-                    [{assign var="order" value=$listitem->getTransactionOrder()}]
-                    [{assign var="payment" value=$order->getOrderPayment()}]
+                    [{assign var="ordernumber" value=$listitem->wdoxidee_ordertransactions__ordernumber->value}]
                     [{if $listitem->getId() == $oxid}]
                         [{assign var="listclass" value=listitem4}]
                     [{else}]
@@ -145,7 +144,11 @@ window.onload = function ()
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__orderid->value}]</a>
                     </td>
                     <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__ordernumber->value}]</a>
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">
+                        [{if $ordernumber}]
+                          [{$ordernumber}]
+                        [{/if}]
+                        </a>
                     </td>
                     <td class="[{$listclass}]">
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__transactionid->value}]</a>
@@ -157,11 +160,14 @@ window.onload = function ()
                         <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->wdoxidee_ordertransactions__type->value}]</a>
                     </td>
                     <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$payment->oxpayments__oxdesc->value}]</a>
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">
+                        [{$listitem->getTransactionPaymentMethodName()}]
+                        </a>
                     </td>
                     <td class="[{$listclass}]">
-                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">[{$listitem->getTranslatedState()}]
-                          [{if $listitem->isPoiPiaPaymentMethod() && !$listitem->wdoxidee_ordertransactions__parenttransactionid->value}]
+                        <a href="Javascript:top.oxid.admin.editThis('[{$listitem->wdoxidee_ordertransactions__oxid->value}]');">
+                        [{$listitem->getTranslatedState()}]
+                          [{if $listitem->isPoiPiaPaymentMethod() && !$ordernumber}]
                               ([{oxmultilang ident="wd_unmatched"}])
                           [{/if}]
                         </a>

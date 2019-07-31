@@ -53,7 +53,7 @@ class ResponseHandler
         //    $oLogger->warning('Transaction was possibly manipulated');
         //}
 
-        self::_saveTransaction($oResponse, $oOrder, $oBackendService);
+        self::saveTransaction($oResponse, $oOrder, $oBackendService);
 
         if (!self::_isPostProcessingAction($oResponse)) {
             self::_updateOrder($oOrder, $oResponse, $oBackendService);
@@ -123,7 +123,7 @@ class ResponseHandler
      *
      * @since 1.0.0
      */
-    private static function _saveTransaction($oResponse, $oOrder, $oBackendService)
+    public static function saveTransaction($oResponse, $oOrder, $oBackendService)
     {
         $aData = $oResponse->getData();
         $oUtilsDate = Registry::getUtilsDate();

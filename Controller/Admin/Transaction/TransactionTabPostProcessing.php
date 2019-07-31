@@ -18,6 +18,7 @@ use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\PostProcessingHelper;
 use Wirecard\Oxid\Core\TransactionHandler;
+use Wirecard\Oxid\Model\PaymentMethod\PaymentOnInvoicePaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
 
 use Wirecard\PaymentSdk\BackendService;
@@ -479,10 +480,17 @@ class TransactionTabPostProcessing extends TransactionTab
     private function _getPaymentMethodConfig()
     {
         $oConfig = null;
-
         if (!is_null($this->_oTransaction)) {
-            $sPaymentId = $this->_oTransaction->getPaymentType();
-            $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
+            $sOrderPaymentId = $this->_oTransaction->getPaymentType();
+
+            if (!$sOrderPaymentId && $this->_oTransaction->isPoiPiaPaymentMethod()) {
+                // Since POI and PIA payment methods share configuration, we create POI config.
+                $oPaymentMethod = PaymentMethodFactory::create(PaymentOnInvoicePaymentMethod::getName());
+                $oConfig = $oPaymentMethod->getConfig();
+                return $oConfig;
+            }
+
+            $oPaymentMethod = PaymentMethodFactory::create($sOrderPaymentId);
             $oConfig = $oPaymentMethod->getConfig();
         }
 

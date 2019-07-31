@@ -22,6 +22,7 @@ use Wirecard\Oxid\Core\PaymentMethodFactory;
 use Wirecard\Oxid\Core\ResponseHandler;
 use Wirecard\Oxid\Core\Vault;
 use Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Model\PaymentMethod\BasePoiPiaPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod\PaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
@@ -197,13 +198,42 @@ class NotifyHandler extends FrontendController
         }
 
         $oOrder = oxNew(Order::class);
+        if (!self::_handleUnmatchedTransactions(
+            $sTransactionId,
+            $oResponse,
+            $oBackendService,
+            $oOrder
+        )) {
+            self::_handleCreditCard($oResponse, $oBackendService, $oOrder);
+            ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
+        }
+    }
+
+    /**
+     * Handles transactions that cannot be matched to an existing order. Returns true if handled, false otherwise.
+     *
+     * @param string          $sTransactionId
+     * @param SuccessResponse $oResponse
+     * @param BackendService  $oBackendService
+     * @param Order           $oOrder
+     *
+     * @return boolean
+     *
+     * @since 1.3.0
+     */
+    private function _handleUnmatchedTransactions($sTransactionId, $oResponse, $oBackendService, &$oOrder)
+    {
         if ($this->_loadOrder($oOrder, $sTransactionId) >= self::MAX_TIMEOUT_SECONDS) {
+            if ($oResponse->getPaymentMethod() === BasePoiPiaPaymentMethod::PAYMENT_METHOD_WIRETRANSFER) {
+                $this->_oLogger->info('Save unmatched order POI/PIA transaction: ' . $sTransactionId);
+                ResponseHandler::saveTransaction($oResponse, $oOrder, $oBackendService);
+                return true;
+            }
             $this->_oLogger->error('No order found for transactionId: ' . $sTransactionId);
-            return;
+            return true;
         }
 
-        self::_handleCreditCard($oResponse, $oBackendService, $oOrder);
-        ResponseHandler::onSuccessResponse($oResponse, $oBackendService, $oOrder);
+        return false;
     }
 
     /**
