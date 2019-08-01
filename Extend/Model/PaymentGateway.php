@@ -337,9 +337,14 @@ class PaymentGateway extends BaseModel
      */
     public static function getModuleToken($oSession)
     {
-        $sRandom = substr(str_shuffle(md5(time())), 0, 15);
-        $oSession->setVariable('wdtoken', $sRandom);
-        return http_build_query(['wdpayment' => $sRandom]);
+        $sToken = $oSession->getVariable('wdtoken');
+
+        if (empty($sToken)) {
+            $sToken = substr(str_shuffle(md5(time())), 0, 15);
+        }
+
+        $oSession->setVariable('wdtoken', $sToken);
+        return http_build_query(['wdpayment' => $sToken]);
     }
 
     /**
