@@ -14,8 +14,6 @@ use OxidEsales\TestingLibrary\UnitTestCase;
 use OxidEsales\Eshop\Core\DatabaseProvider;
 
 use Psr\Log\LogLevel;
-use PHPUnit_Framework_TestResult;
-use oxTestModules;
 
 /**
  * UnitTextCase extension that allows setting database values from within the test.
