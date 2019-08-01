@@ -457,8 +457,8 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     private static function _createDeleteButton($iCardId)
     {
-        return '<button class="btn btn-error" type="submit" name="wd_deletion_card_id" value="' . $iCardId . '" />' .
-            Helper::translate('wd_text_delete') . ' </button > ';
+        return '<button class="btn btn-error" type="submit" name="wd_deletion_card_id" value="' . $iCardId .
+            '" style="color: black"/>' . Helper::translate('wd_text_delete') . '</button >';
     }
 
     /**
