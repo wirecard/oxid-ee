@@ -190,6 +190,7 @@ class PaymentGateway extends BaseModel
                 $oTransaction->setOrderDetail($sOrderDetails);
             }
         }
+
         $oPaymentMethod->addMandatoryTransactionData($oTransaction, $oOrder);
 
         $this->_addCustomFields($oTransaction);
@@ -233,21 +234,14 @@ class PaymentGateway extends BaseModel
      */
     public function executeTransaction($oTransaction, $oOrder, $oBasket)
     {
-        $oSession = $this->getSession();
-
         $oPaymentMethod = PaymentMethodFactory::create($oBasket->getPaymentId());
 
         $oTransactionConfig = $oPaymentMethod->getConfig();
         $oTransactionService = new TransactionService($oTransactionConfig, $this->_oLogger);
 
-        $oShopConfig = Registry::getConfig();
-
-        if (!empty($oShopConfig->getRequestParameter('jsresponse'))) {
+        if (!empty(Registry::getRequest()->getRequestParameter('jsresponse'))) {
             return $this->_handleJsResponse(
                 $oTransactionService,
-                $oSession,
-                $oShopConfig->getCurrentShopUrl(),
-                Helper::getSidQueryString(),
                 $oTransactionConfig,
                 $oOrder
             );
@@ -263,9 +257,6 @@ class PaymentGateway extends BaseModel
 
     /**
      * @param TransactionService                 $oTransactionService
-     * @param Session                            $oSession
-     * @param string                             $sShopUrl
-     * @param string                             $sSid
      * @param \Wirecard\PaymentSdk\Config\Config $oTransactionConfig
      * @param Order                              $oOrder
      *
@@ -274,14 +265,9 @@ class PaymentGateway extends BaseModel
      *
      * @since 1.0.0
      */
-    private function _handleJsResponse($oTransactionService, $oSession, $sShopUrl, $sSid, $oTransactionConfig, $oOrder)
+    private function _handleJsResponse($oTransactionService, $oTransactionConfig, $oOrder)
     {
-        $sModuleToken = self::getModuleToken($oSession);
-        $sBaseLanguage = Registry::getLang()->getBaseLanguage();
-        $oResponse = $oTransactionService->processJsResponse(
-            $_POST,
-            $sShopUrl . 'index.php?lang=' . $sBaseLanguage . '&cl=order&redirectFromForm=1&' . $sModuleToken . $sSid
-        );
+        $oResponse = $oTransactionService->processJsResponse($_POST, self::getTermUrl());
 
         $oBackendService = new BackendService($oTransactionConfig, $this->_oLogger);
         OrderHelper::handleResponse($oResponse, $this->_oLogger, $oOrder, $oBackendService);
@@ -296,6 +282,8 @@ class PaymentGateway extends BaseModel
      * @param Order       $oOrder
      * @param Payment     $oPayment
      * @param string      $sSessionId
+     *
+     * @throws \OxidEsales\Eshop\Core\Exception\SystemComponentException
      *
      * @since 1.0.0
      */
@@ -370,5 +358,21 @@ class PaymentGateway extends BaseModel
         }
 
         return !!$oPaymentMethod->getPayment()->oxpayments__wdoxidee_additional_info->value;
+    }
+
+    /**
+     * Get the TermUrl for Credit Card Transactions
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    public static function getTermUrl()
+    {
+        $sShopUrl = Registry::getConfig()->getShopHomeUrl();
+        $sBaseLanguage = Registry::getLang()->getBaseLanguage();
+        $sModuleToken = self::getModuleToken(Registry::getSession());
+        return $sShopUrl . 'index.php?lang=' . $sBaseLanguage . '&cl=order&redirectFromForm=1&'
+            . $sModuleToken . Helper::getSidQueryString();
     }
 }

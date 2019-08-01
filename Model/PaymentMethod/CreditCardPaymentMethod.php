@@ -17,6 +17,7 @@ use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
 use Wirecard\Oxid\Core\Vault;
 use Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Extend\Model\PaymentGateway;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
 use Wirecard\PaymentSdk\Config\Config as PaymentSdkConfig;
@@ -505,7 +506,7 @@ class CreditCardPaymentMethod extends PaymentMethod
 
         if (self::isCardTokenSet($aDynValue)) {
             $oTransaction->setTokenId($aDynValue['wd_selected_card']);
-            $oTransaction->setTermUrl($oTransaction->getSuccessUrl());
+            $oTransaction->setTermUrl(PaymentGateway::getTermUrl());
         }
 
         parent::addMandatoryTransactionData($oTransaction, $oOrder);
