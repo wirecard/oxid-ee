@@ -9,15 +9,13 @@
 
 use OxidEsales\Eshop\Application\Model\Basket;
 use OxidEsales\Eshop\Application\Model\Order;
-
 use Wirecard\Oxid\Extend\Model\PaymentGateway;
-
+use Wirecard\PaymentSdk\Entity\AccountHolder;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 use Wirecard\PaymentSdk\Transaction\PayPalTransaction;
 use Wirecard\PaymentSdk\Transaction\RatepayInvoiceTransaction;
 use Wirecard\PaymentSdk\Transaction\SepaDirectDebitTransaction;
 use Wirecard\PaymentSdk\Transaction\SofortTransaction;
-use Wirecard\PaymentSdk\Entity\AccountHolder;
 
 class PaymentGatewayTest extends \Wirecard\Test\WdUnitTestCase
 {
@@ -75,4 +73,10 @@ class PaymentGatewayTest extends \Wirecard\Test\WdUnitTestCase
         ];
     }
 
+    public function testSetAndRetrieveModuleToken()
+    {
+        $sToken = PaymentGateway::setAndRetrieveModuleToken($this->getSession());
+
+        $this->assertEquals('wdpayment=' . $this->getSession()->getVariable('wdtoken'), $sToken);
+    }
 }
