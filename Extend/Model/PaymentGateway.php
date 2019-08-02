@@ -108,7 +108,7 @@ class PaymentGateway extends BaseModel
      */
     private static function _addRedirectUrls(&$oTransaction, $oSession, $sShopUrl, $sSid)
     {
-        $sModuleToken = self::getModuleToken($oSession);
+        $sModuleToken = self::setAndRetrieveModuleToken($oSession);
         $sBaseLanguage = Registry::getLang()->getBaseLanguage();
 
         $oRedirect = new Redirect(
@@ -331,11 +331,11 @@ class PaymentGateway extends BaseModel
     /**
      * @param Session $oSession
      *
-     * @return bool|string
+     * @return string
      *
-     * @since 1.0.0
+     * @since 1.3.0
      */
-    public static function getModuleToken($oSession)
+    public static function setAndRetrieveModuleToken($oSession)
     {
         $sToken = $oSession->getVariable('wdtoken');
 
@@ -376,7 +376,7 @@ class PaymentGateway extends BaseModel
     {
         $sShopUrl = Registry::getConfig()->getShopHomeUrl();
         $sBaseLanguage = Registry::getLang()->getBaseLanguage();
-        $sModuleToken = self::getModuleToken(Registry::getSession());
+        $sModuleToken = self::setAndRetrieveModuleToken(Registry::getSession());
         return $sShopUrl . 'index.php?lang=' . $sBaseLanguage . '&cl=order&redirectFromForm=1&'
             . $sModuleToken . Helper::getSidQueryString();
     }

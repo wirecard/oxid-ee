@@ -452,7 +452,7 @@ class OrderController extends OrderController_parent
         ));
         $oTransaction->setConfig($this->_getCreditCardPaymentMethodConfig()->get(CreditCardTransaction::NAME));
 
-        $sModuleToken = PaymentGateway::getModuleToken($this->getSession());
+        $sModuleToken = PaymentGateway::setAndRetrieveModuleToken($this->getSession());
         $oTransaction->setTermUrl(
             Registry::getConfig()->getCurrentShopUrl() . "index.php?cl=order&" . $sModuleToken
             . Helper::getSidQueryString()
