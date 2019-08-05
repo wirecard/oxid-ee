@@ -1,4 +1,4 @@
-# Wirecard OXID Module for OXID 6
+# Wirecard OXID Module
 
 [![License](https://img.shields.io/badge/license-GPLv3-blue.svg)](https://raw.githubusercontent.com/wirecard/oxid-ee/master/LICENSE)
 [![PHP v7.1](https://img.shields.io/badge/php-v7.1-yellow.svg)](http://www.php.net)
