@@ -18,5 +18,4 @@ then
 fi
 
 RESTORE_SHOP_AFTER_TESTS_SUITE=1 \
-PHPBIN="php -d error_reporting=0" \
     $COMMAND
