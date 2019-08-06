@@ -20,6 +20,7 @@ use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\Payment;
 
 use Wirecard\PaymentSdk\Config\Config;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class PaymentMethod
@@ -115,6 +116,8 @@ abstract class PaymentMethod
 
     /**
      * Get the payments method transaction configuration
+     *
+     * @return Transaction
      *
      * @since 1.0.0
      */
