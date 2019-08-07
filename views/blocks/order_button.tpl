@@ -3,7 +3,7 @@
 
 <style>
   .wd-modal {
-    display: none;;
+    display: none;
   }
 </style>
 
