@@ -1,6 +1,12 @@
 [{oxstyle include=$oViewConf->getPaymentGatewayUrl("out/css/wirecard_wdoxidee_modal.css")}]
 [{oxscript include=$oViewConf->getPaymentGatewayUrl('out/js/wirecard_wdoxidee_sepadd.js') priority=9}]
 
+<style>
+  .wd-modal {
+    display: none;;
+  }
+</style>
+
 [{assign var="payment" value=$oView->getPayment()}]
 [{assign var="isConsentNeeded" value=$oView->isConsentNeeded()}]
 [{if $payment->oxpayments__oxid->value == "wdsepadd"}]
@@ -10,6 +16,7 @@
     </button>
     <div class="clearfix"></div>
   </div>
+  [{include file="sepa_mandate_modal.tpl"}]
 [{elseif $isConsentNeeded}]
   <form action="[{$oViewConf->getSslSelfLink()}]" method="post" id="orderConfirmAgbBottom" class="form-horizontal">
 
@@ -50,8 +57,6 @@
 [{else}]
   [{$smarty.block.parent}]
 [{/if}]
-
-[{include file="sepa_mandate_modal.tpl"}]
 
 [{if $isConsentNeeded}]
   <script>
