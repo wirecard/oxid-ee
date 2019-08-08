@@ -78,7 +78,7 @@ abstract class WdUnitTestCase extends UnitTestCase
         if ($logFileContent) {
             return constant(LogLevel::class . "::{$matches[0]}");
         }
-        
+
         return null;
     }
 

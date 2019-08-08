@@ -101,7 +101,7 @@ class SessionHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     {
         $this->setSessionParam('dynvalue', ['dateOfBirthtestPaymentName' => $sInput]);
 
-        $this->assertEquals($blExpected, SessionHelper::isUserOlderThan($iAge, testPaymentName));
+        $this->assertEquals($blExpected, SessionHelper::isUserOlderThan($iAge, 'testPaymentName'));
     }
 
     public function isUserOlderThanProvider()
@@ -154,7 +154,7 @@ class SessionHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testSetSaveCheckoutFields()
     {
-        SessionHelper::setSaveCheckoutFields('foo', testPaymentName);
+        SessionHelper::setSaveCheckoutFields('foo', 'testPaymentName');
 
         $this->assertEquals('foo', $this->getSessionParam('dynvalue')['saveCheckoutFieldstestPaymentName']);
     }

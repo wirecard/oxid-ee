@@ -43,7 +43,7 @@ class Email extends Email_parent
      */
     public function sendOrderEmailToUser($oOrder, $sSubject = null)
     {
-        return $this->_sendEmailWithOrderLanguage($oOrder, $sSubject, [parent, 'sendOrderEmailToUser']);
+        return $this->_sendEmailWithOrderLanguage($oOrder, $sSubject, ['parent', 'sendOrderEmailToUser']);
     }
 
     /**
@@ -60,7 +60,7 @@ class Email extends Email_parent
      */
     public function sendOrderEmailToOwner($oOrder, $sSubject = null)
     {
-        return $this->_sendEmailWithOrderLanguage($oOrder, $sSubject, [parent, 'sendOrderEmailToOwner']);
+        return $this->_sendEmailWithOrderLanguage($oOrder, $sSubject, ['parent', 'sendOrderEmailToOwner']);
     }
 
     /**

@@ -12,6 +12,7 @@ env:
     - MYSQL_DATABASE=oxid_db
     - OXID_CONTAINER=oxid_ee_web
     - OXID_VERSION=dev-b-6.1-ce
+    - OXID_COVERAGE_XML_ONLY=true
     - MODULE_NAME=${TRAVIS_REPO_SLUG}
     - MODULE_PATH=wirecard/paymentgateway
 
