@@ -14,6 +14,7 @@ class AccountHolderHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
     public function testCreateAccountHolderWithAllDataSet()
     {
         $aArgs = [
+            'crmId' => '1234',
             'firstName' => 'FirstName',
             'lastName' => 'LastName',
             'email' => 'test@test.com',
@@ -44,6 +45,7 @@ class AccountHolderHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
                 'postal-code' => '1234',
             ],
             'gender' => 'f',
+            'merchant-crm-id' => '1234'
         ];
 
         $this->assertEquals($aExpected, $aResult);
