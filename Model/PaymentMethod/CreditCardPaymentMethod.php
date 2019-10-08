@@ -10,20 +10,27 @@
 namespace Wirecard\Oxid\Model\PaymentMethod;
 
 use OxidEsales\Eshop\Core\Config;
+use OxidEsales\Eshop\Core\Exception\DatabaseConnectionException;
 use OxidEsales\Eshop\Core\Registry;
 
+use Wirecard\Oxid\Core\AccountInfoHelper;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
+use Wirecard\Oxid\Core\RiskInfoHelper;
+use Wirecard\Oxid\Core\ThreedsHelper;
 use Wirecard\Oxid\Core\Vault;
+use Wirecard\Oxid\Extend\Model\Basket;
 use Wirecard\Oxid\Extend\Model\Order;
 use Wirecard\Oxid\Extend\Model\PaymentGateway;
 use Wirecard\Oxid\Model\Transaction as TransactionModel;
 
 use Wirecard\PaymentSdk\Config\Config as PaymentSdkConfig;
 use Wirecard\PaymentSdk\Config\CreditCardConfig;
+use Wirecard\PaymentSdk\Constant\IsoTransactionType;
 use Wirecard\PaymentSdk\Entity\Amount;
 use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
+use Wirecard\PaymentSdk\Transaction\Transaction;
 
 /**
  * Class CreditCardPaymentMethod
@@ -33,6 +40,8 @@ use Wirecard\PaymentSdk\Transaction\CreditCardTransaction;
 class CreditCardPaymentMethod extends PaymentMethod
 {
     const NEW_CARD_TOKEN = '-1';
+
+    const CARD_TOKEN_FIELD = 'wd_selected_card';
 
     /**
      * @inheritdoc
@@ -253,6 +262,14 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'title' => Helper::translate('wd_config_payment_action'),
                 'description' => Helper::translate('wd_config_payment_action_desc'),
             ],
+            'challengeIndicator'       => [
+                'type'        => 'select',
+                'field'       => 'oxpayments__wdoxidee_challenge_indicator',
+                'options'     => ThreedsHelper::getTranslatedChallengeIndicators(),
+                'title'       => Helper::translate('wd_config_challenge_indicator'),
+                'description' => Helper::translate('wd_config_challenge_indicator_desc'),
+            ],
+
         ];
 
         return array_merge($aFirstFields, $aAdditionalFields, $this->_getOneClickConfigFields());
@@ -319,6 +336,7 @@ class CreditCardPaymentMethod extends PaymentMethod
                 'apiUrlWpp',
                 'oneClickEnabled',
                 'oneClickChangedShipping',
+                'challengeIndicator',
             ]
         );
     }
@@ -346,7 +364,7 @@ class CreditCardPaymentMethod extends PaymentMethod
      *
      * @return array
      *
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws DatabaseConnectionException
      *
      * @since 1.3.0
      */
@@ -438,7 +456,7 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     private static function _createRadioButton($sToken, $bChecked = false)
     {
-        $sResult = '<input type="radio" name="dynvalue[wd_selected_card]" value="' . $sToken . '"';
+        $sResult = sprintf('<input type="radio" name="dynvalue[%s]" value="%s"', self::CARD_TOKEN_FIELD, $sToken);
 
         if ($bChecked) {
             $sResult .= ' checked';
@@ -480,7 +498,7 @@ class CreditCardPaymentMethod extends PaymentMethod
     /**
      * @return bool
      *
-     * @throws \OxidEsales\Eshop\Core\Exception\DatabaseConnectionException
+     * @throws DatabaseConnectionException
      *
      * @since 1.3.0
      */
@@ -493,21 +511,52 @@ class CreditCardPaymentMethod extends PaymentMethod
     }
 
     /**
-     * @inheritdoc
+     * @param Transaction $oTransaction
+     * @param Order       $oOrder
      *
-     * @param CreditCardTransaction $oTransaction
-     * @param Order                 $oOrder
-     *
+     * @throws DatabaseConnectionException
      * @since 1.3.0
      */
     public function addMandatoryTransactionData(&$oTransaction, $oOrder)
     {
         $aDynValue = Registry::getSession()->getVariable('dynvalue');
+        /** @var Basket $oBasket */
+        $oBasket = Registry::getSession()->getBasket();
 
+        $sTokenId = null;
         if (self::isCardTokenSet($aDynValue)) {
-            $oTransaction->setTokenId($aDynValue['wd_selected_card']);
+            $sTokenId = $aDynValue[self::CARD_TOKEN_FIELD];
+            $oTransaction->setTokenId($sTokenId);
             $oTransaction->setTermUrl(PaymentGateway::getTermUrl());
         }
+
+        $oUser = $oOrder->getUser();
+        $oAccountInfo = AccountInfoHelper::create(
+            $oUser->hasAccount(),
+            $this->getPayment()->getFieldData('wdoxidee_challenge_indicator'),
+            ThreedsHelper::isNewCardToken($aDynValue, Registry::getRequest()->getRequestParameter('wdsavecheckbox'))
+        );
+
+        if ($oUser->hasAccount()) {
+            AccountInfoHelper::addAuthenticatedUserData(
+                $oAccountInfo,
+                $oUser->hasAccount(),
+                $oUser->getFieldData('oxregister'),
+                ThreedsHelper::getShippingAddressFirstUsed($oOrder),
+                ThreedsHelper::getCardCreationDate($oUser->getId(), $sTokenId)
+            );
+        }
+
+        $oRiskInfo = RiskInfoHelper::create(
+            $oOrder->getFieldData('oxbillemail'),
+            ThreedsHelper::hasReorderedItems($oOrder, $oBasket),
+            ThreedsHelper::hasDownloadableItems($oBasket)
+        );
+
+        $oAccountHolder = $oTransaction->getAccountHolder();
+        $oAccountHolder->setAccountInfo($oAccountInfo);
+        $oTransaction->setRiskInfo($oRiskInfo);
+        $oTransaction->setIsoTransactionType(IsoTransactionType::GOODS_SERVICE_PURCHASE);
 
         parent::addMandatoryTransactionData($oTransaction, $oOrder);
     }
@@ -523,7 +572,7 @@ class CreditCardPaymentMethod extends PaymentMethod
      */
     public static function isCardTokenSet($aDynValue)
     {
-        return isset($aDynValue['wd_selected_card']) &&
-            $aDynValue['wd_selected_card'] !== CreditCardPaymentMethod::NEW_CARD_TOKEN;
+        return isset($aDynValue[self::CARD_TOKEN_FIELD]) &&
+               $aDynValue[self::CARD_TOKEN_FIELD] !== CreditCardPaymentMethod::NEW_CARD_TOKEN;
     }
 }
