@@ -36,6 +36,10 @@ class AccountHolderHelper
         $oAccountHolder->setLastName($aArgs['lastName']);
         $oAccountHolder->setEmail($aArgs['email']);
 
+        if (Helper::isPresentProperty($aArgs, 'crmId')) {
+            $oAccountHolder->setCrmId($aArgs['crmId']);
+        }
+
         if (Helper::isPresentProperty($aArgs, 'phone')) {
             $oAccountHolder->setPhone($aArgs['phone']);
         }
