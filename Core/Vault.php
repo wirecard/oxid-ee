@@ -58,6 +58,33 @@ class Vault
     }
 
     /**
+     * Get card by token for a user
+     *
+     * @param string $sUserId
+     * @param string $sTokenId
+     *
+     * @return array|null
+     *
+     * @throws DatabaseConnectionException
+     * @since 1.3.0
+     */
+    public static function getCardByToken($sUserId, $sTokenId)
+    {
+        $aRow = null;
+        try {
+            $sQuery = "SELECT * from " . OxidEeEvents::VAULT_TABLE . " WHERE `USERID`=? AND `TOKEN`=?";
+            $aRow = self::_getDb()->getRow($sQuery, [$sUserId, $sTokenId]);
+            if (!count($aRow)) {
+                $aRow = null;
+            }
+        } catch (DatabaseErrorException $oExc) {
+            Registry::getLogger()->error("Error getting card by token", [$oExc]);
+        }
+
+        return $aRow;
+    }
+
+    /**
      * @param string $sUserId
      * @param string $sAddressId
      *
@@ -72,6 +99,7 @@ class Vault
         try {
             $sQuery = "SELECT * from " . OxidEeEvents::VAULT_TABLE . " 
                 WHERE `USERID`=? AND `ADDRESSID`=? ORDER BY `OXID` DESC";
+
             return self::_getDb()->getAll($sQuery, [$sUserId, $sAddressId]);
         } catch (DatabaseErrorException $oExc) {
             Registry::getLogger()->error("Error getting cards", [$oExc]);
@@ -131,7 +159,8 @@ class Vault
             `TOKEN`=?,
             `MASKEDPAN`=?,
             `EXPIRATIONMONTH`=?,
-            `EXPIRATIONYEAR`=?";
+            `EXPIRATIONYEAR`=?,
+            `CREATED` = NOW()";
 
         self::_getDb()->execute($sQuery, [
             $aCard['userId'],
