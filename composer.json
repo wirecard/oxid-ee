@@ -17,7 +17,7 @@
   },
   "require": {
     "php": "^7.1",
-    "wirecard/payment-sdk-php": "3.7.3",
+    "wirecard/payment-sdk-php": "3.8.1",
     "php-http/guzzle6-adapter": "^1.1.1",
     "guzzlehttp/psr7": "<=1.5.0"
   },
