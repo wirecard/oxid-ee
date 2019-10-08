@@ -17,8 +17,10 @@ use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 
 use Wirecard\Oxid\Extend\Model\Order;
+use Wirecard\Oxid\Model\PaymentMethod\CreditCardPaymentMethod;
 use Wirecard\Oxid\Model\PaymentMethod\SepaDirectDebitPaymentMethod;
 use Wirecard\Oxid\Model\Transaction;
+use Wirecard\PaymentSdk\Constant\ChallengeInd;
 
 /**
  * Class handles module behaviour on shop installation events
@@ -52,6 +54,7 @@ class OxidEeEvents
             'WDOXIDEE_LABEL' => "varchar(128) default '' NOT NULL",
             'WDOXIDEE_LOGO' => "varchar(256) default '' NOT NULL",
             'WDOXIDEE_TRANSACTIONACTION' => "enum('" . implode("','", Transaction::getActions()) . "') NOT NULL",
+            'WDOXIDEE_CHALLENGE_INDICATOR' => "varchar(2) default '' NOT NULL",
             'WDOXIDEE_APIURL' => "varchar(128) default '' NOT NULL",
             'WDOXIDEE_MAID' => "varchar(128) default '' NOT NULL",
             'WDOXIDEE_ISOURS' => "tinyint(1) default 0 NOT NULL",
@@ -205,7 +208,8 @@ class OxidEeEvents
         $sOxdesc1 = Helper::translate($sOxdescKey, 1);
 
         $sQuery = "INSERT INTO " . self::PAYMENT_TABLE . "(`OXID`, `OXACTIVE`, `OXFROMAMOUNT`, `OXTOAMOUNT`, `OXDESC`,
-         `OXDESC_1`, `OXSORT`, `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONACTION`, `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`,
+         `OXDESC_1`, `OXSORT`, `WDOXIDEE_LOGO`, `WDOXIDEE_TRANSACTIONACTION`, `WDOXIDEE_CHALLENGE_INDICATOR`, 
+         `WDOXIDEE_APIURL`, `WDOXIDEE_MAID`,
          `WDOXIDEE_SECRET`, `WDOXIDEE_THREE_D_MAID`, `WDOXIDEE_THREE_D_SECRET`, `WDOXIDEE_NON_THREE_D_MAX_LIMIT`,
          `WDOXIDEE_THREE_D_MIN_LIMIT`, `WDOXIDEE_LIMITS_CURRENCY`, `WDOXIDEE_HTTPUSER`, `WDOXIDEE_HTTPPASS`,
          `WDOXIDEE_ISOURS`, `WDOXIDEE_BASKET`, `WDOXIDEE_DESCRIPTOR`, `WDOXIDEE_ADDITIONAL_INFO`,
@@ -219,6 +223,7 @@ class OxidEeEvents
              '{$oPayment->oxsort}',
              '{$oPayment->wdoxidee_logo}',
              '{$oPayment->wdoxidee_transactionaction}',
+             '{$oPayment->wdoxidee_challengeindicator}',
              '{$oPayment->wdoxidee_apiurl}',
              '{$oPayment->wdoxidee_maid}',
              '{$oPayment->wdoxidee_secret}',
@@ -244,6 +249,8 @@ class OxidEeEvents
             self::_insertSepaMandate();
         }
 
+        self::_migratePaymentMethod($oPayment, $bIsInserted);
+
         self::_addPaymentMethodMetaData($oPayment);
 
         $sRandomOxidId = Registry::getUtilsObject()->generateUID();
@@ -259,6 +266,20 @@ class OxidEeEvents
                 'oxdelset'
             );"
         );
+    }
+
+    /**
+     * per payment method data migration
+     *
+     * @param object $oPayment
+     * @param bool   $bIsInserted
+     * @since 1.3.0
+     */
+    private static function _migratePaymentMethod($oPayment, $bIsInserted)
+    {
+        if ((string) $oPayment->oxid === CreditCardPaymentMethod::getName() && !$bIsInserted) {
+            self::_updateCreditCard();
+        }
     }
 
     /**
@@ -301,6 +322,17 @@ class OxidEeEvents
                                          `WDOXIDEE_SEPAMANDATECUSTOM_1` = '$sSepaMandate1'
                    WHERE `OXID` LIKE " . "'" . $sPaymentId . "'";
         self::$_oDb->execute($sQuery);
+    }
+
+    /**
+     * Migrate creditcard payment
+     *
+     * @since 1.3.0
+     */
+    private static function _updateCreditCard()
+    {
+        $sQuery = "UPDATE oxpayments SET `WDOXIDEE_CHALLENGE_INDICATOR` = ? WHERE `OXID` = ?";
+        self::$_oDb->execute($sQuery, [ChallengeInd::NO_PREFERENCE, CreditCardPaymentMethod::getName()]);
     }
 
     /**
@@ -415,6 +447,8 @@ class OxidEeEvents
 			`MASKEDPAN` varchar(30) NOT NULL,
 			`EXPIRATIONMONTH` int NOT NULL,
 			`EXPIRATIONYEAR` int NOT NULL,
+			`CREATED` datetime not null,
+			`MODIFIED` datetime,
             PRIMARY KEY (`OXID`),
             INDEX ids (`USERID`, `ADDRESSID`)
         ) Engine=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci";
