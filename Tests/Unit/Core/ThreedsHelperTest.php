@@ -9,35 +9,48 @@
 
 use OxidEsales\Eshop\Application\Model\Article;
 use OxidEsales\Eshop\Application\Model\Basket;
-use OxidEsales\Eshop\Application\Model\BasketItem;
-use OxidEsales\Eshop\Application\Model\Order as Order;
-use OxidEsales\Eshop\Core\Field;
-use OxidEsales\Eshop\Core\Price;
 
-use Wirecard\Oxid\Core\BasketHelper;
-use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\ThreedsHelper;
-
-use Wirecard\PaymentSdk\Entity\Basket as TransactionBasket;
-
 
 class ThreedsHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 {
-    public function setUp()
+    public function testHasDownloadableItems()
     {
-        parent::setUp();
+        /** @var Basket|PHPUnit_Framework_MockObject_MockObject $oBasket */
+        $oBasket = $this->getMockBuilder(Basket::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $oArticle = $this->getMockBuilder(Article::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $oArticle->method('isDownloadable')->willReturn(false);
+
+        $oBasket->method('getBasketArticles')->willReturn([
+            $oArticle,
+        ]);
+
+        $this->assertFalse(ThreedsHelper::hasDownloadableItems($oBasket));
     }
 
-    public function testGetShippingAddressFirstUsed()
+    public function testHasDownloadableItemsWithDownloadable()
     {
-        //use OxidEsales\Eshop\Application\Model\Order;
+        /** @var Basket|PHPUnit_Framework_MockObject_MockObject $oBasket */
+        $oBasket = $this->getMockBuilder(Basket::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        // creating order
-        $order = oxNew(Order::class);
+        $oArticle = $this->getMockBuilder(Article::class)
+            ->disableOriginalConstructor()
+            ->getMock();
 
-        /** @var Order|PHPUnit_Framework_MockObject_MockObject $oOrderMock */
-        $oOrderMock = $this->getMock(Order::class);
-        ThreedsHelper::getShippingAddressFirstUsed($order);
+        $oArticle->method('isDownloadable')->willReturn(true);
+
+        $oBasket->method('getBasketArticles')->willReturn([
+            $oArticle,
+        ]);
+
+        $this->assertTrue(ThreedsHelper::hasDownloadableItems($oBasket));
     }
-
 }
