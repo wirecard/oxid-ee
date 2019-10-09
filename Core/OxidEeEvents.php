@@ -223,7 +223,7 @@ class OxidEeEvents
              '{$oPayment->oxsort}',
              '{$oPayment->wdoxidee_logo}',
              '{$oPayment->wdoxidee_transactionaction}',
-             '{$oPayment->wdoxidee_challengeindicator}',
+             '{$oPayment->wdoxidee_challenge_indicator}',
              '{$oPayment->wdoxidee_apiurl}',
              '{$oPayment->wdoxidee_maid}',
              '{$oPayment->wdoxidee_secret}',
