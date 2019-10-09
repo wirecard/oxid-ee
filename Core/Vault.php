@@ -33,7 +33,7 @@ class Vault
      * @param Order $oOrder
      *
      * @return array of cards with keys 'OXID', 'USERID', 'ADDRESSID', 'TOKEN', 'MASKEDPAN', 'EXPIRATIONMONTH',
-     *         'EXPIRATIONYEAR'
+     *         'EXPIRATIONYEAR', 'CREATED', 'MODIFIED'
      *
      * @throws DatabaseConnectionException
      * @since 1.3.0
@@ -133,6 +133,9 @@ class Vault
             'addressId' => self::_getAddressId($oOrder),
         ];
 
+        // needed for testing only
+        $aVaultCard['created'] = isset($aCard['created']) ? $aCard['created'] : (new DateTime())->format('Y-m-d H:i:s');
+
         $aExistingCards = self::getCards($oOrder);
         foreach ($aExistingCards as $aCard) {
             if (self::_areCardsEqual($aCard, $aVaultCard)) {
@@ -160,7 +163,7 @@ class Vault
             `MASKEDPAN`=?,
             `EXPIRATIONMONTH`=?,
             `EXPIRATIONYEAR`=?,
-            `CREATED` = NOW()";
+            `CREATED`=?";
 
         self::_getDb()->execute($sQuery, [
             $aCard['userId'],
@@ -169,6 +172,7 @@ class Vault
             $aCard['maskedPan'],
             $aCard['expirationMonth'],
             $aCard['expirationYear'],
+            $aCard['created'],
         ]);
     }
 
