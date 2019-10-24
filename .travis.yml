@@ -24,7 +24,6 @@ env:
     - UI_TEST_JUNIT_REPORT_FILE_NAME=report.xml
     - UI_TEST_HTML_REPORT_FILE_NAME=report.html
 
-
 matrix:
   # these stages are allowed to fail
   allow_failures:
