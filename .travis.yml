@@ -79,24 +79,7 @@ matrix:
     after_failure:
     - bash .bin/get-ui-reports.sh
     - bash .bin/upload-logs-and-notify.sh fail
-  
-  # currently only 1 version of oxid is available and possible to test. This should be enabled, when newer versions arrive
-  #  #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
-  #  #   tests will use extension version = branch which originated pull request
-  #    - <<: *acceptance-test
-  #      if: (type = pull_request AND (head_branch =~ env(PATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
-  #      env:
-  #      - GATEWAY=API-TEST
-  #      - OXID_RELEASE_VERSION=2
-  #
-  #  #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
-  #  #   tests will use extension version = branch which originated pull request
-  #    - <<: *acceptance-test
-  #      if: (type = pull_request AND (head_branch =~ env(PATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
-  #      env:
-  #      - GATEWAY=API-TEST
-  #      - OXID_RELEASE_VERSION=3
-  
+    
   #   run this stage when shop system updated with latest shop extension release version
   #   tests will use latest released extension version
   - <<: *acceptance-test
