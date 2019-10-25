@@ -102,7 +102,23 @@ matrix:
     # if this stage fails, it will not fail the whole build
     - ALLOW_FAIL=1
   
-  
+  #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
+  #   tests will use extension version = branch which originated pull request
+  - <<: *acceptance-test
+    if: (type = pull_request AND (head_branch =~ env(PATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
+    env:
+    - GATEWAY=API-TEST
+    - OXID_RELEASE_VERSION=2
+
+#   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
+#   tests will use extension version = branch which originated pull request
+  - <<: *acceptance-test
+    if: (type = pull_request AND (head_branch =~ env(PATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE)))
+    env:
+    - GATEWAY=API-TEST
+    - OXID_RELEASE_VERSION=3
+
+
   - stage: phraseapp-pull
     if: env(PHRASEAPP_PULL) = '1'
     language: ruby
