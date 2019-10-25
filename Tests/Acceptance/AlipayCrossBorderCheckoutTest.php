@@ -23,6 +23,7 @@ class AlipayCrossBorderCheckoutTest extends CheckoutTestCase
 
     public function testCheckout()
     {
+        $this->markTestSkipped('must be revisited.');
         $this->goThroughCheckout();
         $this->goThroughExternalFlow();
 

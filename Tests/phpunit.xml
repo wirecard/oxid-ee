@@ -21,4 +21,8 @@
       <directory suffix=".php">../Model</directory>
     </whitelist>
   </filter>
+  <logging>
+    <log type="junit" target="report.xml"/>
+    <log type="testdox-html" target="report.html"/>
+  </logging>
 </phpunit>
