@@ -47,11 +47,11 @@ class AlipayCrossBorderCheckoutTest extends CheckoutTestCase
 //            $this->getConfig('payments.alipay.password')
 //        );
 //        $this->fireEvent($this->getLocator('external.alipay.accountName'), 'blur');
-////        $this->waitForElement($this->getLocator('external.alipay.captcha'), self::WAIT_TIME_EXTERNAL);
-////        $this->type(
-////            $this->getLocator('external.alipay.captcha'),
-////            $this->getConfig('payments.alipay.captcha')
-////        );
+//        $this->waitForElement($this->getLocator('external.alipay.captcha'), self::WAIT_TIME_EXTERNAL);
+//        $this->type(
+//            $this->getLocator('external.alipay.captcha'),
+//            $this->getConfig('payments.alipay.captcha')
+//        );
 //
 //        $this->clickAndWait($this->getLocator('external.alipay.nextStep'), self::WAIT_TIME_EXTERNAL);
 //        $this->type(
