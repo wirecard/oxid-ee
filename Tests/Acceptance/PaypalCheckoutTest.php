@@ -9,7 +9,6 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
-use OxidEsales\TestingLibrary;
 use Wirecard\Oxid\Model\PaymentMethod\PaypalPaymentMethod;
 
 /**

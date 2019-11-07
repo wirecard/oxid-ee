@@ -35,7 +35,7 @@ class AlipayCrossBorderCheckoutTest extends CheckoutTestCase
 
     private function goThroughExternalFlow()
     {
-        $this->waitForElement($this->getLocator('external.alipay.accountName'), self::WAIT_TIME_EXTERNAL);
+        $this->waitForElement($this->getLocator('external.alipay.accountName'), self::WAIT_TIME_EXTERNAL * 2);
         $this->assertTrue($this->isVisible($this->getLocator('external.alipay.accountName')));
         // We cannot perform the full payment process because of a captcha at Alipay login page
         //        $this->type(
