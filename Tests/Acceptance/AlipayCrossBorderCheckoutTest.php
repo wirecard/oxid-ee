@@ -23,14 +23,10 @@ class AlipayCrossBorderCheckoutTest extends CheckoutTestCase
 
     public function testCheckout()
     {
-      //  $this->markTestSkipped('must be revisited.');
         $this->goThroughCheckout();
         $this->goThroughExternalFlow();
 
-        // redirect might take a little longer for this payment method as there are multiple redirects
-        //$this->waitForRedirectConfirmation(self::WAIT_TIME_EXTERNAL * 2);
-
-      //  $this->assertPaymentSuccessful();
+        //we cannot test further because there is a capcha and Alipay is unstable, so the test would be very flaky
     }
 
     private function goThroughExternalFlow()
@@ -38,6 +34,5 @@ class AlipayCrossBorderCheckoutTest extends CheckoutTestCase
         //check landing on Alipay page
         $this->waitForElement($this->getLocator('external.alipay.accountName'), self::WAIT_TIME_EXTERNAL * 2);
         $this->assertTrue($this->isVisible($this->getLocator('external.alipay.accountName')));
-        //we cannot test further because there is a capcha and Alipay is unstable, so the test would be very flaky
     }
 }
