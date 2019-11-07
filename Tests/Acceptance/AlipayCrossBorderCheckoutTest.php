@@ -23,38 +23,41 @@ class AlipayCrossBorderCheckoutTest extends CheckoutTestCase
 
     public function testCheckout()
     {
-        $this->markTestSkipped('must be revisited.');
+      //  $this->markTestSkipped('must be revisited.');
         $this->goThroughCheckout();
         $this->goThroughExternalFlow();
 
         // redirect might take a little longer for this payment method as there are multiple redirects
-        $this->waitForRedirectConfirmation(self::WAIT_TIME_EXTERNAL * 2);
+        //$this->waitForRedirectConfirmation(self::WAIT_TIME_EXTERNAL * 2);
 
-        $this->assertPaymentSuccessful();
+      //  $this->assertPaymentSuccessful();
     }
 
     private function goThroughExternalFlow()
     {
         $this->waitForElement($this->getLocator('external.alipay.accountName'), self::WAIT_TIME_EXTERNAL);
-        $this->type(
-            $this->getLocator('external.alipay.accountName'),
-            $this->getConfig('payments.alipay.accountName')
-        );
-        $this->type(
-            $this->getLocator('external.alipay.password'),
-            $this->getConfig('payments.alipay.password')
-        );
-        $this->fireEvent($this->getLocator('external.alipay.accountName'), 'blur');
-        $this->waitForElement($this->getLocator('external.alipay.captcha'), self::WAIT_TIME_EXTERNAL);
-        $this->type(
-            $this->getLocator('external.alipay.captcha'),
-            $this->getConfig('payments.alipay.captcha')
-        );
-        $this->clickAndWait($this->getLocator('external.alipay.nextStep'), self::WAIT_TIME_EXTERNAL);
-        $this->type(
-            $this->getLocator('external.alipay.paymentPassword'),
-            $this->getConfig('payments.alipay.paymentPassword')
-        );
-        $this->click($this->getLocator('external.alipay.submit'));
+        $this->assertTrue($this->isVisible($this->getLocator('external.alipay.accountName')));
+        // We cannot perform the full payment process because of a captcha at Alipay login page
+        //        $this->type(
+//            $this->getLocator('external.alipay.accountName'),
+//            $this->getConfig('payments.alipay.accountName')
+//        );
+//        $this->type(
+//            $this->getLocator('external.alipay.password'),
+//            $this->getConfig('payments.alipay.password')
+//        );
+//        $this->fireEvent($this->getLocator('external.alipay.accountName'), 'blur');
+////        $this->waitForElement($this->getLocator('external.alipay.captcha'), self::WAIT_TIME_EXTERNAL);
+////        $this->type(
+////            $this->getLocator('external.alipay.captcha'),
+////            $this->getConfig('payments.alipay.captcha')
+////        );
+//
+//        $this->clickAndWait($this->getLocator('external.alipay.nextStep'), self::WAIT_TIME_EXTERNAL);
+//        $this->type(
+//            $this->getLocator('external.alipay.paymentPassword'),
+//            $this->getConfig('payments.alipay.paymentPassword')
+//        );
+//        $this->click($this->getLocator('external.alipay.submit'));
     }
 }

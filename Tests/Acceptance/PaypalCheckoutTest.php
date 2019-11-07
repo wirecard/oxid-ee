@@ -9,6 +9,7 @@
 
 namespace Wirecard\Oxid\Tests\Acceptance;
 
+use OxidEsales\TestingLibrary;
 use Wirecard\Oxid\Model\PaymentMethod\PaypalPaymentMethod;
 
 /**
@@ -30,7 +31,6 @@ class PaypalCheckoutTest extends CheckoutTestCase
 
     public function testCheckoutForPurchase()
     {
-        $this->markTestSkipped('must be revisited.');
         $this->setPaymentActionPurchase();
         $this->goThroughCheckout();
         $this->goThroughExternalFlow();
@@ -41,7 +41,6 @@ class PaypalCheckoutTest extends CheckoutTestCase
 
     public function testCheckoutForAuthorize()
     {
-        $this->markTestSkipped('must be revisited.');
         $this->setPaymentActionAuthorize();
         $this->goThroughCheckout();
         $this->goThroughExternalFlow();
@@ -57,7 +56,17 @@ class PaypalCheckoutTest extends CheckoutTestCase
             $this->getLocator('external.paypal.email'),
             $this->getConfig('payments.paypal.email')
         );
-        $this->click($this->getLocator('external.paypal.login'));
+
+        if ($this->isVisible($this->getLocator('external.paypal.password')))
+        {
+            $this->type(
+                $this->getLocator('external.paypal.password'),
+                $this->getConfig('payments.paypal.password')
+            );
+        }
+        else {
+            $this->click($this->getLocator('external.paypal.login'));
+        }
         $this->waitForItemAppear($this->getLocator('external.paypal.password'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.paypal.password'),
