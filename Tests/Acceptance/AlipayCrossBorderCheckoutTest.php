@@ -35,29 +35,9 @@ class AlipayCrossBorderCheckoutTest extends CheckoutTestCase
 
     private function goThroughExternalFlow()
     {
+        //check landing on Alipay page
         $this->waitForElement($this->getLocator('external.alipay.accountName'), self::WAIT_TIME_EXTERNAL * 2);
         $this->assertTrue($this->isVisible($this->getLocator('external.alipay.accountName')));
-        // We cannot perform the full payment process because of a captcha at Alipay login page
-        //        $this->type(
-//            $this->getLocator('external.alipay.accountName'),
-//            $this->getConfig('payments.alipay.accountName')
-//        );
-//        $this->type(
-//            $this->getLocator('external.alipay.password'),
-//            $this->getConfig('payments.alipay.password')
-//        );
-//        $this->fireEvent($this->getLocator('external.alipay.accountName'), 'blur');
-//        $this->waitForElement($this->getLocator('external.alipay.captcha'), self::WAIT_TIME_EXTERNAL);
-//        $this->type(
-//            $this->getLocator('external.alipay.captcha'),
-//            $this->getConfig('payments.alipay.captcha')
-//        );
-//
-//        $this->clickAndWait($this->getLocator('external.alipay.nextStep'), self::WAIT_TIME_EXTERNAL);
-//        $this->type(
-//            $this->getLocator('external.alipay.paymentPassword'),
-//            $this->getConfig('payments.alipay.paymentPassword')
-//        );
-//        $this->click($this->getLocator('external.alipay.submit'));
+        //we cannot test further because there is a capcha and Alipay is unstable, so the test would be very flaky
     }
 }
