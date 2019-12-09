@@ -9,13 +9,13 @@
 curl https://api.github.com/repos/OXID-eSales/oxideshop_project/branches  | jq -r '.[] | .name' | grep 'ce' | egrep -v 'beta' > tmp.txt
 
 # sort versions in descending order
-sort -nr tmp.txt > ${OXID_RELEASES_FILE}
+sort -nr tmp.txt > ${OXID_COMPATIBILITY_FILE}
 
-if [[ $(git diff HEAD ${OXID_RELEASES_FILE}) != '' ]]; then
+if [[ $(git diff HEAD ${OXID_COMPATIBILITY_FILE}) != '' ]]; then
     git config --global user.name "Travis CI"
     git config --global user.email "wirecard@travis-ci.org"
 
-    git add  ${OXID_RELEASES_FILE}
+    git add  ${OXID_COMPATIBILITY_FILE}
     git commit -m "${SHOP_SYSTEM_UPDATE_COMMIT}"
-    git push --quiet https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG} HEAD:master
+    git push --quiet https://${GITHUB_TOKEN}@github.com/${TRAVIS_REPO_SLUG} HEAD:TPWDCEE-5681-configuration
 fi

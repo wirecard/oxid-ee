@@ -23,6 +23,7 @@ env:
     - MAJOR_RELEASE="major"
     - UI_TEST_JUNIT_REPORT_FILE_NAME=report.xml
     - UI_TEST_HTML_REPORT_FILE_NAME=report.html
+    - OXID_COMPATIBILITY_FILE=${TRAVIS_BUILD_DIR}/.bin/new-shop-releases.txt
 
 matrix:
   # these stages are allowed to fail
@@ -44,42 +45,46 @@ matrix:
     if: type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
   - php: 7.2
     if: type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
-  
-  - stage: get-oxid-versions
+
+  - stage: get-latest-shop-release-versions
     if: type = cron
     php: 7.1
     install: skip
     before_script: skip
-    script: bash .bin/get-oxid-versions.sh
+    script: bash .bin/get-latest-shop-release-versions.sh
     after_script: skip
     after_failure: skip
-  
+
   - &acceptance-test
     stage: acceptance-test
     #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
     #   or when build triggered ad-hoc with special commit message
     #   tests will use extension version = branch which originated pull request
     #   or branch which was defined in ad-hoc trigger in Travis UI
-    if: (type = pull_request AND (head_branch =~ env(PATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE))) OR (commit_message =~ env(MANUAL_UITEST_TRIGGER_COMMIT))
+    if: type != cron
     php: 7.2
     env:
     - GATEWAY=API-TEST
     - OXID_RELEASE_VERSION=1
     before_install:
-    - export OXID_VERSION="dev-$(awk "NR==$OXID_RELEASE_VERSION {print; exit}" ${OXID_RELEASES_FILE})"
-    - echo "Testing with Oxid version ${OXID_VERSION}"
+    # check if files are same or not
+    - cmp --silent ${OXID_RELEASES_FILE} ${OXID_COMPATIBILITY_FILE} && export COMPATIBILITY_CHECK=0 || export COMPATIBILITY_CHECK=1
+    # check from which file to take versions
+    - if [[ ${COMPATIBILITY_CHECK}  == "0" ]]; then export OXID_VERSION=dev-$(awk "NR==${OXID_RELEASE_VERSION} {print; exit}" ${OXID_RELEASES_FILE}); else export OXID_VERSION=dev-$(awk "NR==${OXID_RELEASE_VERSION} {print; exit}" ${OXID_COMPATIBILITY_FILE}); fi
+    - echo "Testing with Oxid ${OXID_VERSION} version."
     - export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release ${TRAVIS_BUILD_DIR}/SHOPVERSIONS | tr -d '"'`
     - if [[ ${LATEST_EXTENSION_RELEASE}  == "1" ]]; then git checkout tags/${LATEST_RELEASED_SHOP_EXTENSION_VERSION};fi
-    
+
     script: docker exec ${OXID_CONTAINER} bash -c 'reset-shop.sh && runtests-selenium.sh'
     after_script: skip
     after_success:
     - bash .bin/get-ui-reports.sh
     - bash .bin/upload-logs-and-notify.sh
+    - bash .bin/update-shop-release-versions.sh
     after_failure:
     - bash .bin/get-ui-reports.sh
     - bash .bin/upload-logs-and-notify.sh fail
-    
+
   #   run this stage when shop system updated with latest shop extension release version
   #   tests will use latest released extension version
   - <<: *acceptance-test
@@ -101,8 +106,8 @@ matrix:
     - OXID_RELEASE_VERSION=1
     # if this stage fails, it will not fail the whole build
     - ALLOW_FAIL=1
-  
-  
+
+
   - stage: phraseapp-pull
     if: env(PHRASEAPP_PULL) = '1'
     language: ruby
@@ -114,7 +119,7 @@ matrix:
     script:
     - .bin/rake phraseapp:ci_update
     after_script: skip
-  
+
   - stage: phraseapp-check-if-in-sync
     if: type = pull_request
     language: ruby
