@@ -81,7 +81,7 @@ class PaymentGateway extends BaseModel
      *
      * @since 1.0.0
      */
-    private static function _addDescriptor(&$oTransaction, $sOrderId)
+    protected static function _addDescriptor(&$oTransaction, $sOrderId)
     {
         $sShopId = Registry::getConfig()->getShopId();
         $oShop = oxNew(Shop::class);
@@ -145,7 +145,7 @@ class PaymentGateway extends BaseModel
         }
 
         if ($oPaymentMethod->getPayment()->oxpayments__wdoxidee_descriptor->value) {
-            self::_addDescriptor($oTransaction, $oOrder->oxorder__oxid->value);
+            static::_addDescriptor($oTransaction, $oOrder->oxorder__oxid->value);
         }
 
         if ($this->_shouldAddBasketInfo($oPaymentMethod)) {
