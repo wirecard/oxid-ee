@@ -3,7 +3,6 @@
     "type": "zip",
     "execution-path": "/github/workspace",
     "file-blacklist": [
-      ".env",
       ".gitignore",
       ".travis.yml",
       "CHANGELOG.md",
