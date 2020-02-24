@@ -167,7 +167,7 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
     }
 
     /**
-     * Returns a travis envirnment variable
+     * Returns a travis environment variable
      *
      * @param string $environmentVariable
      *
