@@ -165,4 +165,15 @@ abstract class BaseAcceptanceTestCase extends \OxidEsales\TestingLibrary\Accepta
         $this->getMinkSession()->getDriver()->switchToIFrame($sElementName);
         $this->selectedFrame = $sElementName;
     }
+
+    /**
+     * Returns a travis envirnment variable
+     *
+     * @param string $environmentVariable
+     *
+     * @return mixed
+     */
+    public function getEnvironmentVariable($environmentVariable) {
+        return getenv($environmentVariable);
+    }
 }
