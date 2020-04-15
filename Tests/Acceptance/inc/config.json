@@ -1,7 +1,8 @@
 {
   "payments": {
     "paypal": {
-      "email": "paypal-shop-extensions-test@wirecard.com"
+      "email": "paypal.buyer2@wirecard.com",
+      "password": "Wirecardbuyer"
     },
     "creditcard": {
       "firstName": "First",
