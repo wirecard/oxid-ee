@@ -10,6 +10,7 @@ services:
         MODULE_NAME: ${MODULE_NAME}
         MODULE_PATH: ${MODULE_PATH}
         OXID_VERSION: ${OXID_VERSION}
+        PAYPAL_PASSWORD: ${PAYPAL_PASSWORD}
     image: oxid_ee:${OXID_VERSION}-php${PHP_VERSION}
     container_name: ${OXID_CONTAINER}
     env_file: ./.env
