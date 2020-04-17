@@ -13,6 +13,7 @@ services:
     image: oxid_ee:${OXID_VERSION}-php${TRAVIS_PHP_VERSION}
     container_name: ${OXID_CONTAINER}
     environment:
+      PAYPAL_PASSWORD: ${PAYPAL_PASSWORD}
       CODACY_PROJECT_TOKEN: ${CODACY_PROJECT_TOKEN}
       MODULE_PATH: ${MODULE_PATH}
       MYSQL_HOST: db

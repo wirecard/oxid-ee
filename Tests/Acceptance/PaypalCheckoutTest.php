@@ -60,7 +60,7 @@ class PaypalCheckoutTest extends CheckoutTestCase
         {
             $this->type(
                 $this->getLocator('external.paypal.password'),
-                $this->getConfig('payments.paypal.password')
+                getenv('PAYPAL_PASSWORD')
             );
         }
         else {
@@ -69,15 +69,17 @@ class PaypalCheckoutTest extends CheckoutTestCase
         $this->waitForItemAppear($this->getLocator('external.paypal.password'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.paypal.password'),
-            $this->getConfig('payments.paypal.password')
+            getenv('PAYPAL_PASSWORD')
         );
         $this->click($this->getLocator('external.paypal.login'));
-        $this->waitForElement($this->getLocator('external.paypal.nextStep'), self::WAIT_TIME_EXTERNAL);
-        $this->clickAndWait($this->getLocator('external.paypal.nextStep'), 3);
 
-        // there might be a confirmation step here
-        if ($this->isElementPresent($this->getLocator('external.paypal.nextStep'))) {
-            $this->click($this->getLocator('external.paypal.nextStep'));
+        try {
+            $this->waitForElement($this->getLocator('external.paypal.acceptCookies'), self::WAIT_TIME_EXTERNAL);
+            $this->clickAndWait($this->getLocator('external.paypal.acceptCookies'), 3);
+        } catch (\Exception $e) {
         }
+
+        $this->waitForElement($this->getLocator('external.paypal.payNow'), self::WAIT_TIME_EXTERNAL);
+        $this->clickAndWait($this->getLocator('external.paypal.payNow'), 3);
     }
 }
