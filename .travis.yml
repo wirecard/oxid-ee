@@ -15,35 +15,107 @@ env:
     - OXID_COVERAGE_XML_ONLY=true
     - MODULE_NAME=${TRAVIS_REPO_SLUG}
     - MODULE_PATH=wirecard/paymentgateway
+    - OXID_RELEASES_FILE=${TRAVIS_BUILD_DIR}/.bin/shop-releases.txt
+    - SHOP_SYSTEM_UPDATE_COMMIT=UpdateLatestShopReleases
+    - MANUAL_UITEST_TRIGGER_COMMIT=TestMyBuild
+    - PATCH_RELEASE=patch
+    - MINOR_RELEASE=minor
+    - MAJOR_RELEASE=major
+    - UI_TEST_JUNIT_REPORT_FILE_NAME=report.xml
+    - UI_TEST_HTML_REPORT_FILE_NAME=report.html
 
-matrix:
+jobs:
+  # these stages are allowed to fail
+  allow_failures:
+  - stage: phraseapp-check-if-in-sync
+  - stage: acceptance-test
+    env:
+    - GATEWAY=API-TEST
+    - OXID_RELEASE_VERSION=1
+    - ALLOW_FAIL=1
+  - stage: acceptance-test
+    env:
+    - GATEWAY=API-TEST
+    - OXID_RELEASE_VERSION=1
+    - LATEST_EXTENSION_RELEASE=1
+    - ALLOW_FAIL=1
   include:
-    - php: 7.1
-    - php: 7.2
+  - php: 7.1
+    if: type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
+  - php: 7.2
+    if: type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
 
-    - stage: phraseapp-pull
-      if: env(PHRASEAPP_PULL) = '1'
-      language: ruby
-      ruby: 2.5.3
-      before_install: skip
-      install:
-        - gem install bundler -v 2.0.1
-        - travis_retry bundle install
-      script:
-        - .bin/rake phraseapp:ci_update
-      after_script: skip
+  - &acceptance-test
+    stage: acceptance-test
+    #   run this stage on pull request if head branch name contains one of these words (patch, major, minor)
+    #   or when build triggered ad-hoc with special commit message
+    #   tests will use extension version = branch which originated pull request
+    #   or branch which was defined in ad-hoc trigger in Travis UI
+    if: (type = pull_request AND (head_branch =~ env(PATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE))) OR (commit_message =~ env(MANUAL_UITEST_TRIGGER_COMMIT))
+    php: 7.2
+    env:
+    - GATEWAY=API-TEST
+    - OXID_RELEASE_VERSION=1
+    before_install:
+    - export OXID_VERSION="dev-$(awk "NR==$OXID_RELEASE_VERSION {print; exit}" ${OXID_RELEASES_FILE})"
+    - echo "Testing with Oxid version ${OXID_VERSION}"
+    - export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release ${TRAVIS_BUILD_DIR}/SHOPVERSIONS | tr -d '"'`
+    - if [[ ${LATEST_EXTENSION_RELEASE}  == "1" ]]; then git checkout tags/${LATEST_RELEASED_SHOP_EXTENSION_VERSION};fi
 
-    - stage: phraseapp-check-if-in-sync
-      if: branch = master OR type = pull_request
-      language: ruby
-      ruby: 2.5.3
-      before_install: skip
-      install:
-        - gem install bundler -v 2.0.1
-        - travis_retry bundle install
-      script:
-        - .bin/rake phraseapp:ci_check_if_in_sync
-      after_script: skip
+    script: docker exec ${OXID_CONTAINER} bash -c 'reset-shop.sh && runtests-selenium.sh'
+    after_script: skip
+    after_success:
+    - bash .bin/get-ui-reports.sh
+    - bash .bin/upload-logs-and-notify.sh
+    after_failure:
+    - bash .bin/get-ui-reports.sh
+    - bash .bin/upload-logs-and-notify.sh fail
+
+  #   run this stage when shop system updated with latest shop extension release version
+  #   tests will use latest released extension version
+  - <<: *acceptance-test
+    # when commit message contains string "Update latest shop releases"
+    if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
+    env:
+    - GATEWAY=API-TEST
+    - OXID_RELEASE_VERSION=1
+    # will check latest released extension version with latest shop version
+    - LATEST_EXTENSION_RELEASE=1
+    # if this stage fails, it will not fail the whole build
+    - ALLOW_FAIL=1
+  - <<: *acceptance-test
+    # when commit message contains string "Update latest shop releases"
+    if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
+    env:
+    # will check master branch with latest shop version
+    - GATEWAY=API-TEST
+    - OXID_RELEASE_VERSION=1
+    # if this stage fails, it will not fail the whole build
+    - ALLOW_FAIL=1
+
+  - stage: phraseapp-pull
+    if: env(PHRASEAPP_PULL) = '1'
+    language: ruby
+    ruby: 2.5.3
+    before_install: skip
+    install:
+    - gem install bundler -v 2.0.1
+    - travis_retry bundle install
+    script:
+    - .bin/rake phraseapp:ci_update
+    after_script: skip
+
+  - stage: phraseapp-check-if-in-sync
+    if: type = pull_request
+    language: ruby
+    ruby: 2.5.3
+    before_install: skip
+    install:
+    - gem install bundler -v 2.0.1
+    - travis_retry bundle install
+    script:
+    - .bin/rake phraseapp:ci_check_if_in_sync
+    after_script: skip
 
 install:
   # build & start containers
@@ -55,23 +127,6 @@ script:
   - docker exec ${OXID_CONTAINER} phpcs-check.sh
   - docker exec ${OXID_CONTAINER} phpmd.sh
   - docker exec ${OXID_CONTAINER} bash -c 'runtests-coverage.sh && upload-coverage.sh'
-  - docker exec ${OXID_CONTAINER} bash -c 'reset-shop.sh && runtests-selenium.sh'
 
-after_script:
-  - .bin/generate-tag.sh
-
-before_deploy:
-  - travis_retry composer install
-  - export REPO_NAME=$(echo ${TRAVIS_REPO_SLUG} | awk -F'/' '{print $2}')
-  - export RELEASE_NOTES=$(composer make-release-notes)
-  - bash .bin/generate-readme-badge.sh
-
-deploy:
-  on:
-    repo: ${TRAVIS_REPO_SLUG}
-    tags: true
-  provider: releases
-  api_key: ${GITHUB_TOKEN}
-  name: '${REPO_NAME} ${TRAVIS_TAG}'
-  body: '${RELEASE_NOTES}'
-  skip_cleanup: true
+notifications:
+  email: false

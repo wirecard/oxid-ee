@@ -55,7 +55,17 @@ class PaypalCheckoutTest extends CheckoutTestCase
             $this->getLocator('external.paypal.email'),
             $this->getConfig('payments.paypal.email')
         );
-        $this->click($this->getLocator('external.paypal.login'));
+
+        if ($this->isVisible($this->getLocator('external.paypal.password')))
+        {
+            $this->type(
+                $this->getLocator('external.paypal.password'),
+                $this->getConfig('payments.paypal.password')
+            );
+        }
+        else {
+            $this->click($this->getLocator('external.paypal.login'));
+        }
         $this->waitForItemAppear($this->getLocator('external.paypal.password'), self::WAIT_TIME_EXTERNAL);
         $this->type(
             $this->getLocator('external.paypal.password'),
