@@ -1,5 +1,27 @@
 [
   {
+    "release": "1.2.1",
+    "shopsystem": "Oxid",
+    "tested": "6.1.2",
+    "compatibility": "6.1",
+    "changelog": [
+      "Update configuration UI for Guaranteed Invoice by Payolution (B2C)"
+    ]
+  },
+  {
+    "release": "1.2.0",
+    "shopsystem": "Oxid",
+    "tested": "6.1.2",
+    "compatibility": "6.1",
+    "changelog": [
+      "Guaranteed Invoice by Payolution (B2C)",
+      "Guaranteed Invoice by Wirecard (B2C)",
+      "eps-Überweisung",
+      "giropay",
+      "iDEAL"
+    ]
+  },
+  {
     "release": "1.1.0",
     "shopsystem": "Oxid",
     "tested": "6.1.2",
