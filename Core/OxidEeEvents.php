@@ -525,6 +525,16 @@ class OxidEeEvents
 
         if (!$oDbMetaDataHandler->tableExists(self::VAULT_TABLE)) {
             self::createVaultTable();
-        }
+        };
+        if (!$oDbMetaDataHandler->fieldExists('CREATED', self::VAULT_TABLE)) {
+            $sQuery = "ALTER TABLE " . self::VAULT_TABLE .
+                      " ADD COLUMN `CREATED` datetime not null";
+            self::$_oDb->execute($sQuery);
+        };
+        if (!$oDbMetaDataHandler->fieldExists('MODIFIED', self::VAULT_TABLE)) {
+            $sQuery = "ALTER TABLE " . self::VAULT_TABLE .
+                      " ADD COLUMN `MODIFIED` datetime";
+            self::$_oDb->execute($sQuery);
+        };
     }
 }
