@@ -16,6 +16,7 @@ use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 
+use Wirecard\Converter\WppVTwoConverter;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
@@ -45,6 +46,7 @@ class OrderController extends OrderController_parent
 {
     const FORM_POST_VARIABLE = 'formPost';
     const SEPA_MANDATE_KEY = 'sepamandate';
+    const DEFAULT_WPP_LANGUAGE = 'en';
 
     /**
      * @var TransactionService
@@ -369,11 +371,50 @@ class OrderController extends OrderController_parent
 
         $oPayment = PaymentMethodHelper::getPaymentById($oBasket->getPaymentId());
         $sPaymentAction = $this->_getPaymentAction($oPayment->oxpayments__wdoxidee_transactionaction->value);
-        $sLanguageCode = Registry::getLang()->getLanguageAbbr();
+        $sLanguageCode = $this->getSupportedLanguageCode();
 
         $oTransactionService = $this->_getTransactionService();
 
         return $oTransactionService->getCreditCardUiWithData($oTransaction, $sPaymentAction, $sLanguageCode);
+    }
+
+    /**
+     * Gets the supported WPP language code
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    private function getSupportedLanguageCode()
+    {
+        $converter = new WppVTwoConverter();
+        try {
+            $converter->init();
+            $language = $converter->convert(
+                $this->removeSuffix(Registry::getLang()->getLanguageAbbr())
+            );
+        } catch (\Exception $exception) {
+            $language = self::DEFAULT_WPP_LANGUAGE;
+        }
+
+        return $language;
+    }
+
+    /**
+     * @param $isoCode
+     * @param string $cutOffPoint
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    private function removeSuffix($isoCode, $cutOffPoint = '_')
+    {
+        $trimmed = mb_substr($isoCode, 0, mb_strpos($isoCode, $cutOffPoint));
+
+        return mb_strlen($trimmed) > 0
+            ? $trimmed
+            : $isoCode;
     }
 
     /**
