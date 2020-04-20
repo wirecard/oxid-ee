@@ -555,10 +555,12 @@ class CreditCardPaymentMethod extends PaymentMethod
 
         if(!$oTransaction->getAccountHolder()){
             $oTransaction->setAccountHolder($oOrder->getAccountHolder());
-        }
+        };
+
         if(!$oTransaction->getShipping()){
             $oTransaction->setShipping($oOrder->getShippingAccountHolder());
-        }
+        };
+
         $oAccountHolder = $oTransaction->getAccountHolder();
         $oAccountHolder->setAccountInfo($oAccountInfo);
         $oTransaction->setRiskInfo($oRiskInfo);
