@@ -553,11 +553,11 @@ class CreditCardPaymentMethod extends PaymentMethod
             ThreedsHelper::hasDownloadableItems($oBasket)
         );
 
-        if(!$oTransaction->getAccountHolder()){
+        if (!$oTransaction->getAccountHolder()) {
             $oTransaction->setAccountHolder($oOrder->getAccountHolder());
         };
 
-        if(!$oTransaction->getShipping()){
+        if (!$oTransaction->getShipping()) {
             $oTransaction->setShipping($oOrder->getShippingAccountHolder());
         };
 
