@@ -44,6 +44,8 @@ var ModuleCreditCardForm = (function($) {
   }
 
   function setParentTransactionId(response) {
+    console.log(response);
+
     var form = $("#wirecard-cc-form");
     $.each(response, function(key, value) {
       form.append("<input type='hidden' name='" + key + "' value='" + value + "'>");
@@ -53,6 +55,7 @@ var ModuleCreditCardForm = (function($) {
   }
 
   function initSeamlessRenderForm() {
+    console.log(requestData);
     PaymentPage.seamlessRender({
       requestData: requestData,
       wrappingDivId: "creditcard-form-div",
