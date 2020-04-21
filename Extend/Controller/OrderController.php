@@ -371,7 +371,7 @@ class OrderController extends OrderController_parent
 
         $oPayment = PaymentMethodHelper::getPaymentById($oBasket->getPaymentId());
         $sPaymentAction = $this->_getPaymentAction($oPayment->oxpayments__wdoxidee_transactionaction->value);
-        $sLanguageCode = $this->getSupportedLanguageCode();
+        $sLanguageCode = $this->_getSupportedLanguageCode();
 
         $oTransactionService = $this->_getTransactionService();
 
@@ -385,36 +385,36 @@ class OrderController extends OrderController_parent
      *
      * @since 1.3.0
      */
-    private function getSupportedLanguageCode()
+    private function _getSupportedLanguageCode()
     {
-        $converter = new WppVTwoConverter();
+        $wConverter = new WppVTwoConverter();
         try {
-            $converter->init();
-            $language = $converter->convert(
-                $this->removeSuffix(Registry::getLang()->getLanguageAbbr())
+            $wConverter->init();
+            $wLanguage = $wConverter->convert(
+                $this->_removeSuffix(Registry::getLang()->getLanguageAbbr())
             );
-        } catch (\Exception $exception) {
-            $language = self::DEFAULT_WPP_LANGUAGE;
+        } catch (\Exception $wException) {
+            $wLanguage = self::DEFAULT_WPP_LANGUAGE;
         }
 
-        return $language;
+        return $wLanguage;
     }
 
     /**
-     * @param $isoCode
-     * @param string $cutOffPoint
+     * @param string $oLangCode
+     * @param string $wCutOffPoint
      *
      * @return string
      *
      * @since 1.3.0
      */
-    private function removeSuffix($isoCode, $cutOffPoint = '_')
+    private function _removeSuffix($oLangCode, $wCutOffPoint = '_')
     {
-        $trimmed = mb_substr($isoCode, 0, mb_strpos($isoCode, $cutOffPoint));
+        $wLangCode = mb_substr($oLangCode, 0, mb_strpos($oLangCode, $wCutOffPoint));
 
-        return mb_strlen($trimmed) > 0
-            ? $trimmed
-            : $isoCode;
+        return mb_strlen($wLangCode) > 0
+            ? $wLangCode
+            : $oLangCode;
     }
 
     /**
