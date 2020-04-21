@@ -389,13 +389,13 @@ class OrderController extends OrderController_parent
     {
         $wConverter = new WppVTwoConverter();
         $wLangAbbr = Registry::getLang()->getLanguageAbbr();
-        $isoCode = $this->_removeSuffix(
+        $wIsoCode = $this->_removeSuffix(
             mb_strtolower($wLangAbbr)
         );
 
         try {
             $wConverter->init();
-            $wLanguage = $wConverter->convert($isoCode);
+            $wLanguage = $wConverter->convert($wIsoCode);
         } catch (\Exception $wException) {
             $wLanguage = self::DEFAULT_WPP_LANGUAGE;
         }
