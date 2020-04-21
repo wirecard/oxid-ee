@@ -388,11 +388,14 @@ class OrderController extends OrderController_parent
     private function _getSupportedLanguageCode()
     {
         $wConverter = new WppVTwoConverter();
+        $wLangAbbr = Registry::getLang()->getLanguageAbbr();
+        $isoCode = $this->_removeSuffix(
+            mb_strtolower($wLangAbbr)
+        );
+
         try {
             $wConverter->init();
-            $wLanguage = $wConverter->convert(
-                $this->_removeSuffix(Registry::getLang()->getLanguageAbbr())
-            );
+            $wLanguage = $wConverter->convert($isoCode);
         } catch (\Exception $wException) {
             $wLanguage = self::DEFAULT_WPP_LANGUAGE;
         }
