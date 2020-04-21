@@ -36,10 +36,8 @@ class RiskInfoHelper
     {
         $oRiskInfo = new RiskInfo();
         $oRiskInfo->setDeliveryEmailAddress($sUserEmail);
-        $oRiskInfo->setReorderItems(
-            $bHasReorderedItems ?
-                RiskInfoReorder::REORDERED : RiskInfoReorder::FIRST_TIME_ORDERED
-        );
+        $oRiskInfoReorderType = $bHasReorderedItems ? RiskInfoReorder::REORDERED : RiskInfoReorder::FIRST_TIME_ORDERED;
+        $oRiskInfo->setReorderItems($oRiskInfoReorderType);
         if ($bHasVirtualItems) {
             $oRiskInfo->setDeliveryTimeFrame(RiskInfoDeliveryTimeFrame::ELECTRONIC_DELIVERY);
         }

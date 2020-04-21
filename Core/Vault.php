@@ -74,7 +74,7 @@ class Vault
         try {
             $sQuery = "SELECT * from " . OxidEeEvents::VAULT_TABLE . " WHERE `USERID`=? AND `TOKEN`=?";
             $aRow = self::_getDb()->getRow($sQuery, [$sUserId, $sTokenId]);
-            if (!count($aRow)) {
+            if (empty($aRow)) {
                 $aRow = null;
             }
         } catch (DatabaseErrorException $oExc) {

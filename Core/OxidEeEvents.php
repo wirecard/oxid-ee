@@ -278,7 +278,8 @@ class OxidEeEvents
     private static function _migratePaymentMethod($oPayment, $bIsInserted)
     {
         if ((string) $oPayment->oxid === CreditCardPaymentMethod::getName() && !$bIsInserted) {
-            self::_updateCreditCard();
+            $sQuery = "UPDATE oxpayments SET `WDOXIDEE_CHALLENGE_INDICATOR` = ? WHERE `OXID` = ?";
+            self::$_oDb->execute($sQuery, [ChallengeInd::NO_PREFERENCE, CreditCardPaymentMethod::getName()]);
         }
     }
 
@@ -322,17 +323,6 @@ class OxidEeEvents
                                          `WDOXIDEE_SEPAMANDATECUSTOM_1` = '$sSepaMandate1'
                    WHERE `OXID` LIKE " . "'" . $sPaymentId . "'";
         self::$_oDb->execute($sQuery);
-    }
-
-    /**
-     * Migrate creditcard payment
-     *
-     * @since 1.3.0
-     */
-    private static function _updateCreditCard()
-    {
-        $sQuery = "UPDATE oxpayments SET `WDOXIDEE_CHALLENGE_INDICATOR` = ? WHERE `OXID` = ?";
-        self::$_oDb->execute($sQuery, [ChallengeInd::NO_PREFERENCE, CreditCardPaymentMethod::getName()]);
     }
 
     /**
