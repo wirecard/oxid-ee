@@ -27,7 +27,6 @@ class AccountInfoHelper
      *
      * @param bool   $bIsLoggedIn
      * @param string $sChallengeIndicator
-     * @param bool   $bIsNewToken
      *
      * @return AccountInfo
      *

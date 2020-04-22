@@ -53,6 +53,7 @@ var ModuleCreditCardForm = (function($) {
   }
 
   function initSeamlessRenderForm() {
+    console.log(requestData);
     PaymentPage.seamlessRender({
       requestData: requestData,
       wrappingDivId: "creditcard-form-div",
