@@ -39,11 +39,7 @@ class AccountInfoHelper
         $sAuthMethod = $bIsLoggedIn ? AuthMethod::USER_CHECKOUT : AuthMethod::GUEST_CHECKOUT;
         $oAccountInfo->setAuthMethod($sAuthMethod);
         // ToDo: currently do not send challenge requested on first "tokenize credit card", due to a workflow problem
-        $sChallengeIndicator = self::_getChallengeIndicator($sChallengeIndicator, $bIsNewToken);
-        if ($sChallengeIndicator !== ChallengeInd::CHALLENGE_MANDATE) {
-            $oAccountInfo->setChallengeInd($sChallengeIndicator);
-        }
-
+        $oAccountInfo->setChallengeInd($sChallengeIndicator);
         return $oAccountInfo;
     }
 
@@ -78,28 +74,5 @@ class AccountInfoHelper
         }
 
         $oAccountInfo->setCardCreationDate($oCardCreationDate);
-    }
-
-    /**
-     * Get challenge indicator depending on existing token
-     * - return config setting: for non one-click-checkout, guest checkout, existing token
-     * - return 04/CHALLENGE_MANDATE: for new one-click-checkout token
-     *
-     * @param string $sChallengeIndicator
-     * @param bool   $bIsNewToken
-     *
-     * @return string
-     * @since 1.3.0
-     */
-    protected static function _getChallengeIndicator($sChallengeIndicator, $bIsNewToken)
-    {
-        // token id is null, for a new card token too, so check first for a new token
-        // for non one-click-checkout $bIsNewToken is always false
-        if ($bIsNewToken) {
-            return ChallengeInd::CHALLENGE_MANDATE;
-        }
-
-        // existing token, guest checkout, non one-click checkout
-        return $sChallengeIndicator;
     }
 }
