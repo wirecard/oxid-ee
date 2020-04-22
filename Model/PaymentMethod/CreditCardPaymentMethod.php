@@ -534,8 +534,7 @@ class CreditCardPaymentMethod extends PaymentMethod
         $oUserHasAcc = $oUser->hasAccount();
         $oAccountInfo = AccountInfoHelper::create(
             $oUserHasAcc,
-            $this->getPayment()->getFieldData('wdoxidee_challenge_indicator'),
-            ThreedsHelper::isNewCardToken($aDynValue, Registry::getRequest()->getRequestParameter('wdsavecheckbox'))
+            $this->getPayment()->getFieldData('wdoxidee_challenge_indicator')
         );
 
         if ($oUserHasAcc) {

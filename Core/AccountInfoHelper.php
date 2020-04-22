@@ -33,7 +33,7 @@ class AccountInfoHelper
      *
      * @since 1.3.0
      */
-    public static function create($bIsLoggedIn, $sChallengeIndicator, $bIsNewToken)
+    public static function create($bIsLoggedIn, $sChallengeIndicator)
     {
         $oAccountInfo = new AccountInfo();
         $sAuthMethod = $bIsLoggedIn ? AuthMethod::USER_CHECKOUT : AuthMethod::GUEST_CHECKOUT;
