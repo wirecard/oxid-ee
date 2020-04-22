@@ -36,17 +36,6 @@ class AccountInfoHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         );
     }
 
-    public function testCreateNewToken()
-    {
-        $oAccountInfo = AccountInfoHelper::create(true, '01');
-
-        $this->assertEquals(
-            [
-                'authentication-method' => '02',
-            ], $oAccountInfo->mappedProperties()
-        );
-    }
-
     public function testAddAuthenticatedUserDataNotLoggedIn()
     {
         $oAccountInfo = AccountInfoHelper::create(false, '01');
