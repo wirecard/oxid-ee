@@ -281,7 +281,7 @@ class Order extends Order_parent
     public function getAccountHolder()
     {
         $oCountry = $this->getOrderBillingCountry();
-        $crmId = $this->getOrderUser()->hasAccount() ? $this->getOrderUser()->oxuser__oxcustnr->value : null;
+        $cCrmId = $this->getOrderUser()->hasAccount() ? $this->getOrderUser()->oxuser__oxcustnr->value : null;
 
         $aHiddenFields = PaymentMethodFactory::create($this->oxorder__oxpaymenttype->value)
             ->getHiddenAccountHolderFields();
@@ -299,7 +299,7 @@ class Order extends Order_parent
                 'email' => $this->oxorder__oxbillemail->value,
                 'gender' => Helper::getGenderCodeForSalutation($this->oxorder__oxbillsal->value),
                 'dateOfBirth' => Helper::getDateTimeFromString($this->getOrderUser()->oxuser__oxbirthdate->value),
-                'crmId' => $crmId
+                'crmId' => $cCrmId,
             ],
             function ($sKey) use ($aHiddenFields) {
                 return !in_array($sKey, $aHiddenFields);
