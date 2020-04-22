@@ -531,16 +531,17 @@ class CreditCardPaymentMethod extends PaymentMethod
         }
 
         $oUser = $oOrder->getUser();
+        $oUserHasAcc = $oUser->hasAccount();
         $oAccountInfo = AccountInfoHelper::create(
-            $oUser->hasAccount(),
+            $oUserHasAcc,
             $this->getPayment()->getFieldData('wdoxidee_challenge_indicator'),
             ThreedsHelper::isNewCardToken($aDynValue, Registry::getRequest()->getRequestParameter('wdsavecheckbox'))
         );
 
-        if ($oUser->hasAccount()) {
+        if ($oUserHasAcc) {
             AccountInfoHelper::addAuthenticatedUserData(
                 $oAccountInfo,
-                $oUser->hasAccount(),
+                $oUserHasAcc,
                 $oUser->getFieldData('oxregister'),
                 ThreedsHelper::getShippingAddressFirstUsed($oOrder),
                 ThreedsHelper::getCardCreationDate($oUser->getId(), $sTokenId)
