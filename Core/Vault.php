@@ -33,7 +33,7 @@ class Vault
      * @param Order $oOrder
      *
      * @return array of cards with keys 'OXID', 'USERID', 'ADDRESSID', 'TOKEN', 'MASKEDPAN', 'EXPIRATIONMONTH',
-     *         'EXPIRATIONYEAR'
+     *         'EXPIRATIONYEAR', 'CREATED', 'MODIFIED'
      *
      * @throws DatabaseConnectionException
      * @since 1.3.0
@@ -58,6 +58,33 @@ class Vault
     }
 
     /**
+     * Get card by token for a user
+     *
+     * @param string $sUserId
+     * @param string $sTokenId
+     *
+     * @return array|null
+     *
+     * @throws DatabaseConnectionException
+     * @since 1.3.0
+     */
+    public static function getCardByToken($sUserId, $sTokenId)
+    {
+        $aRow = null;
+        try {
+            $sQuery = "SELECT * from " . OxidEeEvents::VAULT_TABLE . " WHERE `USERID`=? AND `TOKEN`=?";
+            $aRow = self::_getDb()->getRow($sQuery, [$sUserId, $sTokenId]);
+            if (empty($aRow)) {
+                $aRow = null;
+            }
+        } catch (DatabaseErrorException $oExc) {
+            Registry::getLogger()->error("Error getting card by token", [$oExc]);
+        }
+
+        return $aRow;
+    }
+
+    /**
      * @param string $sUserId
      * @param string $sAddressId
      *
@@ -72,6 +99,7 @@ class Vault
         try {
             $sQuery = "SELECT * from " . OxidEeEvents::VAULT_TABLE . " 
                 WHERE `USERID`=? AND `ADDRESSID`=? ORDER BY `OXID` DESC";
+
             return self::_getDb()->getAll($sQuery, [$sUserId, $sAddressId]);
         } catch (DatabaseErrorException $oExc) {
             Registry::getLogger()->error("Error getting cards", [$oExc]);
@@ -105,6 +133,9 @@ class Vault
             'addressId' => self::_getAddressId($oOrder),
         ];
 
+        // needed for testing only
+        $aVaultCard['created'] = isset($aCard['created']) ? $aCard['created'] : (new DateTime())->format('Y-m-d H:i:s');
+
         $aExistingCards = self::getCards($oOrder);
         foreach ($aExistingCards as $aCard) {
             if (self::_areCardsEqual($aCard, $aVaultCard)) {
@@ -131,7 +162,8 @@ class Vault
             `TOKEN`=?,
             `MASKEDPAN`=?,
             `EXPIRATIONMONTH`=?,
-            `EXPIRATIONYEAR`=?";
+            `EXPIRATIONYEAR`=?,
+            `CREATED`=?";
 
         self::_getDb()->execute($sQuery, [
             $aCard['userId'],
@@ -140,6 +172,7 @@ class Vault
             $aCard['maskedPan'],
             $aCard['expirationMonth'],
             $aCard['expirationYear'],
+            $aCard['created'],
         ]);
     }
 
