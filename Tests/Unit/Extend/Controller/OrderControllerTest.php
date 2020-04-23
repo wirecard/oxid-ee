@@ -106,7 +106,7 @@ class OrderControllerTest extends \Wirecard\Test\WdUnitTestCase
     public function testGetCCRequestDataAjaxLink()
     {
         $sLinkText = $this->_controller->getCCRequestDataAjaxLink();
-        $this->assertContains('cl=order&fnc=getCreditCardFormRequestDataAjax', $sLinkText);
+        $this->assertContains('cl=order&amp;fnc=getCreditCardFormRequestDataAjax', $sLinkText);
     }
 
     public function testGetPaymentPageLoaderScriptUrl()

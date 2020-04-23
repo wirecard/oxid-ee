@@ -385,9 +385,9 @@ class OrderController extends OrderController_parent
      */
     public function getCCRequestDataAjaxLink()
     {
-        $urlParameters = ['cl'=>'order', 'fnc'=>'getCreditCardFormRequestDataAjax'];
-        $queryParamString = '?' . http_build_query($urlParameters, '', '&amp;');
-        return Registry::getConfig()->getSslShopUrl() . $queryParamString;
+        $aUrlParameters = ['cl'=>'order', 'fnc'=>'getCreditCardFormRequestDataAjax'];
+        $qParamString = '?' . http_build_query($aUrlParameters, '', '&amp;');
+        return Registry::getConfig()->getSslShopUrl() . $qParamString;
     }
 
     /**
