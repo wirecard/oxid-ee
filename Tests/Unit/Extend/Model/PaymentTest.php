@@ -98,7 +98,7 @@ class PaymentTest extends OxidEsales\TestingLibrary\UnitTestCase
         $oPayment = oxNew(Payment::class);
         $oPayment->load($sPaymentMethodName);
 
-        $aDynArray['wd_selected_card'] = $sToken;
+        $aDynArray[CreditCardPaymentMethod::CARD_TOKEN_FIELD] = $sToken;
         Registry::getSession()->setVariable('dynvalue', $aDynArray);
 
         $this->assertEquals($bExpected, $oPayment->shouldRenderCreditCardForm());
