@@ -14,7 +14,7 @@ class AccountInfoHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testCreateGuest()
     {
-        $oAccountInfo = AccountInfoHelper::create(false, '01', null, false);
+        $oAccountInfo = AccountInfoHelper::create(false, '01');
 
         $this->assertEquals(
             [
@@ -26,7 +26,7 @@ class AccountInfoHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testCreateWithLoggedInUser()
     {
-        $oAccountInfo = AccountInfoHelper::create(true, '01', false);
+        $oAccountInfo = AccountInfoHelper::create(true, '01');
 
         $this->assertEquals(
             [
@@ -36,20 +36,9 @@ class AccountInfoHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
         );
     }
 
-    public function testCreateNewToken()
-    {
-        $oAccountInfo = AccountInfoHelper::create(true, '01', true);
-
-        $this->assertEquals(
-            [
-                'authentication-method' => '02',
-            ], $oAccountInfo->mappedProperties()
-        );
-    }
-
     public function testAddAuthenticatedUserDataNotLoggedIn()
     {
-        $oAccountInfo = AccountInfoHelper::create(false, '01', false);
+        $oAccountInfo = AccountInfoHelper::create(false, '01');
 
         AccountInfoHelper::addAuthenticatedUserData($oAccountInfo, false, null, null, null);
         $this->assertEquals(
@@ -62,7 +51,7 @@ class AccountInfoHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testAddAuthenticatedUserData()
     {
-        $oAccountInfo = AccountInfoHelper::create(false, '01', false);
+        $oAccountInfo = AccountInfoHelper::create(false, '01');
 
         $oCardCreationDate = new DateTime;
         AccountInfoHelper::addAuthenticatedUserData($oAccountInfo, true, null, null, $oCardCreationDate);
@@ -77,7 +66,7 @@ class AccountInfoHelperTest extends OxidEsales\TestingLibrary\UnitTestCase
 
     public function testAddAuthenticatedUserDataFull()
     {
-        $oAccountInfo = AccountInfoHelper::create(false, '01', false);
+        $oAccountInfo = AccountInfoHelper::create(false, '01');
 
         $oDate = new DateTime;
         AccountInfoHelper::addAuthenticatedUserData($oAccountInfo, true, '2019-10-05', $oDate, $oDate);

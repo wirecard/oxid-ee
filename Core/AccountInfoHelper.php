@@ -27,21 +27,17 @@ class AccountInfoHelper
      *
      * @param bool   $bIsLoggedIn
      * @param string $sChallengeIndicator
-     * @param bool   $bIsNewToken
      *
      * @return AccountInfo
      *
      * @since 1.3.0
      */
-    public static function create($bIsLoggedIn, $sChallengeIndicator, $bIsNewToken)
+    public static function create($bIsLoggedIn, $sChallengeIndicator)
     {
         $oAccountInfo = new AccountInfo();
         $sAuthMethod = $bIsLoggedIn ? AuthMethod::USER_CHECKOUT : AuthMethod::GUEST_CHECKOUT;
         $oAccountInfo->setAuthMethod($sAuthMethod);
         // ToDo: currently do not send challenge requested on first "tokenize credit card", due to a workflow problem
-        if ($bIsNewToken) {
-            return $oAccountInfo;
-        }
         $oAccountInfo->setChallengeInd($sChallengeIndicator);
         return $oAccountInfo;
     }
