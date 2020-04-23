@@ -52,11 +52,19 @@ class PaymentGatewayTest extends \Wirecard\Test\WdUnitTestCase
         $oBasketStub->method('createTransactionBasket')
             ->willReturn(oxNew(\Wirecard\PaymentSdk\Entity\Basket::class));
 
+        $oUserStub = $this->getMockBuilder(User::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $oUserStub->method('hasAccount')->willReturn(true);
+
         $oOrderStub = $this->getMockBuilder(Order::class)
             ->disableOriginalConstructor()
             ->getMock();
         $oOrderStub->method('getAccountHolder')
             ->willReturn(new AccountHolder());
+        $oOrderStub->method('getUser')->willReturn($oUserStub);
+        $oOrderStub->method('getViewName')->willReturn('oxorder');
 
         $oTransaction = $this->_oPaymentGateway->createTransaction($oBasketStub, $oOrderStub);
         $this->assertInstanceOf($sTransactionClass, $oTransaction);
