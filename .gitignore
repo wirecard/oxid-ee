@@ -26,3 +26,7 @@ Thumbs.db
 !/.bin/phraseapp/tmp/.gitkeep
 /translations/*/*.json
 /views/admin/*/*.json
+
+### Lock files ###
+composer.lock
+Gemfile.lock
