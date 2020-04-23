@@ -139,6 +139,7 @@ class PaymentGateway extends BaseModel
         $sPaymentId = $oBasket->getPaymentId();
         $oPaymentMethod = PaymentMethodFactory::create($sPaymentId);
         $oTransaction = $oPaymentMethod->getTransaction();
+        $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
 
         if ($oPaymentMethod->getPayment()->oxpayments__wdoxidee_additional_info->value) {
             self::_addAdditionalInfo($oTransaction, $oOrder, $oPaymentMethod->getPayment(), $oSession->getId());
@@ -296,7 +297,6 @@ class PaymentGateway extends BaseModel
         $sRemoteAddress = Registry::getUtilsServer()->getRemoteAddress();
 
         $oTransaction->setIpAddress($sRemoteAddress);
-        $oTransaction->setOrderNumber($oOrder->oxorder__oxid->value);
         $oTransaction->setAccountHolder($oOrder->getAccountHolder());
         $oTransaction->setShipping($oOrder->getShippingAccountHolder());
 
