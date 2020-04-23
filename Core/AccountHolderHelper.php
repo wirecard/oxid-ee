@@ -36,12 +36,16 @@ class AccountHolderHelper
         $oAccountHolder->setLastName($aArgs['lastName']);
         $oAccountHolder->setEmail($aArgs['email']);
 
-        if (Helper::isPresentProperty($aArgs, 'phone')) {
-            $oAccountHolder->setPhone($aArgs['phone']);
-        }
+        $aOptionals = [
+            'crmId' => 'setCrmId',
+            'phone' => 'setPhone',
+            'gender' => 'setGender',
+        ];
 
-        if (Helper::isPresentProperty($aArgs, 'gender')) {
-            $oAccountHolder->setGender($aArgs['gender']);
+        foreach ($aOptionals as $sField => $sSeter) {
+            if (Helper::isPresentProperty($aArgs, $sField)) {
+                $oAccountHolder->$sSeter($aArgs[$sField]);
+            }
         }
 
         if (isset($aArgs['dateOfBirth'])) {

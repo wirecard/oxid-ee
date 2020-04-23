@@ -25,17 +25,18 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
         $oPastDate = new DateTime();
         $oPastDate->sub(new DateInterval('P1Y'));
 
+        $created = '2019-10-02 12:56:01';
         return [
             [
                 'table' => OxidEeEvents::VAULT_TABLE,
-                'columns' => ['OXID', 'USERID', 'ADDRESSID', 'TOKEN', 'MASKEDPAN', 'EXPIRATIONMONTH', 'EXPIRATIONYEAR'],
+                'columns' => ['OXID', 'USERID', 'ADDRESSID', 'TOKEN', 'MASKEDPAN', 'EXPIRATIONMONTH', 'EXPIRATIONYEAR', 'CREATED', 'MODIFIED'],
                 'rows' => [
-                    [1, 'User ID 1', 'caf0983c2368ab82adebd542e99f2c8f363a0e56', 'Token 1', 'Masked****Pan', 2, (int) $oFutureDate->format('y')],
-                    [2, 'User ID 1', 'caf0983c2368ab82adebd542e99f2c8f363a0e56', 'Token 2', 'Masked****Pan', 2, (int) $oPastDate->format('y')],
-                    [3, 'User ID 2', 'caf0983c2368ab82adebd542e99f2c8f363a0e56', 'Token 3', 'Masked****Pan', 2, (int) $oFutureDate->format('y')],
-                    [4, 'User ID 2', 'caf0983c2368ab82adebd542e99f2c8f363a0e56', 'Token 4', 'Masked****Pan', 3, (int) $oFutureDate->format('y')],
-                    [5, 'User ID 3', 'caf0983c2368ab82adebd542e99f2c8f363a0e56', 'Token 5', 'Masked****Pan', 2, (int) $oPastDate->format('y')],
-                    [6, 'User ID 4', 'caf0983c2368ab82adebd542e99f2c8f363a0e56', 'Token 6', 'Masked****Pan', 2, (int) $oFutureDate->format('y')],
+                    [1, 'User ID 1', 'caf0983c2368ab82adebd542e99f2c8f363a0e56', 'Token 1', 'Masked****Pan', 2, (int) $oFutureDate->format('y'), $created, null],
+                    [2, 'User ID 1', 'caf0983c2368ab82adebd542e99f2c8f363a0e56', 'Token 2', 'Masked****Pan', 2, (int) $oPastDate->format('y'), $created, null],
+                    [3, 'User ID 2', 'caf0983c2368ab82adebd542e99f2c8f363a0e56', 'Token 3', 'Masked****Pan', 2, (int) $oFutureDate->format('y'), $created, null],
+                    [4, 'User ID 2', 'caf0983c2368ab82adebd542e99f2c8f363a0e56', 'Token 4', 'Masked****Pan', 3, (int) $oFutureDate->format('y'), $created, null],
+                    [5, 'User ID 3', 'caf0983c2368ab82adebd542e99f2c8f363a0e56', 'Token 5', 'Masked****Pan', 2, (int) $oPastDate->format('y'), $created, null],
+                    [6, 'User ID 4', 'caf0983c2368ab82adebd542e99f2c8f363a0e56', 'Token 6', 'Masked****Pan', 2, (int) $oFutureDate->format('y'), $created, null],
                 ]
             ],
         ];
@@ -57,6 +58,7 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
         $aCard = [
             'expiration-month' => '9',
             'expiration-year' => '21',
+            'created' => '2019-10-02 12:56:01'
         ];
 
         $oUser = $this->getMockBuilder(User::class)
@@ -114,8 +116,10 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
                         'ADDRESSID' => 'caf0983c2368ab82adebd542e99f2c8f363a0e56',
                         'TOKEN' => 'New token',
                         'MASKEDPAN' => 'Masked Account Number',
-                        'EXPIRATIONMONTH' => 9,
-                        'EXPIRATIONYEAR' => 21,
+                        'EXPIRATIONMONTH' => '9',
+                        'EXPIRATIONYEAR' => '21',
+                        'CREATED' => '2019-10-02 12:56:01',
+                        'MODIFIED' => null,
                     ],
                 ],
             ],
@@ -129,10 +133,64 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
                         'MASKEDPAN' => 'Masked****Pan',
                         'EXPIRATIONMONTH' => 2,
                         'EXPIRATIONYEAR' => (int) $oFutureDate->format('y'),
+                        'CREATED' => '2019-10-02 12:56:01',
+                        'MODIFIED' => '0000-00-00 00:00:00',
                     ],
                 ],
             ],
         ];
+    }
+
+    public function testSaveCardWithoutTimestamp()
+    {
+        $sUserId = 'User 1 no TS';
+        $sTokenId = 'Token 1 no TS';
+        $oSuccessResponse = $this->getMockBuilder(SuccessResponse::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $oSuccessResponse->method('getCardTokenId')
+            ->willReturn($sTokenId);
+        $oSuccessResponse->method('getMaskedAccountNumber')
+            ->willReturn('Masked Account Number');
+
+        $aCard = [
+            'expiration-month' => '9',
+            'expiration-year' => '21'
+        ];
+
+        $oUser = $this->getMockBuilder(User::class)
+            ->disableOriginalConstructor()
+            ->setMethods(['getId', '__get'])
+            ->getMock();
+
+        $oUser->method('getId')
+            ->willReturn($sUserId);
+        $oUser->method('__get')
+            ->with('oxuser__oxid')
+            ->willReturn(new Field($sUserId));
+
+        $oOrder = $this->getMockBuilder(Order::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+        $oOrder->method('getShippingAccountHolder')
+            ->willReturn(\Wirecard\Oxid\Core\AccountHolderHelper::createAccountHolder(
+                [
+                    'firstName' => 'First Name',
+                    'lastName' => 'Last Name',
+                    'countryCode' => 'AT',
+                    'street' => 'Street 1',
+                    'city' => 'Graz',
+                ]
+            ));
+        $oOrder->method('getOrderUser')
+            ->willReturn($oUser);
+
+        Vault::saveCard($oSuccessResponse, $aCard, $oOrder);
+
+        $aResult = Vault::getCardByToken($sUserId, $sTokenId);
+
+        $this->assertEquals('User 1 no TS', $aResult['USERID']);
+        $this->assertEquals('Token 1 no TS', $aResult['TOKEN']);
     }
 
     /**
@@ -189,6 +247,8 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
                         'MASKEDPAN' => 'Masked****Pan',
                         'EXPIRATIONMONTH' => 2,
                         'EXPIRATIONYEAR' => $iYear,
+                        'CREATED' => '2019-10-02 12:56:01',
+                        'MODIFIED' => '0000-00-00 00:00:00',
                     ],
                 ],
             ],
@@ -203,6 +263,8 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
                         'MASKEDPAN' => 'Masked****Pan',
                         'EXPIRATIONMONTH' => 3,
                         'EXPIRATIONYEAR' => $iYear,
+                        'CREATED' => '2019-10-02 12:56:01',
+                        'MODIFIED' => '0000-00-00 00:00:00',
                     ],
                     [
                         'OXID' => 3,
@@ -212,6 +274,8 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
                         'MASKEDPAN' => 'Masked****Pan',
                         'EXPIRATIONMONTH' => 2,
                         'EXPIRATIONYEAR' => $iYear,
+                        'CREATED' => '2019-10-02 12:56:01',
+                        'MODIFIED' => '0000-00-00 00:00:00',
                     ],
                 ],
             ],
@@ -236,9 +300,26 @@ class VaultTest extends \Wirecard\Test\WdUnitTestCase
         $this->assertEmpty($aResult);
     }
 
+    public function testGetCardByToken()
+    {
+        $aCard = Vault::getCardByToken('User ID 1', 'Token 1');
+
+        $aExpected = $this->_getCardsWithId(1);
+        $this->assertEquals($aExpected[0], $aCard);
+    }
+
+    public function testGetCardByTokenNotFound()
+    {
+        $aCard = Vault::getCardByToken('xxxx', 'Token 1');
+
+        $this->assertNull($aCard);
+    }
+
     private function _getCardsWithId($iOxid)
     {
         return $this->getDb(DatabaseInterface::FETCH_MODE_ASSOC)->getAll(
             "SELECT * FROM " . OxidEeEvents::VAULT_TABLE . " WHERE `OXID` = {$iOxid}");
     }
+
+
 }
