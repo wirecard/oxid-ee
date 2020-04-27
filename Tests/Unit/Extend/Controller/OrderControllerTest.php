@@ -106,7 +106,7 @@ class OrderControllerTest extends \Wirecard\Test\WdUnitTestCase
     public function testGetCCRequestDataAjaxLink()
     {
         $sLinkText = $this->_controller->getCCRequestDataAjaxLink();
-        $this->assertContains('cl=order&fnc=getCreditCardFormRequestDataAjax', $sLinkText);
+        $this->assertContains('cl=order&amp;fnc=getCreditCardFormRequestDataAjax', $sLinkText);
     }
 
     public function testGetPaymentPageLoaderScriptUrl()
@@ -143,8 +143,10 @@ class OrderControllerTest extends \Wirecard\Test\WdUnitTestCase
 
         $oUserStub = $this->getMockBuilder(User::class)
             ->disableOriginalConstructor()
-            ->setMethods(['__get'])
+            ->setMethods(['__get', 'getFieldData'])
             ->getMock();
+
+        $oUserStub->method('getFieldData')->with('oxregister')->willReturn('2019-10-03');
 
         $oUserStub->method('__get')
             ->will(

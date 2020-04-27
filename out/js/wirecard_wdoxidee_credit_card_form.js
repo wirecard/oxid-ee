@@ -11,16 +11,17 @@ var ModuleCreditCardForm = (function($) {
 
   var requestData = null;
 
-  function getOrderButton() {
-    return $("#orderConfirmAgbBottom button[type = 'submit']");
+  function getOrderButtons() {
+    return $("#orderConfirmAgbTop, #orderConfirmAgbBottom").find("button[type = 'submit']");
   }
 
   function callback() {
+    var browserWidth = window.innerWidth || document.body.clientWidth;
     $(".loader").fadeOut(200,function() {
       $("#creditcard-form-div")
-        .height(screen.width >= 992 ? 220 : 410)
+        .height(browserWidth >= 992 ? 220 : 410)
         .fadeIn(200);
-      getOrderButton().prop("disabled", false);
+      getOrderButtons().prop("disabled", false);
     });
 
     if (debug) {
@@ -119,9 +120,9 @@ var ModuleCreditCardForm = (function($) {
     init: function() {
       loadCCForm();
 
-      var orderButton = getOrderButton();
-      orderButton.prop("disabled", true);
-      orderButton.on("click", function(event) {
+      var orderButtons = getOrderButtons();
+      orderButtons.prop("disabled", true);
+      orderButtons.on("click", function(event) {
         event.preventDefault();
         submitPaymentForm(event);
       });

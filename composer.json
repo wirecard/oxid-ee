@@ -17,7 +17,8 @@
   },
   "require": {
     "php": "^7.1",
-    "wirecard/payment-sdk-php": "3.7.3",
+    "wirecard/payment-sdk-php": "3.8.1",
+    "wirecard/io-converter": "^1.0",
     "php-http/guzzle6-adapter": "^1.1.1",
     "guzzlehttp/psr7": "<=1.5.0"
   },
@@ -53,8 +54,6 @@
     }
   },
   "scripts": {
-    "make-readme-badge": "@php .bin/version-helper.php -r",
-    "make-release-notes": "@php .bin/version-helper.php",
     "cs-check": "phpcs --runtime-set ignore_warnings_on_exit true --standard=./phpcs.xml .",
     "cs-fix": "phpcbf --runtime-set ignore_warnings_on_exit true --standard=./phpcs.xml .",
     "upload-coverage": "codacycoverage clover Tests/reports/clover.xml",

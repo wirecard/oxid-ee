@@ -7,9 +7,11 @@
 ########################################################################
 ARG PHP_VERSION
 FROM php:${PHP_VERSION}-apache-stretch AS base
+ARG PAYPAL_PASSWORD=0
 
 ENV COMPOSER_NO_INTERACTION=1
 ENV WEBROOT_DIR=/var/www/html/source
+ENV PAYPAL_PASSWORD $PAYPAL_PASSWORD
 
 RUN set -ex; \
     # set DocumentRoot (see: https://hub.docker.com/_/php)

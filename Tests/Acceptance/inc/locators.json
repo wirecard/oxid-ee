@@ -9,7 +9,9 @@
       "email": "email",
       "password": "password",
       "login": "btnLogin",
-      "nextStep": "//*[contains(@class, 'continueButton')]"
+      "acceptCookies": "//*[@id='acceptAllButton']",
+      "nextStep": "//*[contains(@class, 'continueButton')]",
+      "payNow": "//*[@id='payment-submit-btn']"
     },
     "creditcard": {
       "frame": "wirecard-integrated-payment-page-frame",
