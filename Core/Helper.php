@@ -342,12 +342,14 @@ class Helper
         $oModule = oxNew(Module::class);
         $oModule->load(Helper::MODULE_ID);
 
+        $oPhpVersion = " PHP" . phpversion();
+
         return [
             self::SHOP_SYSTEM_KEY => self::SHOP_SYSTEM_VALUE,
             self::SHOP_NAME_KEY => $oShop->oxshops__oxname->value,
             self::SHOP_VERSION_KEY => ShopVersion::getVersion(),
             self::PLUGIN_NAME_KEY => $oModule->getTitle(),
-            self::PLUGIN_VERSION_KEY => $oModule->getInfo('version'),
+            self::PLUGIN_VERSION_KEY => $oModule->getInfo('version') . $oPhpVersion,
         ];
     }
 
