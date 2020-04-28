@@ -16,6 +16,7 @@ use OxidEsales\Eshop\Application\Model\User;
 use OxidEsales\Eshop\Core\Field;
 use OxidEsales\Eshop\Core\Registry;
 
+use Wirecard\Converter\WppVTwoConverter;
 use Wirecard\Oxid\Core\Helper;
 use Wirecard\Oxid\Core\OrderHelper;
 use Wirecard\Oxid\Core\PaymentMethodHelper;
@@ -45,6 +46,7 @@ class OrderController extends OrderController_parent
 {
     const FORM_POST_VARIABLE = 'formPost';
     const SEPA_MANDATE_KEY = 'sepamandate';
+    const DEFAULT_WPP_LANGUAGE = 'en';
 
     /**
      * @var TransactionService
@@ -369,11 +371,53 @@ class OrderController extends OrderController_parent
 
         $oPayment = PaymentMethodHelper::getPaymentById($oBasket->getPaymentId());
         $sPaymentAction = $this->_getPaymentAction($oPayment->oxpayments__wdoxidee_transactionaction->value);
-        $sLanguageCode = Registry::getLang()->getLanguageAbbr();
+        $sLanguageCode = $this->_getSupportedLanguageCode();
 
         $oTransactionService = $this->_getTransactionService();
 
         return $oTransactionService->getCreditCardUiWithData($oTransaction, $sPaymentAction, $sLanguageCode);
+    }
+
+    /**
+     * Gets the supported WPP language code
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    private function _getSupportedLanguageCode()
+    {
+        $wConverter = new WppVTwoConverter();
+        $wLangAbbr = Registry::getLang()->getLanguageAbbr();
+        $wIsoCode = $this->_removeSuffix(
+            mb_strtolower($wLangAbbr)
+        );
+
+        try {
+            $wConverter->init();
+            $wLanguage = $wConverter->convert($wIsoCode);
+        } catch (\Exception $wException) {
+            $wLanguage = self::DEFAULT_WPP_LANGUAGE;
+        }
+
+        return $wLanguage;
+    }
+
+    /**
+     * @param string $oLangCode
+     * @param string $wCutOffPoint
+     *
+     * @return string
+     *
+     * @since 1.3.0
+     */
+    private function _removeSuffix($oLangCode, $wCutOffPoint = '_')
+    {
+        $wLangCode = mb_substr($oLangCode, 0, mb_strpos($oLangCode, $wCutOffPoint));
+
+        return mb_strlen($wLangCode) > 0
+            ? $wLangCode
+            : $oLangCode;
     }
 
     /**
@@ -385,7 +429,9 @@ class OrderController extends OrderController_parent
      */
     public function getCCRequestDataAjaxLink()
     {
-        return Registry::getConfig()->getShopHomeUrl() . 'cl=order&fnc=getCreditCardFormRequestDataAjax';
+        $aUrlParameters = ['cl'=>'order', 'fnc'=>'getCreditCardFormRequestDataAjax'];
+        $qParamString = '?' . http_build_query($aUrlParameters, '', '&amp;');
+        return Registry::getConfig()->getSslShopUrl() . $qParamString;
     }
 
     /**
