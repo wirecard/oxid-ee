@@ -1,5 +1,17 @@
 [
   {
+    "release": "1.3.0",
+    "shopsystem": "Oxid",
+    "tested": "6.1.2",
+    "compatibility": "6.1",
+    "changelog": [
+      "Implement Credit Card 3D Secure 2 parameters",
+      "Enable WPPv2 and language support for Credit Card form",
+      "Fix Credit Card Seamless render form for SSL connection",
+      "Update Alipay Cross-border brand logo"
+    ]
+  },
+  {
     "release": "1.2.1",
     "shopsystem": "Oxid",
     "tested": "6.1.2",
