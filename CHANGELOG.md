@@ -2,10 +2,10 @@
 
 ## v1.3.0
  
-*    Implement Credit Card 3D Secure 2 parameters  
-*    Enable WPPv2 and language support for Credit Card form  
-*    Fix Credit Card Seamless render form for SSL connection  
-*    Update Alipay Cross-border brand logo  
+*  Implement Credit Card 3D Secure 2 parameters  
+*  Enable WPPv2 and language support for Credit Card form  
+*  Fix Credit Card Seamless render form for SSL connection  
+*  Update Alipay Cross-border brand logo  
   
   
 | Overview              | Oxid version                  | PHP 5.6   | PHP 7.0   | PHP 7.1 |  
