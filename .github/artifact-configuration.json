@@ -14,8 +14,7 @@
       "docker-compose.ci.yml",
       "phpcs.xml",
       "phpunit.xml",
-      "README.md",
-      "SHOPVERSIONS"
+      "README.md"
     ],
     "folder-blacklist": [
       ".bin",

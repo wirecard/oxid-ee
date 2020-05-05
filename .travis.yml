@@ -59,7 +59,7 @@ jobs:
     before_install:
     - export OXID_VERSION="dev-$(awk "NR==$OXID_RELEASE_VERSION {print; exit}" ${OXID_RELEASES_FILE})"
     - echo "Testing with Oxid version ${OXID_VERSION}"
-    - export LATEST_RELEASED_SHOP_EXTENSION_VERSION=`jq .[0].release ${TRAVIS_BUILD_DIR}/SHOPVERSIONS | tr -d '"'`
+    - export LATEST_RELEASED_SHOP_EXTENSION_VERSION=$(git describe --abbrev=0 --tags)
     - if [[ ${LATEST_EXTENSION_RELEASE}  == "1" ]]; then git checkout tags/${LATEST_RELEASED_SHOP_EXTENSION_VERSION};fi
 
     script: docker exec ${OXID_CONTAINER} bash -c 'reset-shop.sh && runtests-selenium.sh'
