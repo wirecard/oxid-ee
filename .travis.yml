@@ -16,7 +16,6 @@ env:
     - MODULE_NAME=${TRAVIS_REPO_SLUG}
     - MODULE_PATH=wirecard/paymentgateway
     - OXID_RELEASES_FILE=${TRAVIS_BUILD_DIR}/.bin/shop-releases.txt
-    - SHOP_SYSTEM_UPDATE_COMMIT=UpdateLatestShopReleases
     - MANUAL_UITEST_TRIGGER_COMMIT=TestMyBuild
     - PATCH_RELEASE=patch
     - MINOR_RELEASE=minor
@@ -33,17 +32,12 @@ jobs:
     - GATEWAY=API-TEST
     - OXID_RELEASE_VERSION=1
     - ALLOW_FAIL=1
-  - stage: acceptance-test
-    env:
-    - GATEWAY=API-TEST
-    - OXID_RELEASE_VERSION=1
-    - LATEST_EXTENSION_RELEASE=1
-    - ALLOW_FAIL=1
+
   include:
   - php: 7.1
-    if: type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
+    if: type != cron AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
   - php: 7.2
-    if: type != cron AND commit_message !~ env(SHOP_SYSTEM_UPDATE_COMMIT) AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
+    if: type != cron AND commit_message !~ env(MANUAL_UITEST_TRIGGER_COMMIT)
 
   - &acceptance-test
     stage: acceptance-test
@@ -52,16 +46,13 @@ jobs:
     #   tests will use extension version = branch which originated pull request
     #   or branch which was defined in ad-hoc trigger in Travis UI
     if: (type = pull_request AND (head_branch =~ env(PATCH_RELEASE) OR head_branch =~ env(MINOR_RELEASE) OR head_branch =~ env(MAJOR_RELEASE))) OR (commit_message =~ env(MANUAL_UITEST_TRIGGER_COMMIT))
-    php: 7.2
+    php: 7.1
     env:
     - GATEWAY=API-TEST
     - OXID_RELEASE_VERSION=1
     before_install:
     - export OXID_VERSION="dev-$(awk "NR==$OXID_RELEASE_VERSION {print; exit}" ${OXID_RELEASES_FILE})"
     - echo "Testing with Oxid version ${OXID_VERSION}"
-    - export LATEST_RELEASED_SHOP_EXTENSION_VERSION=$(git describe --abbrev=0 --tags)
-    - if [[ ${LATEST_EXTENSION_RELEASE}  == "1" ]]; then git checkout tags/${LATEST_RELEASED_SHOP_EXTENSION_VERSION};fi
-
     script: docker exec ${OXID_CONTAINER} bash -c 'reset-shop.sh && runtests-selenium.sh'
     after_script: skip
     after_success:
@@ -70,28 +61,6 @@ jobs:
     after_failure:
     - bash .bin/get-ui-reports.sh
     - bash .bin/upload-logs-and-notify.sh fail
-
-  #   run this stage when shop system updated with latest shop extension release version
-  #   tests will use latest released extension version
-  - <<: *acceptance-test
-    # when commit message contains string "Update latest shop releases"
-    if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
-    env:
-    - GATEWAY=API-TEST
-    - OXID_RELEASE_VERSION=1
-    # will check latest released extension version with latest shop version
-    - LATEST_EXTENSION_RELEASE=1
-    # if this stage fails, it will not fail the whole build
-    - ALLOW_FAIL=1
-  - <<: *acceptance-test
-    # when commit message contains string "Update latest shop releases"
-    if: commit_message =~ env(SHOP_SYSTEM_UPDATE_COMMIT)
-    env:
-    # will check master branch with latest shop version
-    - GATEWAY=API-TEST
-    - OXID_RELEASE_VERSION=1
-    # if this stage fails, it will not fail the whole build
-    - ALLOW_FAIL=1
 
   - stage: phraseapp-pull
     if: env(PHRASEAPP_PULL) = '1'
