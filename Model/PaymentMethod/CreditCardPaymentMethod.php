@@ -177,6 +177,19 @@ class CreditCardPaymentMethod extends PaymentMethod
             ],
             $iUrlFieldOffset
         );
+        $iPsdTwoFieldOffset = 5;
+        Helper::insertToArrayAtPosition(
+            $aFirstFields,
+            [
+                'psdTwo' => [
+                    'type' => 'link',
+                    'field' => 'oxpayments__psd2',
+                    'title' => Helper::translate('wd_config_PSD2_information'),
+                    'text' => Helper::translate('wd_config_PSD2_information_desc_oxid'),
+                ],
+            ],
+            $iPsdTwoFieldOffset
+        );
 
         $aAdditionalFields = [
             'threeDMaid' => [
