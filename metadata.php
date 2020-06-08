@@ -228,7 +228,6 @@ $aModule = [
         'form_interaction.tpl' => 'wirecard/paymentgateway/views/form_interaction.tpl',
         'module_support.tpl' => 'wirecard/paymentgateway/views/admin/tpl/module_support.tpl',
         'module_support_email.tpl' => 'wirecard/paymentgateway/views/admin/tpl/email/module_support_email.tpl',
-        'live_chat.tpl' => 'wirecard/paymentgateway/views/admin/inc/live_chat.tpl',
         'sepa_mandate_modal.tpl' => 'wirecard/paymentgateway/views/blocks/sepa_mandate_modal.tpl',
         'sepa_mandate.tpl' => 'wirecard/paymentgateway/views/blocks/sepa_mandate.tpl',
         'table.tpl' => 'wirecard/paymentgateway/views/admin/inc/table.tpl',
