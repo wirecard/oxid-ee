@@ -1,2 +1,1 @@
 [{$smarty.block.parent}]
-
