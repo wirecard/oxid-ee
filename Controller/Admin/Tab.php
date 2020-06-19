@@ -87,18 +87,6 @@ class Tab extends AdminDetailsController
     }
 
     /**
-     * Determines whether the live chat should be displayed in the tab.
-     *
-     * @return boolean
-     *
-     * @since 1.1.0
-     */
-    public function shouldDisplayLiveChat()
-    {
-        return $this->_oOrder->isCustomPaymentMethod();
-    }
-
-    /**
      * Check if $_sListObjectId is set
      *
      * @return bool
