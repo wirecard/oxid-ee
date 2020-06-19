@@ -44,7 +44,7 @@ $aModule = [
     ],
     'lang'              => 'en',
     'thumbnail'         => 'logo.png',
-    'version'           => '1.3.0',
+    'version'           => '1.4.0',
     'author'            => 'Wirecard',
     'url'               => 'https://www.wirecard.com',
     'email'             => 'shop-systems-support@wirecard.com',
