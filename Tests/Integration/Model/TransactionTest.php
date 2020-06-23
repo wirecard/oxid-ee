@@ -135,7 +135,7 @@ class TransactionTest extends Wirecard\Test\WdUnitTestCase
     public function getTransactionPaymentMethodNameProvider()
     {
         return [
-            'transaction with order id' => ['Wirecard Vorauskasse', 't4'],
+            'transaction with order id' => ['Vorauskasse', 't4'],
             'transaction without order id' => ['', 't7'],
         ];
     }
