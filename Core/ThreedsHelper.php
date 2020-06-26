@@ -183,9 +183,9 @@ SQL;
     public static function getTranslatedChallengeIndicators()
     {
         return [
-            ChallengeInd::NO_PREFERENCE    => Helper::translate('wd_config_challenge_indicator_no_preference'),
-            ChallengeInd::NO_CHALLENGE     => Helper::translate('wd_config_challenge_indicator_no_challenge'),
-            ChallengeInd::CHALLENGE_THREED => Helper::translate('wd_config_challenge_indicator_challenge_threed'),
+            ChallengeInd::NO_PREFERENCE    => Helper::translate('wd_config_challenge_no_preference'),
+            ChallengeInd::NO_CHALLENGE     => Helper::translate('wd_config_challenge_no_challenge'),
+            ChallengeInd::CHALLENGE_THREED => Helper::translate('wd_config_challenge_challenge_threed'),
         ];
     }
 }
